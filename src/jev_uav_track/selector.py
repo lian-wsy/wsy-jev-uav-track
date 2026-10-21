@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Sequence
 
 from .jev_client import JevClient
@@ -59,6 +59,7 @@ class JevTrackSelector:
         rejected_ids: Sequence[str],
         reason: str,
         previous_action_id: str | None = None,
+        decision: JevDecision | None = None,
     ) -> SelectionResult:
         best = self._best_action(state, safe_actions)
         previous = next(
@@ -73,7 +74,7 @@ class JevTrackSelector:
                 reason = f"{reason}:hold_previous"
         return SelectionResult(
             action=best,
-            decision=self._one_hot_decision(best, reason),
+            decision=decision or self._one_hot_decision(best, reason),
             used_fallback=True,
             reason=reason,
             rejected_action_ids=tuple(rejected_ids),
@@ -92,8 +93,15 @@ class JevTrackSelector:
         if not safe_actions:
             raise RuntimeError("No candidate action passed the hard safety filter")
 
+        decision_state = state
+        if previous_action_id:
+            prior_history = state.history_summary.strip()
+            previous_context = f"Previous selected behavior: {previous_action_id}."
+            history = f"{prior_history}\n{previous_context}" if prior_history else previous_context
+            decision_state = replace(state, history_summary=history)
+
         try:
-            decision = self.client.choose(state, safe_actions)
+            decision = self.client.choose(decision_state, safe_actions)
         except Exception as exc:  # Runtime safety path for a remote model or gateway.
             return self._fallback(
                 state,
@@ -112,6 +120,7 @@ class JevTrackSelector:
                 rejected_ids,
                 "jev_unknown_choice",
                 previous_action_id,
+                decision=decision,
             )
 
         confidence_ok = (
@@ -129,6 +138,7 @@ class JevTrackSelector:
                 rejected_ids,
                 "confidence_gate",
                 previous_action_id,
+                decision=decision,
             )
 
         previous = by_id.get(previous_action_id or "")

@@ -65,12 +65,23 @@ class KinematicRolloutModel:
             0.0,
             1.0,
         )
-        occlusion_relief = 0.18 if primitive.id in {"orbit_left", "orbit_right", "climb"} else 0.0
-        scan_relief = 0.25 if primitive.id == "scan_reacquire" else 0.0
+        visibility_is_low = (
+            primitive.preferred_when_visibility_below > 0.0
+            and target.visibility_probability < primitive.preferred_when_visibility_below
+        )
+        occlusion_relief = (
+            0.18
+            if primitive.id in {"orbit_left", "orbit_right", "climb"}
+            and (target.occlusion_risk >= 0.25 or visibility_is_low)
+            else 0.0
+        )
+        scan_relief = 0.25 if primitive.id == "scan_reacquire" and visibility_is_low else 0.0
+        scan_penalty = 0.08 if primitive.id == "scan_reacquire" and not visibility_is_low else 0.0
         visibility = _clamp(
             target.visibility_probability
             + occlusion_relief
             + scan_relief
+            - scan_penalty
             - 0.02 * range_error
             - 0.01 * abs(vz),
             0.0,
@@ -101,6 +112,8 @@ class KinematicRolloutModel:
             0.0,
             1.0,
         )
+        if primitive.id == "scan_reacquire" and visibility_is_low:
+            information_gain = _clamp(information_gain + 0.15, 0.0, 1.0)
 
         for step in range(steps + 1):
             time_s = min(cfg.horizon_s, step * cfg.dt_s)

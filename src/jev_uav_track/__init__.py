@@ -9,7 +9,15 @@ from .models import (
     TrackingState,
     UAVState,
 )
-from .jev_client import JevClient, JevProtocolError, MockJevClient, TypeSafeJevClient, build_choice_request
+from .jev_client import (
+    DEFAULT_JEV_ENDPOINT,
+    DEFAULT_JEV_MODEL,
+    JevClient,
+    JevProtocolError,
+    MockJevClient,
+    TypeSafeJevClient,
+    build_choice_request,
+)
 from .pipeline import JevTrackPipeline
 from .primitives import DEFAULT_PRIMITIVES, BehaviorPrimitive
 from .rollout import KinematicRolloutModel, RolloutConfig
@@ -20,6 +28,8 @@ __all__ = [
     "CandidateAction",
     "CandidateOutcome",
     "DEFAULT_PRIMITIVES",
+    "DEFAULT_JEV_ENDPOINT",
+    "DEFAULT_JEV_MODEL",
     "JevDecision",
     "JevClient",
     "JevProtocolError",

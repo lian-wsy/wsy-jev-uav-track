@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 
 import pytest
 
@@ -66,6 +67,20 @@ def test_hard_safety_filter_rejects_actions_inside_obstacle_margin() -> None:
     assert len(rejected) == len(actions)
 
 
+def test_scan_reacquire_is_contextual_to_low_visibility() -> None:
+    high_visibility_state = make_state()
+    low_visibility_state = replace(
+        high_visibility_state,
+        target=replace(high_visibility_state.target, visibility_probability=0.3, occlusion_risk=0.8),
+    )
+    primitives = JevTrackPipeline(MockJevClient()).primitives
+    high_actions = KinematicRolloutModel().generate(primitives, high_visibility_state)
+    low_actions = KinematicRolloutModel().generate(primitives, low_visibility_state)
+    high_scan = next(action for action in high_actions if action.id == "scan_reacquire")
+    low_scan = next(action for action in low_actions if action.id == "scan_reacquire")
+    assert low_scan.outcome.information_gain > high_scan.outcome.information_gain
+
+
 def test_mock_pipeline_returns_a_safe_action() -> None:
     state = make_state()
     result = JevTrackPipeline(MockJevClient(temperature=0.15)).step(state)
@@ -94,7 +109,8 @@ def test_low_confidence_uses_deterministic_fallback() -> None:
     result = JevTrackSelector(LowConfidenceClient()).select(state, actions)
     assert result.used_fallback is True
     assert result.reason.startswith("confidence_gate")
-    assert result.decision.model_version == "deterministic-fallback-v0"
+    assert result.decision.model_version == "test-low-confidence"
+    assert result.decision.confidence == 0.1
 
 
 def test_invalid_uav_health_is_rejected() -> None:

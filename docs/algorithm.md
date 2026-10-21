@@ -27,6 +27,8 @@ UAVState:
 
 候选行为是可解释的技能，例如 `follow_predictive`、`orbit_left`、`orbit_right`、`climb`、`scan_reacquire` 和 `safe_hover`。候选数量应保持在能由飞控可靠执行、且能覆盖主要跟踪情形的范围内。
 
+动作原语的上下文偏好也会进入 rollout：`scan_reacquire` 只有在可见度低于阈值时获得重捕获增益，目标已经清晰时反而承担轻微的重复扫描代价。这样可以减少“目标已稳定却持续扫描”的策略抖动。
+
 ## 3. 外部 rollout
 
 对每个候选行为 (a_i)，在时间窗 (H) 内用动力学或仿真模型预测：
@@ -68,6 +70,8 @@ Jev 返回后再做三项检查：
 3. confidence 低于阈值、接口超时、响应格式错误时，使用透明的 utility 排序作为 fallback。
 
 如果新动作与上一动作的概率差距很小，且 utility 没有明显优势，则保持上一动作，降低高层决策抖动。所有 fallback 和拒绝 id 都保留在 `SelectionResult` 中，便于日志和离线审计。
+
+当 Jev 低置信度或接口异常时，代码会保留原始 Jev decision（choice、概率、confidence 和 model），同时记录实际执行的 deterministic fallback，避免把模型的不确定性从日志中抹掉。上一动作 id 也会追加到下一次 Jev state 的 history 中，让模型看到短期动作上下文。
 
 ## 5. 实机闭环伪代码
 

@@ -62,6 +62,14 @@ result = pipeline.step(tracking_state, previous_action_id=last_action_id)
 command = result.action.command_mps
 ```
 
+也可以把本地 `.env` 按 `.env.example` 配置后运行真实接口 smoke test：
+
+```powershell
+python examples/live_jev_choice.py
+```
+
+`.env` 已被 Git 忽略，只用于本机测试；不要把真实 key 写进 Python、README、提交记录或 CI 日志。客户端默认请求 `jev-latest`，也会用账户的模型列表发现结果确认可用模型。
+
 `command_mps` 只是高层行为意图，实际工程中应交给经过验证的轨迹生成器和飞控。不要把 Jev 输出直接映射成电机 PWM 或未经约束的姿态力矩。
 
 ## 下一步接入点

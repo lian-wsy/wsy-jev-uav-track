@@ -9,6 +9,7 @@
 - [JEV-as-a-Judge: Accept When Confident, Escalate When Unsure](https://arxiv.org/abs/2609.26550)：适合参考接受、fallback 和升级到人工/更强规划器的门控逻辑。
 - [More Choices, Fewer Decisions: Ordinal-Scale Bias in JEV-like Direct-Decision Models](https://arxiv.org/abs/2609.38827)：提醒候选数量、顺序和刻度可能影响直接选择模型，应在动作库扩展时做顺序随机化和偏差评估。
 - [TypeSafe: Introducing System One Models & Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev)：官方 System One / Jev 产品背景和结构化决策定位。
+- [TypeSafe API documentation](https://api.typesafe.ai/docs)：当前 `/v1/systemone` choice schema、`/v1/models` 模型发现接口和响应字段定义。
 
 ## 具身智能中的候选技能选择
 

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import urllib.error
 import urllib.request
 from typing import Any, Dict, Mapping, Protocol, Sequence
@@ -24,10 +25,15 @@ class JevProtocolError(RuntimeError):
     """Raised when a Jev response cannot be mapped to a candidate action."""
 
 
+DEFAULT_JEV_ENDPOINT = "https://api.typesafe.ai/v1/systemone"
+DEFAULT_JEV_MODEL = "jev-latest"
+DEFAULT_JEV_MODELS_ENDPOINT = "https://api.typesafe.ai/v1/models"
+
+
 def build_choice_request(
     state: TrackingState,
     actions: Sequence[CandidateAction],
-    model: str = "jev-1.13.0",
+    model: str = DEFAULT_JEV_MODEL,
 ) -> Dict[str, Any]:
     criteria = {action.id: action.option_description() for action in actions}
     return {
@@ -76,7 +82,16 @@ def _parse_decision(payload: Mapping[str, Any], valid_ids: Sequence[str]) -> Jev
     probabilities = answer.get("probabilities") or answer.get("probs") or {}
     if not isinstance(probabilities, Mapping):
         probabilities = {}
-    probabilities = {str(k): float(v) for k, v in probabilities.items()}
+    parsed_probabilities: Dict[str, float] = {}
+    for key, value in probabilities.items():
+        candidate_id = str(key)
+        if candidate_id not in valid_ids:
+            continue
+        probability = float(value)
+        if not math.isfinite(probability) or probability < 0.0:
+            raise JevProtocolError(f"Invalid probability for candidate id: {candidate_id}")
+        parsed_probabilities[candidate_id] = probability
+    probabilities = parsed_probabilities
     if choice is None and probabilities:
         choice = max(probabilities, key=probabilities.get)
     if choice is None:
@@ -86,6 +101,22 @@ def _parse_decision(payload: Mapping[str, Any], valid_ids: Sequence[str]) -> Jev
         raise JevProtocolError(f"Jev returned unknown candidate id: {choice}")
     if not probabilities:
         probabilities = {candidate_id: (1.0 if candidate_id == choice else 0.0) for candidate_id in valid_ids}
+    else:
+        probabilities = {
+            candidate_id: probabilities.get(candidate_id, 0.0)
+            for candidate_id in valid_ids
+        }
+        total = sum(probabilities.values())
+        if total <= 0.0:
+            probabilities = {
+                candidate_id: (1.0 if candidate_id == choice else 0.0)
+                for candidate_id in valid_ids
+            }
+        else:
+            probabilities = {
+                candidate_id: probability / total
+                for candidate_id, probability in probabilities.items()
+            }
     confidence = answer.get("confidence")
     confidence = float(confidence) if confidence is not None else None
     return JevDecision(
@@ -103,9 +134,9 @@ class TypeSafeJevClient:
     def __init__(
         self,
         api_key: str,
-        endpoint: str = "https://api.typesafe.ai/v1/systemone",
-        model: str = "jev-1.13.0",
-        timeout_s: float = 2.0,
+        endpoint: str = DEFAULT_JEV_ENDPOINT,
+        model: str = DEFAULT_JEV_MODEL,
+        timeout_s: float = 8.0,
     ) -> None:
         if not api_key:
             raise ValueError("api_key is required")
@@ -113,6 +144,44 @@ class TypeSafeJevClient:
         self.endpoint = endpoint
         self.model = model
         self.timeout_s = timeout_s
+
+    @classmethod
+    def from_environment(
+        cls,
+        api_key_name: str = "JEV_API_KEY",
+        endpoint_name: str = "JEV_ENDPOINT",
+        model_name: str = "JEV_MODEL",
+        timeout_s: float = 8.0,
+    ) -> "TypeSafeJevClient":
+        """Build a client from environment variables without hard-coding secrets."""
+
+        api_key = os.getenv(api_key_name, "").strip()
+        if not api_key:
+            raise ValueError(f"Environment variable {api_key_name} is required")
+        return cls(
+            api_key=api_key,
+            endpoint=os.getenv(endpoint_name, DEFAULT_JEV_ENDPOINT),
+            model=os.getenv(model_name, DEFAULT_JEV_MODEL),
+            timeout_s=timeout_s,
+        )
+
+    def list_models(self) -> Sequence[Mapping[str, Any]]:
+        """Return models visible to this API key for account-specific discovery."""
+
+        request = urllib.request.Request(
+            DEFAULT_JEV_MODELS_ENDPOINT,
+            headers={"Authorization": f"Bearer {self.api_key}"},
+            method="GET",
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=self.timeout_s) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+        except (urllib.error.URLError, TimeoutError, OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise JevProtocolError(f"Jev model discovery failed: {exc}") from exc
+        models = payload.get("models") if isinstance(payload, Mapping) else None
+        if not isinstance(models, list):
+            raise JevProtocolError("Jev model discovery response did not contain a models list")
+        return tuple(model for model in models if isinstance(model, Mapping))
 
     def choose(self, state: TrackingState, actions: Sequence[CandidateAction]) -> JevDecision:
         request_body = json.dumps(build_choice_request(state, actions, self.model)).encode("utf-8")
@@ -128,7 +197,7 @@ class TypeSafeJevClient:
         try:
             with urllib.request.urlopen(request, timeout=self.timeout_s) as response:
                 payload = json.loads(response.read().decode("utf-8"))
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+        except (urllib.error.URLError, TimeoutError, OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
             raise JevProtocolError(f"Jev request failed: {exc}") from exc
         return _parse_decision(payload, [action.id for action in actions])
 
