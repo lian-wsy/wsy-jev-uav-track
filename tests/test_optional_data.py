@@ -15,6 +15,7 @@ from jev_uav_track.training import (
     build_training_dataset,
     fit_outcome_model,
     fit_outcome_model_cross_episode,
+    feature_mask_for_ablation,
 )
 
 
@@ -70,6 +71,16 @@ def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
         "range_error_m",
         "covariance_trace",
     }
+
+    masked_model, _ = fit_outcome_model(
+        dataset,
+        config,
+        feature_mask=feature_mask_for_ablation("no_action"),
+    )
+    masked_path = tmp_path / "masked_model.npz"
+    masked_model.save(masked_path)
+    masked_loaded = LinearOutcomeModel.load(masked_path)
+    assert not any(masked_loaded.input_mask[-4:])
 
     report = evaluate_episode(
         episode,

@@ -101,3 +101,5 @@ while mission_is_running:
 
 跨 episode 训练使用 `build_training_dataset_from_episodes` 和 `fit_outcome_model_cross_episode`：每个文件先独立生成样本，再拼接训练数组；验证集由完全不重叠的 episode 组成，并强制检查 HDF5 的 `validation_status=PASS`。`compare_jev.py` 在同一组记录帧上分别调用 Mock Jev 和真实 `TypeSafeJevClient`，只发送结构化状态与候选后果，输出逐帧 choice、fallback、confidence 和选择一致率。
 
+消融实验通过固定训练/验证 episode，只改变输入信息：`no_motion` 移除目标和 UAV 速度，`no_action` 移除候选动作指令，`no_visibility` 移除可见性/遮挡/画面中心误差，`kinematic_baseline` 完全不使用校准模型。每个消融模型会保存自己的输入 mask，推理时同样屏蔽对应特征，避免训练和评估口径不一致。
+

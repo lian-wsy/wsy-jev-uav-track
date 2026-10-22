@@ -26,11 +26,13 @@ from .data import HDF5Episode, HDF5SchemaError
 from .evaluation import OfflineEvaluationConfig, compare_jev_reports, evaluate_episode
 from .learned_rollout import LearnedOutcomeRolloutModel
 from .training import (
+    ABLATION_DISABLED_FEATURES,
     LinearOutcomeModel,
     RolloutTrainingConfig,
     RolloutTrainingDataset,
     build_training_dataset,
     build_training_dataset_from_episodes,
+    feature_mask_for_ablation,
     feature_vector,
     fit_outcome_model,
     fit_outcome_model_cross_episode,
@@ -38,6 +40,7 @@ from .training import (
 
 __all__ = [
     "BehaviorPrimitive",
+    "ABLATION_DISABLED_FEATURES",
     "CandidateAction",
     "CandidateOutcome",
     "DEFAULT_PRIMITIVES",
@@ -71,6 +74,7 @@ __all__ = [
     "compare_jev_reports",
     "evaluate_episode",
     "feature_vector",
+    "feature_mask_for_ablation",
     "fit_outcome_model",
     "fit_outcome_model_cross_episode",
 ]

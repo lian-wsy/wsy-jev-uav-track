@@ -139,3 +139,18 @@ python scripts/compare_jev.py `
 
 本次跨 episode 与真实 Jev 对照记录见 [`docs/experiments/cross_episode_jev_smoke_20261022.md`](docs/experiments/cross_episode_jev_smoke_20261022.md)。
 
+要比较不同信息源的作用，可以运行消融报告脚本。默认包含 `kinematic_baseline`、`full`、`no_motion`、`no_action` 和 `no_visibility`；它只读取验证集 episode，并把每个模型保存到被 Git 忽略的 `artifacts/`：
+
+```powershell
+python scripts/run_ablation_report.py `
+  --train-episode "<PASS episode 1>" `
+  --train-episode "<PASS episode 2>" `
+  --validation-episode "<different PASS episode 1>" `
+  --validation-episode "<different PASS episode 2>" `
+  --output artifacts\ablation\report.json
+```
+
+报告同时给出跨 episode outcome RMSE、每个验证环境的预测指标、fallback、utility regret 和动作选择分布。由于记录回放不能观测未执行动作的真实反事实后果，这些结果用于比较当前 rollout/选择器原型，不能替代闭环仿真。
+
+本轮多环境结果见 [`docs/experiments/ablation_report_20261022.md`](docs/experiments/ablation_report_20261022.md)。
+

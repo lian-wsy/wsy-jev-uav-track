@@ -42,6 +42,42 @@ OUTPUT_NAMES = (
 )
 
 
+ABLATION_DISABLED_FEATURES = {
+    "full": (),
+    "no_motion": (
+        "target_vx_mps",
+        "target_vy_mps",
+        "target_vz_mps",
+        "uav_vx_mps",
+        "uav_vy_mps",
+        "uav_vz_mps",
+        "uav_speed_mps",
+    ),
+    "no_action": (
+        "command_vx_mps",
+        "command_vy_mps",
+        "command_vz_mps",
+        "command_yaw_rate_dps",
+    ),
+    "no_visibility": (
+        "visibility_probability",
+        "occlusion_risk",
+        "image_center_error",
+    ),
+}
+
+
+def feature_mask_for_ablation(name: str) -> tuple[bool, ...]:
+    """Return the input-feature mask for a named ablation."""
+
+    if name not in ABLATION_DISABLED_FEATURES:
+        raise ValueError(
+            f"Unknown ablation {name!r}; choose from {sorted(ABLATION_DISABLED_FEATURES)}"
+        )
+    disabled = set(ABLATION_DISABLED_FEATURES[name])
+    return tuple(feature_name not in disabled for feature_name in FEATURE_NAMES)
+
+
 def _numpy() -> Any:
     try:
         import numpy as np  # type: ignore
@@ -226,12 +262,25 @@ class LinearOutcomeModel:
     feature_names: tuple[str, ...] = FEATURE_NAMES
     output_names: tuple[str, ...] = OUTPUT_NAMES
     training_summary: Mapping[str, Any] | None = None
+    input_mask: Any | None = None
 
     def _design(self, features: Any) -> Any:
         np = _numpy()
         values = np.asarray(features, dtype=np.float64)
         if values.ndim == 1:
             values = values.reshape(1, -1)
+        if values.shape[1] != len(self.feature_mean):
+            raise ValueError(
+                f"Expected {len(self.feature_mean)} features, got {values.shape[1]}"
+            )
+        if self.input_mask is not None:
+            mask = np.asarray(self.input_mask, dtype=bool).reshape(-1)
+            if len(mask) != values.shape[1]:
+                raise ValueError(
+                    f"Feature mask length {len(mask)} does not match {values.shape[1]} features"
+                )
+            values = values.copy()
+            values[:, ~mask] = 0.0
         normalized = (values - self.feature_mean) / self.feature_scale
         return np.column_stack([np.ones(values.shape[0]), normalized])
 
@@ -259,6 +308,11 @@ class LinearOutcomeModel:
             weights=self.weights,
             feature_names=np.asarray(self.feature_names),
             output_names=np.asarray(self.output_names),
+            input_mask=np.asarray(
+                self.input_mask
+                if self.input_mask is not None
+                else np.ones(len(self.feature_names), dtype=bool)
+            ),
             training_summary_json=json.dumps(dict(self.training_summary or {}), ensure_ascii=True),
         )
         return destination
@@ -280,6 +334,7 @@ class LinearOutcomeModel:
                 feature_names=tuple(str(item) for item in data["feature_names"].tolist()),
                 output_names=tuple(str(item) for item in data["output_names"].tolist()),
                 training_summary=summary,
+                input_mask=data["input_mask"] if "input_mask" in data.files else None,
             )
 
 
@@ -290,17 +345,56 @@ def _rmse(predictions: Any, labels: Any) -> list[float]:
     return [float(value) for value in np.sqrt(np.mean((predictions - labels) ** 2, axis=0))]
 
 
+def _normalise_feature_mask(
+    feature_mask: Sequence[bool] | None,
+    feature_count: int,
+) -> tuple[bool, ...] | None:
+    if feature_mask is None:
+        return None
+    mask = tuple(bool(value) for value in feature_mask)
+    if len(mask) != feature_count:
+        raise ValueError(
+            f"Feature mask length {len(mask)} does not match {feature_count} features"
+        )
+    if not any(mask):
+        raise ValueError("At least one input feature must remain enabled")
+    return mask
+
+
+def _masked_dataset(
+    dataset: RolloutTrainingDataset,
+    feature_mask: tuple[bool, ...] | None,
+) -> RolloutTrainingDataset:
+    if feature_mask is None:
+        return dataset
+    np = _numpy()
+    values = np.asarray(dataset.features, dtype=np.float64).copy()
+    values[:, [not enabled for enabled in feature_mask]] = 0.0
+    return RolloutTrainingDataset(
+        features=values,
+        labels=dataset.labels,
+        feature_names=dataset.feature_names,
+        output_names=dataset.output_names,
+        episode_paths=dataset.episode_paths,
+    )
+
+
 def _fit_ridge_model(
     features: Any,
     labels: Any,
     config: RolloutTrainingConfig,
     training_summary: Mapping[str, Any],
+    feature_mask: Sequence[bool] | None = None,
 ) -> LinearOutcomeModel:
     np = _numpy()
     values = np.asarray(features, dtype=np.float64)
     targets = np.asarray(labels, dtype=np.float64)
     if values.ndim != 2 or targets.ndim != 2 or len(values) == 0:
         raise ValueError("Training features and labels must be non-empty 2D arrays")
+    mask = _normalise_feature_mask(feature_mask, values.shape[1])
+    if mask is not None:
+        values = values.copy()
+        values[:, [not enabled for enabled in mask]] = 0.0
     feature_mean = values.mean(axis=0)
     feature_scale = values.std(axis=0)
     feature_scale = np.where(feature_scale < 1e-8, 1.0, feature_scale)
@@ -314,11 +408,15 @@ def _fit_ridge_model(
         weights = np.linalg.solve(lhs, rhs)
     except np.linalg.LinAlgError:
         weights = np.linalg.lstsq(lhs, rhs, rcond=None)[0]
+    summary = dict(training_summary)
+    if mask is not None:
+        summary["feature_mask"] = list(mask)
     return LinearOutcomeModel(
         feature_mean=feature_mean,
         feature_scale=feature_scale,
         weights=weights,
-        training_summary=training_summary,
+        training_summary=summary,
+        input_mask=mask,
     )
 
 
@@ -333,15 +431,18 @@ def _dataset_metrics(model: LinearOutcomeModel, dataset: RolloutTrainingDataset)
 def fit_outcome_model(
     dataset: RolloutTrainingDataset,
     config: RolloutTrainingConfig | None = None,
+    feature_mask: Sequence[bool] | None = None,
 ) -> tuple[LinearOutcomeModel, Dict[str, Any]]:
     """Fit on the early portion and report a chronological holdout."""
 
     np = _numpy()
     cfg = config or RolloutTrainingConfig()
+    mask = _normalise_feature_mask(feature_mask, dataset.features.shape[1])
+    fit_dataset = _masked_dataset(dataset, mask)
     count = dataset.sample_count
     split = max(1, min(count - 1, int(round(count * cfg.train_fraction)))) if count > 1 else count
-    train_x = dataset.features[:split]
-    train_y = dataset.labels[:split]
+    train_x = fit_dataset.features[:split]
+    train_y = fit_dataset.labels[:split]
     model = _fit_ridge_model(
         train_x,
         train_y,
@@ -351,8 +452,9 @@ def fit_outcome_model(
             "dataset": dataset.to_summary(),
             "split": "chronological_within_episode",
         },
+        feature_mask=mask,
     )
-    train_predictions = model.predict_array(train_x)
+    train_predictions = model.predict_array(dataset.features[:split])
     eval_predictions = model.predict_array(dataset.features[split:]) if split < count else np.empty((0, dataset.labels.shape[1]))
     metrics = {
         "sample_count": count,
@@ -371,6 +473,7 @@ def fit_outcome_model_cross_episode(
     validation_episodes: Sequence[HDF5Episode],
     config: RolloutTrainingConfig | None = None,
     max_samples_per_episode: int | None = None,
+    feature_mask: Sequence[bool] | None = None,
 ) -> tuple[LinearOutcomeModel, Dict[str, Any]]:
     """Fit on complete episodes and evaluate on disjoint complete episodes."""
 
@@ -408,6 +511,7 @@ def fit_outcome_model_cross_episode(
         output_names=train_dataset.output_names,
         episode_paths=tuple(str(episode.path) for episode in validation_list),
     )
+    mask = _normalise_feature_mask(feature_mask, train_dataset.features.shape[1])
     model = _fit_ridge_model(
         train_dataset.features,
         train_dataset.labels,
@@ -421,6 +525,7 @@ def fit_outcome_model_cross_episode(
             "train_dataset": train_dataset.to_summary(),
             "validation_dataset": validation_dataset.to_summary(),
         },
+        feature_mask=mask,
     )
     train_metrics = _dataset_metrics(model, train_dataset)
     validation_metrics = _dataset_metrics(model, validation_dataset)
@@ -445,5 +550,6 @@ def fit_outcome_model_cross_episode(
         "feature_names": list(train_dataset.feature_names),
         "output_names": list(train_dataset.output_names),
         "max_samples_per_episode": max_samples_per_episode,
+        "feature_mask": list(mask) if mask is not None else None,
     }
     return model, metrics
