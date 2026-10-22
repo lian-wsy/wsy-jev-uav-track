@@ -22,6 +22,17 @@ from .pipeline import JevTrackPipeline
 from .primitives import DEFAULT_PRIMITIVES, BehaviorPrimitive
 from .rollout import KinematicRolloutModel, RolloutConfig
 from .selector import JevTrackSelector, SelectionConfig, SelectionResult
+from .data import HDF5Episode, HDF5SchemaError
+from .evaluation import OfflineEvaluationConfig, evaluate_episode
+from .learned_rollout import LearnedOutcomeRolloutModel
+from .training import (
+    LinearOutcomeModel,
+    RolloutTrainingConfig,
+    RolloutTrainingDataset,
+    build_training_dataset,
+    feature_vector,
+    fit_outcome_model,
+)
 
 __all__ = [
     "BehaviorPrimitive",
@@ -36,9 +47,16 @@ __all__ = [
     "JevTrackPipeline",
     "JevTrackSelector",
     "KinematicRolloutModel",
+    "HDF5Episode",
+    "HDF5SchemaError",
+    "LearnedOutcomeRolloutModel",
+    "LinearOutcomeModel",
     "MissionConstraints",
     "MockJevClient",
+    "OfflineEvaluationConfig",
     "RolloutConfig",
+    "RolloutTrainingConfig",
+    "RolloutTrainingDataset",
     "SelectionConfig",
     "SelectionResult",
     "TargetBelief",
@@ -46,4 +64,8 @@ __all__ = [
     "TrackingState",
     "UAVState",
     "build_choice_request",
+    "build_training_dataset",
+    "evaluate_episode",
+    "feature_vector",
+    "fit_outcome_model",
 ]

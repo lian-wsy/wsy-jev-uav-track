@@ -91,3 +91,11 @@ while mission_is_running:
 
 在第一次实机测试前，必须用仿真回放验证动作可达性、碰撞概率估计和异常 fallback；还要记录 Jev 延迟、失败率、选择概率和最终闭环指标。
 
+## 6. CarlaAir 数据适配和离线校准
+
+`jev_uav_track.data.HDF5Episode` 读取已验证的 CarlaAir trimmed HDF5。它把 `image_state/state_index` 对齐到 `state/positions` 和 `action/camera_positions`，用时间戳有限差分得到目标和 UAV 速度，并将 `visibility/target_visible`、`target_in_frame`、`target_occluded` 和像素高度映射为 `TargetBelief`。RGB 默认不加载，避免离线状态实验占用大块内存。
+
+`training.py` 的 ridge calibrator 使用观测到的相机速度作为动作特征，预测未来可见率、中心误差、距离误差和协方差代理。它是校准基线，不是反事实世界模型；`learned_rollout.py` 只替换这些预测量，碰撞概率、障碍余量和能耗仍由安全基线提供。
+
+`evaluation.py` 在记录帧上运行 Mock Jev，报告选择动作、fallback 率、与候选 utility oracle 的 regret，以及真实可见性标注。评估报告中的真实标注和预测后果必须分开解释，不能把单条记录中的动作选择当成因果训练标签。
+

@@ -49,6 +49,12 @@ python -m jev_uav_track.demo
 pytest -q
 ```
 
+HDF5 适配和离线实验需要数据依赖。建议在 CarlaAir 的 Python 环境中安装或直接使用已有的 `numpy`、`h5py`：
+
+```powershell
+pip install -e ".[data,dev]"
+```
+
 示例使用离线 mock，不需要 API key。若要接入 TypeSafe Jev，可在自己的感知循环中创建 `TypeSafeJevClient`：
 
 ```python
@@ -81,4 +87,26 @@ python examples/live_jev_choice.py
 5. 用闭环指标评估：目标可见率、身份保持率、重捕获时间、距离误差、碰撞/近失事件、能耗、Jev 超时率和置信度校准误差。
 
 算法说明见 [`docs/algorithm.md`](docs/algorithm.md)，论文和方向整理见 [`docs/research.md`](docs/research.md)。
+
+## CarlaAir 小规模离线实验
+
+适配器以只读方式打开 HDF5，默认不加载约 400 MB 的 RGB 张量，只读取状态、时间戳和可见性标注。训练脚本拟合一个小型 ridge outcome calibrator，用来校准候选 rollout；它不会修改源文件，也不会启动采集器或上传器。
+
+```powershell
+$env:PYTHONPATH = "src"
+python scripts/train_rollout_model.py `
+  --episode "D:\CarlaAir\data\trimmed\v3\quota_grid_20261003_formal\Town05_bicycle_frequent_turns_close_seed26094435.hdf5" `
+  --output artifacts\small_experiment\rollout_model.npz `
+  --max-samples 128
+
+python scripts/evaluate_offline.py `
+  --episode "D:\CarlaAir\data\trimmed\v3\quota_grid_20261003_formal\Town05_bicycle_frequent_turns_close_seed26094435.hdf5" `
+  --model artifacts\small_experiment\rollout_model.npz `
+  --output artifacts\small_experiment\offline_jev_report.json `
+  --max-frames 32
+```
+
+这项实验是离线代理评估：Mock Jev 在候选行为之间选择，报告同时保存实际可见性标注和预测 rollout 指标。单个记录回放不能证明未执行动作的反事实效果，后续需要按 episode 划分训练/验证集，并接入真实动力学或仿真器。
+
+本次已验证的小规模运行记录见 [`docs/experiments/small_run_20261022.md`](docs/experiments/small_run_20261022.md)。
 
