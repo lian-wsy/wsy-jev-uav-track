@@ -99,3 +99,5 @@ while mission_is_running:
 
 `evaluation.py` 在记录帧上运行 Mock Jev，报告选择动作、fallback 率、与候选 utility oracle 的 regret，以及真实可见性标注。评估报告中的真实标注和预测后果必须分开解释，不能把单条记录中的动作选择当成因果训练标签。
 
+跨 episode 训练使用 `build_training_dataset_from_episodes` 和 `fit_outcome_model_cross_episode`：每个文件先独立生成样本，再拼接训练数组；验证集由完全不重叠的 episode 组成，并强制检查 HDF5 的 `validation_status=PASS`。`compare_jev.py` 在同一组记录帧上分别调用 Mock Jev 和真实 `TypeSafeJevClient`，只发送结构化状态与候选后果，输出逐帧 choice、fallback、confidence 和选择一致率。
+

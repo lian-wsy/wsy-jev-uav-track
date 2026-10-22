@@ -110,3 +110,32 @@ python scripts/evaluate_offline.py `
 
 本次已验证的小规模运行记录见 [`docs/experiments/small_run_20261022.md`](docs/experiments/small_run_20261022.md)。
 
+跨 episode 训练时，脚本要求每个文件的 `validation_status=PASS`，并把完整 episode 留作验证集，避免相邻帧泄漏：
+
+```powershell
+$env:PYTHONPATH = "src"
+python scripts/train_cross_episode.py `
+  --train-episode "D:\CarlaAir\data\trimmed\v3\quota_grid_20261003_formal\Town05_bicycle_frequent_turns_close_seed26094435.hdf5" `
+  --train-episode "D:\CarlaAir\data\trimmed\v3\quota_grid_20261003_formal\Town07_bicycle_normal_motion_close_seed26094440.hdf5" `
+  --train-episode "D:\CarlaAir\data\trimmed\v3\quota_grid_20261003_formal\Town10HD_bicycle_frequent_turns_long_seed26094433.hdf5" `
+  --validation-episode "D:\CarlaAir\data\trimmed\v3\quota_grid_20261004_formal\Town02_bicycle_frequent_turns_long_seed26094450.hdf5" `
+  --validation-episode "D:\CarlaAir\data\trimmed\v3\quota_grid_20261004_formal\Town05_bicycle_frequent_turns_long_seed26094453.hdf5" `
+  --output artifacts\cross_episode\rollout_model.npz `
+  --max-samples-per-episode 64
+```
+
+如果要做真实 Jev 与 Mock Jev 的小规模对照，先确认 `.env` 只在本机存在，然后只取少量记录帧：
+
+```powershell
+python scripts/compare_jev.py `
+  --episode "D:\CarlaAir\data\trimmed\v3\quota_grid_20261004_formal\Town05_bicycle_frequent_turns_long_seed26094453.hdf5" `
+  --model artifacts\cross_episode\rollout_model.npz `
+  --env-file .env `
+  --output artifacts\cross_episode\jev_comparison.json `
+  --max-frames 4 --stride 75
+```
+
+该 smoke test 只把 belief state 和候选 outcome JSON 发给 Jev，不发送 RGB；报告会并列保存两种客户端的动作、fallback、置信度和逐帧选择差异。API key 不会写入报告、日志或 Git。
+
+本次跨 episode 与真实 Jev 对照记录见 [`docs/experiments/cross_episode_jev_smoke_20261022.md`](docs/experiments/cross_episode_jev_smoke_20261022.md)。
+

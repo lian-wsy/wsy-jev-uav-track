@@ -136,3 +136,53 @@ def evaluate_episode(
         "choice_counts": dict(choice_counts),
         "records": records,
     }
+
+
+def compare_jev_reports(
+    mock_report: Mapping[str, Any],
+    real_report: Mapping[str, Any],
+) -> Dict[str, Any]:
+    """Compare Mock Jev and a real Jev report produced on the same frames."""
+
+    mock_records = {
+        int(record["frame_index"]): record
+        for record in mock_report.get("records", [])
+    }
+    real_records = {
+        int(record["frame_index"]): record
+        for record in real_report.get("records", [])
+    }
+    shared_indices = sorted(set(mock_records) & set(real_records))
+    frame_comparison = []
+    changed = 0
+    for frame_index in shared_indices:
+        mock_record = mock_records[frame_index]
+        real_record = real_records[frame_index]
+        choice_changed = mock_record["choice"] != real_record["choice"]
+        changed += int(choice_changed)
+        frame_comparison.append(
+            {
+                "frame_index": frame_index,
+                "mock_choice": mock_record["choice"],
+                "real_choice": real_record["choice"],
+                "choice_changed": choice_changed,
+                "mock_fallback": bool(mock_record["fallback"]),
+                "real_fallback": bool(real_record["fallback"]),
+                "real_reason": real_record["reason"],
+                "real_model": real_record["model"],
+                "real_confidence": real_record["confidence"],
+                "real_top_probability": real_record["top_probability"],
+            }
+        )
+    return {
+        "mock_backend": mock_report.get("backend"),
+        "real_backend": real_report.get("backend"),
+        "shared_frames": len(shared_indices),
+        "choice_changed_count": changed,
+        "choice_agreement_rate": (
+            1.0 - changed / len(shared_indices) if shared_indices else None
+        ),
+        "mock_metrics": mock_report.get("metrics", {}),
+        "real_metrics": real_report.get("metrics", {}),
+        "frame_comparison": frame_comparison,
+    }

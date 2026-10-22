@@ -8,7 +8,7 @@ calibrated before a learned dynamics/world model is introduced.
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping, Sequence
 
@@ -100,6 +100,7 @@ class RolloutTrainingDataset:
     labels: Any
     feature_names: tuple[str, ...] = FEATURE_NAMES
     output_names: tuple[str, ...] = OUTPUT_NAMES
+    episode_paths: tuple[str, ...] = ()
 
     @property
     def sample_count(self) -> int:
@@ -112,6 +113,7 @@ class RolloutTrainingDataset:
             "output_count": int(self.labels.shape[1]),
             "feature_names": list(self.feature_names),
             "output_names": list(self.output_names),
+            "episode_paths": list(self.episode_paths),
         }
 
 
@@ -164,6 +166,53 @@ def build_training_dataset(
     return RolloutTrainingDataset(
         features=np.asarray(features, dtype=np.float64),
         labels=np.asarray(labels, dtype=np.float64),
+        episode_paths=(str(episode.path),),
+    )
+
+
+def _require_verified_episode(episode: HDF5Episode) -> None:
+    status = str(episode.metadata.get("validation_status", "")).upper()
+    if status != "PASS":
+        raise ValueError(
+            "Cross-episode training requires validation_status=PASS; "
+            f"{episode.path} has {status or 'unreported'}"
+        )
+
+
+def build_training_dataset_from_episodes(
+    episodes: Sequence[HDF5Episode],
+    config: RolloutTrainingConfig | None = None,
+    max_samples_per_episode: int | None = None,
+) -> RolloutTrainingDataset:
+    """Concatenate state/action samples from multiple verified episodes.
+
+    ``max_samples_per_episode`` keeps a long episode or a large scene family
+    from dominating the cross-episode fit. Samples remain chronological within
+    each episode; no frames are mixed across episode boundaries.
+    """
+
+    np = _numpy()
+    episode_list = list(episodes)
+    if not episode_list:
+        raise ValueError("At least one episode is required")
+    for episode in episode_list:
+        _require_verified_episode(episode)
+    paths = tuple(str(episode.path) for episode in episode_list)
+    if len(set(paths)) != len(paths):
+        raise ValueError("Training episodes must have unique paths")
+
+    cfg = config or RolloutTrainingConfig()
+    if max_samples_per_episode is not None:
+        if max_samples_per_episode <= 0:
+            raise ValueError("max_samples_per_episode must be positive")
+        cfg = replace(cfg, max_samples=max_samples_per_episode)
+    datasets = [build_training_dataset(episode, cfg) for episode in episode_list]
+    return RolloutTrainingDataset(
+        features=np.concatenate([dataset.features for dataset in datasets], axis=0),
+        labels=np.concatenate([dataset.labels for dataset in datasets], axis=0),
+        feature_names=datasets[0].feature_names,
+        output_names=datasets[0].output_names,
+        episode_paths=paths,
     )
 
 
@@ -241,6 +290,46 @@ def _rmse(predictions: Any, labels: Any) -> list[float]:
     return [float(value) for value in np.sqrt(np.mean((predictions - labels) ** 2, axis=0))]
 
 
+def _fit_ridge_model(
+    features: Any,
+    labels: Any,
+    config: RolloutTrainingConfig,
+    training_summary: Mapping[str, Any],
+) -> LinearOutcomeModel:
+    np = _numpy()
+    values = np.asarray(features, dtype=np.float64)
+    targets = np.asarray(labels, dtype=np.float64)
+    if values.ndim != 2 or targets.ndim != 2 or len(values) == 0:
+        raise ValueError("Training features and labels must be non-empty 2D arrays")
+    feature_mean = values.mean(axis=0)
+    feature_scale = values.std(axis=0)
+    feature_scale = np.where(feature_scale < 1e-8, 1.0, feature_scale)
+    normalized = (values - feature_mean) / feature_scale
+    design = np.column_stack([np.ones(len(normalized)), normalized])
+    regularizer = np.eye(design.shape[1], dtype=np.float64) * float(config.ridge_alpha)
+    regularizer[0, 0] = 0.0
+    lhs = design.T @ design + regularizer
+    rhs = design.T @ targets
+    try:
+        weights = np.linalg.solve(lhs, rhs)
+    except np.linalg.LinAlgError:
+        weights = np.linalg.lstsq(lhs, rhs, rcond=None)[0]
+    return LinearOutcomeModel(
+        feature_mean=feature_mean,
+        feature_scale=feature_scale,
+        weights=weights,
+        training_summary=training_summary,
+    )
+
+
+def _dataset_metrics(model: LinearOutcomeModel, dataset: RolloutTrainingDataset) -> Dict[str, Any]:
+    predictions = model.predict_array(dataset.features)
+    return {
+        "sample_count": dataset.sample_count,
+        "rmse": dict(zip(dataset.output_names, _rmse(predictions, dataset.labels))),
+    }
+
+
 def fit_outcome_model(
     dataset: RolloutTrainingDataset,
     config: RolloutTrainingConfig | None = None,
@@ -253,25 +342,15 @@ def fit_outcome_model(
     split = max(1, min(count - 1, int(round(count * cfg.train_fraction)))) if count > 1 else count
     train_x = dataset.features[:split]
     train_y = dataset.labels[:split]
-    feature_mean = train_x.mean(axis=0)
-    feature_scale = train_x.std(axis=0)
-    feature_scale = np.where(feature_scale < 1e-8, 1.0, feature_scale)
-    normalized = (train_x - feature_mean) / feature_scale
-    design = np.column_stack([np.ones(len(normalized)), normalized])
-    regularizer = np.eye(design.shape[1], dtype=np.float64) * float(cfg.ridge_alpha)
-    regularizer[0, 0] = 0.0
-    lhs = design.T @ design + regularizer
-    rhs = design.T @ train_y
-    try:
-        weights = np.linalg.solve(lhs, rhs)
-    except np.linalg.LinAlgError:
-        weights = np.linalg.lstsq(lhs, rhs, rcond=None)[0]
-
-    model = LinearOutcomeModel(
-        feature_mean=feature_mean,
-        feature_scale=feature_scale,
-        weights=weights,
-        training_summary={"config": cfg.__dict__, "dataset": dataset.to_summary()},
+    model = _fit_ridge_model(
+        train_x,
+        train_y,
+        cfg,
+        {
+            "config": cfg.__dict__,
+            "dataset": dataset.to_summary(),
+            "split": "chronological_within_episode",
+        },
     )
     train_predictions = model.predict_array(train_x)
     eval_predictions = model.predict_array(dataset.features[split:]) if split < count else np.empty((0, dataset.labels.shape[1]))
@@ -283,5 +362,88 @@ def fit_outcome_model(
         "eval_rmse": dict(zip(dataset.output_names, _rmse(eval_predictions, dataset.labels[split:]))),
         "feature_names": list(dataset.feature_names),
         "output_names": list(dataset.output_names),
+    }
+    return model, metrics
+
+
+def fit_outcome_model_cross_episode(
+    train_episodes: Sequence[HDF5Episode],
+    validation_episodes: Sequence[HDF5Episode],
+    config: RolloutTrainingConfig | None = None,
+    max_samples_per_episode: int | None = None,
+) -> tuple[LinearOutcomeModel, Dict[str, Any]]:
+    """Fit on complete episodes and evaluate on disjoint complete episodes."""
+
+    train_list = list(train_episodes)
+    validation_list = list(validation_episodes)
+    if not train_list or not validation_list:
+        raise ValueError("Both train_episodes and validation_episodes are required")
+    for episode in train_list + validation_list:
+        _require_verified_episode(episode)
+    train_paths = {str(episode.path) for episode in train_list}
+    validation_paths = {str(episode.path) for episode in validation_list}
+    overlap = sorted(train_paths & validation_paths)
+    if overlap:
+        raise ValueError(f"Train/validation episode overlap: {overlap}")
+
+    np = _numpy()
+    cfg = config or RolloutTrainingConfig()
+    train_dataset = build_training_dataset_from_episodes(
+        train_list,
+        cfg,
+        max_samples_per_episode=max_samples_per_episode,
+    )
+    validation_datasets = [
+        build_training_dataset_from_episodes(
+            [episode],
+            cfg,
+            max_samples_per_episode=max_samples_per_episode,
+        )
+        for episode in validation_list
+    ]
+    validation_dataset = RolloutTrainingDataset(
+        features=np.concatenate([dataset.features for dataset in validation_datasets], axis=0),
+        labels=np.concatenate([dataset.labels for dataset in validation_datasets], axis=0),
+        feature_names=train_dataset.feature_names,
+        output_names=train_dataset.output_names,
+        episode_paths=tuple(str(episode.path) for episode in validation_list),
+    )
+    model = _fit_ridge_model(
+        train_dataset.features,
+        train_dataset.labels,
+        cfg,
+        {
+            "config": cfg.__dict__,
+            "split": "cross_episode",
+            "train_episodes": list(train_paths),
+            "validation_episodes": list(validation_paths),
+            "max_samples_per_episode": max_samples_per_episode,
+            "train_dataset": train_dataset.to_summary(),
+            "validation_dataset": validation_dataset.to_summary(),
+        },
+    )
+    train_metrics = _dataset_metrics(model, train_dataset)
+    validation_metrics = _dataset_metrics(model, validation_dataset)
+    validation_by_episode = []
+    for episode, dataset in zip(validation_list, validation_datasets):
+        metrics_for_episode = _dataset_metrics(model, dataset)
+        validation_by_episode.append(
+            {"episode": str(episode.path), **metrics_for_episode}
+        )
+    metrics = {
+        "split": "cross_episode",
+        "train_episode_count": len(train_list),
+        "validation_episode_count": len(validation_list),
+        "train_episodes": [str(episode.path) for episode in train_list],
+        "validation_episodes": [str(episode.path) for episode in validation_list],
+        "sample_count": train_dataset.sample_count + validation_dataset.sample_count,
+        "train_count": train_dataset.sample_count,
+        "validation_count": validation_dataset.sample_count,
+        "train_rmse": train_metrics["rmse"],
+        "validation_rmse": validation_metrics["rmse"],
+        "validation_by_episode": validation_by_episode,
+        "feature_names": list(train_dataset.feature_names),
+        "output_names": list(train_dataset.output_names),
+        "max_samples_per_episode": max_samples_per_episode,
     }
     return model, metrics

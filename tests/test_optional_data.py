@@ -14,6 +14,7 @@ from jev_uav_track.training import (
     LinearOutcomeModel,
     build_training_dataset,
     fit_outcome_model,
+    fit_outcome_model_cross_episode,
 )
 
 
@@ -77,3 +78,32 @@ def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
     )
     json.dumps(report)
     assert report["metrics"]["evaluated_frames"] == 4
+
+
+def test_cross_episode_split_rejects_overlap_and_reports_holdout(tmp_path) -> None:
+    train_path = tmp_path / "train.hdf5"
+    validation_path = tmp_path / "validation.hdf5"
+    make_synthetic_episode(train_path)
+    make_synthetic_episode(validation_path)
+    train_episode = HDF5Episode.open(train_path)
+    validation_episode = HDF5Episode.open(validation_path)
+    config = RolloutTrainingConfig(horizon_frames=2, stride=1, max_samples=6)
+
+    model, metrics = fit_outcome_model_cross_episode(
+        [train_episode],
+        [validation_episode],
+        config=config,
+        max_samples_per_episode=6,
+    )
+    assert metrics["split"] == "cross_episode"
+    assert metrics["train_episode_count"] == 1
+    assert metrics["validation_episode_count"] == 1
+    assert metrics["validation_count"] == 6
+    assert model.training_summary["split"] == "cross_episode"
+
+    with pytest.raises(ValueError, match="overlap"):
+        fit_outcome_model_cross_episode(
+            [train_episode],
+            [train_episode],
+            config=config,
+        )

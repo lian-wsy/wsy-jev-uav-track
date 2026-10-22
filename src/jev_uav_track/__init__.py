@@ -23,15 +23,17 @@ from .primitives import DEFAULT_PRIMITIVES, BehaviorPrimitive
 from .rollout import KinematicRolloutModel, RolloutConfig
 from .selector import JevTrackSelector, SelectionConfig, SelectionResult
 from .data import HDF5Episode, HDF5SchemaError
-from .evaluation import OfflineEvaluationConfig, evaluate_episode
+from .evaluation import OfflineEvaluationConfig, compare_jev_reports, evaluate_episode
 from .learned_rollout import LearnedOutcomeRolloutModel
 from .training import (
     LinearOutcomeModel,
     RolloutTrainingConfig,
     RolloutTrainingDataset,
     build_training_dataset,
+    build_training_dataset_from_episodes,
     feature_vector,
     fit_outcome_model,
+    fit_outcome_model_cross_episode,
 )
 
 __all__ = [
@@ -65,7 +67,10 @@ __all__ = [
     "UAVState",
     "build_choice_request",
     "build_training_dataset",
+    "build_training_dataset_from_episodes",
+    "compare_jev_reports",
     "evaluate_episode",
     "feature_vector",
     "fit_outcome_model",
+    "fit_outcome_model_cross_episode",
 ]
