@@ -34,8 +34,8 @@
 - `primitives.py`：保持、预测跟随、左右绕飞、升降、扫描重捕获和安全悬停等行为原语。
 - `rollout.py`：开发阶段的常速度短时预测。
 - `safety.py`：碰撞概率、障碍物余量、速度、动作时长和电池余量检查。
-- `jev_client.py`：TypeSafe Jev API 适配器和离线 `MockJevClient`。
-- `selector.py`：Jev 结果校验、低置信度 fallback 和动作滞回。
+- `jev_client.py`：TypeSafe Jev API 适配器、离线 `MockJevClient` 和 utility-only 对照客户端。
+- `selector.py`：Jev 结果校验、低置信度 fallback、动作滞回和可配置安全门控。
 - `pipeline.py`：把 rollout、过滤和选择串成一次闭环步骤。
 
 ## 本地运行
@@ -153,4 +153,26 @@ python scripts/run_ablation_report.py `
 报告同时给出跨 episode outcome RMSE、每个验证环境的预测指标、fallback、utility regret 和动作选择分布。由于记录回放不能观测未执行动作的真实反事实后果，这些结果用于比较当前 rollout/选择器原型，不能替代闭环仿真。
 
 本轮多环境结果见 [`docs/experiments/ablation_report_20261022.md`](docs/experiments/ablation_report_20261022.md)。
+
+还可以固定同一个跨 episode outcome model，只消融决策模块本身。模块报告包含 `jev`、`utility`、`no_safety_gate`、`no_short_history` 和 `no_identity_confidence` 五行；默认配置适合观察 nominal 行为，另可用较高障碍余量做安全门控压力测试：
+
+```powershell
+python scripts/run_module_ablation_report.py `
+  --train-episode "<PASS episode 1>" `
+  --train-episode "<PASS episode 2>" `
+  --validation-episode "<different PASS episode 1>" `
+  --validation-episode "<different PASS episode 2>" `
+  --output artifacts\module_ablation\report.json
+
+# 仅用于门控压力对照，不改变源 HDF5
+python scripts/run_module_ablation_report.py `
+  --train-episode "<PASS episode 1>" `
+  --validation-episode "<different PASS episode 1>" `
+  --output artifacts\module_ablation\gate_stress.json `
+  --minimum-obstacle-margin-m 7.8
+```
+
+`UtilityRankingClient` 是候选 utility 的确定性排序上限；`MockJevClient(identity_weight>0)` 只用于离线检验身份置信度是否能改变信息寻求倾向，真实 Jev smoke 仍通过 `TypeSafeJevClient`。模块报告会同时统计 fallback、跳帧、安全门控下的 unsafe 选择率、utility regret、可见性和各环境动作分布。
+
+本次 6 环境模块报告见 [`docs/experiments/module_ablation_report_20261022.md`](docs/experiments/module_ablation_report_20261022.md)。
 

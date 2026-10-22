@@ -203,14 +203,31 @@ class TypeSafeJevClient:
 
 
 class MockJevClient:
-    """Offline deterministic substitute used by the example and unit tests."""
+    """Offline deterministic substitute used by the example and unit tests.
 
-    def __init__(self, temperature: float = 0.35, confidence_scale: float = 1.0) -> None:
+    ``identity_weight`` is optional so the default mock remains backward
+    compatible with the original utility-shaped baseline.  The module
+    ablation runner enables it to exercise identity confidence and information
+    seeking together without making a network request.
+    """
+
+    def __init__(
+        self,
+        temperature: float = 0.35,
+        confidence_scale: float = 1.0,
+        identity_weight: float = 0.0,
+    ) -> None:
         self.temperature = max(0.05, float(temperature))
         self.confidence_scale = max(0.0, float(confidence_scale))
+        self.identity_weight = max(0.0, float(identity_weight))
 
     def choose(self, state: TrackingState, actions: Sequence[CandidateAction]) -> JevDecision:
-        utilities = [action.outcome.utility(state.constraints) for action in actions]
+        identity_need = 1.0 - state.target.identity_confidence
+        utilities = [
+            action.outcome.utility(state.constraints)
+            + self.identity_weight * identity_need * action.outcome.information_gain
+            for action in actions
+        ]
         logits = [utility / self.temperature for utility in utilities]
         maximum = max(logits)
         weights = [math.exp(logit - maximum) for logit in logits]
@@ -223,5 +240,30 @@ class MockJevClient:
             probabilities=probabilities,
             confidence=min(1.0, confidence),
             model_version="mock-jev-v0",
+            raw={
+                "utilities": dict(zip((a.id for a in actions), utilities)),
+                "identity_need": identity_need,
+                "identity_weight": self.identity_weight,
+            },
+        )
+
+
+class UtilityRankingClient:
+    """Deterministic utility-only selector for the Jev-vs-utility ablation."""
+
+    def choose(self, state: TrackingState, actions: Sequence[CandidateAction]) -> JevDecision:
+        if not actions:
+            raise ValueError("At least one candidate action is required")
+        utilities = [action.outcome.utility(state.constraints) for action in actions]
+        best_index = max(range(len(actions)), key=utilities.__getitem__)
+        probabilities = {
+            action.id: (1.0 if index == best_index else 0.0)
+            for index, action in enumerate(actions)
+        }
+        return JevDecision(
+            choice=actions[best_index].id,
+            probabilities=probabilities,
+            confidence=1.0,
+            model_version="utility-ranking-v0",
             raw={"utilities": dict(zip((a.id for a in actions), utilities))},
         )

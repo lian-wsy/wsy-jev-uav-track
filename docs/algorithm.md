@@ -103,3 +103,17 @@ while mission_is_running:
 
 消融实验通过固定训练/验证 episode，只改变输入信息：`no_motion` 移除目标和 UAV 速度，`no_action` 移除候选动作指令，`no_visibility` 移除可见性/遮挡/画面中心误差，`kinematic_baseline` 完全不使用校准模型。每个消融模型会保存自己的输入 mask，推理时同样屏蔽对应特征，避免训练和评估口径不一致。
 
+### 6.1 决策模块消融
+
+模块消融固定同一个 `full` outcome calibrator，只改变选择层：
+
+| 变体 | 改变 | 预期回答的问题 |
+| --- | --- | --- |
+| `jev` | identity-aware Mock Jev + 安全门控 + 上一动作短历史 | 完整高层选择链路的离线代理表现 |
+| `utility` | 用 `UtilityRankingClient` 直接取 utility 最大候选 | Jev 语义选择相对透明 utility 排序带来什么变化 |
+| `no_safety_gate` | 允许 Jev 看到并选择未通过硬约束的候选 | 安全门控对跳帧和 unsafe 选择率的贡献 |
+| `no_short_history` | 不发送上一动作，并关闭滞回保持 | 短时动作上下文对抖动/fallback 的贡献 |
+| `no_identity_confidence` | 将 identity confidence 中性化为 0.5 | 身份不确定时，信息寻求偏好是否改变 |
+
+安全门控始终先于 Jev；`no_safety_gate` 只绕过候选过滤，仍按原任务约束记录 `selected_unsafe`，因此不会把越界动作误报为安全。离线 Mock 的 `identity_weight` 是实验用代理，真实接口仍从 `TargetBelief.identity_confidence` 序列化该字段。若验证集全部可见且身份置信度均为 1，身份消融结果相同是数据覆盖不足的证据，而不是模块已被证明无效。
+

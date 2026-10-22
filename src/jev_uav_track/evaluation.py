@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+import math
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any, Dict, Iterable, Mapping, Optional, Sequence
 
 from .data.hdf5_adapter import HDF5Episode
@@ -25,6 +26,10 @@ class OfflineEvaluationConfig:
     minimum_obstacle_margin_m: float = 0.0
     maximum_collision_probability: float = 0.05
     mock_temperature: float = 0.35
+    enable_safety_gate: bool = True
+    use_short_history: bool = True
+    use_identity_confidence: bool = True
+    identity_neutral_confidence: float = 0.5
 
 
 def _sample_indices(frame_count: int, max_frames: int, stride: int) -> list[int]:
@@ -50,6 +55,8 @@ def evaluate_episode(
     The default ``MockJevClient`` is a deterministic Jev-shaped baseline. The
     report labels actual annotations separately from predicted outcomes because
     a recorded episode cannot provide counterfactual results for every action.
+    The module flags make safety gating, short history, and identity confidence
+    explicit experimental factors without changing the recorded source files.
     """
 
     cfg = config or OfflineEvaluationConfig()
@@ -63,22 +70,56 @@ def evaluate_episode(
     if outcome_model is not None:
         rollout = LearnedOutcomeRolloutModel(outcome_model, baseline=baseline)
     decision_client = client or MockJevClient(temperature=cfg.mock_temperature)
-    selector = JevTrackSelector(decision_client, config=SelectionConfig())
+    selection_config = SelectionConfig()
+    if not cfg.use_short_history:
+        selection_config = SelectionConfig(
+            hysteresis_margin=0.0,
+            maximum_utility_drop_for_hold=0.0,
+        )
+    selector = JevTrackSelector(
+        decision_client,
+        config=selection_config,
+        enable_safety_gate=cfg.enable_safety_gate,
+    )
 
     records: list[Dict[str, Any]] = []
     previous_action_id: Optional[str] = None
     skipped = 0
     for frame_index in _sample_indices(episode.frame_count, cfg.max_frames, cfg.stride):
         state = episode.tracking_state(frame_index, constraints=constraints)
+        if not cfg.use_identity_confidence:
+            state = replace(
+                state,
+                target=replace(
+                    state.target,
+                    identity_confidence=cfg.identity_neutral_confidence,
+                ),
+            )
         candidates = rollout.generate(DEFAULT_PRIMITIVES, state)
-        safe_actions, rejected_ids = filter_safe_actions(candidates, state.uav, constraints)
+        constraint_safe_actions, constraint_rejected_ids = filter_safe_actions(
+            candidates,
+            state.uav,
+            constraints,
+        )
+        if cfg.enable_safety_gate:
+            safe_actions, rejected_ids = constraint_safe_actions, constraint_rejected_ids
+        else:
+            safe_actions, rejected_ids = list(candidates), ()
         if not safe_actions:
             skipped += 1
             continue
-        result = selector.select(state, candidates, previous_action_id=previous_action_id)
+        result = selector.select(
+            state,
+            candidates,
+            previous_action_id=(previous_action_id if cfg.use_short_history else None),
+        )
         oracle = max(safe_actions, key=lambda item: item.outcome.utility(constraints))
         selected = result.action
         observed = episode.observed_metrics(frame_index)
+        selected_margin = float(selected.outcome.minimum_obstacle_margin_m)
+        selected_margin_value: float | None = (
+            selected_margin if math.isfinite(selected_margin) else None
+        )
         records.append(
             {
                 **observed,
@@ -92,6 +133,12 @@ def evaluate_episode(
                 "predicted_visibility": selected.outcome.visibility_probability,
                 "predicted_range_error_m": selected.outcome.range_error_m,
                 "selected_utility": selected.outcome.utility(constraints),
+                "identity_confidence": state.target.identity_confidence,
+                "history_enabled": cfg.use_short_history,
+                "safety_gate_enabled": cfg.enable_safety_gate,
+                "selected_unsafe": selected.id in constraint_rejected_ids,
+                "selected_collision_probability": selected.outcome.collision_probability,
+                "selected_obstacle_margin_m": selected_margin_value,
                 "oracle_action": oracle.id,
                 "oracle_utility": oracle.outcome.utility(constraints),
                 "utility_regret": oracle.outcome.utility(constraints)
@@ -103,7 +150,13 @@ def evaluate_episode(
 
     choice_counts = Counter(record["choice"] for record in records)
     if records:
-        mean = lambda key: sum(float(record[key]) for record in records) / len(records)
+        def mean(key: str) -> float | None:
+            values = [
+                float(record[key])
+                for record in records
+                if record.get(key) is not None and math.isfinite(float(record[key]))
+            ]
+            return sum(values) / len(values) if values else None
         fallback_rate = sum(bool(record["fallback"]) for record in records) / len(records)
         report_metrics = {
             "evaluated_frames": len(records),
@@ -116,6 +169,9 @@ def evaluate_episode(
             "mean_actual_visibility": sum(bool(record["target_visible"]) for record in records) / len(records),
             "mean_actual_range_m": mean("target_range_m"),
             "mean_predicted_range_error_m": mean("predicted_range_error_m"),
+            "unsafe_selected_rate": sum(bool(record["selected_unsafe"]) for record in records)
+            / len(records),
+            "mean_identity_confidence": mean("identity_confidence"),
         }
     else:
         report_metrics = {
@@ -123,6 +179,8 @@ def evaluate_episode(
             "skipped_frames": skipped,
             "fallback_rate": None,
             "safe_action_rate": 0.0,
+            "unsafe_selected_rate": None,
+            "mean_identity_confidence": None,
         }
     return {
         "episode": str(episode.path),

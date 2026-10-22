@@ -29,14 +29,22 @@ class SelectionConfig:
 class JevTrackSelector:
     """Select one safe candidate and fall back deterministically when needed.
 
-    Jev only chooses among candidates whose consequences were already rolled out
-    and passed hard safety checks. The selector therefore remains usable when an
-    external Jev call times out or returns low confidence.
+    In the normal path Jev only chooses among candidates whose consequences
+    were already rolled out and passed hard safety checks. The optional gate
+    switch exists for offline ablations; it is enabled by default. The
+    selector remains usable when an external Jev call times out or returns low
+    confidence.
     """
 
-    def __init__(self, client: JevClient, config: SelectionConfig | None = None) -> None:
+    def __init__(
+        self,
+        client: JevClient,
+        config: SelectionConfig | None = None,
+        enable_safety_gate: bool = True,
+    ) -> None:
         self.client = client
         self.config = config or SelectionConfig()
+        self.enable_safety_gate = bool(enable_safety_gate)
 
     @staticmethod
     def _best_action(state: TrackingState, actions: Sequence[CandidateAction]) -> CandidateAction:
@@ -89,7 +97,10 @@ class JevTrackSelector:
         if not actions:
             raise ValueError("At least one candidate action is required")
 
-        safe_actions, rejected_ids = filter_safe_actions(actions, state.uav, state.constraints)
+        if self.enable_safety_gate:
+            safe_actions, rejected_ids = filter_safe_actions(actions, state.uav, state.constraints)
+        else:
+            safe_actions, rejected_ids = list(actions), ()
         if not safe_actions:
             raise RuntimeError("No candidate action passed the hard safety filter")
 

@@ -16,6 +16,7 @@ from .jev_client import (
     JevProtocolError,
     MockJevClient,
     TypeSafeJevClient,
+    UtilityRankingClient,
     build_choice_request,
 )
 from .pipeline import JevTrackPipeline
@@ -58,6 +59,7 @@ __all__ = [
     "LinearOutcomeModel",
     "MissionConstraints",
     "MockJevClient",
+    "UtilityRankingClient",
     "OfflineEvaluationConfig",
     "RolloutConfig",
     "RolloutTrainingConfig",

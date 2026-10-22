@@ -14,6 +14,7 @@ from jev_uav_track import (
     MockJevClient,
     TargetBelief,
     TrackingState,
+    UtilityRankingClient,
     UAVState,
     build_choice_request,
 )
@@ -65,6 +66,32 @@ def test_hard_safety_filter_rejects_actions_inside_obstacle_margin() -> None:
     safe, rejected = filter_safe_actions(actions, state.uav, state.constraints)
     assert not safe
     assert len(rejected) == len(actions)
+
+
+def test_utility_ranking_client_matches_best_candidate() -> None:
+    state = make_state()
+    actions = KinematicRolloutModel().generate(
+        JevTrackPipeline(MockJevClient()).primitives,
+        state,
+    )
+    expected = max(actions, key=lambda action: action.outcome.utility(state.constraints))
+    decision = UtilityRankingClient().choose(state, actions)
+    assert decision.choice == expected.id
+    assert decision.model_version == "utility-ranking-v0"
+
+
+def test_selector_can_run_without_safety_gate_for_ablation() -> None:
+    state = make_state(minimum_obstacle_margin_m=0.5)
+    actions = KinematicRolloutModel().generate(
+        JevTrackPipeline(MockJevClient()).primitives,
+        state,
+    )
+    result = JevTrackSelector(
+        UtilityRankingClient(),
+        enable_safety_gate=False,
+    ).select(state, actions)
+    assert result.action.id in {action.id for action in actions}
+    assert result.rejected_action_ids == ()
 
 
 def test_scan_reacquire_is_contextual_to_low_visibility() -> None:
