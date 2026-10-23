@@ -129,3 +129,13 @@ UAV position / velocity / yaw
 
 窗口还提供 `identity_consistency`、`occlusion_fraction`、`target_acceleration_mps2`、目标/UAV 速度和可序列化摘要。摘要会进入 Jev 的 `history_summary`，完整窗口只保留在本地 state/environment 中，避免把源文件路径等 provenance 字段发送给远端模型。窗口构建器已覆盖稳定跟踪、出框/遮挡代理、身份切换和目标加速的合成测试；当前 12 个 PASS episode 仍然是全可见、零遮挡，因此真实数据上的 history/identity 指标还没有压力样本。
 
+### 6.3 history-conditioned rollout
+
+`KinematicRolloutModel` 会读取 `state.environment["belief_history"]` 中的摘要，并把它作为候选后果预测的条件，而不是把历史直接交给 Jev 让模型自行解释：
+
+- 历史平均可见率低于动作阈值，或窗口遮挡比例达到 0.25 时，`scan_reacquire`、绕飞和上升等动作获得可见性/信息增益的重捕获条件。
+- 当前帧与历史中的最低身份置信度共同形成 `identity_need`；身份不确定时，协方差上升，扫描、绕飞和上升动作获得额外身份信息增益。
+- 最近两帧的目标速度差形成加速度项，并作为预测协方差的增量，避免常速度假设在目标突然转向时过度自信。
+
+这些量只改变候选 outcome，不改变硬安全约束；安全过滤仍然在 Jev 选择之前执行。没有 history 时使用当前帧的可见率、身份置信度和零加速度作为兼容默认值，因此已有无历史调用保持原有行为。对应回归测试位于 `tests/test_rollout_history.py`，覆盖身份不确定性、历史遮挡和目标加速三条路径。
+

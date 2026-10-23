@@ -33,7 +33,7 @@
 - `models.py`：目标 belief、无人机状态、候选行为、预测结果和选择结果。
 - `history.py`：有界的 TargetBelief 时间窗口，保存 actor id、身份置信度、可见性、遮挡、目标/UAV 运动和加速度统计。
 - `primitives.py`：保持、预测跟随、左右绕飞、升降、扫描重捕获和安全悬停等行为原语。
-- `rollout.py`：开发阶段的常速度短时预测。
+- `rollout.py`：开发阶段的常速度短时预测；可选读取短时 history 摘要，把遮挡、身份不确定性和目标加速传入候选 outcome。
 - `safety.py`：碰撞概率、障碍物余量、速度、动作时长和电池余量检查。
 - `jev_client.py`：TypeSafe Jev API 适配器、离线 `MockJevClient` 和 utility-only 对照客户端。
 - `selector.py`：Jev 结果校验、低置信度 fallback、动作滞回和可配置安全门控。
@@ -155,6 +155,8 @@ python scripts/build_pass_manifest.py `
 manifest 会保存 schema、PASS 状态、帧数、文件大小/mtime、可见性/遮挡比例和 actor id，供训练、验证和报告脚本复用。
 
 评估默认把最近 8 个状态压缩成短时 history summary；每条选择记录还保存 history length、持续时间、identity consistency、遮挡比例和目标加速度。通过 `OfflineEvaluationConfig(use_short_history=False)` 可以关闭这部分上下文做模块消融。
+
+候选 rollout 也会读取同一份 history summary：历史遮挡会提高重捕获动作的信息增益，较低身份置信度会增加协方差并鼓励扫描/绕飞/上升，目标加速会增加预测不确定性。该逻辑只影响候选后果预测，不会绕过安全过滤；没有 history 时退回当前帧兼容默认值。对应验证见 [`docs/experiments/belief_history_coverage_20261023.md`](docs/experiments/belief_history_coverage_20261023.md)。
 
 要比较不同信息源的作用，可以运行消融报告脚本。默认包含 `kinematic_baseline`、`full`、`no_motion`、`no_action` 和 `no_visibility`；它只读取验证集 episode，并把每个模型保存到被 Git 忽略的 `artifacts/`：
 
