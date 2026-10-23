@@ -127,7 +127,7 @@ target position / velocity / visibility / occlusion / identity confidence
 UAV position / velocity / yaw
 ```
 
-窗口还提供 `identity_consistency`、`occlusion_fraction`、`target_acceleration_mps2`、目标/UAV 速度和可序列化摘要。摘要会进入 Jev 的 `history_summary`，完整窗口只保留在本地 state/environment 中，避免把源文件路径等 provenance 字段发送给远端模型。窗口构建器已覆盖稳定跟踪、出框/遮挡代理、身份切换和目标加速的合成测试；当前 12 个 PASS episode 仍然是全可见、零遮挡，因此真实数据上的 history/identity 指标还没有压力样本。
+窗口还提供 `identity_consistency`、`occlusion_fraction`、`target_acceleration_mps2`、目标/UAV 速度和可序列化摘要。摘要会进入 Jev 的 `history_summary`，完整窗口只保留在本地 state/environment 中，避免把源文件路径等 provenance 字段发送给远端模型。窗口构建器已覆盖稳定跟踪、出框/遮挡代理、身份切换和目标加速的合成测试；原始 12 个 baseline PASS episode 全可见、零遮挡，新增困难 manifest 已覆盖出框和高加速度，但真实遮挡/身份交叉仍没有压力样本。
 
 ### 6.3 history-conditioned rollout
 

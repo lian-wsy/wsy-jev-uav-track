@@ -48,10 +48,10 @@
 
 1. **已完成第一版**：`scripts/build_pass_manifest.py` 已对本轮 12 个 episode 做只读检查，12/12 为 `PASS`、schema 统一为 `carlaair_uav_v2_candidate`，manifest 位于本机 `artifacts/module_ablation_20261022/pass_manifest.json`。
 2. **已完成第一版**：`history.py` 提供有界 `TargetBeliefHistory` 和 `attach_history`，默认评估窗口为最近 8 个状态，保存目标/UAV 自运动、actor id、可见性、遮挡和 identity confidence，并计算身份一致性与目标加速度。
-3. **已完成合成覆盖**：新增稳定跟踪、出框/遮挡代理、身份切换和目标加速测试；当前真实 PASS manifest 仍显示 12 个 episode 全可见、零遮挡，下一步需要真实困难场景。
+3. **已完成第一轮覆盖**：新增稳定跟踪、出框/遮挡代理、身份切换和目标加速测试；原始 12-episode baseline 全可见、零遮挡，新增困难 manifest 已覆盖 3 个出框 episode 和 6 个高加速度 episode，但仍没有真实遮挡或身份切换。
 4. **已完成第一版**：短时历史和身份置信度已接入 action-conditioned rollout；历史遮挡/可见性影响重捕获增益，身份不确定性影响协方差与信息增益，目标加速度进入不确定性项，并有 15 个基础测试通过。
-5. 在固定少量帧上复跑 real Jev、Mock Jev 和 utility，对比选择、延迟、fallback 和安全拒绝原因。
-6. 补齐真实 PASS 数据中的出框、遮挡、身份交叉和加速覆盖，再建立闭环仿真任务；未满足数据和安全门槛时不启动 CARLA 采集，也不接真实飞行控制器。
+5. **已完成第一版**：在困难 PASS episode 的固定出框事件帧上复跑 real Jev、Mock Jev 和 utility；记录选择、confidence、fallback、utility regret 和安全拒绝原因。
+6. 补齐真实 PASS 数据中的遮挡、身份交叉和更多跨环境事件，再建立闭环仿真任务；未满足数据和安全门槛时不启动 CARLA 采集，也不接真实飞行控制器。
 
 ## 完成定义
 

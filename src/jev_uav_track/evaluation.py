@@ -23,6 +23,8 @@ from .training import LinearOutcomeModel
 class OfflineEvaluationConfig:
     max_frames: int = 64
     stride: int = 5
+    start_frame: int = 0
+    end_frame: int | None = None
     desired_range_m: float = 20.0
     minimum_obstacle_margin_m: float = 0.0
     maximum_collision_probability: float = 0.05
@@ -34,10 +36,21 @@ class OfflineEvaluationConfig:
     identity_neutral_confidence: float = 0.5
 
 
-def _sample_indices(frame_count: int, max_frames: int, stride: int) -> list[int]:
+def _sample_indices(
+    frame_count: int,
+    max_frames: int,
+    stride: int,
+    start_frame: int = 0,
+    end_frame: int | None = None,
+) -> list[int]:
     if max_frames <= 0 or stride <= 0:
         raise ValueError("max_frames and stride must be positive")
-    indices = list(range(0, frame_count, stride))
+    if start_frame < 0:
+        raise ValueError("start_frame cannot be negative")
+    if end_frame is not None and end_frame < 0:
+        raise ValueError("end_frame cannot be negative")
+    stop = frame_count if end_frame is None else min(end_frame, frame_count)
+    indices = list(range(min(start_frame, stop), stop, stride))
     if len(indices) <= max_frames:
         return indices
     if max_frames == 1:
@@ -87,7 +100,13 @@ def evaluate_episode(
     records: list[Dict[str, Any]] = []
     previous_action_id: Optional[str] = None
     skipped = 0
-    for frame_index in _sample_indices(episode.frame_count, cfg.max_frames, cfg.stride):
+    for frame_index in _sample_indices(
+        episode.frame_count,
+        cfg.max_frames,
+        cfg.stride,
+        cfg.start_frame,
+        cfg.end_frame,
+    ):
         state = episode.tracking_state(frame_index, constraints=constraints)
         history = None
         if cfg.use_short_history:

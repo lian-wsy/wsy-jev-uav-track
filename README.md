@@ -137,9 +137,11 @@ python scripts/compare_jev.py `
   --max-frames 4 --stride 75
 ```
 
-该 smoke test 只把 belief state 和候选 outcome JSON 发给 Jev，不发送 RGB；报告会并列保存两种客户端的动作、fallback、置信度和逐帧选择差异。API key 不会写入报告、日志或 Git。
+该 smoke test 只把 belief state 和候选 outcome JSON 发给 Jev，不发送 RGB；报告会并列保存真实 Jev、Mock Jev 和 utility 三种客户端的动作、fallback、置信度和逐帧选择差异。使用 `--start-frame`、`--end-frame` 和 `--stride` 可以锁定一个出框/遮挡事件窗口。API key 不会写入报告、日志或 Git。
 
 本次跨 episode 与真实 Jev 对照记录见 [`docs/experiments/cross_episode_jev_smoke_20261022.md`](docs/experiments/cross_episode_jev_smoke_20261022.md)。
+
+困难事件帧三方对照见 [`docs/experiments/difficult_pass_three_way_jev_20261023.md`](docs/experiments/difficult_pass_three_way_jev_20261023.md)。
 
 为了固定每次实验的输入，可以用 `build_pass_manifest.py` 对显式列出的 episode 做只读检查。它不会扫描 live 上传目录，也不会写回 HDF5：
 
@@ -153,6 +155,18 @@ python scripts/build_pass_manifest.py `
 ```
 
 manifest 会保存 schema、PASS 状态、帧数、文件大小/mtime、可见性/遮挡比例和 actor id，供训练、验证和报告脚本复用。
+
+困难场景使用显式 episode 路径生成额外 manifest，不扫描 live 目录：
+
+```powershell
+python scripts/build_difficult_pass_manifest.py `
+  --episode "<PASS crossing/frequent-turns episode>" `
+  --expected-schema carlaair_uav_v2_candidate `
+  --acceleration-threshold-mps2 3.0 `
+  --output artifacts\difficult_pass\pass_manifest.json
+```
+
+它会额外记录出框、可见性下降、遮挡、actor-ID 变化和目标加速度 p95，避免把普通全可见数据误称为困难覆盖。
 
 评估默认把最近 8 个状态压缩成短时 history summary；每条选择记录还保存 history length、持续时间、identity consistency、遮挡比例和目标加速度。通过 `OfflineEvaluationConfig(use_short_history=False)` 可以关闭这部分上下文做模块消融。
 

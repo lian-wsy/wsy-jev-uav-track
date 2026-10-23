@@ -14,7 +14,12 @@ from jev_uav_track.evaluation import (
     compare_jev_reports,
     evaluate_episode,
 )
-from jev_uav_track.jev_client import MockJevClient, TypeSafeJevClient
+from jev_uav_track.jev_client import (
+    JevProtocolError,
+    MockJevClient,
+    TypeSafeJevClient,
+    UtilityRankingClient,
+)
 from jev_uav_track.training import LinearOutcomeModel
 
 
@@ -46,6 +51,17 @@ def main() -> None:
     parser.add_argument("--env-file", type=Path, default=Path(".env"))
     parser.add_argument("--max-frames", type=int, default=4)
     parser.add_argument("--stride", type=int, default=75)
+    parser.add_argument(
+        "--start-frame",
+        type=int,
+        default=0,
+        help="First recorded frame in the fixed comparison window",
+    )
+    parser.add_argument(
+        "--end-frame",
+        type=int,
+        help="Exclusive end of the fixed comparison window",
+    )
     parser.add_argument("--desired-range-m", type=float, default=20.0)
     parser.add_argument("--timeout-s", type=float, default=8.0)
     parser.add_argument("--mock-temperature", type=float, default=0.35)
@@ -58,6 +74,8 @@ def main() -> None:
     config = OfflineEvaluationConfig(
         max_frames=args.max_frames,
         stride=args.stride,
+        start_frame=args.start_frame,
+        end_frame=args.end_frame,
         desired_range_m=args.desired_range_m,
         mock_temperature=args.mock_temperature,
     )
@@ -67,13 +85,30 @@ def main() -> None:
         client=MockJevClient(temperature=args.mock_temperature),
         outcome_model=model,
     )
-    real_client = TypeSafeJevClient.from_environment(timeout_s=args.timeout_s)
-    real_report = evaluate_episode(
+    utility_report = evaluate_episode(
         episode,
         config=config,
-        client=real_client,
+        client=UtilityRankingClient(),
         outcome_model=model,
     )
+    real_report = None
+    real_error = None
+    try:
+        real_client = TypeSafeJevClient.from_environment(timeout_s=args.timeout_s)
+        real_report = evaluate_episode(
+            episode,
+            config=config,
+            client=real_client,
+            outcome_model=model,
+        )
+    except (JevProtocolError, OSError, TimeoutError, ValueError) as exc:
+        real_error = f"{type(exc).__name__}: {exc}"
+    comparisons = {
+        "mock_vs_utility": compare_jev_reports(mock_report, utility_report),
+    }
+    if real_report is not None:
+        comparisons["mock_vs_real"] = compare_jev_reports(mock_report, real_report)
+        comparisons["real_vs_utility"] = compare_jev_reports(real_report, utility_report)
     report: Dict[str, object] = {
         "episode": str(episode.path),
         "schema": episode.metadata.get("schema", "unknown"),
@@ -81,23 +116,29 @@ def main() -> None:
         "visibility_observed": bool(episode.metadata.get("visibility_observed", False)),
         "config": config.__dict__,
         "mock": mock_report,
+        "utility": utility_report,
         "real": real_report,
-        "comparison": compare_jev_reports(mock_report, real_report),
+        "real_error": real_error,
+        # Keep the original key for consumers of the two-client smoke report.
+        "comparison": comparisons.get("mock_vs_real"),
+        "comparisons": comparisons,
         "note": (
-            "The real client receives state and candidate outcome JSON only; no RGB is sent. "
-            "API key values are never included in this report."
+            "All three clients use the same recorded frames and candidate outcomes. The real "
+            "client receives state and candidate outcome JSON only; no RGB is sent. API key "
+            "values are never included in this report."
         ),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=True, indent=2), encoding="utf-8")
-    comparison = report["comparison"]
     print(
         json.dumps(
             {
                 "output": str(args.output.resolve()),
                 "mock_metrics": mock_report["metrics"],
-                "real_metrics": real_report["metrics"],
-                "comparison": comparison,
+                "utility_metrics": utility_report["metrics"],
+                "real_metrics": real_report["metrics"] if real_report else None,
+                "real_error": real_error,
+                "comparisons": comparisons,
             },
             ensure_ascii=False,
             indent=2,

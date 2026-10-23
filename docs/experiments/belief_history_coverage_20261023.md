@@ -36,4 +36,4 @@
 
 详细表格见 [`history_rollout_integration_20261023.md`](history_rollout_integration_20261023.md)。
 
-下一步是把真实采集中的出框、遮挡、身份交叉和目标加速 episode 纳入新的 PASS manifest，再重新运行 history/identity 消融，并报告身份保持率和重捕获时间。当前 PASS 子集仍不足以证明这些困难场景上的收益。
+下一步是把真实采集中的遮挡和身份交叉 episode 纳入 PASS manifest，再重新运行 history/identity 消融，并报告身份保持率和重捕获时间。出框和高加速度的第一轮覆盖已在 [`difficult_pass_three_way_jev_20261023.md`](difficult_pass_three_way_jev_20261023.md) 中单独记录；当前数据仍不足以证明遮挡恢复或身份保持收益。
