@@ -8,6 +8,7 @@ from dataclasses import dataclass, replace
 from typing import Any, Dict, Iterable, Mapping, Optional, Sequence
 
 from .data.hdf5_adapter import HDF5Episode
+from .history import attach_history, build_episode_belief_history
 from .jev_client import JevClient, MockJevClient
 from .learned_rollout import LearnedOutcomeRolloutModel
 from .models import CandidateAction, MissionConstraints
@@ -28,6 +29,7 @@ class OfflineEvaluationConfig:
     mock_temperature: float = 0.35
     enable_safety_gate: bool = True
     use_short_history: bool = True
+    history_window_size: int = 8
     use_identity_confidence: bool = True
     identity_neutral_confidence: float = 0.5
 
@@ -87,6 +89,15 @@ def evaluate_episode(
     skipped = 0
     for frame_index in _sample_indices(episode.frame_count, cfg.max_frames, cfg.stride):
         state = episode.tracking_state(frame_index, constraints=constraints)
+        history = None
+        if cfg.use_short_history:
+            history = build_episode_belief_history(
+                episode,
+                frame_index,
+                window_size=cfg.history_window_size,
+                constraints=constraints,
+            )
+            state = attach_history(state, history)
         if not cfg.use_identity_confidence:
             state = replace(
                 state,
@@ -95,6 +106,11 @@ def evaluate_episode(
                     identity_confidence=cfg.identity_neutral_confidence,
                 ),
             )
+            if history is not None:
+                state = attach_history(
+                    state,
+                    history.with_identity_confidence(cfg.identity_neutral_confidence),
+                )
         candidates = rollout.generate(DEFAULT_PRIMITIVES, state)
         constraint_safe_actions, constraint_rejected_ids = filter_safe_actions(
             candidates,
@@ -135,6 +151,17 @@ def evaluate_episode(
                 "selected_utility": selected.outcome.utility(constraints),
                 "identity_confidence": state.target.identity_confidence,
                 "history_enabled": cfg.use_short_history,
+                "history_length": history.length if history is not None else 0,
+                "history_duration_s": history.duration_s if history is not None else 0.0,
+                "history_identity_consistency": (
+                    history.identity_consistency if history is not None else None
+                ),
+                "history_occlusion_fraction": (
+                    history.occlusion_fraction if history is not None else None
+                ),
+                "history_target_acceleration_mps2": (
+                    history.target_acceleration_mps2 if history is not None else None
+                ),
                 "safety_gate_enabled": cfg.enable_safety_gate,
                 "selected_unsafe": selected.id in constraint_rejected_ids,
                 "selected_collision_probability": selected.outcome.collision_probability,

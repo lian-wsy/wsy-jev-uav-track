@@ -117,3 +117,15 @@ while mission_is_running:
 
 安全门控始终先于 Jev；`no_safety_gate` 只绕过候选过滤，仍按原任务约束记录 `selected_unsafe`，因此不会把越界动作误报为安全。离线 Mock 的 `identity_weight` 是实验用代理，真实接口仍从 `TargetBelief.identity_confidence` 序列化该字段。若验证集全部可见且身份置信度均为 1，身份消融结果相同是数据覆盖不足的证据，而不是模块已被证明无效。
 
+### 6.2 短时 history builder
+
+`history.py` 将最近 `N` 个 `TrackingState` 转成 `TargetBeliefHistory`。每个条目显式保存：
+
+```text
+timestamp、target_actor_id
+target position / velocity / visibility / occlusion / identity confidence
+UAV position / velocity / yaw
+```
+
+窗口还提供 `identity_consistency`、`occlusion_fraction`、`target_acceleration_mps2`、目标/UAV 速度和可序列化摘要。摘要会进入 Jev 的 `history_summary`，完整窗口只保留在本地 state/environment 中，避免把源文件路径等 provenance 字段发送给远端模型。窗口构建器已覆盖稳定跟踪、出框/遮挡代理、身份切换和目标加速的合成测试；当前 12 个 PASS episode 仍然是全可见、零遮挡，因此真实数据上的 history/identity 指标还没有压力样本。
+

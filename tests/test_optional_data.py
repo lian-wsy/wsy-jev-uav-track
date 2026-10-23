@@ -89,6 +89,7 @@ def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
     )
     json.dumps(report)
     assert report["metrics"]["evaluated_frames"] == 4
+    assert report["records"][0]["history_length"] == 1
 
     module_report = evaluate_episode(
         episode,
@@ -106,6 +107,7 @@ def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
     assert module_report["metrics"]["unsafe_selected_rate"] is not None
     assert all(record["identity_confidence"] == 0.5 for record in module_report["records"])
     assert all(record["history_enabled"] is False for record in module_report["records"])
+    assert all(record["history_length"] == 0 for record in module_report["records"])
 
 
 def test_cross_episode_split_rejects_overlap_and_reports_holdout(tmp_path) -> None:

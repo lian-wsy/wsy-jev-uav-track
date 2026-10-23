@@ -2,7 +2,7 @@
 
 更新时间：2026-10-23
 
-当前基线是 commit `375c6cd`：仓库已经有 CarlaAir trimmed HDF5 适配器、跨 episode outcome calibrator、Jev/utility 选择器、安全门控、短时历史和身份置信度开关，以及 6 环境模块消融报告。下一阶段的目标是把“候选行为后果预测 + Jev 高层选择”从离线原型推进到可复现、可诊断、可在闭环仿真中比较的跟踪算法。
+当前基线已经包含 CarlaAir trimmed HDF5 适配器、跨 episode outcome calibrator、Jev/utility 选择器、安全门控、短时 history builder、身份置信度开关，以及 6 环境模块消融报告。下一阶段的目标是把“候选行为后果预测 + Jev 高层选择”从离线原型推进到可复现、可诊断、可在闭环仿真中比较的跟踪算法。
 
 ## 研发原则
 
@@ -47,8 +47,8 @@
 当前处于 A 阶段尾部、B 阶段准备阶段。接下来依次推进：
 
 1. **已完成第一版**：`scripts/build_pass_manifest.py` 已对本轮 12 个 episode 做只读检查，12/12 为 `PASS`、schema 统一为 `carlaair_uav_v2_candidate`，manifest 位于本机 `artifacts/module_ablation_20261022/pass_manifest.json`。
-2. 为 `TargetBelief` 增加时间窗口构建器，显式保存最近若干帧的目标位置、速度、可见性、actor id 和 UAV 自运动。
-3. 加入合成遮挡、出框、身份交叉和目标加速测试，先验证 identity/history 指标，再扩展到真实 PASS 数据。
+2. **已完成第一版**：`history.py` 提供有界 `TargetBeliefHistory` 和 `attach_history`，默认评估窗口为最近 8 个状态，保存目标/UAV 自运动、actor id、可见性、遮挡和 identity confidence，并计算身份一致性与目标加速度。
+3. **已完成合成覆盖**：新增稳定跟踪、出框/遮挡代理、身份切换和目标加速测试；当前真实 PASS manifest 仍显示 12 个 episode 全可见、零遮挡，下一步需要真实困难场景。
 4. 将短时历史和身份置信度接入 action-conditioned rollout，重新运行模块消融，避免当前“全可见、identity=1”造成的消融饱和。
 5. 在固定少量帧上复跑 real Jev、Mock Jev 和 utility，对比选择、延迟、fallback 和安全拒绝原因。
 6. 数据覆盖足够后，再建立闭环仿真任务；未满足数据和安全门槛时不启动 CARLA 采集，也不接真实飞行控制器。

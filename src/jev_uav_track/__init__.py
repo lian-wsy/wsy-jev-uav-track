@@ -25,6 +25,13 @@ from .rollout import KinematicRolloutModel, RolloutConfig
 from .selector import JevTrackSelector, SelectionConfig, SelectionResult
 from .data import HDF5Episode, HDF5SchemaError
 from .evaluation import OfflineEvaluationConfig, compare_jev_reports, evaluate_episode
+from .history import (
+    BeliefHistoryEntry,
+    TargetBeliefHistory,
+    attach_history,
+    build_episode_belief_history,
+    build_target_belief_history,
+)
 from .learned_rollout import LearnedOutcomeRolloutModel
 from .training import (
     ABLATION_DISABLED_FEATURES,
@@ -41,6 +48,7 @@ from .training import (
 
 __all__ = [
     "BehaviorPrimitive",
+    "BeliefHistoryEntry",
     "ABLATION_DISABLED_FEATURES",
     "CandidateAction",
     "CandidateOutcome",
@@ -66,11 +74,14 @@ __all__ = [
     "RolloutTrainingDataset",
     "SelectionConfig",
     "SelectionResult",
+    "TargetBeliefHistory",
     "TargetBelief",
     "TypeSafeJevClient",
     "TrackingState",
     "UAVState",
     "build_choice_request",
+    "build_episode_belief_history",
+    "build_target_belief_history",
     "build_training_dataset",
     "build_training_dataset_from_episodes",
     "compare_jev_reports",
@@ -79,4 +90,5 @@ __all__ = [
     "feature_mask_for_ablation",
     "fit_outcome_model",
     "fit_outcome_model_cross_episode",
+    "attach_history",
 ]
