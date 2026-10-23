@@ -87,6 +87,7 @@ python examples/live_jev_choice.py
 5. 用闭环指标评估：目标可见率、身份保持率、重捕获时间、距离误差、碰撞/近失事件、能耗、Jev 超时率和置信度校准误差。
 
 算法说明见 [`docs/algorithm.md`](docs/algorithm.md)，论文和方向整理见 [`docs/research.md`](docs/research.md)。
+长期研发排程见 [`docs/roadmap.md`](docs/roadmap.md)。
 
 ## CarlaAir 小规模离线实验
 
