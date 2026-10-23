@@ -46,7 +46,7 @@
 
 当前处于 A 阶段尾部、B 阶段准备阶段。接下来依次推进：
 
-1. 增加可复现的 PASS episode manifest 和数据统计脚本，确认所有报告都能从同一 manifest 重跑。
+1. **已完成第一版**：`scripts/build_pass_manifest.py` 已对本轮 12 个 episode 做只读检查，12/12 为 `PASS`、schema 统一为 `carlaair_uav_v2_candidate`，manifest 位于本机 `artifacts/module_ablation_20261022/pass_manifest.json`。
 2. 为 `TargetBelief` 增加时间窗口构建器，显式保存最近若干帧的目标位置、速度、可见性、actor id 和 UAV 自运动。
 3. 加入合成遮挡、出框、身份交叉和目标加速测试，先验证 identity/history 指标，再扩展到真实 PASS 数据。
 4. 将短时历史和身份置信度接入 action-conditioned rollout，重新运行模块消融，避免当前“全可见、identity=1”造成的消融饱和。

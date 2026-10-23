@@ -140,6 +140,19 @@ python scripts/compare_jev.py `
 
 本次跨 episode 与真实 Jev 对照记录见 [`docs/experiments/cross_episode_jev_smoke_20261022.md`](docs/experiments/cross_episode_jev_smoke_20261022.md)。
 
+为了固定每次实验的输入，可以用 `build_pass_manifest.py` 对显式列出的 episode 做只读检查。它不会扫描 live 上传目录，也不会写回 HDF5：
+
+```powershell
+$env:PYTHONPATH = "src"
+python scripts/build_pass_manifest.py `
+  --episode "<PASS train episode>" `
+  --episode "<PASS validation episode>" `
+  --expected-schema carlaair_uav_v2_candidate `
+  --output artifacts\manifests\pass_manifest.json
+```
+
+manifest 会保存 schema、PASS 状态、帧数、文件大小/mtime、可见性/遮挡比例和 actor id，供训练、验证和报告脚本复用。
+
 要比较不同信息源的作用，可以运行消融报告脚本。默认包含 `kinematic_baseline`、`full`、`no_motion`、`no_action` 和 `no_visibility`；它只读取验证集 episode，并把每个模型保存到被 Git 忽略的 `artifacts/`：
 
 ```powershell
