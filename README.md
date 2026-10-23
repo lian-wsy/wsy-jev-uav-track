@@ -38,6 +38,7 @@
 - `jev_client.py`：TypeSafe Jev API 适配器、离线 `MockJevClient` 和 utility-only 对照客户端。
 - `selector.py`：Jev 结果校验、低置信度 fallback、动作滞回和可配置安全门控。
 - `pipeline.py`：把 rollout、过滤和选择串成一次闭环步骤。
+- `closed_loop.py`：在固定 PASS 事件窗上更新独立 UAV 运动学状态，按记录可见性和几何 FOV 代理统计重捕获、身份保持和安全事件。
 
 ## 本地运行
 
@@ -208,4 +209,25 @@ python scripts/run_module_ablation_report.py `
 `UtilityRankingClient` 是候选 utility 的确定性排序上限；`MockJevClient(identity_weight>0)` 只用于离线检验身份置信度是否能改变信息寻求倾向，真实 Jev smoke 仍通过 `TypeSafeJevClient`。模块报告会同时统计 fallback、跳帧、安全门控下的 unsafe 选择率、utility regret、可见性和各环境动作分布。
 
 本次 6 环境模块报告见 [`docs/experiments/module_ablation_report_20261022.md`](docs/experiments/module_ablation_report_20261022.md)。
+
+## 真实遮挡 PASS 与闭环三方回放
+
+`scripts/audit_trimmed_pass_coverage.py` 只读审计一个明确的 trimmed HDF5 根目录，统计 PASS、遮挡、出框和身份交叉覆盖，不访问采集器、上传器或 live staging。当前已验证数据包含 4 个真实遮挡 PASS，但身份交叉 PASS 为 0；代码和报告会把单 actor episode 的身份保持率标为 `NOT_AUDITED`，不会把它当成交叉结论。
+
+`scripts/run_closed_loop_replay.py` 在同一固定帧窗顺序运行 Mock Jev、utility 和真实 Jev。它把记录目标轨迹作为只读参考，用选中高层动作更新独立 UAV 常速度状态，再用记录可见性/遮挡和几何距离/FOV 代理构造下一次 belief。它不是 CARLA/ AirSim/实机动力学仿真，安全事件仅表示回放中预测的 unsafe/near-miss 事件。
+
+```powershell
+$env:PYTHONPATH = "src"
+python scripts/audit_trimmed_pass_coverage.py `
+  --root "D:\CarlaAir\data\trimmed\v3" `
+  --output artifacts\coverage_audit_20261023.json
+
+python scripts/run_closed_loop_replay.py `
+  --episode "D:\CarlaAir\data\trimmed\v3\quota_grid_20260930\Town10HD_bicycle_normal_motion_long_seed260922365.hdf5" `
+  --model artifacts\occlusion_pass_20261023\models\rollout_model.npz `
+  --env-file .env --start-frame 168 --end-frame 225 --stride 8 `
+  --output artifacts\occlusion_pass_20261023\closed_loop_three_way.json
+```
+
+本轮结果见 [`docs/experiments/closed_loop_occlusion_replay_20261023.md`](docs/experiments/closed_loop_occlusion_replay_20261023.md)。
 

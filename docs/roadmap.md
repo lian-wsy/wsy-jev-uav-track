@@ -2,7 +2,7 @@
 
 更新时间：2026-10-23
 
-当前基线已经包含 CarlaAir trimmed HDF5 适配器、跨 episode outcome calibrator、Jev/utility 选择器、安全门控、短时 history builder、身份置信度开关，以及 6 环境模块消融报告。下一阶段的目标是把“候选行为后果预测 + Jev 高层选择”从离线原型推进到可复现、可诊断、可在闭环仿真中比较的跟踪算法。
+当前基线已经包含 CarlaAir trimmed HDF5 适配器、跨 episode outcome calibrator、Jev/utility 选择器、安全门控、短时 history builder、身份置信度开关、6 环境模块消融报告，以及固定事件窗的运动学闭环回放。下一阶段的目标是把“候选行为后果预测 + Jev 高层选择”从离线代理推进到可复现、可诊断、可在真实仿真器中比较的跟踪算法。
 
 ## 研发原则
 
@@ -44,14 +44,14 @@
 
 ## 当前排程
 
-当前处于 A 阶段尾部、B 阶段准备阶段。接下来依次推进：
+当前处于 E 阶段的代理回放切片，B/C/D 的数据覆盖和接口验证仍在持续补齐。接下来依次推进：
 
 1. **已完成第一版**：`scripts/build_pass_manifest.py` 已对本轮 12 个 episode 做只读检查，12/12 为 `PASS`、schema 统一为 `carlaair_uav_v2_candidate`，manifest 位于本机 `artifacts/module_ablation_20261022/pass_manifest.json`。
 2. **已完成第一版**：`history.py` 提供有界 `TargetBeliefHistory` 和 `attach_history`，默认评估窗口为最近 8 个状态，保存目标/UAV 自运动、actor id、可见性、遮挡和 identity confidence，并计算身份一致性与目标加速度。
-3. **已完成第一轮覆盖**：新增稳定跟踪、出框/遮挡代理、身份切换和目标加速测试；原始 12-episode baseline 全可见、零遮挡，新增困难 manifest 已覆盖 3 个出框 episode 和 6 个高加速度 episode，但仍没有真实遮挡或身份切换。
+3. **已完成第一轮覆盖**：新增稳定跟踪、出框/遮挡代理、身份切换和目标加速测试；历史 12-episode baseline 全可见、零遮挡，早期困难 manifest 曾覆盖 3 个出框 episode 和 6 个高加速度 episode。后续全量只读审计已补出 4 个真实遮挡 PASS，但仍没有身份交叉 PASS。
 4. **已完成第一版**：短时历史和身份置信度已接入 action-conditioned rollout；历史遮挡/可见性影响重捕获增益，身份不确定性影响协方差与信息增益，目标加速度进入不确定性项，并有 15 个基础测试通过。
 5. **已完成第一版**：在困难 PASS episode 的固定出框事件帧上复跑 real Jev、Mock Jev 和 utility；记录选择、confidence、fallback、utility regret 和安全拒绝原因。
-6. 补齐真实 PASS 数据中的遮挡、身份交叉和更多跨环境事件，再建立闭环仿真任务；未满足数据和安全门槛时不启动 CARLA 采集，也不接真实飞行控制器。
+6. **已完成当前切片**：只读审计确认 4 个真实遮挡 PASS、0 个身份交叉 PASS；新增 `closed_loop.py` 和 `run_closed_loop_replay.py`，在固定遮挡事件窗比较 Mock Jev、真实 Jev 和 utility 的重捕获、身份保持与回放安全事件。闭环仍是运动学代理，身份交叉和 CARLA/实机动力学验证继续作为后续门槛；未满足数据和安全门槛时不启动 CARLA 采集，也不接真实飞行控制器。
 
 ## 完成定义
 

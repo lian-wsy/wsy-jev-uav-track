@@ -45,6 +45,11 @@ from .training import (
     fit_outcome_model,
     fit_outcome_model_cross_episode,
 )
+from .closed_loop import (
+    ClosedLoopReplayConfig,
+    compare_closed_loop_reports,
+    run_closed_loop_replay,
+)
 
 __all__ = [
     "BehaviorPrimitive",
@@ -91,4 +96,7 @@ __all__ = [
     "fit_outcome_model",
     "fit_outcome_model_cross_episode",
     "attach_history",
+    "ClosedLoopReplayConfig",
+    "run_closed_loop_replay",
+    "compare_closed_loop_reports",
 ]
