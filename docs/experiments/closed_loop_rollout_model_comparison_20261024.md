@@ -37,6 +37,18 @@
 
 新增的 `max_learned_state_zscore` 只检查观测状态特征；当状态 OOD 时，该帧所有 learned 候选都回退透明 rollout。留出 episode 的阈值 2.75 让 Mock 恢复到 `0.470` 可见率、utility 恢复到 `0.463`，但 92.7%/95.3% 的选中帧仍然是状态 OOD。这个阈值只作为待校准的安全保护候选，不能当成 learned 模型泛化证明。
 
+状态门控敏感性如下；阈值 3.0 以后 utility 明显退化，说明不能只追求让 learned 候选通过得更多：
+
+| 状态 z-score 上限 | Mock 可见率 | Mock OOD 率 | utility 可见率 | utility OOD 率 |
+| ---: | ---: | ---: | ---: | ---: |
+| 2.25 | 0.453 | 1.000 | 0.463 | 1.000 |
+| 2.50 | 0.470 | 0.950 | 0.463 | 1.000 |
+| 2.75 | 0.470 | 0.927 | 0.463 | 0.953 |
+| 3.00 | 0.543 | 0.787 | 0.380 | 0.867 |
+| 4.00 | 0.517 | 0.597 | 0.330 | 0.727 |
+
+默认配置的 `max_learned_state_zscore=None`、`learned_prediction_blend=1.0` 保持原透明/learned 口径不变；带 SHA 校验的默认 5-episode 批次重跑后，Mock/utility 可见率仍为 `0.689/0.734`。
+
 五 episode 汇总 `model_default.json` 只用于诊断，包含模型训练所用的 4 个 episode，因此不作为独立泛化结果。下一步应在更多、完全按 episode 隔离的 PASS 数据上重新校准，并把动作执行后的真实可见性/距离标签纳入训练；在此之前，透明 rollout 只能作为可解释基线，learned 模型只能保留为研究对照。
 
 ## 复现
