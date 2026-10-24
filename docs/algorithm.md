@@ -139,3 +139,13 @@ UAV position / velocity / yaw
 
 这些量只改变候选 outcome，不改变硬安全约束；安全过滤仍然在 Jev 选择之前执行。没有 history 时使用当前帧的可见率、身份置信度和零加速度作为兼容默认值，因此已有无历史调用保持原有行为。对应回归测试位于 `tests/test_rollout_history.py`，覆盖身份不确定性、历史遮挡和目标加速三条路径。
 
+### 6.4 learned rollout 的支持域保护
+
+`LearnedOutcomeRolloutModel` 默认只替换可见率、中心误差、距离误差和协方差预测，碰撞概率、障碍余量和能耗仍来自透明安全 rollout。由于 calibrator 的动作特征来自记录中的相机速度，直接把它外推到任意候选动作会产生训练分布外输入。可选的 `max_learned_feature_zscore` 会按模型保存的特征均值/尺度检查每个候选；超过阈值的候选回退透明 rollout，并在记录中标记 `learned_model_ood` 和 `max_feature_zscore`。这只阻止明显外推，不能证明 learned 模型已经具有反事实动力学能力；阈值必须在完全留出的 episode 上校准。
+
+### 6.5 crossing 身份状态机与数据指纹
+
+闭环代理的 identity tracker 在可见 crossing 中保留上一身份，直到连续两次看到同一个新 actor id 才确认切换，并记录 `identity_confirmed_switch_events`。真实 trimmed PASS 审计目前仍为零 crossing，因此单 actor 的保持率必须标为 `NOT_AUDITED`；合成 crossing 测试只验证状态机边界。
+
+显式 PASS manifest 可以用 `build_pass_manifest.py --sha256` 生成流式 SHA-256，批处理用 `--verify-manifest-sha256` 在打开 HDF5 前验证内容没有替换。指纹是输入可复现性保护，不会改变 `validation_status`，也不会自动纳入 PENDING/FAIL 文件。
+
