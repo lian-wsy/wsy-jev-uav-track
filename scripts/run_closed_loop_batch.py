@@ -12,7 +12,7 @@ from jev_uav_track.closed_loop import (
     aggregate_closed_loop_reports,
     run_closed_loop_replay,
 )
-from jev_uav_track.data import HDF5Episode
+from jev_uav_track.data import HDF5Episode, sha256_file
 from jev_uav_track.jev_client import MockJevClient, UtilityRankingClient
 from jev_uav_track.training import LinearOutcomeModel
 
@@ -48,6 +48,11 @@ def main() -> None:
         ),
     )
     parser.add_argument("--max-episodes", type=int)
+    parser.add_argument(
+        "--verify-manifest-sha256",
+        action="store_true",
+        help="Verify every selected manifest entry before opening its HDF5",
+    )
     args = parser.parse_args()
 
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
@@ -62,6 +67,20 @@ def main() -> None:
         entries = entries[: args.max_episodes]
     if not entries:
         raise ValueError("The manifest contains no PASS episodes")
+    if args.verify_manifest_sha256:
+        for entry in entries:
+            expected = str(entry.get("sha256", "")).lower()
+            if len(expected) != 64:
+                raise ValueError(
+                    "--verify-manifest-sha256 requires a 64-character sha256 field "
+                    f"for {entry.get('path')}"
+                )
+            actual = sha256_file(entry["path"])
+            if actual != expected:
+                raise ValueError(
+                    f"Manifest SHA-256 mismatch for {entry['path']}: "
+                    f"expected {expected}, got {actual}"
+                )
 
     config = ClosedLoopReplayConfig(
         start_frame=args.start_frame,
@@ -104,6 +123,7 @@ def main() -> None:
     }
     report = {
         "manifest": str(args.manifest.resolve()),
+        "manifest_sha256_verified": bool(args.verify_manifest_sha256),
         "source_mode": "read_only_hdf5_manifest",
         "evaluation_mode": "kinematic_replay_proxy",
         "config": config.__dict__,

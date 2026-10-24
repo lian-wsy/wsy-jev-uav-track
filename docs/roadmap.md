@@ -57,6 +57,7 @@
 9. **已完成 tracker 边界切片**：身份 tracker 现在对可见 crossing 需要连续两次新 actor 观测才确认切换，并记录 `identity_confirmed_switch_events`；新增合成 crossing 回归测试，真实数据覆盖仍维持 `NOT_AUDITED`。
 10. **已完成 learned rollout 诊断**：在完全留出的 Town10HD episode 上复跑透明与 learned outcome rollout；learned 模型使 Mock/utility 的 proxy 可见率降到 `0.307`，暴露校准模型与动作执行代理的分布偏差，因此暂不把 learned 模型当作改进或部署候选。
 11. **已完成 OOD 保护切片**：`LearnedOutcomeRolloutModel` 增加可选 `max_learned_feature_zscore` 支持域门控，逐帧记录 OOD 回退；留出实验显示严格阈值可恢复透明基线，宽松阈值仍会退化，后续需用更多独立 episode 做阈值校准。
+12. **已完成 manifest 指纹切片**：显式 PASS manifest 支持流式 SHA-256，批处理可在 HDF5 打开前验证哈希；当前 5 个对照 episode 的指纹验证通过，结果与未校验批次一致。
 
 ## 完成定义
 

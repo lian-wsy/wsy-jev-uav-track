@@ -15,7 +15,7 @@ import math
 from pathlib import Path
 from typing import Any, Dict, Sequence
 
-from jev_uav_track.data import HDF5Episode
+from jev_uav_track.data import HDF5Episode, sha256_file
 
 
 def _fraction(values: Sequence[Any]) -> float:
@@ -65,6 +65,7 @@ def _episode_entry(
     path: str | Path,
     expected_schema: str | None,
     acceleration_threshold: float,
+    include_sha256: bool = False,
 ) -> Dict[str, Any]:
     source = Path(path).expanduser().resolve()
     episode = HDF5Episode.open(source, load_images=False)
@@ -95,7 +96,7 @@ def _episode_entry(
             f"Episode has no difficult coverage signal under the configured threshold: {source}"
         )
     stat = source.stat()
-    return {
+    entry = {
         "path": str(source),
         "schema": schema,
         "validation_status": validation_status,
@@ -112,6 +113,9 @@ def _episode_entry(
         **motion,
         "difficult_signals": signals,
     }
+    if include_sha256:
+        entry["sha256"] = sha256_file(source)
+    return entry
 
 
 def main() -> None:
@@ -120,6 +124,11 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--expected-schema")
     parser.add_argument("--acceleration-threshold-mps2", type=float, default=3.0)
+    parser.add_argument(
+        "--sha256",
+        action="store_true",
+        help="Compute a streaming SHA-256 for each explicitly selected episode",
+    )
     args = parser.parse_args()
     if args.acceleration_threshold_mps2 < 0.0:
         raise ValueError("acceleration threshold cannot be negative")
@@ -128,7 +137,12 @@ def main() -> None:
     if len(set(paths)) != len(paths):
         raise ValueError("Episode paths must be unique")
     entries = [
-        _episode_entry(path, args.expected_schema, args.acceleration_threshold_mps2)
+        _episode_entry(
+            path,
+            args.expected_schema,
+            args.acceleration_threshold_mps2,
+            include_sha256=args.sha256,
+        )
         for path in paths
     ]
     schemas = sorted({entry["schema"] for entry in entries})
@@ -137,8 +151,9 @@ def main() -> None:
         for signal in entries[0]["difficult_signals"]
     }
     report = {
-        "manifest_version": 1,
+        "manifest_version": 2 if args.sha256 else 1,
         "source_mode": "read_only_hdf5_adapter",
+        "integrity": {"algorithm": "sha256", "computed": True} if args.sha256 else None,
         "selection_rule": {
             "explicit_episode_paths_only": True,
             "acceleration_threshold_mps2": args.acceleration_threshold_mps2,

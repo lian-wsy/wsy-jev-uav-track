@@ -13,7 +13,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, Sequence
 
-from jev_uav_track.data import HDF5Episode
+from jev_uav_track.data import HDF5Episode, sha256_file
 
 
 def _fraction(values: Sequence[Any]) -> float:
@@ -22,7 +22,11 @@ def _fraction(values: Sequence[Any]) -> float:
     return sum(bool(value) for value in values) / len(values)
 
 
-def _episode_entry(path: str | Path, expected_schema: str | None) -> Dict[str, Any]:
+def _episode_entry(
+    path: str | Path,
+    expected_schema: str | None,
+    include_sha256: bool = False,
+) -> Dict[str, Any]:
     source = Path(path).expanduser().resolve()
     episode = HDF5Episode.open(source, load_images=False)
     validation_status = str(episode.metadata.get("validation_status", "")).upper()
@@ -38,7 +42,7 @@ def _episode_entry(path: str | Path, expected_schema: str | None) -> Dict[str, A
         )
     stat = source.stat()
     actor_ids = sorted({int(value) for value in episode.target_actor_ids})
-    return {
+    entry = {
         "path": str(source),
         "schema": schema,
         "validation_status": validation_status,
@@ -53,6 +57,9 @@ def _episode_entry(path: str | Path, expected_schema: str | None) -> Dict[str, A
         "target_occluded_fraction": _fraction(episode.target_occluded),
         "target_actor_ids": actor_ids,
     }
+    if include_sha256:
+        entry["sha256"] = sha256_file(source)
+    return entry
 
 
 def main() -> None:
@@ -60,16 +67,25 @@ def main() -> None:
     parser.add_argument("--episode", action="append", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--expected-schema")
+    parser.add_argument(
+        "--sha256",
+        action="store_true",
+        help="Compute a streaming SHA-256 for each explicitly selected episode",
+    )
     args = parser.parse_args()
 
     paths = [Path(item).expanduser().resolve() for item in args.episode]
     if len(set(paths)) != len(paths):
         raise ValueError("Episode paths must be unique")
-    entries = [_episode_entry(path, args.expected_schema) for path in paths]
+    entries = [
+        _episode_entry(path, args.expected_schema, include_sha256=args.sha256)
+        for path in paths
+    ]
     schemas = sorted({entry["schema"] for entry in entries})
     report = {
-        "manifest_version": 1,
+        "manifest_version": 2 if args.sha256 else 1,
         "source_mode": "read_only_hdf5_adapter",
+        "integrity": {"algorithm": "sha256", "computed": True} if args.sha256 else None,
         "episode_count": len(entries),
         "schemas": schemas,
         "all_validation_status_pass": all(

@@ -157,6 +157,8 @@ python scripts/build_pass_manifest.py `
 
 manifest 会保存 schema、PASS 状态、帧数、文件大小/mtime、可见性/遮挡比例和 actor id，供训练、验证和报告脚本复用。
 
+需要固定文件内容时，在显式 episode 列表上加 `--sha256`；批处理可用 `--verify-manifest-sha256` 在打开 HDF5 前流式校验摘要。这个校验只保护输入可复现性，不会把 PENDING/FAIL 文件升级为 PASS。
+
 困难场景使用显式 episode 路径生成额外 manifest，不扫描 live 目录：
 
 ```powershell
