@@ -698,6 +698,17 @@ def aggregate_closed_loop_reports(
             std = math.sqrt(variance)
             half_width = 1.96 * std / math.sqrt(len(values))
             ci95 = [mean - half_width, mean + half_width]
+            if name in {
+                "proxy_visible_fraction",
+                "annotated_visible_fraction",
+                "annotated_occluded_fraction",
+                "identity_retention_rate",
+                "near_miss_rate",
+                "safety_event_rate",
+                "fallback_rate",
+                "learned_model_ood_rate",
+            }:
+                ci95 = [_clamp(ci95[0], 0.0, 1.0), _clamp(ci95[1], 0.0, 1.0)]
         return {
             "n": len(values),
             "mean": mean,

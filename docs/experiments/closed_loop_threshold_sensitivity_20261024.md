@@ -11,7 +11,7 @@
 - 客户端：离线 Mock Jev 与 utility；本轮没有发起网络请求。
 - rollout：透明 `KinematicRolloutModel`，未加载训练模型；因此这是阈值和指标管线实验，不是动力学性能结论。
 - 采样：`stride=1`、`max_decisions=512`，FOV 半角 75°，最小障碍余量 3 m。
-- 区间：`episode_statistics` 给每个 episode 一个权重，`ci95` 是 episode-level 值的正态近似描述区间，不是总体性能保证。
+- 区间：`episode_statistics` 给每个 episode 一个权重，`ci95` 是 episode-level 值的正态近似描述区间，不是总体性能保证；比例/率类区间裁到 `[0, 1]`，时间和能耗不裁。
 
 ## 结果
 

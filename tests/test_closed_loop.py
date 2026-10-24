@@ -166,6 +166,8 @@ def test_closed_loop_aggregate_weights_identity_and_reacquisition_events():
     stats = aggregate["episode_statistics"]["proxy_visible_fraction"]
     assert stats["n"] == 2
     assert stats["ci95"][0] <= stats["mean"] <= stats["ci95"][1]
+    assert 0.0 <= stats["ci95"][0] <= 1.0
+    assert 0.0 <= stats["ci95"][1] <= 1.0
 
 
 def test_near_miss_probability_fraction_is_explicit_and_validated():
