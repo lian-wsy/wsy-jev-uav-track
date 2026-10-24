@@ -242,3 +242,15 @@ python scripts/run_closed_loop_batch.py `
 
 该批处理只运行 Mock Jev 和 utility，不发起网络请求；真实 Jev 仍通过固定小窗口脚本单独对照。批量结果见 [`docs/experiments/closed_loop_batch_20261024.md`](docs/experiments/closed_loop_batch_20261024.md)。
 
+near-miss 只是当前运动学回放的风险代理，阈值可以显式调整；报告还会给出按 episode 等权的均值、标准差和描述性 95% 区间：
+
+```powershell
+python scripts/run_closed_loop_batch.py `
+  --manifest artifacts\occlusion_pass_20261023\pass_manifest.json `
+  --output artifacts\threshold_sensitivity_20261024\default.json `
+  --near-miss-margin-m 0.5 `
+  --near-miss-collision-probability-fraction 0.5
+```
+
+完整阈值敏感性记录见 [`docs/experiments/closed_loop_threshold_sensitivity_20261024.md`](docs/experiments/closed_loop_threshold_sensitivity_20261024.md)。
+

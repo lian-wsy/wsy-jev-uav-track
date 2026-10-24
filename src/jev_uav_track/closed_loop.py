@@ -41,6 +41,7 @@ class ClosedLoopReplayConfig:
     fov_half_angle_deg: float = 75.0
     max_visible_range_m: float = 60.0
     near_miss_margin_m: float = 0.5
+    near_miss_collision_probability_fraction: float = 0.5
     initial_battery_percent: float = 100.0
     enable_safety_gate: bool = True
     use_short_history: bool = True
@@ -62,6 +63,8 @@ class ClosedLoopReplayConfig:
             raise ValueError("max_visible_range_m must be positive")
         if self.near_miss_margin_m < 0.0:
             raise ValueError("near_miss_margin_m cannot be negative")
+        if not 0.0 <= self.near_miss_collision_probability_fraction <= 1.0:
+            raise ValueError("near_miss_collision_probability_fraction must be in [0, 1]")
         if not 0.0 <= self.initial_battery_percent <= 100.0:
             raise ValueError("initial_battery_percent must be in [0, 100]")
 
@@ -397,7 +400,10 @@ def run_closed_loop_replay(
             selected.outcome.minimum_obstacle_margin_m
             < constraints.minimum_obstacle_margin_m + cfg.near_miss_margin_m
             or selected.outcome.collision_probability
-            >= 0.5 * constraints.maximum_collision_probability
+            >= (
+                cfg.near_miss_collision_probability_fraction
+                * constraints.maximum_collision_probability
+            )
         )
         selected_unsafe_count += int(selected_unsafe)
         near_miss_count += int(selected_near_miss)
@@ -490,7 +496,14 @@ def run_closed_loop_replay(
         "identity_switch_events": identity.switch_events,
         "selected_unsafe_count": selected_unsafe_count,
         "near_miss_count": near_miss_count,
+        "near_miss_rate": near_miss_count / len(records) if records else None,
         "safety_event_count": selected_unsafe_count + near_miss_count,
+        "safety_event_rate": (
+            (selected_unsafe_count + near_miss_count) / len(records)
+            if records
+            else None
+        ),
+        "selected_unsafe_rate": selected_unsafe_count / len(records) if records else None,
         "hard_rejection_count": hard_rejection_count,
         "fallback_rate": (
             sum(bool(record["fallback"]) for record in records) / len(records)
@@ -615,14 +628,65 @@ def aggregate_closed_loop_reports(
         denominator = sum(count for _, count in values)
         return sum(value * count for value, count in values) / denominator if denominator else None
 
+    def _episode_statistics(name: str) -> Dict[str, Any]:
+        """Describe between-episode variation without treating frames as iid.
+
+        The aggregate rates above are frame-weighted for operational reporting.
+        This companion summary gives each episode one vote, which exposes whether
+        a result is driven by a single long recording.  The interval is a
+        descriptive normal approximation over episode-level values; it is not a
+        claim of a population confidence interval for the data collection.
+        """
+
+        values = [
+            float(report.get("metrics", {}).get(name))
+            for report in reports
+            if report.get("metrics", {}).get(name) is not None
+            and math.isfinite(float(report.get("metrics", {}).get(name)))
+        ]
+        if not values:
+            return {"n": 0, "mean": None, "std": None, "ci95": None, "min": None, "max": None}
+        mean = sum(values) / len(values)
+        if len(values) < 2:
+            std = 0.0
+            ci95 = [mean, mean]
+        else:
+            variance = sum((value - mean) ** 2 for value in values) / (len(values) - 1)
+            std = math.sqrt(variance)
+            half_width = 1.96 * std / math.sqrt(len(values))
+            ci95 = [mean - half_width, mean + half_width]
+        return {
+            "n": len(values),
+            "mean": mean,
+            "std": std,
+            "ci95": ci95,
+            "min": min(values),
+            "max": max(values),
+            "method": "normal_approximation_over_episode_values",
+        }
+
     identity_statuses = sorted({
         str(report.get("identity_coverage", {}).get("status", "UNKNOWN"))
         for report in reports
     })
+    episode_metric_names = (
+        "proxy_visible_fraction",
+        "annotated_visible_fraction",
+        "annotated_occluded_fraction",
+        "mean_reacquisition_time_s",
+        "identity_retention_rate",
+        "near_miss_rate",
+        "safety_event_rate",
+        "fallback_rate",
+        "energy_cost_wh",
+    )
     return {
         "episode_count": len(reports),
         "decision_count": total_decisions,
         "identity_coverage_statuses": identity_statuses,
+        "episode_statistics": {
+            name: _episode_statistics(name) for name in episode_metric_names
+        },
         "metrics": {
             "proxy_visible_fraction": _weighted_mean("proxy_visible_fraction"),
             "annotated_visible_fraction": _weighted_mean("annotated_visible_fraction"),
@@ -648,9 +712,21 @@ def aggregate_closed_loop_reports(
                 int(report.get("metrics", {}).get("near_miss_count", 0))
                 for report in reports
             ),
+            "near_miss_rate": (
+                sum(int(report.get("metrics", {}).get("near_miss_count", 0)) for report in reports)
+                / total_decisions
+                if total_decisions
+                else None
+            ),
             "safety_event_count": sum(
                 int(report.get("metrics", {}).get("safety_event_count", 0))
                 for report in reports
+            ),
+            "safety_event_rate": (
+                sum(int(report.get("metrics", {}).get("safety_event_count", 0)) for report in reports)
+                / total_decisions
+                if total_decisions
+                else None
             ),
             "hard_rejection_count": sum(
                 int(report.get("metrics", {}).get("hard_rejection_count", 0))

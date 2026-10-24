@@ -29,6 +29,16 @@ def main() -> None:
     parser.add_argument("--desired-range-m", type=float, default=20.0)
     parser.add_argument("--minimum-obstacle-margin-m", type=float, default=3.0)
     parser.add_argument("--fov-half-angle-deg", type=float, default=75.0)
+    parser.add_argument("--near-miss-margin-m", type=float, default=0.5)
+    parser.add_argument(
+        "--near-miss-collision-probability-fraction",
+        type=float,
+        default=0.5,
+        help=(
+            "Mark a near miss when predicted collision probability reaches this "
+            "fraction of the hard safety threshold."
+        ),
+    )
     parser.add_argument("--max-episodes", type=int)
     args = parser.parse_args()
 
@@ -53,6 +63,8 @@ def main() -> None:
         desired_range_m=args.desired_range_m,
         minimum_obstacle_margin_m=args.minimum_obstacle_margin_m,
         fov_half_angle_deg=args.fov_half_angle_deg,
+        near_miss_margin_m=args.near_miss_margin_m,
+        near_miss_collision_probability_fraction=args.near_miss_collision_probability_fraction,
     )
     outcome_model = LinearOutcomeModel.load(args.model) if args.model else None
     reports: Dict[str, list[Dict[str, Any]]] = {"mock": [], "utility": []}

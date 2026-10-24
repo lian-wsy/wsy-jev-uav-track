@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from jev_uav_track.closed_loop import (
     ClosedLoopReplayConfig,
     _IdentityTracker,
@@ -129,3 +131,14 @@ def test_closed_loop_aggregate_weights_identity_and_reacquisition_events():
     assert aggregate["metrics"]["mean_reacquisition_time_s"] == 2.0
     assert aggregate["metrics"]["identity_retention_rate"] == 1.0
     assert aggregate["identity_coverage_statuses"] == ["NOT_AUDITED"]
+    assert aggregate["metrics"]["near_miss_rate"] is not None
+    stats = aggregate["episode_statistics"]["proxy_visible_fraction"]
+    assert stats["n"] == 2
+    assert stats["ci95"][0] <= stats["mean"] <= stats["ci95"][1]
+
+
+def test_near_miss_probability_fraction_is_explicit_and_validated():
+    config = ClosedLoopReplayConfig(near_miss_collision_probability_fraction=0.25)
+    assert config.near_miss_collision_probability_fraction == 0.25
+    with pytest.raises(ValueError):
+        ClosedLoopReplayConfig(near_miss_collision_probability_fraction=1.1)
