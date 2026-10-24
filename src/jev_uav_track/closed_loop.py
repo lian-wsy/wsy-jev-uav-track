@@ -47,6 +47,7 @@ class ClosedLoopReplayConfig:
     use_short_history: bool = True
     use_identity_confidence: bool = True
     identity_neutral_confidence: float = 0.5
+    max_learned_feature_zscore: float | None = None
 
     def __post_init__(self) -> None:
         if self.start_frame < 0:
@@ -67,6 +68,11 @@ class ClosedLoopReplayConfig:
             raise ValueError("near_miss_collision_probability_fraction must be in [0, 1]")
         if not 0.0 <= self.initial_battery_percent <= 100.0:
             raise ValueError("initial_battery_percent must be in [0, 100]")
+        if (
+            self.max_learned_feature_zscore is not None
+            and self.max_learned_feature_zscore <= 0.0
+        ):
+            raise ValueError("max_learned_feature_zscore must be positive when set")
 
 
 def _clamp(value: float, lower: float, upper: float) -> float:
@@ -363,7 +369,11 @@ def run_closed_loop_replay(
     baseline = KinematicRolloutModel()
     rollout: Any = baseline
     if outcome_model is not None:
-        rollout = LearnedOutcomeRolloutModel(outcome_model, baseline=baseline)
+        rollout = LearnedOutcomeRolloutModel(
+            outcome_model,
+            baseline=baseline,
+            max_feature_zscore=cfg.max_learned_feature_zscore,
+        )
 
     identity = _IdentityTracker()
     history_states: list[TrackingState] = []
@@ -384,6 +394,7 @@ def run_closed_loop_replay(
     near_miss_count = 0
     hard_rejection_count = 0
     client_error_count = 0
+    learned_model_ood_count = 0
     energy_cost_wh = 0.0
 
     for position, frame_index in enumerate(indices):
@@ -432,6 +443,7 @@ def run_closed_loop_replay(
         near_miss_count += int(selected_near_miss)
         hard_rejection_count += len(result.rejected_action_ids)
         energy_cost_wh += float(selected.outcome.energy_cost_wh)
+        learned_model_ood_count += int(selected.metadata.get("learned_model_ood", False))
         if result.reason.startswith("jev_error:"):
             client_error_count += 1
 
@@ -452,6 +464,9 @@ def run_closed_loop_replay(
                 "frame_index": frame_index,
                 "timestamp_s": timestamp_s,
                 "choice": selected.id,
+                "rollout_model": selected.metadata.get("model"),
+                "learned_model_ood": bool(selected.metadata.get("learned_model_ood", False)),
+                "max_feature_zscore": selected.metadata.get("max_feature_zscore"),
                 "fallback": bool(result.used_fallback),
                 "reason": result.reason,
                 "model": result.decision.model_version,
@@ -528,6 +543,10 @@ def run_closed_loop_replay(
             else None
         ),
         "selected_unsafe_rate": selected_unsafe_count / len(records) if records else None,
+        "learned_model_ood_count": learned_model_ood_count,
+        "learned_model_ood_rate": (
+            learned_model_ood_count / len(records) if records else None
+        ),
         "hard_rejection_count": hard_rejection_count,
         "fallback_rate": (
             sum(bool(record["fallback"]) for record in records) / len(records)
@@ -702,6 +721,7 @@ def aggregate_closed_loop_reports(
         "near_miss_rate",
         "safety_event_rate",
         "fallback_rate",
+        "learned_model_ood_rate",
         "energy_cost_wh",
     )
     return {
@@ -752,6 +772,19 @@ def aggregate_closed_loop_reports(
             ),
             "safety_event_rate": (
                 sum(int(report.get("metrics", {}).get("safety_event_count", 0)) for report in reports)
+                / total_decisions
+                if total_decisions
+                else None
+            ),
+            "learned_model_ood_count": sum(
+                int(report.get("metrics", {}).get("learned_model_ood_count", 0))
+                for report in reports
+            ),
+            "learned_model_ood_rate": (
+                sum(
+                    int(report.get("metrics", {}).get("learned_model_ood_count", 0))
+                    for report in reports
+                )
                 / total_decisions
                 if total_decisions
                 else None

@@ -173,3 +173,5 @@ def test_near_miss_probability_fraction_is_explicit_and_validated():
     assert config.near_miss_collision_probability_fraction == 0.25
     with pytest.raises(ValueError):
         ClosedLoopReplayConfig(near_miss_collision_probability_fraction=1.1)
+    with pytest.raises(ValueError):
+        ClosedLoopReplayConfig(max_learned_feature_zscore=0.0)

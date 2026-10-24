@@ -9,6 +9,8 @@ h5py = pytest.importorskip("h5py")
 
 from jev_uav_track.data import HDF5Episode
 from jev_uav_track.evaluation import OfflineEvaluationConfig, evaluate_episode
+from jev_uav_track.learned_rollout import LearnedOutcomeRolloutModel
+from jev_uav_track.primitives import DEFAULT_PRIMITIVES
 from jev_uav_track.training import (
     RolloutTrainingConfig,
     LinearOutcomeModel,
@@ -108,6 +110,14 @@ def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
     assert all(record["identity_confidence"] == 0.5 for record in module_report["records"])
     assert all(record["history_enabled"] is False for record in module_report["records"])
     assert all(record["history_length"] == 0 for record in module_report["records"])
+
+    guarded = LearnedOutcomeRolloutModel(
+        loaded,
+        max_feature_zscore=1e-6,
+    )
+    guarded_action = guarded.simulate(DEFAULT_PRIMITIVES[0], episode.tracking_state(0))
+    assert guarded_action.metadata["learned_model_ood"] is True
+    assert guarded_action.metadata["model"] == "kinematic-rollout-ood-fallback"
 
 
 def test_cross_episode_split_rejects_overlap_and_reports_holdout(tmp_path) -> None:

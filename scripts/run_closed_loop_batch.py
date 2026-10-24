@@ -39,6 +39,14 @@ def main() -> None:
             "fraction of the hard safety threshold."
         ),
     )
+    parser.add_argument(
+        "--max-learned-feature-zscore",
+        type=float,
+        help=(
+            "Optional support-domain guard for --model. Candidate actions beyond "
+            "this standardized feature distance use the transparent rollout."
+        ),
+    )
     parser.add_argument("--max-episodes", type=int)
     args = parser.parse_args()
 
@@ -65,6 +73,7 @@ def main() -> None:
         fov_half_angle_deg=args.fov_half_angle_deg,
         near_miss_margin_m=args.near_miss_margin_m,
         near_miss_collision_probability_fraction=args.near_miss_collision_probability_fraction,
+        max_learned_feature_zscore=args.max_learned_feature_zscore,
     )
     outcome_model = LinearOutcomeModel.load(args.model) if args.model else None
     reports: Dict[str, list[Dict[str, Any]]] = {"mock": [], "utility": []}
