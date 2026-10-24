@@ -55,6 +55,7 @@
 7. **已完成阈值诊断切片**：闭环 near-miss 的距离余量和碰撞概率比例已参数化，汇总增加按 episode 等权的均值、标准差和描述性 95% 区间；在同一 5-episode/1500 帧 PASS 集上完成 strict/default/conservative 三组敏感性报告。结果显示代理事件从 0 到约 70% 帧率变化，不能作为真实碰撞结论；身份交叉仍为 0，继续标记 `NOT_AUDITED`。
 8. **已完成覆盖复核**：2026-10-24 对 trimmed 根目录做只读复核，281/281 可读，`PASS=259`、`FAIL=5`、`PENDING=17`，PASS 身份交叉仍为 0。新增数据只记录为快照，不自动纳入训练或闭环 manifest。
 9. **已完成 tracker 边界切片**：身份 tracker 现在对可见 crossing 需要连续两次新 actor 观测才确认切换，并记录 `identity_confirmed_switch_events`；新增合成 crossing 回归测试，真实数据覆盖仍维持 `NOT_AUDITED`。
+10. **已完成 learned rollout 诊断**：在完全留出的 Town10HD episode 上复跑透明与 learned outcome rollout；learned 模型使 Mock/utility 的 proxy 可见率降到 `0.307`，暴露校准模型与动作执行代理的分布偏差，因此暂不把 learned 模型当作改进或部署候选。
 
 ## 完成定义
 

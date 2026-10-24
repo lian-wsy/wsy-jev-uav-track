@@ -254,3 +254,5 @@ python scripts/run_closed_loop_batch.py `
 
 完整阈值敏感性记录见 [`docs/experiments/closed_loop_threshold_sensitivity_20261024.md`](docs/experiments/closed_loop_threshold_sensitivity_20261024.md)。
 
+如果传入 `--model`，批处理会加载跨 episode outcome calibrator；应优先用完全留出的 episode 评估。当前模型的留出对照结果见 [`docs/experiments/closed_loop_rollout_model_comparison_20261024.md`](docs/experiments/closed_loop_rollout_model_comparison_20261024.md)，它仍是研究基线，不是已验证动力学模型。
+
