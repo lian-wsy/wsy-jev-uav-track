@@ -47,6 +47,23 @@ def main() -> None:
             "this standardized feature distance use the transparent rollout."
         ),
     )
+    parser.add_argument(
+        "--learned-prediction-blend",
+        type=float,
+        default=1.0,
+        help=(
+            "Blend learned outcome predictions with the transparent baseline: "
+            "0 uses baseline, 1 uses the learned prediction."
+        ),
+    )
+    parser.add_argument(
+        "--max-learned-state-zscore",
+        type=float,
+        help=(
+            "Optional state-only support guard. If observation features are out "
+            "of-domain, all learned candidates fall back for that frame."
+        ),
+    )
     parser.add_argument("--max-episodes", type=int)
     parser.add_argument(
         "--verify-manifest-sha256",
@@ -93,6 +110,8 @@ def main() -> None:
         near_miss_margin_m=args.near_miss_margin_m,
         near_miss_collision_probability_fraction=args.near_miss_collision_probability_fraction,
         max_learned_feature_zscore=args.max_learned_feature_zscore,
+        max_learned_state_feature_zscore=args.max_learned_state_zscore,
+        learned_prediction_blend=args.learned_prediction_blend,
     )
     outcome_model = LinearOutcomeModel.load(args.model) if args.model else None
     reports: Dict[str, list[Dict[str, Any]]] = {"mock": [], "utility": []}

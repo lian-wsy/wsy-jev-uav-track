@@ -141,7 +141,7 @@ UAV position / velocity / yaw
 
 ### 6.4 learned rollout 的支持域保护
 
-`LearnedOutcomeRolloutModel` 默认只替换可见率、中心误差、距离误差和协方差预测，碰撞概率、障碍余量和能耗仍来自透明安全 rollout。由于 calibrator 的动作特征来自记录中的相机速度，直接把它外推到任意候选动作会产生训练分布外输入。可选的 `max_learned_feature_zscore` 会按模型保存的特征均值/尺度检查每个候选；超过阈值的候选回退透明 rollout，并在记录中标记 `learned_model_ood` 和 `max_feature_zscore`。这只阻止明显外推，不能证明 learned 模型已经具有反事实动力学能力；阈值必须在完全留出的 episode 上校准。
+`LearnedOutcomeRolloutModel` 默认只替换可见率、中心误差、距离误差和协方差预测，碰撞概率、障碍余量和能耗仍来自透明安全 rollout。由于 calibrator 的动作特征来自记录中的相机速度，直接把它外推到任意候选动作会产生训练分布外输入。`learned_prediction_blend` 可以把 learned 预测和透明 baseline 混合；可选的 `max_learned_feature_zscore` 会按模型保存的特征均值/尺度检查每个候选，超过阈值就回退透明 rollout。更保守的 `max_learned_state_zscore` 只检查观测状态，状态超出训练域时让该帧所有候选回退，并在记录中标记 `learned_model_ood_reason=state_feature_zscore`。这些开关只阻止明显外推，不能证明 learned 模型已经具有反事实动力学能力；阈值必须在完全留出的 episode 上校准。
 
 ### 6.5 crossing 身份状态机与数据指纹
 

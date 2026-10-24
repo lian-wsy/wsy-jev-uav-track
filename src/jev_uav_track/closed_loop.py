@@ -48,6 +48,8 @@ class ClosedLoopReplayConfig:
     use_identity_confidence: bool = True
     identity_neutral_confidence: float = 0.5
     max_learned_feature_zscore: float | None = None
+    max_learned_state_feature_zscore: float | None = None
+    learned_prediction_blend: float = 1.0
 
     def __post_init__(self) -> None:
         if self.start_frame < 0:
@@ -73,6 +75,13 @@ class ClosedLoopReplayConfig:
             and self.max_learned_feature_zscore <= 0.0
         ):
             raise ValueError("max_learned_feature_zscore must be positive when set")
+        if (
+            self.max_learned_state_feature_zscore is not None
+            and self.max_learned_state_feature_zscore <= 0.0
+        ):
+            raise ValueError("max_learned_state_feature_zscore must be positive when set")
+        if not 0.0 <= self.learned_prediction_blend <= 1.0:
+            raise ValueError("learned_prediction_blend must be in [0, 1]")
 
 
 def _clamp(value: float, lower: float, upper: float) -> float:
@@ -373,6 +382,8 @@ def run_closed_loop_replay(
             outcome_model,
             baseline=baseline,
             max_feature_zscore=cfg.max_learned_feature_zscore,
+            max_state_feature_zscore=cfg.max_learned_state_feature_zscore,
+            prediction_blend=cfg.learned_prediction_blend,
         )
 
     identity = _IdentityTracker()
@@ -466,7 +477,10 @@ def run_closed_loop_replay(
                 "choice": selected.id,
                 "rollout_model": selected.metadata.get("model"),
                 "learned_model_ood": bool(selected.metadata.get("learned_model_ood", False)),
+                "learned_model_ood_reason": selected.metadata.get("learned_model_ood_reason"),
                 "max_feature_zscore": selected.metadata.get("max_feature_zscore"),
+                "state_feature_zscore": selected.metadata.get("state_feature_zscore"),
+                "prediction_blend": selected.metadata.get("prediction_blend"),
                 "fallback": bool(result.used_fallback),
                 "reason": result.reason,
                 "model": result.decision.model_version,
@@ -546,6 +560,13 @@ def run_closed_loop_replay(
         "learned_model_ood_count": learned_model_ood_count,
         "learned_model_ood_rate": (
             learned_model_ood_count / len(records) if records else None
+        ),
+        "learned_model_ood_reason_counts": dict(
+            Counter(
+                str(record["learned_model_ood_reason"])
+                for record in records
+                if record.get("learned_model_ood_reason")
+            )
         ),
         "hard_rejection_count": hard_rejection_count,
         "fallback_rate": (
@@ -723,6 +744,11 @@ def aggregate_closed_loop_reports(
         str(report.get("identity_coverage", {}).get("status", "UNKNOWN"))
         for report in reports
     })
+    learned_ood_reason_counts: Counter[str] = Counter()
+    for report in reports:
+        learned_ood_reason_counts.update(
+            report.get("metrics", {}).get("learned_model_ood_reason_counts", {})
+        )
     episode_metric_names = (
         "proxy_visible_fraction",
         "annotated_visible_fraction",
@@ -800,6 +826,7 @@ def aggregate_closed_loop_reports(
                 if total_decisions
                 else None
             ),
+            "learned_model_ood_reason_counts": dict(learned_ood_reason_counts),
             "hard_rejection_count": sum(
                 int(report.get("metrics", {}).get("hard_rejection_count", 0))
                 for report in reports

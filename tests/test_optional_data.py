@@ -119,6 +119,17 @@ def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
     assert guarded_action.metadata["learned_model_ood"] is True
     assert guarded_action.metadata["model"] == "kinematic-rollout-ood-fallback"
 
+    blended = LearnedOutcomeRolloutModel(loaded, prediction_blend=0.5)
+    blended_action = blended.simulate(DEFAULT_PRIMITIVES[0], episode.tracking_state(0))
+    assert blended_action.metadata["prediction_blend"] == 0.5
+
+    state_guard = LearnedOutcomeRolloutModel(
+        loaded,
+        max_state_feature_zscore=1e-6,
+    )
+    state_guard_action = state_guard.simulate(DEFAULT_PRIMITIVES[0], episode.tracking_state(0))
+    assert state_guard_action.metadata["learned_model_ood_reason"] == "state_feature_zscore"
+
 
 def test_cross_episode_split_rejects_overlap_and_reports_holdout(tmp_path) -> None:
     train_path = tmp_path / "train.hdf5"

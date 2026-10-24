@@ -258,5 +258,5 @@ python scripts/run_closed_loop_batch.py `
 
 如果传入 `--model`，批处理会加载跨 episode outcome calibrator；应优先用完全留出的 episode 评估。当前模型的留出对照结果见 [`docs/experiments/closed_loop_rollout_model_comparison_20261024.md`](docs/experiments/closed_loop_rollout_model_comparison_20261024.md)，它仍是研究基线，不是已验证动力学模型。
 
-对明显的训练分布外候选，可以额外设置 `--max-learned-feature-zscore` 让该候选回退透明 rollout；门控只防止外推，阈值必须在独立 episode 上校准。
+对明显的训练分布外候选，可以设置 `--max-learned-feature-zscore`；如果观测状态本身分布外，设置 `--max-learned-state-zscore` 会让该帧所有候选回退透明 rollout。门控只防止外推，阈值必须在独立 episode 上校准；`--learned-prediction-blend` 可用于保守混合预测。
 
