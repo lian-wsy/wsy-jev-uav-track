@@ -9,7 +9,7 @@ from typing import Iterable, List
 from .models import CandidateAction, CandidateOutcome, TrackingState
 from .primitives import BehaviorPrimitive
 from .rollout import KinematicRolloutModel
-from .training import FEATURE_NAMES, LinearOutcomeModel, feature_vector
+from .training import FEATURE_NAMES, TARGET_MODES, LinearOutcomeModel, feature_vector
 
 
 class LearnedOutcomeRolloutModel:
@@ -25,6 +25,8 @@ class LearnedOutcomeRolloutModel:
     ) -> None:
         self.predictor = predictor
         self.baseline = baseline or KinematicRolloutModel()
+        if predictor.target_mode not in TARGET_MODES:
+            raise ValueError(f"Unknown predictor target_mode: {predictor.target_mode!r}")
         if max_feature_zscore is not None and max_feature_zscore <= 0.0:
             raise ValueError("max_feature_zscore must be positive when set")
         if max_state_feature_zscore is not None and max_state_feature_zscore <= 0.0:
@@ -84,14 +86,20 @@ class LearnedOutcomeRolloutModel:
                     "max_feature_zscore": feature_zscore,
                     "state_feature_zscore": state_feature_zscore,
                     "prediction_blend": 0.0,
+                    "prediction_target_mode": self.predictor.target_mode,
                 },
             )
+        baseline_outcome = baseline_action.outcome
         prediction = self.predictor.predict_state(
             state,
             primitive.command_mps,
             primitive.yaw_rate_dps,
         )
-        baseline_outcome = baseline_action.outcome
+        if self.predictor.target_mode == "baseline_residual":
+            prediction = {
+                name: float(getattr(baseline_outcome, name)) + float(value)
+                for name, value in prediction.items()
+            }
         blend = self.prediction_blend
         blended = {
             name: (1.0 - blend) * float(getattr(baseline_outcome, name)) + blend * float(value)
@@ -120,6 +128,7 @@ class LearnedOutcomeRolloutModel:
                 "max_feature_zscore": feature_zscore,
                 "state_feature_zscore": state_feature_zscore,
                 "prediction_blend": blend,
+                "prediction_target_mode": self.predictor.target_mode,
             },
         )
 

@@ -8,6 +8,7 @@ from pathlib import Path
 
 from jev_uav_track.data import HDF5Episode
 from jev_uav_track.training import (
+    TARGET_MODES,
     RolloutTrainingConfig,
     fit_outcome_model_cross_episode,
 )
@@ -32,6 +33,7 @@ def main() -> None:
     parser.add_argument("--stride", type=int, default=2)
     parser.add_argument("--max-samples-per-episode", type=int, default=64)
     parser.add_argument("--desired-range-m", type=float, default=20.0)
+    parser.add_argument("--target-mode", choices=TARGET_MODES, default="absolute")
     args = parser.parse_args()
 
     train_episodes = [HDF5Episode.open(path, load_images=False) for path in args.train_episode]
@@ -43,6 +45,7 @@ def main() -> None:
         stride=args.stride,
         max_samples=args.max_samples_per_episode,
         desired_range_m=args.desired_range_m,
+        target_mode=args.target_mode,
     )
     model, metrics = fit_outcome_model_cross_episode(
         train_episodes,

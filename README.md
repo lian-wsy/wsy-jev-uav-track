@@ -127,6 +127,18 @@ python scripts/train_cross_episode.py `
   --max-samples-per-episode 64
 ```
 
+如果要让模型只学习相对透明 rollout 的修正量，可以使用 residual target；推理时 `LearnedOutcomeRolloutModel` 会自动把修正量加回当前候选的 baseline：
+
+```powershell
+python scripts/train_cross_episode.py `
+  --train-episode "<PASS train episode>" `
+  --validation-episode "<different PASS validation episode>" `
+  --target-mode baseline_residual `
+  --output artifacts\cross_episode\residual_rollout_model.npz
+```
+
+该模式仍然只利用记录中的相机速度，不能替代动作执行后的反事实动力学数据。
+
 如果要做真实 Jev 与 Mock Jev 的小规模对照，先确认 `.env` 只在本机存在，然后只取少量记录帧：
 
 ```powershell

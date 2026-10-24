@@ -130,6 +130,29 @@ def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
     state_guard_action = state_guard.simulate(DEFAULT_PRIMITIVES[0], episode.tracking_state(0))
     assert state_guard_action.metadata["learned_model_ood_reason"] == "state_feature_zscore"
 
+    residual_config = RolloutTrainingConfig(
+        horizon_frames=2,
+        stride=1,
+        max_samples=8,
+        target_mode="baseline_residual",
+    )
+    residual_dataset = build_training_dataset(episode, residual_config)
+    residual_model, _ = fit_outcome_model(residual_dataset, residual_config)
+    assert residual_model.target_mode == "baseline_residual"
+    residual_path = tmp_path / "residual_model.npz"
+    residual_model.save(residual_path)
+    residual_loaded = LinearOutcomeModel.load(residual_path)
+    assert residual_loaded.target_mode == "baseline_residual"
+    residual_action = LearnedOutcomeRolloutModel(residual_loaded).simulate(
+        DEFAULT_PRIMITIVES[0], episode.tracking_state(0)
+    )
+    assert residual_action.metadata["prediction_target_mode"] == "baseline_residual"
+    with pytest.raises(ValueError, match="target_mode"):
+        build_training_dataset(
+            episode,
+            RolloutTrainingConfig(horizon_frames=2, target_mode="invalid"),
+        )
+
 
 def test_cross_episode_split_rejects_overlap_and_reports_holdout(tmp_path) -> None:
     train_path = tmp_path / "train.hdf5"

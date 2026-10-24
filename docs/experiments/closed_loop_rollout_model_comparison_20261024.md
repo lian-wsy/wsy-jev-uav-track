@@ -6,7 +6,7 @@
 
 ## 模型与数据边界
 
-- 模型文件：`artifacts/occlusion_pass_20261023/models/rollout_model.npz`。
+- 绝对目标模型：`artifacts/occlusion_pass_20261023/models/rollout_model.npz`；residual 复跑模型：`artifacts/threshold_sensitivity_20261024/residual_rollout_model.npz`。
 - 训练 episode：4 个 PASS；留出验证 episode：`Town10HD_bicycle_normal_motion_long_seed260922365.hdf5`，没有与训练 episode 重叠。
 - 训练记录的 RMSE：visibility `0.1099`、image-center `0.0763`、range `1.477 m`、covariance `0.1004`；留出验证 RMSE：visibility `0.2209`、image-center `0.0922`、range `2.917 m`、covariance `0.1920`。
 - 所有回放仍是运动学/FOV 代理，不是 CARLA、AirSim 或实机动力学；near-miss 仍按默认 `0.5 m` / `0.5` 代理阈值统计。
@@ -26,8 +26,12 @@
 | learned + OOD guard 5 | utility | 0.293 | 5.800 s | 2 | 0.000 | 0 | 45.29 | orbit_left 86 / scan 159 / hold 55 |
 | learned + state OOD guard 2.75 | Mock Jev | 0.470 | 4.050 s | 4 | 0.677 | 0 | 56.78 | orbit_left 133 / scan 167 |
 | learned + state OOD guard 2.75 | utility | 0.463 | 3.950 s | 4 | 0.000 | 0 | 53.23 | orbit_left 108 / scan 178 / hold 14 |
+| residual learned | Mock Jev | 0.500 | 7.200 s | 3 | 0.777 | 0 | 55.39 | descend 20 / orbit_left 160 / scan 120 |
+| residual learned | utility | 0.460 | 5.133 s | 3 | 0.000 | 0 | 54.66 | descend 9 / orbit_left 114 / scan 177 |
+| residual + blend 0.25 | Mock Jev | 0.457 | 4.050 s | 4 | 0.637 | 0 | 56.54 | orbit_left 128 / scan 172 |
+| residual + blend 0.25 | utility | 0.463 | 5.067 s | 3 | 0.000 | 0 | 56.35 | orbit_left 124 / scan 176 |
 
-“未完成”表示固定窗口结束时仍处于 proxy 丢失状态，不能把它当成 0 秒重捕获。四行的身份保持率都只能标为 `NOT_AUDITED`，因为留出 episode 只有一个 actor id。
+“未完成”表示固定窗口结束时仍处于 proxy 丢失状态，不能把它当成 0 秒重捕获。上述结果的身份保持率都只能标为 `NOT_AUDITED`，因为留出 episode 只有一个 actor id。
 
 ## 结论
 
@@ -51,36 +55,52 @@
 
 五 episode 汇总 `model_default.json` 只用于诊断，包含模型训练所用的 4 个 episode，因此不作为独立泛化结果。下一步应在更多、完全按 episode 隔离的 PASS 数据上重新校准，并把动作执行后的真实可见性/距离标签纳入训练；在此之前，透明 rollout 只能作为可解释基线，learned 模型只能保留为研究对照。
 
+本轮新增 `target_mode=baseline_residual`。它把训练标签改成“未来真实 outcome 减去同一记录动作的透明 baseline”，留出验证 RMSE 的 range-error 从 absolute 模式的 `2.917m` 降到 `0.378m`。闭环上 residual 原始模式让 Mock 可见率升到 `0.500`，但重捕获变慢到 `7.20s`；混合比例 `0.25` 时 Mock/utility 可见率为 `0.457/0.463`、重捕获时间为 `4.05/5.07s`，接近透明基线。结果来自带 SHA 校验的同一留出 episode 复跑，说明 residual target 更稳定，但仍没有证明 learned 反事实有效，默认配置继续保持 absolute。
+
 ## 复现
 
 ```powershell
 $env:PYTHONPATH = "src"
 
-# 留出 episode 是 manifest 的第一项，--max-episodes 1 只取它
+# 留出 episode 是 SHA manifest 的第一项，--max-episodes 1 只取它
 python scripts/run_closed_loop_batch.py `
-  --manifest artifacts\occlusion_pass_20261023\pass_manifest.json `
+  --manifest artifacts\occlusion_pass_20261024\pass_manifest_sha256.json `
   --max-episodes 1 `
+  --verify-manifest-sha256 `
   --output artifacts\threshold_sensitivity_20261024\heldout_kinematic.json
 
 python scripts/run_closed_loop_batch.py `
-  --manifest artifacts\occlusion_pass_20261023\pass_manifest.json `
+  --manifest artifacts\occlusion_pass_20261024\pass_manifest_sha256.json `
   --model artifacts\occlusion_pass_20261023\models\rollout_model.npz `
-  --max-episodes 1 `
+  --max-episodes 1 --verify-manifest-sha256 `
   --output artifacts\threshold_sensitivity_20261024\heldout_learned.json
 
 # 可选支持域保护；阈值需要用独立 episode 校准
 python scripts/run_closed_loop_batch.py `
-  --manifest artifacts\occlusion_pass_20261023\pass_manifest.json `
+  --manifest artifacts\occlusion_pass_20261024\pass_manifest_sha256.json `
   --model artifacts\occlusion_pass_20261023\models\rollout_model.npz `
-  --max-episodes 1 --max-learned-feature-zscore 5 `
+  --max-episodes 1 --verify-manifest-sha256 --max-learned-feature-zscore 5 `
   --output artifacts\threshold_sensitivity_20261024\heldout_guard5.json
 
 # 状态特征门控；只在状态进入训练支持域时使用 learned outcome
 python scripts/run_closed_loop_batch.py `
-  --manifest artifacts\occlusion_pass_20261023\pass_manifest.json `
+  --manifest artifacts\occlusion_pass_20261024\pass_manifest_sha256.json `
   --model artifacts\occlusion_pass_20261023\models\rollout_model.npz `
-  --max-episodes 1 --max-learned-state-zscore 2.75 `
+  --max-episodes 1 --verify-manifest-sha256 --max-learned-state-zscore 2.75 `
   --output artifacts\threshold_sensitivity_20261024\heldout_stateguard2p75.json
+
+# residual target；模型训练仍保持四训一留出 episode 隔离
+python scripts/train_cross_episode.py `
+  --train-episode "<four PASS train episodes>" `
+  --validation-episode "<held-out PASS episode>" `
+  --target-mode baseline_residual `
+  --output artifacts\threshold_sensitivity_20261024\residual_rollout_model.npz
+
+python scripts/run_closed_loop_batch.py `
+  --manifest artifacts\occlusion_pass_20261024\pass_manifest_sha256.json `
+  --model artifacts\threshold_sensitivity_20261024\residual_rollout_model.npz `
+  --max-episodes 1 --verify-manifest-sha256 --learned-prediction-blend 0.25 `
+  --output artifacts\threshold_sensitivity_20261024\heldout_residual_blend0p25.json
 ```
 
 完整 JSON 保存在被 Git 忽略的 `artifacts/threshold_sensitivity_20261024/`。

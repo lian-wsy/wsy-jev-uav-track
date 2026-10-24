@@ -14,6 +14,8 @@ from typing import Any, Dict, Iterable, Mapping, Sequence
 
 from .data.hdf5_adapter import HDF5Episode
 from .models import MissionConstraints, TrackingState
+from .primitives import BehaviorPrimitive
+from .rollout import KinematicRolloutModel
 
 
 FEATURE_NAMES = (
@@ -40,6 +42,8 @@ OUTPUT_NAMES = (
     "range_error_m",
     "covariance_trace",
 )
+
+TARGET_MODES = ("absolute", "baseline_residual")
 
 
 ABLATION_DISABLED_FEATURES = {
@@ -128,6 +132,7 @@ class RolloutTrainingConfig:
     desired_range_m: float = 20.0
     ridge_alpha: float = 1.0
     train_fraction: float = 0.7
+    target_mode: str = "absolute"
 
 
 @dataclass
@@ -166,6 +171,10 @@ def build_training_dataset(
 
     np = _numpy()
     cfg = config or RolloutTrainingConfig()
+    if cfg.target_mode not in TARGET_MODES:
+        raise ValueError(
+            f"Unknown target_mode {cfg.target_mode!r}; choose from {TARGET_MODES}"
+        )
     if cfg.horizon_frames <= 0 or cfg.stride <= 0 or cfg.max_samples <= 0:
         raise ValueError("horizon_frames, stride, and max_samples must be positive")
     if not 0.0 < cfg.train_fraction < 1.0:
@@ -179,6 +188,7 @@ def build_training_dataset(
 
     features = []
     labels = []
+    baseline_rollout = KinematicRolloutModel()
     constraints = MissionConstraints(
         desired_range_m=cfg.desired_range_m,
         minimum_obstacle_margin_m=0.0,
@@ -188,14 +198,34 @@ def build_training_dataset(
         state = episode.tracking_state(index, constraints=constraints)
         future = episode.tracking_state(future_index, constraints=constraints)
         features.append(feature_vector(state, episode.camera_velocities[index]))
-        labels.append(
-            (
-                future.target.visibility_probability,
-                future.target.image_center_error,
-                abs(future.target.range_m - cfg.desired_range_m),
-                future.target.covariance_trace,
-            )
+        future_outcome = (
+            future.target.visibility_probability,
+            future.target.image_center_error,
+            abs(future.target.range_m - cfg.desired_range_m),
+            future.target.covariance_trace,
         )
+        if cfg.target_mode == "baseline_residual":
+            observed_primitive = BehaviorPrimitive(
+                id="observed_camera_motion",
+                name="Observed camera motion",
+                description="Recorded camera velocity used for calibration",
+                command_mps=tuple(float(value) for value in episode.camera_velocities[index]),
+            )
+            baseline = baseline_rollout.simulate(observed_primitive, state).outcome
+            baseline_outcome = (
+                baseline.visibility_probability,
+                baseline.image_center_error,
+                baseline.range_error_m,
+                baseline.covariance_trace,
+            )
+            labels.append(
+                tuple(
+                    float(target) - float(reference)
+                    for target, reference in zip(future_outcome, baseline_outcome)
+                )
+            )
+        else:
+            labels.append(future_outcome)
 
     if not features:
         raise ValueError("Episode does not contain enough frames for the requested horizon")
@@ -263,6 +293,7 @@ class LinearOutcomeModel:
     output_names: tuple[str, ...] = OUTPUT_NAMES
     training_summary: Mapping[str, Any] | None = None
     input_mask: Any | None = None
+    target_mode: str = "absolute"
 
     def _design(self, features: Any) -> Any:
         np = _numpy()
@@ -314,6 +345,7 @@ class LinearOutcomeModel:
                 else np.ones(len(self.feature_names), dtype=bool)
             ),
             training_summary_json=json.dumps(dict(self.training_summary or {}), ensure_ascii=True),
+            target_mode=np.asarray(self.target_mode),
         )
         return destination
 
@@ -335,6 +367,11 @@ class LinearOutcomeModel:
                 output_names=tuple(str(item) for item in data["output_names"].tolist()),
                 training_summary=summary,
                 input_mask=data["input_mask"] if "input_mask" in data.files else None,
+                target_mode=(
+                    str(data["target_mode"].item())
+                    if "target_mode" in data.files
+                    else "absolute"
+                ),
             )
 
 
@@ -417,6 +454,7 @@ def _fit_ridge_model(
         weights=weights,
         training_summary=summary,
         input_mask=mask,
+        target_mode=config.target_mode,
     )
 
 
@@ -458,6 +496,7 @@ def fit_outcome_model(
     eval_predictions = model.predict_array(dataset.features[split:]) if split < count else np.empty((0, dataset.labels.shape[1]))
     metrics = {
         "sample_count": count,
+        "target_mode": cfg.target_mode,
         "train_count": split,
         "eval_count": count - split,
         "train_rmse": dict(zip(dataset.output_names, _rmse(train_predictions, train_y))),
@@ -537,6 +576,7 @@ def fit_outcome_model_cross_episode(
         )
     metrics = {
         "split": "cross_episode",
+        "target_mode": cfg.target_mode,
         "train_episode_count": len(train_list),
         "validation_episode_count": len(validation_list),
         "train_episodes": [str(episode.path) for episode in train_list],
