@@ -59,6 +59,7 @@
 11. **已完成 OOD 保护切片**：`LearnedOutcomeRolloutModel` 增加候选级 `max_learned_feature_zscore`、状态级 `max_learned_state_zscore` 和 `learned_prediction_blend`；逐帧记录 OOD 原因。留出实验中状态阈值 2.75 可把 Mock/utility 恢复到约 `0.470/0.463` 可见率，但 92.7%/95.3% 帧仍是状态 OOD，后续需用更多独立 episode 校准。
 12. **已完成 manifest 指纹切片**：显式 PASS manifest 支持流式 SHA-256，批处理可在 HDF5 打开前验证哈希；当前 5 个对照 episode 的指纹验证通过，结果与未校验批次一致。
 13. **已完成 residual rollout 切片**：新增 `target_mode=baseline_residual`，留出 range-error RMSE 从 `2.917m` 降到 `0.378m`；闭环 raw residual 仍会拉长重捕获，blend `0.25` 接近透明基线，因此默认仍保持 absolute，后续需要真实动作后果数据。
+14. **已完成 target provenance 切片**：`RolloutTrainingDataset` 保存 `target_mode`，省略训练 config 时自动继承，显式 mode 不一致会拒绝拟合；新增 residual API 回归测试，防止把 residual 标签误标成 absolute。
 
 ## 完成定义
 

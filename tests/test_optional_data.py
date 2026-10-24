@@ -137,6 +137,11 @@ def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
         target_mode="baseline_residual",
     )
     residual_dataset = build_training_dataset(episode, residual_config)
+    assert residual_dataset.target_mode == "baseline_residual"
+    inferred_residual_model, _ = fit_outcome_model(residual_dataset)
+    assert inferred_residual_model.target_mode == "baseline_residual"
+    with pytest.raises(ValueError, match="does not match dataset"):
+        fit_outcome_model(residual_dataset, RolloutTrainingConfig(horizon_frames=2))
     residual_model, _ = fit_outcome_model(residual_dataset, residual_config)
     assert residual_model.target_mode == "baseline_residual"
     residual_path = tmp_path / "residual_model.npz"

@@ -142,6 +142,13 @@ class RolloutTrainingDataset:
     feature_names: tuple[str, ...] = FEATURE_NAMES
     output_names: tuple[str, ...] = OUTPUT_NAMES
     episode_paths: tuple[str, ...] = ()
+    target_mode: str = "absolute"
+
+    def __post_init__(self) -> None:
+        if self.target_mode not in TARGET_MODES:
+            raise ValueError(
+                f"Unknown dataset target_mode {self.target_mode!r}; choose from {TARGET_MODES}"
+            )
 
     @property
     def sample_count(self) -> int:
@@ -155,6 +162,7 @@ class RolloutTrainingDataset:
             "feature_names": list(self.feature_names),
             "output_names": list(self.output_names),
             "episode_paths": list(self.episode_paths),
+            "target_mode": self.target_mode,
         }
 
 
@@ -233,6 +241,7 @@ def build_training_dataset(
         features=np.asarray(features, dtype=np.float64),
         labels=np.asarray(labels, dtype=np.float64),
         episode_paths=(str(episode.path),),
+        target_mode=cfg.target_mode,
     )
 
 
@@ -279,6 +288,7 @@ def build_training_dataset_from_episodes(
         feature_names=datasets[0].feature_names,
         output_names=datasets[0].output_names,
         episode_paths=paths,
+        target_mode=datasets[0].target_mode,
     )
 
 
@@ -413,6 +423,7 @@ def _masked_dataset(
         feature_names=dataset.feature_names,
         output_names=dataset.output_names,
         episode_paths=dataset.episode_paths,
+        target_mode=dataset.target_mode,
     )
 
 
@@ -474,7 +485,12 @@ def fit_outcome_model(
     """Fit on the early portion and report a chronological holdout."""
 
     np = _numpy()
-    cfg = config or RolloutTrainingConfig()
+    cfg = config or RolloutTrainingConfig(target_mode=dataset.target_mode)
+    if cfg.target_mode != dataset.target_mode:
+        raise ValueError(
+            "Training config target_mode does not match dataset: "
+            f"config={cfg.target_mode!r}, dataset={dataset.target_mode!r}"
+        )
     mask = _normalise_feature_mask(feature_mask, dataset.features.shape[1])
     fit_dataset = _masked_dataset(dataset, mask)
     count = dataset.sample_count
@@ -549,6 +565,7 @@ def fit_outcome_model_cross_episode(
         feature_names=train_dataset.feature_names,
         output_names=train_dataset.output_names,
         episode_paths=tuple(str(episode.path) for episode in validation_list),
+        target_mode=train_dataset.target_mode,
     )
     mask = _normalise_feature_mask(feature_mask, train_dataset.features.shape[1])
     model = _fit_ridge_model(
