@@ -485,6 +485,7 @@ def run_closed_loop_replay(
         "identity_retention_rate": (
             identity_correct / identity_observed_frames if identity_observed_frames else None
         ),
+        "identity_correct_frames": identity_correct,
         "identity_observed_frames": identity_observed_frames,
         "identity_switch_events": identity.switch_events,
         "selected_unsafe_count": selected_unsafe_count,
@@ -572,3 +573,107 @@ def compare_closed_loop_reports(
             "right_minus_left": metric_delta,
         }
     return comparisons
+
+
+def aggregate_closed_loop_reports(
+    reports: Sequence[Mapping[str, Any]],
+) -> Dict[str, Any]:
+    """Aggregate per-episode replay reports without hiding coverage gaps.
+
+    Rates are weighted by the number of decision frames.  Reacquisition time is
+    computed from the concatenated completed events, so an episode with no
+    completed reacquisition does not silently contribute a zero-second event.
+    """
+
+    if not reports:
+        raise ValueError("At least one closed-loop report is required")
+
+    total_decisions = sum(
+        int(report.get("metrics", {}).get("decision_count", 0)) for report in reports
+    )
+    total_identity_frames = sum(
+        int(report.get("metrics", {}).get("identity_observed_frames", 0))
+        for report in reports
+    )
+    total_identity_correct = sum(
+        int(report.get("metrics", {}).get("identity_correct_frames", 0))
+        for report in reports
+    )
+    reacquisition_times = [
+        float(value)
+        for report in reports
+        for value in report.get("reacquisition_times_s", [])
+    ]
+
+    def _weighted_mean(name: str) -> float | None:
+        values: list[tuple[float, int]] = []
+        for report in reports:
+            value = report.get("metrics", {}).get(name)
+            count = int(report.get("metrics", {}).get("decision_count", 0))
+            if value is not None and count > 0:
+                values.append((float(value), count))
+        denominator = sum(count for _, count in values)
+        return sum(value * count for value, count in values) / denominator if denominator else None
+
+    identity_statuses = sorted({
+        str(report.get("identity_coverage", {}).get("status", "UNKNOWN"))
+        for report in reports
+    })
+    return {
+        "episode_count": len(reports),
+        "decision_count": total_decisions,
+        "identity_coverage_statuses": identity_statuses,
+        "metrics": {
+            "proxy_visible_fraction": _weighted_mean("proxy_visible_fraction"),
+            "annotated_visible_fraction": _weighted_mean("annotated_visible_fraction"),
+            "annotated_occluded_fraction": _weighted_mean("annotated_occluded_fraction"),
+            "reacquisition_count": len(reacquisition_times),
+            "mean_reacquisition_time_s": (
+                sum(reacquisition_times) / len(reacquisition_times)
+                if reacquisition_times
+                else None
+            ),
+            "max_reacquisition_time_s": max(reacquisition_times, default=None),
+            "identity_retention_rate": (
+                total_identity_correct / total_identity_frames
+                if total_identity_frames
+                else None
+            ),
+            "identity_observed_frames": total_identity_frames,
+            "selected_unsafe_count": sum(
+                int(report.get("metrics", {}).get("selected_unsafe_count", 0))
+                for report in reports
+            ),
+            "near_miss_count": sum(
+                int(report.get("metrics", {}).get("near_miss_count", 0))
+                for report in reports
+            ),
+            "safety_event_count": sum(
+                int(report.get("metrics", {}).get("safety_event_count", 0))
+                for report in reports
+            ),
+            "hard_rejection_count": sum(
+                int(report.get("metrics", {}).get("hard_rejection_count", 0))
+                for report in reports
+            ),
+            "fallback_rate": _weighted_mean("fallback_rate"),
+            "client_error_count": sum(
+                int(report.get("metrics", {}).get("client_error_count", 0))
+                for report in reports
+            ),
+            "energy_cost_wh": sum(
+                float(report.get("metrics", {}).get("energy_cost_wh", 0.0))
+                for report in reports
+            ),
+        },
+        "episodes": [
+            {
+                "episode": report.get("episode"),
+                "validation_status": report.get("validation_status"),
+                "identity_coverage": report.get("identity_coverage"),
+                "metrics": report.get("metrics", {}),
+                "choice_counts": report.get("choice_counts", {}),
+            }
+            for report in reports
+        ],
+    }

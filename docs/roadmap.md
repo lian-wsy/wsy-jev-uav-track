@@ -51,7 +51,7 @@
 3. **已完成第一轮覆盖**：新增稳定跟踪、出框/遮挡代理、身份切换和目标加速测试；历史 12-episode baseline 全可见、零遮挡，早期困难 manifest 曾覆盖 3 个出框 episode 和 6 个高加速度 episode。后续全量只读审计已补出 4 个真实遮挡 PASS，但仍没有身份交叉 PASS。
 4. **已完成第一版**：短时历史和身份置信度已接入 action-conditioned rollout；历史遮挡/可见性影响重捕获增益，身份不确定性影响协方差与信息增益，目标加速度进入不确定性项，并有 15 个基础测试通过。
 5. **已完成第一版**：在困难 PASS episode 的固定出框事件帧上复跑 real Jev、Mock Jev 和 utility；记录选择、confidence、fallback、utility regret 和安全拒绝原因。
-6. **已完成当前切片**：只读审计确认 4 个真实遮挡 PASS、0 个身份交叉 PASS；新增 `closed_loop.py` 和 `run_closed_loop_replay.py`，在固定遮挡事件窗比较 Mock Jev、真实 Jev 和 utility 的重捕获、身份保持与回放安全事件。闭环仍是运动学代理，身份交叉和 CARLA/实机动力学验证继续作为后续门槛；未满足数据和安全门槛时不启动 CARLA 采集，也不接真实飞行控制器。
+6. **已完成当前切片**：只读审计确认 4 个真实遮挡 PASS、0 个身份交叉 PASS；新增 `closed_loop.py`、固定窗三方对照和多 episode Mock/utility 汇总。闭环仍是运动学代理，身份交叉和 CARLA/实机动力学验证继续作为后续门槛；未满足数据和安全门槛时不启动 CARLA 采集，也不接真实飞行控制器。
 
 ## 完成定义
 

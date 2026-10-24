@@ -3,6 +3,7 @@ from pathlib import Path
 from jev_uav_track.closed_loop import (
     ClosedLoopReplayConfig,
     _IdentityTracker,
+    aggregate_closed_loop_reports,
     compare_closed_loop_reports,
     run_closed_loop_replay,
 )
@@ -100,3 +101,31 @@ def test_closed_loop_pairwise_comparison_is_deterministic():
     ]
     assert comparison["shared_frames"] == 3
     assert 0.0 <= comparison["choice_agreement_rate"] <= 1.0
+
+
+def test_closed_loop_aggregate_weights_identity_and_reacquisition_events():
+    config = ClosedLoopReplayConfig(
+        start_frame=0,
+        end_frame=6,
+        stride=1,
+        max_decisions=16,
+        minimum_obstacle_margin_m=0.0,
+    )
+    first = run_closed_loop_replay(
+        FakeEpisode(),
+        client=UtilityRankingClient(),
+        config=config,
+        model_name="utility-ranking-v0",
+    )
+    second = run_closed_loop_replay(
+        FakeEpisode(),
+        client=MockJevClient(),
+        config=config,
+        model_name="mock-jev-v0",
+    )
+    aggregate = aggregate_closed_loop_reports([first, second])
+    assert aggregate["episode_count"] == 2
+    assert aggregate["metrics"]["reacquisition_count"] == 2
+    assert aggregate["metrics"]["mean_reacquisition_time_s"] == 2.0
+    assert aggregate["metrics"]["identity_retention_rate"] == 1.0
+    assert aggregate["identity_coverage_statuses"] == ["NOT_AUDITED"]

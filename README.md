@@ -231,3 +231,14 @@ python scripts/run_closed_loop_replay.py `
 
 本轮结果见 [`docs/experiments/closed_loop_occlusion_replay_20261023.md`](docs/experiments/closed_loop_occlusion_replay_20261023.md)。
 
+如果要在同一份 PASS manifest 上做多 episode 的离线闭环汇总，可以运行：
+
+```powershell
+python scripts/run_closed_loop_batch.py `
+  --manifest artifacts\occlusion_pass_20261023\pass_manifest.json `
+  --output artifacts\occlusion_pass_20261024\mock_utility_batch.json `
+  --stride 1 --max-decisions 512
+```
+
+该批处理只运行 Mock Jev 和 utility，不发起网络请求；真实 Jev 仍通过固定小窗口脚本单独对照。批量结果见 [`docs/experiments/closed_loop_batch_20261024.md`](docs/experiments/closed_loop_batch_20261024.md)。
+

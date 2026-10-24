@@ -47,6 +47,7 @@ from .training import (
 )
 from .closed_loop import (
     ClosedLoopReplayConfig,
+    aggregate_closed_loop_reports,
     compare_closed_loop_reports,
     run_closed_loop_replay,
 )
@@ -97,6 +98,7 @@ __all__ = [
     "fit_outcome_model_cross_episode",
     "attach_history",
     "ClosedLoopReplayConfig",
+    "aggregate_closed_loop_reports",
     "run_closed_loop_replay",
     "compare_closed_loop_reports",
 ]
