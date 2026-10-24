@@ -116,15 +116,23 @@ class _IdentityTracker:
 
     Ground-truth actor ids are used only for metric annotation.  The simulated
     tracker receives an id when the proxy observation is visible and keeps its
-    last id through an occlusion.  This makes identity retention measurable
-    without leaking an unseen actor id into the decision state.
+    last id through an occlusion.  At a visible crossing it requires two
+    consecutive observations of a new id before confirming a switch.  This
+    makes identity retention measurable without leaking an unseen actor id
+    into the decision state or switching on one ambiguous frame.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, switch_confirmation_steps: int = 2) -> None:
+        if switch_confirmation_steps <= 0:
+            raise ValueError("switch_confirmation_steps must be positive")
         self.tracked_id: int | None = None
         self.confidence = 0.5
         self.lost_steps = 0
         self.switch_events = 0
+        self.confirmed_switch_events = 0
+        self.switch_confirmation_steps = int(switch_confirmation_steps)
+        self._pending_id: int | None = None
+        self._pending_steps = 0
 
     def update(self, observed_id: int | None, visible: bool) -> tuple[int | None, float]:
         if visible and observed_id is not None and observed_id >= 0:
@@ -132,16 +140,31 @@ class _IdentityTracker:
                 self.tracked_id = observed_id
                 self.confidence = 1.0
             elif observed_id == self.tracked_id:
+                self._pending_id = None
+                self._pending_steps = 0
                 self.confidence = min(1.0, self.confidence + 0.12)
             else:
-                # Keep the previous identity for one ambiguous observation;
+                # Keep the previous identity until the new id is repeated;
                 # this is intentionally conservative at a crossing.
                 self.switch_events += 1
                 self.confidence = min(self.confidence, 0.25)
+                if self._pending_id == observed_id:
+                    self._pending_steps += 1
+                else:
+                    self._pending_id = observed_id
+                    self._pending_steps = 1
+                if self._pending_steps >= self.switch_confirmation_steps:
+                    self.tracked_id = observed_id
+                    self.confirmed_switch_events += 1
+                    self.confidence = 0.60
+                    self._pending_id = None
+                    self._pending_steps = 0
             self.lost_steps = 0
         else:
             self.lost_steps += 1
             self.confidence = max(0.25, self.confidence - 0.10)
+            self._pending_id = None
+            self._pending_steps = 0
         return self.tracked_id, self.confidence
 
 
@@ -494,6 +517,7 @@ def run_closed_loop_replay(
         "identity_correct_frames": identity_correct,
         "identity_observed_frames": identity_observed_frames,
         "identity_switch_events": identity.switch_events,
+        "identity_confirmed_switch_events": identity.confirmed_switch_events,
         "selected_unsafe_count": selected_unsafe_count,
         "near_miss_count": near_miss_count,
         "near_miss_rate": near_miss_count / len(records) if records else None,
@@ -704,6 +728,10 @@ def aggregate_closed_loop_reports(
                 else None
             ),
             "identity_observed_frames": total_identity_frames,
+            "identity_confirmed_switch_events": sum(
+                int(report.get("metrics", {}).get("identity_confirmed_switch_events", 0))
+                for report in reports
+            ),
             "selected_unsafe_count": sum(
                 int(report.get("metrics", {}).get("selected_unsafe_count", 0))
                 for report in reports

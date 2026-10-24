@@ -46,6 +46,12 @@ class FakeEpisode:
         )
 
 
+class CrossingEpisode(FakeEpisode):
+    target_visible = [True] * 6
+    target_occluded = [False] * 6
+    target_actor_ids = [7, 7, 8, 8, 8, 8]
+
+
 def test_closed_loop_reports_reacquisition_and_identity_metrics():
     config = ClosedLoopReplayConfig(
         start_frame=0,
@@ -76,6 +82,31 @@ def test_identity_tracker_is_sticky_at_crossing():
     assert tracked_id == 1
     assert confidence == 0.25
     assert tracker.switch_events == 1
+    tracked_id, confidence = tracker.update(2, True)
+    assert tracked_id == 2
+    assert confidence == 0.60
+    assert tracker.confirmed_switch_events == 1
+
+
+def test_crossing_episode_reports_audited_identity_and_confirmed_switch():
+    config = ClosedLoopReplayConfig(
+        start_frame=0,
+        end_frame=6,
+        stride=1,
+        max_decisions=16,
+        minimum_obstacle_margin_m=0.0,
+    )
+    report = run_closed_loop_replay(
+        CrossingEpisode(),
+        client=UtilityRankingClient(),
+        config=config,
+        model_name="utility-ranking-v0",
+    )
+
+    assert report["identity_coverage"]["status"] == "AUDITED"
+    assert report["identity_coverage"]["ground_truth_actor_ids"] == [7, 8]
+    assert report["metrics"]["identity_confirmed_switch_events"] == 1
+    assert report["metrics"]["identity_retention_rate"] == 5 / 6
 
 
 def test_closed_loop_pairwise_comparison_is_deterministic():

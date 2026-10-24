@@ -22,6 +22,8 @@
 
 最关键的阻塞仍是身份交叉覆盖为 0。当前单 actor episode 的身份保持率可以用于检查 tracker 的基本粘性，但不能解释 crossing 下的误跟随、ID switch 或重捕获鲁棒性；在获得新的、独立 PASS 审核的多 actor episode 前，相关指标继续标记为 `NOT_AUDITED`。
 
+代码层面补了一个不进入训练或报告的合成边界测试：actor 序列 `[7, 7, 8, 8, 8, 8]` 要求连续两次看到新 id 才确认切换，得到 `confirmed_switch_events=1`、身份保持率 `5/6`，并将覆盖状态标为 `AUDITED`。这只验证 tracker 的状态机语义，不能替代真实 crossing PASS 数据。
+
 复现：
 
 ```powershell
