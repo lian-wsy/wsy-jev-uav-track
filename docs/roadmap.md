@@ -63,4 +63,6 @@
 
 ## 完成定义
 
+2026-10-25：补齐单 episode 训练的 PASS 准入检查，absolute/residual 均在访问训练状态前拒绝未审核数据。34 个测试通过，一份 SHA 校验 PASS episode 的 32 样本训练 smoke 成功。见 [实验记录](experiments/pass_training_gate_20261025.md)。
+
 长期目标不是让某一次离线报告的 utility 更高，而是形成一条能被复现和审计的闭环链路：感知与身份 belief → 短时历史与自运动 → 候选 rollout → 硬安全过滤 → Jev/utility 选择 → 飞控执行 → 可见性、身份和安全结果回写。每个模块都要有独立开关、测试、消融结果和已知限制。

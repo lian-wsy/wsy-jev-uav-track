@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 
@@ -15,6 +17,7 @@ from jev_uav_track.training import (
     RolloutTrainingConfig,
     LinearOutcomeModel,
     build_training_dataset,
+    build_training_dataset_from_episodes,
     fit_outcome_model,
     fit_outcome_model_cross_episode,
     feature_mask_for_ablation,
@@ -157,6 +160,23 @@ def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
             episode,
             RolloutTrainingConfig(horizon_frames=2, target_mode="invalid"),
         )
+
+
+@pytest.mark.parametrize("status", ["FAIL", "PENDING", None, ""])
+@pytest.mark.parametrize("target_mode", ["absolute", "baseline_residual"])
+def test_training_rejects_unverified_before_reading_states(status, target_mode):
+    # A metadata-only adapter ensures rejected episodes never reach sample access.
+    episode = SimpleNamespace(
+        path="unverified.hdf5",
+        metadata={} if status is None else {"validation_status": status},
+        tracking_state=Mock(side_effect=AssertionError("must not read states")),
+    )
+    config = RolloutTrainingConfig(target_mode=target_mode)
+    with pytest.raises(ValueError, match="requires validation_status=PASS"):
+        build_training_dataset(episode, config)
+    with pytest.raises(ValueError, match="requires validation_status=PASS"):
+        build_training_dataset_from_episodes([episode], config)
+    episode.tracking_state.assert_not_called()
 
 
 def test_cross_episode_split_rejects_overlap_and_reports_holdout(tmp_path) -> None:

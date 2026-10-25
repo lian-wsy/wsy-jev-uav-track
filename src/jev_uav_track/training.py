@@ -170,13 +170,14 @@ def build_training_dataset(
     episode: HDF5Episode,
     config: RolloutTrainingConfig | None = None,
 ) -> RolloutTrainingDataset:
-    """Create chronological state/action -> future-outcome samples.
+    """Create chronological state/action -> future-outcome samples from PASS data.
 
     The observed camera velocity is used as the action feature. This is a
     calibration baseline: it learns the relationship present in the recorded
     behavior and should not be mistaken for counterfactual dynamics coverage.
     """
 
+    _require_verified_episode(episode)
     np = _numpy()
     cfg = config or RolloutTrainingConfig()
     if cfg.target_mode not in TARGET_MODES:
@@ -249,7 +250,7 @@ def _require_verified_episode(episode: HDF5Episode) -> None:
     status = str(episode.metadata.get("validation_status", "")).upper()
     if status != "PASS":
         raise ValueError(
-            "Cross-episode training requires validation_status=PASS; "
+            "Episode training requires validation_status=PASS; "
             f"{episode.path} has {status or 'unreported'}"
         )
 
