@@ -68,6 +68,7 @@
 12. **已完成 manifest 指纹切片**：显式 PASS manifest 支持流式 SHA-256，批处理可在 HDF5 打开前验证哈希；当前 5 个对照 episode 的指纹验证通过，结果与未校验批次一致。
 13. **已完成 residual rollout 切片**：新增 `target_mode=baseline_residual`，留出 range-error RMSE 从 `2.917m` 降到 `0.378m`；闭环 raw residual 仍会拉长重捕获，blend `0.25` 接近透明基线，因此默认仍保持 absolute，后续需要真实动作后果数据。
 14. **已完成 target provenance 切片**：`RolloutTrainingDataset` 保存 `target_mode`，省略训练 config 时自动继承，显式 mode 不一致会拒绝拟合；新增 residual API 回归测试，防止把 residual 标签误标成 absolute。
+15. **已完成 D1 split 冻结切片**：新增 `scripts/freeze_experiment_split.py`，将 12 个 baseline PASS episode 固定为 6 train/6 validation，并把已用于探索的 5 个困难 episode 单独标记为 `development_stress`；当前没有可声称的独立 final test，见 [2026-10-26 日报](experiments/daily_20261026.md)。
 
 ## 完成定义
 
