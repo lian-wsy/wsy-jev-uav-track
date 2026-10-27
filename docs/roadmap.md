@@ -69,6 +69,7 @@
 13. **已完成 residual rollout 切片**：新增 `target_mode=baseline_residual`，留出 range-error RMSE 从 `2.917m` 降到 `0.378m`；闭环 raw residual 仍会拉长重捕获，blend `0.25` 接近透明基线，因此默认仍保持 absolute，后续需要真实动作后果数据。
 14. **已完成 target provenance 切片**：`RolloutTrainingDataset` 保存 `target_mode`，省略训练 config 时自动继承，显式 mode 不一致会拒绝拟合；新增 residual API 回归测试，防止把 residual 标签误标成 absolute。
 15. **已完成 D1 split 冻结切片**：新增 `scripts/freeze_experiment_split.py`，将 12 个 baseline PASS episode 固定为 6 train/6 validation，并把已用于探索的 5 个困难 episode 单独标记为 `development_stress`；当前没有可声称的独立 final test，见 [2026-10-26 日报](experiments/daily_20261026.md)。
+16. **已完成 D2 条件核验切片**：只读确认本机有 CarlaAir v0.1.7 Windows 发行目录，但没有证明本任务拥有独立实例、端口和输出目录；新增无副作用 `sim_adapter.py` 契约与 4 个回归测试，D2 live simulator 仍标记 `BLOCKED_PENDING_RESOURCE_OWNERSHIP`，见 [2026-10-27 日报](experiments/daily_20261027.md)。
 
 ## 完成定义
 
