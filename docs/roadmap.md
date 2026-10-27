@@ -70,6 +70,7 @@
 14. **已完成 target provenance 切片**：`RolloutTrainingDataset` 保存 `target_mode`，省略训练 config 时自动继承，显式 mode 不一致会拒绝拟合；新增 residual API 回归测试，防止把 residual 标签误标成 absolute。
 15. **已完成 D1 split 冻结切片**：新增 `scripts/freeze_experiment_split.py`，将 12 个 baseline PASS episode 固定为 6 train/6 validation，并把已用于探索的 5 个困难 episode 单独标记为 `development_stress`；当前没有可声称的独立 final test，见 [2026-10-26 日报](experiments/daily_20261026.md)。
 16. **已完成 D2 条件核验切片**：只读确认本机有 CarlaAir v0.1.7 Windows 发行目录，但没有证明本任务拥有独立实例、端口和输出目录；新增无副作用 `sim_adapter.py` 契约与 4 个回归测试，D2 live simulator 仍标记 `BLOCKED_PENDING_RESOURCE_OWNERSHIP`，见 [2026-10-27 日报](experiments/daily_20261027.md)。
+17. **已完成 D3 时域切片**：核对 17 个冻结 episode 均为约 5 Hz，修正 rollout 默认 horizon 为 1.0 秒，训练会从时间戳解析并拒绝显式错位；42 个测试通过，6/6 train/validation 的更新 ablation 已完成。坐标转换和真实动作语义仍待仿真适配，见 [D3 日报](experiments/daily_20261027_time_contract.md)。
 
 ## 完成定义
 

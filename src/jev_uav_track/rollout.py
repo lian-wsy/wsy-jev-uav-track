@@ -25,7 +25,9 @@ def _norm(vector: Sequence[float]) -> float:
 
 @dataclass(frozen=True)
 class RolloutConfig:
-    horizon_s: float = 1.5
+    # PASS CarlaAir images are sampled at 5 Hz; the default five-frame
+    # training horizon therefore represents one second of future outcome.
+    horizon_s: float = 1.0
     dt_s: float = 0.25
     obstacle_margin_decay: float = 0.08
     base_collision_probability: float = 0.01

@@ -64,6 +64,7 @@ def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
 
     config = RolloutTrainingConfig(horizon_frames=2, stride=1, max_samples=8)
     dataset = build_training_dataset(episode, config)
+    assert dataset.resolved_rollout_horizon_s == pytest.approx(0.4)
     model, metrics = fit_outcome_model(dataset, config)
     assert metrics["sample_count"] == 8
     model_path = tmp_path / "model.npz"
@@ -159,6 +160,20 @@ def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
         build_training_dataset(
             episode,
             RolloutTrainingConfig(horizon_frames=2, target_mode="invalid"),
+        )
+
+
+def test_training_rejects_rollout_horizon_mismatch(tmp_path) -> None:
+    episode_path = tmp_path / "episode.hdf5"
+    make_synthetic_episode(episode_path)
+    episode = HDF5Episode.open(episode_path)
+    with pytest.raises(ValueError, match="does not match episode timestamps"):
+        build_training_dataset(
+            episode,
+            RolloutTrainingConfig(
+                horizon_frames=5,
+                rollout_horizon_s=1.5,
+            ),
         )
 
 

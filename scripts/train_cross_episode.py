@@ -30,6 +30,12 @@ def main() -> None:
     )
     parser.add_argument("--output", type=Path, required=True, help="Output .npz model path")
     parser.add_argument("--horizon-frames", type=int, default=5)
+    parser.add_argument(
+        "--rollout-horizon-s",
+        type=float,
+        default=None,
+        help="Explicit future duration; by default derive it from episode timestamps",
+    )
     parser.add_argument("--stride", type=int, default=2)
     parser.add_argument("--max-samples-per-episode", type=int, default=64)
     parser.add_argument("--desired-range-m", type=float, default=20.0)
@@ -46,6 +52,7 @@ def main() -> None:
         max_samples=args.max_samples_per_episode,
         desired_range_m=args.desired_range_m,
         target_mode=args.target_mode,
+        rollout_horizon_s=args.rollout_horizon_s,
     )
     model, metrics = fit_outcome_model_cross_episode(
         train_episodes,

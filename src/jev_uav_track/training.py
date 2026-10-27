@@ -8,6 +8,8 @@ calibrated before a learned dynamics/world model is introduced.
 from __future__ import annotations
 
 import json
+import math
+import statistics
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping, Sequence
@@ -15,7 +17,7 @@ from typing import Any, Dict, Iterable, Mapping, Sequence
 from .data.hdf5_adapter import HDF5Episode
 from .models import MissionConstraints, TrackingState
 from .primitives import BehaviorPrimitive
-from .rollout import KinematicRolloutModel
+from .rollout import KinematicRolloutModel, RolloutConfig
 
 
 FEATURE_NAMES = (
@@ -133,6 +135,10 @@ class RolloutTrainingConfig:
     ridge_alpha: float = 1.0
     train_fraction: float = 0.7
     target_mode: str = "absolute"
+    # None derives the exact future span from each read-only episode.  An
+    # explicit value is useful for a simulator contract and is checked.
+    rollout_horizon_s: float | None = None
+    timing_tolerance_s: float = 0.05
 
 
 @dataclass
@@ -143,6 +149,7 @@ class RolloutTrainingDataset:
     output_names: tuple[str, ...] = OUTPUT_NAMES
     episode_paths: tuple[str, ...] = ()
     target_mode: str = "absolute"
+    resolved_rollout_horizon_s: float | None = None
 
     def __post_init__(self) -> None:
         if self.target_mode not in TARGET_MODES:
@@ -163,6 +170,7 @@ class RolloutTrainingDataset:
             "output_names": list(self.output_names),
             "episode_paths": list(self.episode_paths),
             "target_mode": self.target_mode,
+            "resolved_rollout_horizon_s": self.resolved_rollout_horizon_s,
         }
 
 
@@ -188,6 +196,7 @@ def build_training_dataset(
         raise ValueError("horizon_frames, stride, and max_samples must be positive")
     if not 0.0 < cfg.train_fraction < 1.0:
         raise ValueError("train_fraction must be in (0, 1)")
+    effective_horizon_s = _validate_horizon_alignment(episode, cfg)
 
     last_start = episode.frame_count - cfg.horizon_frames - 1
     indices = list(range(0, max(0, last_start + 1), cfg.stride))
@@ -197,7 +206,9 @@ def build_training_dataset(
 
     features = []
     labels = []
-    baseline_rollout = KinematicRolloutModel()
+    baseline_rollout = KinematicRolloutModel(
+        config=RolloutConfig(horizon_s=effective_horizon_s)
+    )
     constraints = MissionConstraints(
         desired_range_m=cfg.desired_range_m,
         minimum_obstacle_margin_m=0.0,
@@ -243,7 +254,46 @@ def build_training_dataset(
         labels=np.asarray(labels, dtype=np.float64),
         episode_paths=(str(episode.path),),
         target_mode=cfg.target_mode,
+        resolved_rollout_horizon_s=effective_horizon_s,
     )
+
+
+def _validate_horizon_alignment(
+    episode: HDF5Episode,
+    config: RolloutTrainingConfig,
+) -> float:
+    """Return the episode's future span and check the configured contract.
+
+    ``horizon_frames`` is a frame count, not a duration.  Using the timestamp
+    span prevents a 5 Hz recording from silently being trained against a 1.5 s
+    rollout.  The source episode remains read-only.
+    """
+
+    if config.timing_tolerance_s <= 0.0:
+        raise ValueError("timing_tolerance_s must be positive")
+    last_start = episode.frame_count - config.horizon_frames - 1
+    if last_start < 0:
+        raise ValueError("Episode does not contain enough frames for the requested horizon")
+    spans = []
+    for index in range(0, last_start + 1, max(1, config.stride)):
+        span = float(episode.image_timestamps[index + config.horizon_frames]) - float(
+            episode.image_timestamps[index]
+        )
+        if math.isfinite(span) and span > 0.0:
+            spans.append(span)
+    if not spans:
+        raise ValueError("Episode timestamps do not define a positive future horizon")
+    effective = float(statistics.median(spans))
+    if config.rollout_horizon_s is not None:
+        if config.rollout_horizon_s <= 0.0:
+            raise ValueError("rollout_horizon_s must be positive when set")
+        if abs(float(config.rollout_horizon_s) - effective) > config.timing_tolerance_s:
+            raise ValueError(
+                "Rollout horizon does not match episode timestamps: "
+                f"configured={config.rollout_horizon_s:.6f}s, observed={effective:.6f}s, "
+                f"tolerance={config.timing_tolerance_s:.6f}s"
+            )
+    return effective
 
 
 def _require_verified_episode(episode: HDF5Episode) -> None:
@@ -290,6 +340,7 @@ def build_training_dataset_from_episodes(
         output_names=datasets[0].output_names,
         episode_paths=paths,
         target_mode=datasets[0].target_mode,
+        resolved_rollout_horizon_s=datasets[0].resolved_rollout_horizon_s,
     )
 
 
@@ -425,6 +476,7 @@ def _masked_dataset(
         output_names=dataset.output_names,
         episode_paths=dataset.episode_paths,
         target_mode=dataset.target_mode,
+        resolved_rollout_horizon_s=dataset.resolved_rollout_horizon_s,
     )
 
 
@@ -514,6 +566,7 @@ def fit_outcome_model(
     metrics = {
         "sample_count": count,
         "target_mode": cfg.target_mode,
+        "resolved_rollout_horizon_s": dataset.resolved_rollout_horizon_s,
         "train_count": split,
         "eval_count": count - split,
         "train_rmse": dict(zip(dataset.output_names, _rmse(train_predictions, train_y))),
@@ -547,6 +600,16 @@ def fit_outcome_model_cross_episode(
 
     np = _numpy()
     cfg = config or RolloutTrainingConfig()
+    horizons = [
+        _validate_horizon_alignment(episode, cfg)
+        for episode in train_list + validation_list
+    ]
+    if max(horizons) - min(horizons) > cfg.timing_tolerance_s:
+        raise ValueError(
+            "Train/validation episodes use inconsistent future horizons: "
+            f"min={min(horizons):.6f}s, max={max(horizons):.6f}s, "
+            f"tolerance={cfg.timing_tolerance_s:.6f}s"
+        )
     train_dataset = build_training_dataset_from_episodes(
         train_list,
         cfg,
@@ -567,6 +630,7 @@ def fit_outcome_model_cross_episode(
         output_names=train_dataset.output_names,
         episode_paths=tuple(str(episode.path) for episode in validation_list),
         target_mode=train_dataset.target_mode,
+        resolved_rollout_horizon_s=train_dataset.resolved_rollout_horizon_s,
     )
     mask = _normalise_feature_mask(feature_mask, train_dataset.features.shape[1])
     model = _fit_ridge_model(
@@ -595,6 +659,7 @@ def fit_outcome_model_cross_episode(
     metrics = {
         "split": "cross_episode",
         "target_mode": cfg.target_mode,
+        "resolved_rollout_horizon_s": train_dataset.resolved_rollout_horizon_s,
         "train_episode_count": len(train_list),
         "validation_episode_count": len(validation_list),
         "train_episodes": [str(episode.path) for episode in train_list],

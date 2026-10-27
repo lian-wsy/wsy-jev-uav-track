@@ -126,6 +126,12 @@ def main() -> None:
     parser.add_argument("--validation-episode", action="append", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--horizon-frames", type=int, default=5)
+    parser.add_argument(
+        "--rollout-horizon-s",
+        type=float,
+        default=None,
+        help="Explicit future duration; by default derive it from episode timestamps",
+    )
     parser.add_argument("--stride", type=int, default=2)
     parser.add_argument("--max-samples-per-episode", type=int, default=48)
     parser.add_argument("--eval-max-frames", type=int, default=12)
@@ -153,6 +159,7 @@ def main() -> None:
         horizon_frames=args.horizon_frames,
         stride=args.stride,
         max_samples=args.max_samples_per_episode,
+        rollout_horizon_s=args.rollout_horizon_s,
     )
     evaluation_config = OfflineEvaluationConfig(
         max_frames=args.eval_max_frames,
