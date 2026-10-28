@@ -29,6 +29,36 @@ def _vec3(value: Sequence[float]) -> tuple[float, float, float]:
     return result
 
 
+def camera_mount_error(vehicle_position, vehicle_orientation_xyzw, body_offset,
+                       camera_position, camera_orientation_xyzw):
+    """Check a rigid forward-facing FRD camera mount in the same NED frame.
+
+    Uses full normalized quaternions and treats q/-q as the same rotation.
+    No AirSim/NumPy dependency; the requested relative orientation is identity.
+    """
+    def normalize(value):
+        if len(value) != 4 or not all(math.isfinite(x) for x in value):
+            raise ValueError('Quaternion must contain four finite values')
+        norm = math.hypot(*value)
+        if not math.isfinite(norm) or norm <= 0:
+            raise ValueError('Quaternion must have a finite positive norm')
+        return tuple(x / norm for x in value)
+
+    def cross(a, b):
+        return (a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2],
+                a[0] * b[1] - a[1] * b[0])
+
+    position, offset, actual = _vec3(vehicle_position), _vec3(body_offset), _vec3(camera_position)
+    q, observed = normalize(vehicle_orientation_xyzw), normalize(camera_orientation_xyzw)
+    twice_cross = tuple(2 * x for x in cross(q[:3], offset))
+    second_cross = cross(q[:3], twice_cross)
+    expected = _vec3(tuple(position[i] + offset[i] + q[3] * twice_cross[i] + second_cross[i]
+                           for i in range(3)))
+    angle = 2 * math.degrees(math.acos(min(1.0, abs(sum(a * b for a, b in zip(q, observed))))))
+    return {'expected_position_ned_m': expected,
+            'position_error_m': math.dist(expected, actual), 'orientation_error_deg': angle}
+
+
 @dataclass(frozen=True)
 class CarlaAirAlignment:
     """Local producer mapping, NOT geographic ENU->NED.

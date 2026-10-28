@@ -31,3 +31,22 @@ def test_summary_missing_measurement_is_not_zero_or_pass():
     assert result['coordinate_status'] == 'NOT_AUDITED'
     assert result['paced_delta_s'] is None
     assert result['command_refresh'] is None
+
+
+def test_profile_export_keeps_failed_runs_and_their_provenance(tmp_path):
+    module = load_summary()
+    root = tmp_path / 'runtime'
+    (root / 'runs/observation01').mkdir(parents=True)
+    (root / 'runs/contract01').mkdir()
+    for name, profile, status in [('observation01', 'observation', 'FAILED'),
+                                  ('contract01', 'contract', 'API_SMOKE_COMPLETED')]:
+        (root / 'runs' / name / 'smoke_result.json').write_text(json.dumps({
+            'profile': profile, 'status': status, 'observation_gate_sha256': 'sample-hash'}))
+    output = tmp_path / 'export'
+    module.export(root, output, profile='observation')
+    summary = json.loads((output / 'summary.json').read_text())
+    assert len(summary['runs']) == 1
+    assert summary['runs'][0]['run'] == 'observation01'
+    assert summary['runs'][0]['status'] == 'FAILED'
+    evidence = json.loads((output / 'observation01.json').read_text())
+    assert evidence['controller']['observation_gate_sha256'] == 'sample-hash'

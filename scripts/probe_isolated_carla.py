@@ -129,6 +129,9 @@ def smoke(source, task, client_python, run_name, profile, bootstrap):
               'probe_sha256': sha(Path(__file__)),
               'api_probe_sha256': sha(Path(__file__).with_name('probe_carla_apis.py')),
               'runtime_module_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/isolated_runtime.py'),
+              'observation_probe_sha256': sha(Path(__file__).with_name('probe_observation_contract.py')),
+              'observation_gate_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/live_observation.py'),
+              'frames_module_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/frames.py'),
               'binary_sha256': prepared['binary_sha256']}
     try:
         process = subprocess.Popen(args, cwd=task / 'package', env=env, startupinfo=startup)
@@ -203,7 +206,7 @@ if __name__ == '__main__':
     parser.add_argument('--task', type=Path, required=True)
     parser.add_argument('--client-python', type=Path)
     parser.add_argument('--run-name', default='smoke01')
-    parser.add_argument('--profile', choices=['api', 'contract'], default='api')
+    parser.add_argument('--profile', choices=['api', 'contract', 'observation'], default='api')
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
     args = parser.parse_args()
     if os.name != 'nt':

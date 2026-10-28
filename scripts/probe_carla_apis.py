@@ -98,7 +98,7 @@ in simListSceneObjects but return NaN in simGetObjectPose. Do not use them.
             'mapping_pass': max(spread) < 0.01 and min(span) > 1.0}
 
 
-def contract_probe(world, air, output, result, bootstrap):
+def contract_probe(world, air, output, result, bootstrap, observation_contract=False):
     def sample():
         state = air.getMultirotorState(vehicle_name='JevDrone')
         snap = world.get_snapshot()
@@ -151,6 +151,7 @@ def contract_probe(world, air, output, result, bootstrap):
         result['takeoff'] = {'method': bootstrap, 'before': sample(),
                              'started_wall_s': time.perf_counter()}
         collision_before = air.simGetCollisionInfo(vehicle_name='JevDrone').time_stamp
+        result['takeoff']['collision_before'] = collision_before
         try:
             if bootstrap == 'takeoff':
                 require_rpc_success(air.takeoffAsync(timeout_sec=10, vehicle_name='JevDrone'), result['takeoff'])
@@ -233,6 +234,11 @@ def contract_probe(world, air, output, result, bootstrap):
                             'png_bytes': len(image.image_data_uint8)}
         if image.width and image.height and image.image_data_uint8:
             (output.parent / 'camera.png').write_bytes(image.image_data_uint8)
+        if observation_contract:
+            from probe_observation_contract import probe_observation_contract
+            result['phase'] = 'observation_contract'
+            result['observation_contract'] = {}
+            probe_observation_contract(world, air, output.parent, result['observation_contract'])
     finally:
         air.cancelLastTask(vehicle_name='JevDrone')
         air.armDisarm(False, vehicle_name='JevDrone')
@@ -268,11 +274,11 @@ def main(output, profile, expected_settings, bootstrap):
               'airsim_server': air.getServerVersion(), 'vehicles': air.listVehicles(),
               'settings_match': True, 'samples': samples,
               'note': 'No arm, reset, motion, RGB capture or target tracking in this probe.'}
-    if profile == 'contract':
+    if profile in ('contract', 'observation'):
         result['contract'] = {}
         result['note'] = 'Owned development physics probe; may arm/move/capture. Not a tracking comparison.'
         try:
-            contract_probe(world, air, output, result['contract'], bootstrap)
+            contract_probe(world, air, output, result['contract'], bootstrap, profile == 'observation')
         except Exception as exc:
             result['contract_error'] = f'{type(exc).__name__}: {exc}'
             output.write_text(json.dumps(result, indent=2), encoding='utf-8')
@@ -284,7 +290,7 @@ def main(output, profile, expected_settings, bootstrap):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--profile', choices=['api', 'contract'], default='api')
+    parser.add_argument('--profile', choices=['api', 'contract', 'observation'], default='api')
     parser.add_argument('--expected-settings', type=Path, required=True)
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
     args = parser.parse_args()

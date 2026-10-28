@@ -5,6 +5,7 @@ import json
 import math
 from pathlib import Path
 import statistics
+import shutil
 
 
 def finite_json(value):
@@ -66,10 +67,11 @@ def summarize(api):
             'unpaced_delta_s': delta('sync_begin', 'sync_end'),
             'paced_delta_s': delta('paced_begin', 'paced_end'),
             'axis_commands': axes, 'command_refresh': cadence_summary,
-            'new_collision_axes': contract.get('new_collision_axes'), 'camera': contract.get('camera')}
+            'new_collision_axes': contract.get('new_collision_axes'), 'camera': contract.get('camera'),
+            'observation_contract': contract.get('observation_contract')}
 
 
-def export(root, output):
+def export(root, output, profile=None):
     output.mkdir(parents=True, exist_ok=False)
     runs = []
     for folder in [root, *sorted((root / 'runs').iterdir())]:
@@ -77,22 +79,29 @@ def export(root, output):
         if not source.is_file():
             continue
         raw = json.loads(source.read_text(encoding='utf-8'))
+        if profile is not None and raw.get('profile') != profile:
+            continue
         name = 'initial_api' if folder == root else folder.name
         api_file = folder / 'api_probe.json'
         api = json.loads(api_file.read_text(encoding='utf-8')) if api_file.exists() else raw.get('client_probe') or {}
         evidence = {'run': name, 'controller': {k: raw.get(k) for k in (
             'status', 'started_at', 'ended_at', 'profile', 'client_exit_code', 'owned_process_exit_code',
             'protected_unchanged', 'cleanup_confirmed', 'probe_sha256', 'api_probe_sha256',
-            'runtime_module_sha256', 'binary_sha256')},
+            'runtime_module_sha256', 'binary_sha256', 'bootstrap', 'observation_probe_sha256',
+            'observation_gate_sha256', 'frames_module_sha256')},
             'source_sha256': {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
-                              for p in (source, api_file, folder / 'camera.png', folder / 'client_stderr.txt') if p.exists()},
+                              for p in (source, api_file, folder / 'camera.png', folder / 'client_stderr.txt',
+                                        folder / 'camera_before.png', folder / 'camera_after.png') if p.exists()},
             'api_probe': finite_json(api),
             'nonfinite_policy': 'Nonfinite raw measurements exported as null; raw source hash retained.'}
         (output / f'{name}.json').write_text(json.dumps(evidence, indent=2, allow_nan=False), encoding='utf-8')
+        for image_name in ('camera_before.png', 'camera_after.png'):
+            if (folder / image_name).exists():
+                shutil.copyfile(folder / image_name, output / f'{name}_{image_name}')
         runs.append({'run': name, 'status': raw.get('status'),
                      'protected_unchanged': raw.get('protected_unchanged'),
                      'cleanup_confirmed': raw.get('cleanup_confirmed'), **finite_json(summarize(api))})
-    report = {'kind': 'LIVE_OWNED_DEVELOPMENT_DIAGNOSTICS', 'runs': runs,
+    report = {'kind': 'LIVE_OWNED_DEVELOPMENT_DIAGNOSTICS', 'selection_profile': profile, 'runs': runs,
               'not_tracking_evaluation': True, 'real_jev_requests': 0,
               'source_hdf_files_opened': 0}
     (output / 'summary.json').write_text(json.dumps(report, indent=2, allow_nan=False), encoding='utf-8')
@@ -103,5 +112,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--profile', choices=['api', 'contract', 'observation'])
     args = parser.parse_args()
-    export(args.root, args.output)
+    export(args.root, args.output, args.profile)
