@@ -10,7 +10,32 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Mapping, Protocol, Sequence
 
-from .frames import CoordinateFrame
+from .frames import CoordinateFrame, CarlaAirAlignment
+from .models import CandidateAction, Vec3
+
+
+@dataclass(frozen=True)
+class AirSimWorldVelocityCommand:
+    velocity_mps: Vec3
+    yaw_rate_dps: float
+    duration_s: float
+
+
+def compile_carlaair_candidate(
+    action: CandidateAction, alignment: CarlaAirAlignment,
+) -> AirSimWorldVelocityCommand:
+    """Compile legacy world-axis candidates; never reinterpret them as FLU."""
+    import math
+    if action.metadata.get("command_frame") != "world_z_up":
+        raise ValueError("Candidate must declare world_z_up")
+    if not math.isfinite(action.duration_s) or not 0 < action.duration_s <= 10:
+        raise ValueError("Candidate duration must be finite and in (0, 10]")
+    if not math.isfinite(action.yaw_rate_dps):
+        raise ValueError("Candidate yaw rate must be finite")
+    return AirSimWorldVelocityCommand(
+        alignment.velocity_to_airsim(action.command_mps),
+        action.yaw_rate_dps, action.duration_s,
+    )
 
 
 @dataclass(frozen=True)

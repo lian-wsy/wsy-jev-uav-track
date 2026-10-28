@@ -214,7 +214,8 @@ class KinematicRolloutModel:
             yaw_rate_dps=primitive.yaw_rate_dps,
             outcome=outcome,
             trajectory=tuple(trajectory),
-            metadata={"model": "kinematic-rollout-v0", "target_prediction": "constant-velocity"},
+            metadata={"model": "kinematic-rollout-v0", "target_prediction": "constant-velocity",
+                      "command_frame": "world_z_up"},
         )
 
     def generate(self, primitives: Iterable[BehaviorPrimitive], state: TrackingState) -> List[CandidateAction]:

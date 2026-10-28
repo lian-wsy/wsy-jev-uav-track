@@ -53,13 +53,8 @@ def _finite_difference(values: Any, timestamps: Any, np: Any) -> Any:
     result = np.zeros_like(values, dtype=np.float64)
     if len(values) < 2:
         return result
-    for index in range(len(values)):
-        if index == 0:
-            left, right = 0, 1
-        elif index == len(values) - 1:
-            left, right = index - 1, index
-        else:
-            left, right = index - 1, index + 1
+    for index in range(1, len(values)):
+        left, right = index - 1, index
         dt = float(timestamps[right] - timestamps[left])
         if abs(dt) < 1e-9:
             continue
@@ -94,6 +89,7 @@ class HDF5Episode:
     target_actor_ids: Any
     metadata: Dict[str, Any]
     images: Optional[Any] = None
+    camera_yaws_deg: Optional[Any] = None
 
     @classmethod
     def open(cls, path: str | Path, load_images: bool = False) -> "HDF5Episode":
@@ -118,9 +114,7 @@ class HDF5Episode:
                     return None
                 return dataset[:]
 
-            image_timestamps = read("timestamp/image_timestamps")
-            if image_timestamps is None:
-                image_timestamps = np.arange(frame_count, dtype=np.float64) * 0.2
+            image_timestamps = read("timestamp/image_timestamps", required=True)
             image_timestamps = np.asarray(image_timestamps, dtype=np.float64).reshape(-1)
             if len(image_timestamps) != frame_count:
                 raise HDF5SchemaError("timestamp/image_timestamps length does not match images")
@@ -128,21 +122,28 @@ class HDF5Episode:
             positions = np.asarray(read("state/positions", required=True), dtype=np.float32)
             if positions.ndim != 2 or positions.shape[1] != 3:
                 raise HDF5SchemaError("state/positions must have shape (N, 3)")
-            state_timestamps = read("timestamp/position_timestamps")
-            if state_timestamps is None:
-                state_timestamps = np.arange(len(positions), dtype=np.float64) * 0.04
+            state_timestamps = read("timestamp/position_timestamps", required=True)
             state_timestamps = np.asarray(state_timestamps, dtype=np.float64).reshape(-1)
             if len(state_timestamps) != len(positions):
                 raise HDF5SchemaError("timestamp/position_timestamps length mismatch")
 
-            state_indices = read("image_state/state_index")
-            if state_indices is None:
-                state_indices = np.linspace(0, len(positions) - 1, frame_count).round().astype(np.int64)
-            state_indices = np.asarray(state_indices, dtype=np.int64).reshape(-1)
+            for name, times in (("image", image_timestamps), ("state", state_timestamps)):
+                if not len(times) or not np.isfinite(times).all() or np.any(np.diff(times) <= 0):
+                    raise HDF5SchemaError(f"{name} timestamps must be finite and strictly increasing")
+
+            raw_indices = np.asarray(read("image_state/state_index", required=True)).reshape(-1)
+            if not np.isfinite(raw_indices).all() or np.any(raw_indices != np.floor(raw_indices)):
+                raise HDF5SchemaError("state_index must contain finite integer rows")
+            state_indices = raw_indices.astype(np.int64)
             if len(state_indices) != frame_count:
                 raise HDF5SchemaError("image_state/state_index length mismatch")
             if np.any(state_indices < 0) or np.any(state_indices >= len(positions)):
                 raise HDF5SchemaError("image_state/state_index contains an invalid state row")
+            # The local producer records image and state from the same snapshot.
+            # Refuse stale/future mappings rather than silently using truth at a
+            # different instant. Tolerance permits floating-point roundoff only.
+            if not np.allclose(state_timestamps[state_indices], image_timestamps, atol=1e-6, rtol=0):
+                raise HDF5SchemaError("image/state timestamps must align within 1 microsecond")
 
             camera_positions_all = read("action/camera_positions")
             if camera_positions_all is None:
@@ -153,6 +154,14 @@ class HDF5Episode:
 
             target_positions = positions[state_indices]
             camera_positions = camera_positions_all[state_indices]
+            camera_rotations = read("action/camera_rotations")
+            camera_yaws = None
+            if camera_rotations is not None:
+                camera_rotations = np.asarray(camera_rotations, dtype=np.float64)
+                if camera_rotations.shape != positions.shape or not np.isfinite(camera_rotations).all():
+                    raise HDF5SchemaError("camera_rotations must be finite state-axis (N, 3)")
+                # Verified local writer stores roll, yaw, pitch in degrees.
+                camera_yaws = camera_rotations[state_indices, 1]
             target_velocities_all = _finite_difference(positions, state_timestamps, np)
             camera_velocities_all = _finite_difference(camera_positions_all, state_timestamps, np)
             target_velocities = target_velocities_all[state_indices]
@@ -242,6 +251,7 @@ class HDF5Episode:
             target_actor_ids=actor_ids,
             metadata=metadata,
             images=images,
+            camera_yaws_deg=camera_yaws,
         )
 
     def _visibility_probability(self, index: int) -> float:
@@ -301,6 +311,7 @@ class HDF5Episode:
         uav = UAVState(
             position_m=camera_position,
             velocity_mps=_as_vector(self.camera_velocities[index]),
+            yaw_deg=float(self.camera_yaws_deg[index]) if self.camera_yaws_deg is not None else 0.0,
             minimum_obstacle_margin_m=static_clearance,
         )
         return TrackingState(

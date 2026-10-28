@@ -54,6 +54,7 @@ def main():
             }
     report = {
         "protocol": "recorded_action_calibration_only",
+        "state_source": "oracle_state_with_backward_only_velocity_v2",
         "split": str(args.split),
         "samples_per_episode": args.samples_per_episode,
         "results": results,

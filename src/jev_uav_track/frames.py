@@ -1,15 +1,16 @@
 """Explicit vector-frame conversions for the simulator boundary.
 
-The internal contract uses ENU world vectors (x=east, y=north, z=up), NED
-world vectors (x=north, y=east, z=down), and body FLU vectors (x=forward,
-y=left, z=up).  A CARLA/AirSim adapter must declare which convention it
-receives; no simulator process is started by this module.
+Generic conversions support ENU (x=east, y=north, z=up), NED (x=north,
+y=east, z=down), and body FLU (x=forward, y=left, z=up). The actual local
+CARLA producer uses its own world x/y/z-up axes, mapped separately by
+CarlaAirAlignment. No simulator process is started by this module.
 """
 
 from __future__ import annotations
 
 import math
 from enum import Enum
+from dataclasses import dataclass
 from typing import Sequence
 
 
@@ -22,7 +23,37 @@ class CoordinateFrame(str, Enum):
 def _vec3(value: Sequence[float]) -> tuple[float, float, float]:
     if len(value) != 3:
         raise ValueError("a vector must contain exactly three values")
-    return (float(value[0]), float(value[1]), float(value[2]))
+    result = (float(value[0]), float(value[1]), float(value[2]))
+    if not all(math.isfinite(v) for v in result):
+        raise ValueError("vector must be finite")
+    return result
+
+
+@dataclass(frozen=True)
+class CarlaAirAlignment:
+    """Local producer mapping, NOT geographic ENU->NED.
+
+    AirSim position = (CARLA.x + ox, CARLA.y + oy, -CARLA.z + oz).
+    Offsets must come from a paired own-instance pose calibration.
+    """
+    offset_m: tuple[float, float, float]
+
+    def __post_init__(self):
+        object.__setattr__(self, "offset_m", _vec3(self.offset_m))
+
+    def position_to_airsim(self, value: Sequence[float]) -> tuple[float, float, float]:
+        x, y, z = _vec3(value)
+        ox, oy, oz = self.offset_m
+        return x + ox, y + oy, -z + oz
+
+    def position_to_carla(self, value: Sequence[float]) -> tuple[float, float, float]:
+        x, y, z = _vec3(value)
+        ox, oy, oz = self.offset_m
+        return x - ox, y - oy, oz - z
+
+    def velocity_to_airsim(self, value: Sequence[float]) -> tuple[float, float, float]:
+        x, y, z = _vec3(value)
+        return x, y, -z
 
 
 def _world_to_enu(value: tuple[float, float, float], frame: CoordinateFrame) -> tuple[float, float, float]:

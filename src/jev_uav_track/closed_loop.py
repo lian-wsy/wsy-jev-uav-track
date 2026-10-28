@@ -17,9 +17,10 @@ from dataclasses import dataclass, replace
 from typing import Any, Dict, Iterable, Mapping, Sequence
 
 from .history import attach_history, build_target_belief_history
+from .causal_belief import CausalTargetEstimator
 from .jev_client import JevClient, MockJevClient
 from .learned_rollout import LearnedOutcomeRolloutModel
-from .models import MissionConstraints, TargetBelief, TrackingState, UAVState
+from .models import MissionConstraints, TrackingState, UAVState
 from .primitives import DEFAULT_PRIMITIVES
 from .rollout import KinematicRolloutModel
 from .selector import JevTrackSelector, SelectionConfig
@@ -249,21 +250,18 @@ def _make_state(
     observation: Mapping[str, Any],
     constraints: MissionConstraints,
     config: ClosedLoopReplayConfig,
+    estimator: CausalTargetEstimator,
 ) -> TrackingState:
     base = observation["base"]
-    target = TargetBelief(
-        position_m=base.target.position_m,
-        velocity_mps=base.target.velocity_mps,
-        range_m=float(observation["range_m"]),
-        bearing_deg=float(observation["relative_bearing_deg"]),
-        image_center_error=_clamp(
-            abs(float(observation["relative_bearing_deg"])) / config.fov_half_angle_deg,
-            0.0,
-            1.0,
-        ),
-        covariance_trace=float(observation["covariance_trace"]),
-        visibility_probability=float(observation["visibility_probability"]),
-        occlusion_risk=float(observation["occlusion_risk"]),
+    visible = bool(observation["proxy_visible"])
+    target = estimator.update(
+        measurement=base.target.position_m if visible else None,
+        # Velocity belongs to the visible measurement's identity, even while
+        # the sticky identity tracker is still confirming an association.
+        actor_id=int(episode.target_actor_ids[frame_index]) if visible else None,
+        uav=sim_uav,
+        desired_range_m=constraints.desired_range_m,
+        fov_half_angle_deg=config.fov_half_angle_deg,
         identity_confidence=(
             identity_confidence
             if config.use_identity_confidence
@@ -272,16 +270,11 @@ def _make_state(
         timestamp_s=float(episode.image_timestamps[frame_index]),
     )
     environment = {
-        **dict(base.environment),
         "frame_index": frame_index,
         "target_actor_id": identity_id,
-        "ground_truth_actor_id": int(episode.target_actor_ids[frame_index]),
-        "ground_truth_visible": bool(episode.target_visible[frame_index]),
-        "ground_truth_in_frame": bool(episode.target_in_frame[frame_index]),
-        "ground_truth_occluded": bool(episode.target_occluded[frame_index]),
-        "proxy_visible": bool(observation["proxy_visible"]),
-        "geometry_in_frame": bool(observation["geometry_in_frame"]),
-        "observation_source": "recorded_annotation+kinematic_fov_proxy",
+        "proxy_visible": visible,
+        "observation_source": "visible_oracle_position+causal_extrapolation",
+        "command_frame": "world_z_up",
     }
     return TrackingState(
         target=target,
@@ -297,23 +290,30 @@ def _make_state(
 
 
 def _advance_uav(uav: UAVState, action: Any, dt_s: float) -> UAVState:
-    dt_s = max(0.0, float(dt_s))
+    dt_s = float(dt_s)
+    if not math.isfinite(dt_s) or dt_s <= 0:
+        raise ValueError("Replay step must be finite and positive")
+    if not math.isfinite(action.duration_s) or action.duration_s <= 0:
+        raise ValueError("Action duration must be finite and positive")
+    # Zero-order command hold expires at its declared duration. The remaining
+    # interval is an ideal zero-velocity hold (proxy only, no braking dynamics).
+    executed_s = min(dt_s, float(action.duration_s))
     position = tuple(
-        float(uav.position_m[axis]) + float(action.command_mps[axis]) * dt_s
+        float(uav.position_m[axis]) + float(action.command_mps[axis]) * executed_s
         for axis in range(3)
     )
     battery = max(
         0.0,
         uav.battery_percent
         - float(action.outcome.energy_cost_wh)
-        * dt_s
+        * executed_s
         / max(float(action.duration_s), 1e-6),
     )
-    yaw = (float(uav.yaw_deg) + float(action.yaw_rate_dps) * dt_s + 180.0) % 360.0 - 180.0
+    yaw = (float(uav.yaw_deg) + float(action.yaw_rate_dps) * executed_s + 180.0) % 360.0 - 180.0
     return replace(
         uav,
         position_m=position,
-        velocity_mps=action.command_mps,
+        velocity_mps=action.command_mps if dt_s <= action.duration_s else (0.0, 0.0, 0.0),
         yaw_deg=yaw,
         battery_percent=battery,
     )
@@ -339,6 +339,8 @@ def run_closed_loop_replay(
     """
 
     cfg = config or ClosedLoopReplayConfig()
+    if str(episode.metadata.get("validation_status", "")).upper() != "PASS":
+        raise ValueError("Closed-loop replay requires validation_status=PASS")
     indices = _sample_indices(
         episode.frame_count,
         cfg.start_frame,
@@ -354,12 +356,10 @@ def run_closed_loop_replay(
         maximum_collision_probability=cfg.maximum_collision_probability,
     )
     first = episode.tracking_state(indices[0], constraints=constraints)
-    # The recorded camera has no normalized yaw channel.  Align the proxy
-    # optical axis with the first target bearing so the FOV check measures
-    # subsequent closed-loop motion rather than an arbitrary world-axis offset.
+    # Own recorded camera orientation only; never align to hidden target truth.
     sim_uav = replace(
         first.uav,
-        yaw_deg=first.target.bearing_deg,
+        yaw_deg=first.uav.yaw_deg,
         battery_percent=cfg.initial_battery_percent,
         minimum_obstacle_margin_m=_static_clearance(episode),
     )
@@ -386,6 +386,7 @@ def run_closed_loop_replay(
         )
 
     identity = _IdentityTracker()
+    estimator = CausalTargetEstimator()
     history_states: list[TrackingState] = []
     records: list[Dict[str, Any]] = []
     previous_action_id: str | None = None
@@ -413,7 +414,7 @@ def run_closed_loop_replay(
         if ground_truth_id >= 0:
             identity_ground_truth_ids.add(ground_truth_id)
         tracked_id, identity_confidence = identity.update(
-            ground_truth_id if ground_truth_id >= 0 else None,
+            ground_truth_id if ground_truth_id >= 0 and observation["proxy_visible"] else None,
             bool(observation["proxy_visible"]),
         )
         state = _make_state(
@@ -425,6 +426,7 @@ def run_closed_loop_replay(
             observation,
             constraints,
             cfg,
+            estimator,
         )
         history: Any = None
         if cfg.use_short_history:
@@ -492,6 +494,9 @@ def run_closed_loop_replay(
                 "annotated_occluded": bool(observation["annotated_occluded"]),
                 "geometry_in_frame": bool(observation["geometry_in_frame"]),
                 "range_m": float(observation["range_m"]),
+                "belief_position_m": list(state.target.position_m),
+                "belief_velocity_mps": list(state.target.velocity_mps),
+                "belief_covariance_trace": state.target.covariance_trace,
                 "relative_bearing_deg": float(observation["relative_bearing_deg"]),
                 "tracked_actor_id": tracked_id,
                 "ground_truth_actor_id": ground_truth_id,
@@ -581,7 +586,9 @@ def run_closed_loop_replay(
         "schema": episode.metadata.get("schema", "unknown"),
         "validation_status": episode.metadata.get("validation_status", "unreported"),
         "evaluation_mode": "kinematic_replay_proxy",
-        "observation_source": "recorded_annotation+kinematic_fov_proxy",
+        "observation_source": "visible_oracle_position+causal_extrapolation",
+        "belief_protocol_version": 2,
+        "execution_protocol": "command_until_expiry_then_ideal_zero_velocity_hold",
         "identity_coverage": {
             "status": "AUDITED" if crossing_audited else "NOT_AUDITED",
             "reason": (

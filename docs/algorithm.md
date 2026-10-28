@@ -155,3 +155,15 @@ UAV position / velocity / yaw
 
 显式 PASS manifest 可以用 `build_pass_manifest.py --sha256` 生成流式 SHA-256，批处理用 `--verify-manifest-sha256` 在打开 HDF5 前验证内容没有替换。指纹是输入可复现性保护，不会改变 `validation_status`，也不会自动纳入 PENDING/FAIL 文件。
 
+### 6.6 因果 belief 与本地 CarlaAir 契约（2026-10-28）
+
+`closed_loop.py` 的 belief 协议更新为 v2。可见时输入 oracle 位置和 actor id，以同一身份的两次可见位置估计速度；不可见时不传入当前真值位置、速度、距离、方位、身份或遮挡原因，而由 `CausalTargetEstimator` 外推最后可见状态，协方差随丢失时长增长。首次检测前使用仅由自身位置/yaw/期望距离构造的搜索先验。输入 environment 使用白名单，history 也只缓存这些因果状态。可见身份变化立即清零速度，避免把跨身份跳变当运动；身份 tracker 的两帧确认另行保留。
+
+可见位置和可见身份仍来自真值标注，FOV 与可见性也是代理；这不等于已接入视觉检测器。隐藏真值仅留在观测生成和评估侧。`HDF5Episode.tracking_state()` 仍是 oracle-state 接口，训练和其他离线评估不能自动声称采用了 causal belief。旧回放存在隐藏真值输入，旧指标不能与 v2 做提升对照。
+
+适配器要求显式图像时间戳、状态时间戳及整数 state_index，检查严格递增与同快照对齐（容差 1 微秒），拒绝猜测采样率和映射。位置速度只取后向差分，第一行置零；旧中心差分模型需要重训。相机旋转来自生产端的 `[roll, yaw, pitch]`，不再把初始相机朝向对准目标真值。缺少旋转的兼容数据仍为零 yaw；本次 17 个冻结 episode 全部具备记录 yaw。
+
+本地生产端使用 CARLA 世界 x/y/z-up，映射为 AirSim `(x+ox, y+oy, -z+oz)`，不是地理 ENU/NED 交换轴。`CarlaAirAlignment` 必须显式提供配准偏移；速度只翻转 z，偏航率保持符号。候选标记 `world_z_up`，`compile_carlaair_candidate` 仅纯编译，不发送飞控命令。现有 follow/orbit 名称仍对应固定世界轴速度，并非目标相对/机体动作；重设计动作库时需要同步重训和对照，不能静默旋转旧特征。
+
+代理执行在动作 duration 到期后停止该速度和偏航率，剩余决策间隔理想化为零速度保持；没有惯性、制动或悬停功耗模型。这防止默认稀疏采样将 1 秒动作执行成 1.6 秒，但不构成真实低层控制。真实实例仍需独立配置/进程/端口所有权证明、现场配准和受限执行 smoke。详见 [本轮报告](experiments/causal_belief_20261028.md)。
+

@@ -35,7 +35,7 @@ def make_synthetic_episode(path):
     camera_positions = np.column_stack(
         [np.zeros(state_count), np.zeros(state_count), np.full(state_count, 5.0)]
     ).astype(np.float32)
-    state_indices = np.arange(1, state_count, 2, dtype=np.int64)
+    state_indices = np.arange(0, state_count, 2, dtype=np.int64)
     with h5py.File(path, "w") as h5:
         h5.attrs["schema"] = "synthetic-test"
         h5.attrs["validation_status"] = "PASS"
@@ -52,6 +52,39 @@ def make_synthetic_episode(path):
         h5.create_dataset("visibility/target_occluded", data=np.zeros(frame_count, dtype=bool))
         h5.create_dataset("visibility/target_pixel_height", data=np.full(frame_count, 30.0, dtype=np.float32))
         h5.create_dataset("action/camera_target_distance", data=np.full(frame_count, 5.0, dtype=np.float32))
+
+
+@pytest.mark.parametrize("fault", ["future", "stale", "missing_time", "missing_index", "nan", "duplicate", "fractional_index"])
+def test_adapter_rejects_unproven_time_alignment(tmp_path, fault):
+    from jev_uav_track.data.hdf5_adapter import HDF5SchemaError
+    path = tmp_path / "bad_time.hdf5"
+    make_synthetic_episode(path)
+    with h5py.File(path, "r+") as h5:
+        if fault == "missing_time":
+            del h5["timestamp/image_timestamps"]
+        elif fault == "missing_index":
+            del h5["image_state/state_index"]
+        elif fault == "future":
+            h5["image_state/state_index"][0] = 1
+        elif fault == "stale":
+            h5["image_state/state_index"][1] = 1
+        elif fault == "fractional_index":
+            values = h5["image_state/state_index"][:].astype(float)
+            values[0] = 0.5
+            del h5["image_state/state_index"]
+            h5.create_dataset("image_state/state_index", data=values)
+        else:
+            h5["timestamp/image_timestamps"][1] = np.nan if fault == "nan" else 0
+    with pytest.raises(HDF5SchemaError):
+        HDF5Episode.open(path)
+
+
+def test_camera_yaw_uses_recorded_rotation_not_target_bearing(tmp_path):
+    path = tmp_path / "yaw.hdf5"
+    make_synthetic_episode(path)
+    with h5py.File(path, "r+") as h5:
+        h5.create_dataset("action/camera_rotations", data=np.tile([11, 37, 82], (24, 1)))
+    assert HDF5Episode.open(path).tracking_state(2).uav.yaw_deg == 37
 
 
 def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
@@ -226,6 +259,16 @@ def test_training_rejects_rollout_horizon_mismatch(tmp_path) -> None:
                 rollout_horizon_s=1.5,
             ),
         )
+
+
+def test_velocity_estimate_never_uses_future_rows():
+    from jev_uav_track.data.hdf5_adapter import _finite_difference
+    values = np.asarray([[0, 0, 0], [1, 0, 0], [2, 0, 0]], dtype=float)
+    before = _finite_difference(values, [0, 1, 2], np)
+    values[2] = (1000, 1000, 1000)
+    after = _finite_difference(values, [0, 1, 2], np)
+    np.testing.assert_array_equal(before[:2], after[:2])
+    np.testing.assert_array_equal(before[0], [0, 0, 0])
 
 
 @pytest.mark.parametrize("status", ["FAIL", "PENDING", None, ""])

@@ -15,6 +15,11 @@ from .models import Vec3
 
 @dataclass(frozen=True)
 class BehaviorPrimitive:
+    """Legacy commands are absolute world x/y/z-up velocities, not body FLU.
+
+    Names such as left/follow describe intended use, not guaranteed body-relative
+    maneuvers. A heading-aware primitive library needs separate calibration.
+    """
     id: str
     name: str
     description: str
