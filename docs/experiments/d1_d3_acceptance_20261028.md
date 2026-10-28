@@ -1,0 +1,78 @@
+# D1–D3 今日验收记录（2026-10-28）
+
+目标：今天按 `docs/sprint_20261026_20261108.md` 原标准逐项复核并补缺；验收不等于保证算法提升。起点 `d9d91ea`，基线 68 测试通过。当前目标已在本聊天建立，未另开调度任务。
+
+## 执行清单
+
+- [x] D1：核验研究假设和具备一手来源的相关工作对照表。
+- [ ] D1：核验 PASS、30–60 独立 episode、按场景/seed 分组、文件 SHA、独立 town test 与已使用数据隔离。旧 17 episode split 不覆盖改名。
+- [x] D1：冻结指标定义、全方法公平预算、最终 test 使用禁令，明确哪些指标代码可用。
+- [ ] D2：核验版本/同步/资源/外部任务占用，准备任务专属配置/端口/输出方案，不运行共享启动器。
+- [x] D2：形成 Jev 调用、耗时、费用和累计上限报告；不擅自扩大付费请求。attempt完整账本未知另列阻塞。
+- [x] D3：完成离线坐标/yaw、时间对齐、horizon、控制周期约定、命令到期、遮挡真值隔离和已列异常输入复核；真实时钟/控制周期仍依赖D2。
+- [x] 运行针对性回归及最小可复现检查，形成可提交结果；剩余项逐条标未通过，不能用代理替代真实实例。
+
+## 执行边界与决定
+
+任务是落实既有已授权冲刺，保持研究假设和标准，不要求用户重新批准相同设计。使用现有计划执行、测试驱动和完成前验证技能；数据与仿真只读审查按并行核查技能交给两个独立审查任务，代码集中修改。
+
+原生 worktree 创建因 sourceRoot 是聊天工作区内的嵌套仓库被工具拒绝；仓库原本干净，改在专用 `codex/d1-d3-acceptance` 分支工作，不改原采集工程。已有提交推送授权沿用。读取源码不等于证明发行二进制具有相同行为；没有资源所有权与写入隔离证据不启动模拟实例。
+
+当前缺口：D1 原 17 episode 均为开发数据，无 final test；缺完整原始文件 SHA 和正式相关工作表。D2 共享启动器会改用户 AirSim settings、DefaultEngine.ini 并 Stop-Process 旧 PID。D3 离线时域/坐标/因果回归存在，但 adapter 仍可能接受 NaN/Inf，需用真实 API 边界回归核验。
+
+## 本轮验收结果
+
+| 日程/标准 | 本轮实际证据 | 判定 |
+| --- | --- | --- |
+| D1 研究假设与相关工作表 | [一手来源对照表](../related_work_matrix.md)，明确Jev不是自训练模型，主动跟踪已发表代码入口核验；尚未复现其基线 | 文档通过；论文新颖性不作通过声明 |
+| D1 30–60 PASS与SHA | 39文件、11700图像帧，28 train / 6 validation / 5 stress；旧17分配保留，39内容SHA唯一、seed唯一、规范路径唯一；5旧stress指纹一致 | 数量、文件级去重与指纹通过；未证明不同seed轨迹绝不相关 |
+| D1 独立town/test | 审计发现24个效果暴露seed；现有259 PASS仅五个town且均已开发使用，未发现独立town来源 | **未通过**，final_test_available=false |
+| D1 指标与公平性 | [协议v1](../metrics_protocol_v1.md)，固定窗/失败计入/稳定确认可运行；独立episode统计方案冻结 | 定义与重捕获实现通过；live安全/视觉/统计矩阵待后续 |
+| D2 版本/坐标/同步/资源核对 | [隔离复核](simulator_isolation_20261028.md)：源码与exe指纹、settings解析、双时钟、低内存与外部任务证据 | 只读调查通过 |
+| D2 独立实例/端口/配置/输出落实 | 有专属配置候选，但写入回落、进程所有权、内存与实际时钟尚无完整证明；没有运行launcher | **未通过**；不能靠端口无监听认领实例 |
+| D2 调用/时间/费用 | [预算](jev_budget_20261028.md)，8/32准备上限、720/4320请求正式示例，明确公开费率不等于账户报价 | 估算报告通过；attempt账本未知，当前新增API调用0 |
+| D3 坐标/yaw/时间/horizon | 39文件读state数组复查同快照且yaw存在；1秒模型/到期执行/隐身真值扰动回归通过 | 离线通过；二进制现场配准与真实20Hz控制未通过 |
+| D3 异常输入 | 修复SimAction/SimObservation NaN/Inf，HDF目标/相机位置NaN及距离NaN/Inf/负值 | 覆盖所列字段；不声称已经完整审计所有外部schema字段 |
+
+**整体结论：D1部分通过、D2阻塞、D3离线通过但现场联验未完成。不能勾选“前三天全部达到预期”。** 目标仍保持未完成；今日已完成可安全推进的代码、数据指纹、协议和费用/隔离证据补齐。提升效果属于后续对照验收，不是前三天接口工作能保证的结果。
+
+## 数据扩展与最小复现
+
+输入是固定coverage快照，仅选 `quota_grid_20261004_formal` 中PASS，排除24个已效果暴露seed，按semantic cell字典序、每cell最小数值seed取22；不依据可见率或模型结果选择。新增全部train，避免事后制造“未见测试”。`26094452`曾做质量检查，明确不是“从未看过”。现有样本没有增加真实遮挡/出框/身份交叉覆盖。
+
+```powershell
+python scripts/extend_development_split.py --base-split artifacts/experiment_split_20261026.json --coverage artifacts/coverage_audit_20261024.json --exposure docs/experiments/development_exposure_20261028.json --output artifacts/acceptance_20261028/development_split_v2.json --hash-mib-per-s 16
+python scripts/audit_episode_contract.py --split artifacts/acceptance_20261028/development_split_v2.json --output artifacts/acceptance_20261028/contract_audit_39.json
+python scripts/evaluate_fixed_event_replay.py --transparent artifacts/causal_belief_20261028/stress_replay.json --residual artifacts/causal_belief_20261028/residual_stress_replay.json --output artifacts/acceptance_20261028/fixed_event_metrics.json
+python -m pytest -q
+python -m compileall -q scripts src
+git diff --check
+```
+
+冻结命令拒绝覆盖已有输出；复跑需新路径。约12.05GiB原文件只读串行限速16MiB/s，每文件检查前后大小/mtime不变并计算完整SHA。39个文件再次通过当前适配器校验；完整本机manifest SHA `7326f07e67e90ed0e6397bb553abf31e23cd8d594cf647532a5b02447b9f8e87`。可公开复核的[文件名/seed/split/SHA清单](development_split_v2_20261028.json)随仓库保存，原HDF、绝对路径manifest和旧模型仍在本机，不上传密钥或原数据。
+
+本轮未重训39集，也没有把旧6/6模型效果改称39集训练成果。原split保持历史有效，后续显式选择v2才用新增28 train。
+
+## 重捕获主指标复算与负结果
+
+从已有全300帧reference源标注冻结事件，取非重叠10秒窗，连续0.5秒正确跟踪后确认；提前终止即使曾短暂恢复也计失败。共3个eligible事件、3个尾部不完整reference窗；每方法同一事件集合。
+
+| 方法 | 恢复率（事件所属episode等权） | 10秒受限重捕获均值 |
+| --- | ---: | ---: |
+| 透明 + Mock | 100% | 1.867 s |
+| 透明 + utility | 100% | 1.867 s |
+| residual + Mock | 66.7% | 6.667 s |
+| residual + utility | 100% | 1.867 s |
+
+这是3个开发代理事件，不能解释成泛化或真实跟踪100%成功。新口径下residual+Mock明显退化，没有支持Jev/rollout整体提升的证据；和旧“只平均成功事件”指标不可混用。真实身份交叉仍NOT_AUDITED。该复算不训练、不调参、不新增网络调用。
+
+## 测试、审查与剩余解除条件
+
+最终全套119测试通过，编译/diff检查通过。新增测试先复现缺失行为，再修复；代码审查指出“先恢复后提前终止误判”和“距离非有限值遗漏”，两项修复及cell数量不足拒绝都经独立复核。稀疏连续性测试保持完整10秒窗，确保不是被早停分支意外覆盖。
+
+要完成原目标仍需：
+
+1. 具有完整PASS证据、未在本任务/相关实验调参使用的独立town episode；在取得前不挪用已开发town作为final test。
+2. 明确本任务可独占的仿真进程/全部可写目录/端口与足够内存资源，或独立用户/机器。当前外部采集上传控制链不由本任务停止或重配。
+3. 在上述隔离成立后进行二进制settings回落、坐标配准、双时钟/暂停、1秒动作和低层周期受限smoke；否则D3现场验收不能通过。
+4. 新真实Jev批次前核对完整attempt账本，未知额度不进行自动付费调用。预算估算已完成，不需要再次发送API key。

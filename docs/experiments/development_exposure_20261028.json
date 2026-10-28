@@ -1,0 +1,7 @@
+{
+  "scope": "repository experiment reports; not a claim of global non-exposure",
+  "effect_exposed_seeds": [26094450,26094451,260922334,26094435,26094436,26094453,26094528,26094529,26094456,26094457,26094743,26094535,26094538,26094440,26094824,26094827,26094432,26094433,26094434,260922365,26094706,26094707,26094463,26094464],
+  "quality_only_examples": [26094424,26094425,260922347,260922392,26094452,260922355],
+  "evidence": ["artifacts/experiment_split_20261026.json", "artifacts/cross_episode/rollout_model.json", "artifacts/difficult_pass_20261023/models/rollout_model.json", "artifacts/coverage_audit_20261024.json"],
+  "policy": "All known effect-exposed seeds are excluded from new additions. Additions go to training only. No independent final test is claimed."
+}

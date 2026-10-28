@@ -7,6 +7,7 @@ may implement it once an isolated simulator instance has been proven.
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from typing import Mapping, Protocol, Sequence
 
@@ -25,7 +26,6 @@ def compile_carlaair_candidate(
     action: CandidateAction, alignment: CarlaAirAlignment,
 ) -> AirSimWorldVelocityCommand:
     """Compile legacy world-axis candidates; never reinterpret them as FLU."""
-    import math
     if action.metadata.get("command_frame") != "world_z_up":
         raise ValueError("Candidate must declare world_z_up")
     if not math.isfinite(action.duration_s) or not 0 < action.duration_s <= 10:
@@ -53,6 +53,11 @@ class SimAction:
     def __post_init__(self) -> None:
         if not self.name:
             raise ValueError("action name must be non-empty")
+        if not all(math.isfinite(v) for v in (
+            self.duration_s, self.yaw_rate_dps, self.forward_mps,
+            self.lateral_mps, self.vertical_mps,
+        )):
+            raise ValueError("action values must be finite")
         if self.duration_s <= 0.0:
             raise ValueError("action duration must be positive")
         try:
@@ -92,6 +97,12 @@ class SimulatorSession(Protocol):
 def validate_observation(observation: SimObservation) -> None:
     """Reject malformed adapter output before it reaches selector metrics."""
 
+    if not math.isfinite(observation.timestamp_s) or any(
+        value is not None and not math.isfinite(value)
+        for value in (observation.range_m, observation.minimum_clearance_m,
+                      observation.image_center_error)
+    ):
+        raise ValueError("observation values must be finite")
     if observation.timestamp_s < 0.0:
         raise ValueError("observation timestamp must be non-negative")
     if observation.target_visible and not observation.target_in_frame:

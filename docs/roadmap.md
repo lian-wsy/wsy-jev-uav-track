@@ -52,6 +52,8 @@
 
 ## 当前排程
 
+**2026-10-28 D1–D3复查结论：前三天尚未整体验收。** 已补39个完整SHA开发episode、指标协议及固定窗实现、相关工作表、调用费用/隔离报告和异常输入回归；119测试通过。D1独立town test仍缺，D2独立实例与资源未落实，D3离线通过但现场双时钟/执行联验仍阻塞。下一次从这些缺口继续，不按日历跳到“仿真已可用”。详见 [今日逐条验收](experiments/d1_d3_acceptance_20261028.md)。
+
 当前处于 E 阶段的代理回放切片，B/C/D 的数据覆盖和接口验证仍在持续补齐。接下来依次推进：
 
 1. **已完成第一版**：`scripts/build_pass_manifest.py` 已对本轮 12 个 episode 做只读检查，12/12 为 `PASS`、schema 统一为 `carlaair_uav_v2_candidate`，manifest 位于本机 `artifacts/module_ablation_20261022/pass_manifest.json`。

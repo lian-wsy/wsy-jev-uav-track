@@ -120,8 +120,8 @@ class HDF5Episode:
                 raise HDF5SchemaError("timestamp/image_timestamps length does not match images")
 
             positions = np.asarray(read("state/positions", required=True), dtype=np.float32)
-            if positions.ndim != 2 or positions.shape[1] != 3:
-                raise HDF5SchemaError("state/positions must have shape (N, 3)")
+            if positions.ndim != 2 or positions.shape[1] != 3 or not np.isfinite(positions).all():
+                raise HDF5SchemaError("state/positions must have finite shape (N, 3)")
             state_timestamps = read("timestamp/position_timestamps", required=True)
             state_timestamps = np.asarray(state_timestamps, dtype=np.float64).reshape(-1)
             if len(state_timestamps) != len(positions):
@@ -149,8 +149,8 @@ class HDF5Episode:
             if camera_positions_all is None:
                 camera_positions_all = np.zeros_like(positions)
             camera_positions_all = np.asarray(camera_positions_all, dtype=np.float32)
-            if camera_positions_all.shape != positions.shape:
-                raise HDF5SchemaError("action/camera_positions must match state/positions")
+            if camera_positions_all.shape != positions.shape or not np.isfinite(camera_positions_all).all():
+                raise HDF5SchemaError("action/camera_positions must be finite and match state/positions")
 
             target_positions = positions[state_indices]
             camera_positions = camera_positions_all[state_indices]
@@ -177,6 +177,8 @@ class HDF5Episode:
             if target_ranges is None or len(np.asarray(target_ranges).reshape(-1)) != frame_count:
                 target_ranges = np.linalg.norm(relative_positions, axis=1)
             target_ranges = np.asarray(target_ranges, dtype=np.float32).reshape(-1)
+            if not np.isfinite(target_ranges).all() or np.any(target_ranges < 0):
+                raise HDF5SchemaError("target distance must be finite and non-negative")
 
             visible = read("visibility/target_visible")
             visible_observed = visible is not None

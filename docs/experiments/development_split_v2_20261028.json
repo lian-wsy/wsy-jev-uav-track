@@ -1,0 +1,327 @@
+{
+  "source_manifest_sha256": "7326f07e67e90ed0e6397bb553abf31e23cd8d594cf647532a5b02447b9f8e87",
+  "split_version": 2,
+  "split_counts": {
+    "train": 28,
+    "validation": 6,
+    "development_stress": 5
+  },
+  "final_test_available": false,
+  "independent_town_test_available": false,
+  "new_training_run_completed": false,
+  "policy": "Preserve old 17 assignments; add 22 train-only cells; no final-test claim. See d1_d3_acceptance_20261028.md.",
+  "episodes": [
+    {
+      "filename": "Town02_bicycle_frequent_turns_long_seed26094450.hdf5",
+      "seed": 26094450,
+      "split": "train",
+      "sha256": "415331729f7231ba0d876fb0017283eb90095a83d23e3840af382c8b87de7590",
+      "bytes": 322425471,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town05_bicycle_normal_motion_close_seed26094528.hdf5",
+      "seed": 26094528,
+      "split": "train",
+      "sha256": "98245e990c48028a3f5f96e01bd85e230b280df8aaa35620a729af8117d30b15",
+      "bytes": 314756856,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_long_seed26094456.hdf5",
+      "seed": 26094456,
+      "split": "train",
+      "sha256": "0485b51c068393f7596030c0c15ec37eb49864538af13d9404b35798a147c2cb",
+      "bytes": 335735353,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_close_seed26094535.hdf5",
+      "seed": 26094535,
+      "split": "train",
+      "sha256": "606464c4b32bd313ca6409b944329fc6a861bcf071719edf53a795742e40d48c",
+      "bytes": 322767277,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_long_seed26094824.hdf5",
+      "seed": 26094824,
+      "split": "train",
+      "sha256": "6d22c07fe5d6e6da594aa1ced2e633126dd9362366022b51cffb35ddbde207d7",
+      "bytes": 339551027,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094463.hdf5",
+      "seed": 26094463,
+      "split": "train",
+      "sha256": "8c21d63b86404a355e68faf4b8a79da3b65d8abc482bcd7448137c948c49f63f",
+      "bytes": 319672005,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town02_bicycle_frequent_turns_long_seed26094451.hdf5",
+      "seed": 26094451,
+      "split": "validation",
+      "sha256": "6bb267360cde0eab6b379d5206ba6e88e4233ee7e46a9d2cb30b3b3bbab63307",
+      "bytes": 322642409,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town05_bicycle_normal_motion_close_seed26094529.hdf5",
+      "seed": 26094529,
+      "split": "validation",
+      "sha256": "056fa42c8146ab488f8309cf2d7ee26d4b876be7b017c47089cbe2fcc9fa35ed",
+      "bytes": 315063760,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_long_seed26094457.hdf5",
+      "seed": 26094457,
+      "split": "validation",
+      "sha256": "cb6b7da6d67aad82938603f28ca31fde7b728d95cd4526e0c2d7460468e5f32f",
+      "bytes": 335514459,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_close_seed26094538.hdf5",
+      "seed": 26094538,
+      "split": "validation",
+      "sha256": "06e6b3be8358c0e8c69cf2614f0f2fd3c09371928a429f42d120aed05aac6db0",
+      "bytes": 322930767,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_long_seed26094827.hdf5",
+      "seed": 26094827,
+      "split": "validation",
+      "sha256": "77240e5ae02f948164f59c4aaf931e077bc0c7dbb1fc9484a28713acac8d8f40",
+      "bytes": 340034989,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094464.hdf5",
+      "seed": 26094464,
+      "split": "validation",
+      "sha256": "60c424afb34d9d177e913d8fecc287e061390036bb3f00726af1cfd9443e28ca",
+      "bytes": 319587986,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town10HD_bicycle_normal_motion_long_seed260922365.hdf5",
+      "seed": 260922365,
+      "split": "development_stress",
+      "sha256": "535a7e32ea3f5650dfe82330fccb7f90fc5c71b091f542457a0872c00a498c1d",
+      "bytes": 338722010,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town05_pedestrian_normal_motion_close_seed26094743.hdf5",
+      "seed": 26094743,
+      "split": "development_stress",
+      "sha256": "26d51d3d05532ec5d641f242917ad415f99ff204b946eb6eb77a9e08521ac1fa",
+      "bytes": 338459397,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town10HD_bicycle_normal_motion_long_seed26094706.hdf5",
+      "seed": 26094706,
+      "split": "development_stress",
+      "sha256": "696b0a2ce4c1a988899df3a023220340a5e7508809616e401bee0e1b8386857e",
+      "bytes": 354388616,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town10HD_bicycle_normal_motion_long_seed26094707.hdf5",
+      "seed": 26094707,
+      "split": "development_stress",
+      "sha256": "e59d92ea03d1c09088ebc5751e1f8df3ef326d62dad0013ab29c9938a3bbd247",
+      "bytes": 354258859,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town10HD_bicycle_frequent_turns_long_seed26094434.hdf5",
+      "seed": 26094434,
+      "split": "development_stress",
+      "sha256": "be3661fe3d21bc54a271a6561f3f49769922675b4eafe0c2f754ef04dd482e0a",
+      "bytes": 335023210,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town02_bicycle_frequent_turns_long_seed26094452.hdf5",
+      "seed": 26094452,
+      "split": "train",
+      "sha256": "08dcc71857a6a6ad9e1fa31c159af6c664255b756e943535c7280e69bbe275b1",
+      "bytes": 322358074,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town05_bicycle_frequent_turns_long_seed26094454.hdf5",
+      "seed": 26094454,
+      "split": "train",
+      "sha256": "0b9ea32227151a1225080af307115fac66c7049ef2914f290cdbb352e9effe83",
+      "bytes": 329450034,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town05_bicycle_frequent_turns_suitable_seed26094537.hdf5",
+      "seed": 26094537,
+      "split": "train",
+      "sha256": "9d23d92b110e400506ec9aed3fa603794240028f06922e81d20dec4d0f294d2f",
+      "bytes": 332339663,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town05_bicycle_normal_motion_close_seed26094530.hdf5",
+      "seed": 26094530,
+      "split": "train",
+      "sha256": "75b8fd03a74e2fb9d7002f6777d754e99bacc0fe34c6a160e4c5b10f411f2d7b",
+      "bytes": 314390514,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_long_seed26094458.hdf5",
+      "seed": 26094458,
+      "split": "train",
+      "sha256": "9b90fca8a6651ae5b6dda27fee1a5033a8be6009e0a9792b3a70fb05091bb1a8",
+      "bytes": 335891042,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_suitable_seed26094534.hdf5",
+      "seed": 26094534,
+      "split": "train",
+      "sha256": "af73c3d79728b7d431c38f96b5b56d6584b4eec908fc608e38693055a6820b60",
+      "bytes": 333478665,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town05_pedestrian_normal_motion_close_seed26094738.hdf5",
+      "seed": 26094738,
+      "split": "train",
+      "sha256": "48e6001e9ede6ea6e5dc2db9f2db6f3b7fa583127a96bbfe0530d521ac1e0148",
+      "bytes": 336157664,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town05_pedestrian_normal_motion_long_seed26094872.hdf5",
+      "seed": 26094872,
+      "split": "train",
+      "sha256": "06ba2e9a3a438b47e6c947b40fdcd5b9fb76a98d6033e7f45ea79d2d8b7e2e53",
+      "bytes": 337966071,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town05_pedestrian_normal_motion_suitable_seed26094774.hdf5",
+      "seed": 26094774,
+      "split": "train",
+      "sha256": "09a31ae65faed6555faf6996f9a6c7109c2bc800b9b9f27e64862d62a9863d41",
+      "bytes": 332405444,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_close_seed26094539.hdf5",
+      "seed": 26094539,
+      "split": "train",
+      "sha256": "5e0dcf61625fe0a5fe2e09999099d6493d503811320d04279b3375128640464a",
+      "bytes": 322691279,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_suitable_seed26094588.hdf5",
+      "seed": 26094588,
+      "split": "train",
+      "sha256": "4e3ffe4cc23b184ceeaa3e484eaf1f23a9ebc0fe9365657bdf281ce4012c8f44",
+      "bytes": 319949272,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town07_bicycle_normal_motion_long_seed26094516.hdf5",
+      "seed": 26094516,
+      "split": "train",
+      "sha256": "0b301501a07227f29b19ebb85694bcf3c00466e98b8cb97958bbdff6d65cedfb",
+      "bytes": 368697461,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town07_bicycle_normal_motion_suitable_seed26094611.hdf5",
+      "seed": 26094611,
+      "split": "train",
+      "sha256": "9b956679c6ad6e91d1709a8f62bbb32da2438e925b31db893b26da42c30b05da",
+      "bytes": 319459198,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town07_pedestrian_frequent_turns_long_seed26094460.hdf5",
+      "seed": 26094460,
+      "split": "train",
+      "sha256": "66b67e55855a4d3bcc0d427febd9f9d69ad4c62ea2863db3c20f69259f5896d6",
+      "bytes": 334994715,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town07_pedestrian_frequent_turns_suitable_seed26094570.hdf5",
+      "seed": 26094570,
+      "split": "train",
+      "sha256": "f7c3ed7a3913c1d4e56484f4172065b97e16610fe94c0ddd6f15d7e6ee40d84e",
+      "bytes": 338409848,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_long_seed26094834.hdf5",
+      "seed": 26094834,
+      "split": "train",
+      "sha256": "d7572493cacf9aea3e1ca0553b82ab0e6e1397e389883b058d303eaa9037e099",
+      "bytes": 340045169,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_suitable_seed26094726.hdf5",
+      "seed": 26094726,
+      "split": "train",
+      "sha256": "fd7c2ae2addb7d09109d1b76e782637b22dc4ca2f2874083da2124d7e0170391",
+      "bytes": 333643352,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town10HD_bicycle_normal_motion_long_seed26094696.hdf5",
+      "seed": 26094696,
+      "split": "train",
+      "sha256": "45b778880075b3ea9af99ec5401fb949c8cb26ebee96c710af1c003bbad6b823",
+      "bytes": 343217238,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_close_seed26094470.hdf5",
+      "seed": 26094470,
+      "split": "train",
+      "sha256": "115bbb85b5aaacb40c645e6674f2c8577dcfb0e1c65cf39d79a1180e17e23be3",
+      "bytes": 327457052,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094465.hdf5",
+      "seed": 26094465,
+      "split": "train",
+      "sha256": "f4b8cb5648c325374378ed3e46fdf9493c2ab10b2fecca43340b2e1a61e75e95",
+      "bytes": 319609530,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_suitable_seed26094581.hdf5",
+      "seed": 26094581,
+      "split": "train",
+      "sha256": "f3a0f2601f43b64bca0e68749544734ad7790c14ec4bfb40b5b86a68b316a830",
+      "bytes": 333391946,
+      "frame_count": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_normal_motion_long_seed26094889.hdf5",
+      "seed": 26094889,
+      "split": "train",
+      "sha256": "997c016860dce2bf26ff3d4144609da21917a43d4510f09381614c534391a645",
+      "bytes": 332452237,
+      "frame_count": 300
+    }
+  ]
+}

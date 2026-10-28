@@ -87,6 +87,28 @@ def test_camera_yaw_uses_recorded_rotation_not_target_bearing(tmp_path):
     assert HDF5Episode.open(path).tracking_state(2).uav.yaw_deg == 37
 
 
+@pytest.mark.parametrize("dataset", ["state/positions", "action/camera_positions"])
+def test_adapter_rejects_nonfinite_positions_before_belief(tmp_path, dataset):
+    from jev_uav_track.data.hdf5_adapter import HDF5SchemaError
+    path = tmp_path / "bad_position.hdf5"
+    make_synthetic_episode(path)
+    with h5py.File(path, "r+") as h5:
+        h5[dataset][0, 0] = np.nan
+    with pytest.raises(HDF5SchemaError):
+        HDF5Episode.open(path)
+
+
+@pytest.mark.parametrize("distance", [float("nan"), float("inf"), -1.0])
+def test_adapter_rejects_invalid_distance_instead_of_silently_clamping(tmp_path, distance):
+    from jev_uav_track.data.hdf5_adapter import HDF5SchemaError
+    path = tmp_path / "bad_distance.hdf5"
+    make_synthetic_episode(path)
+    with h5py.File(path, "r+") as h5:
+        h5["action/camera_target_distance"][0] = distance
+    with pytest.raises(HDF5SchemaError):
+        HDF5Episode.open(path)
+
+
 def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
     episode_path = tmp_path / "episode.hdf5"
     make_synthetic_episode(episode_path)
