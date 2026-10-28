@@ -1,0 +1,40 @@
+{
+  "run": "belief02",
+  "controller": {
+    "status": "INCOMPLETE_CONTROLLER_RECORD",
+    "started_at": null,
+    "ended_at": null,
+    "profile": null,
+    "client_exit_code": null,
+    "owned_process_exit_code": null,
+    "protected_unchanged": null,
+    "cleanup_confirmed": null,
+    "probe_sha256": null,
+    "api_probe_sha256": null,
+    "runtime_module_sha256": null,
+    "binary_sha256": null,
+    "bootstrap": null,
+    "observation_probe_sha256": null,
+    "observation_gate_sha256": null,
+    "frames_module_sha256": null,
+    "belief_probe_sha256": null,
+    "belief_modules_sha256": null
+  },
+  "source_sha256": {
+    "preflight.json": "70fee1bfebdfa443a1585b190aa34a558c32a86d6c6b05d8ffb0636c9d850f9a"
+  },
+  "preflight": {
+    "free_memory_kib": 4112764,
+    "processes": [
+      {
+        "ProcessId": 19040,
+        "ParentProcessId": 49532,
+        "Name": "python.exe",
+        "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+      }
+    ],
+    "listeners": []
+  },
+  "api_probe": {},
+  "nonfinite_policy": "Nonfinite raw measurements exported as null; raw source hash retained."
+}

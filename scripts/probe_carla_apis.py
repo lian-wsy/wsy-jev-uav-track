@@ -99,7 +99,7 @@ in simListSceneObjects but return NaN in simGetObjectPose. Do not use them.
             'mapping_pass': max(spread) < 0.01 and min(span) > 1.0}
 
 
-def contract_probe(world, air, output, result, bootstrap, observation_contract=False):
+def contract_probe(world, air, output, result, bootstrap, observation_contract=False, belief_contract=False):
     def sample():
         state = air.getMultirotorState(vehicle_name='JevDrone')
         snap = world.get_snapshot()
@@ -261,6 +261,11 @@ def contract_probe(world, air, output, result, bootstrap, observation_contract=F
             result['phase'] = 'observation_contract'
             result['observation_contract'] = {}
             probe_observation_contract(world, air, output.parent, result['observation_contract'])
+        if belief_contract:
+            from probe_belief_contract import probe_belief_contract
+            result['phase'] = 'belief_contract'
+            result['belief_contract'] = {}
+            probe_belief_contract(world, air, output.parent, bridge, result['belief_contract'])
     finally:
         air.cancelLastTask(vehicle_name='JevDrone')
         air.armDisarm(False, vehicle_name='JevDrone')
@@ -296,11 +301,12 @@ def main(output, profile, expected_settings, bootstrap):
               'airsim_server': air.getServerVersion(), 'vehicles': air.listVehicles(),
               'settings_match': True, 'samples': samples,
               'note': 'No arm, reset, motion, RGB capture or target tracking in this probe.'}
-    if profile in ('contract', 'observation'):
+    if profile in ('contract', 'observation', 'belief'):
         result['contract'] = {}
         result['note'] = 'Owned development physics probe; may arm/move/capture. Not a tracking comparison.'
         try:
-            contract_probe(world, air, output, result['contract'], bootstrap, profile == 'observation')
+            contract_probe(world, air, output, result['contract'], bootstrap,
+                           profile in ('observation', 'belief'), profile == 'belief')
         except Exception as exc:
             result['contract_error'] = f'{type(exc).__name__}: {exc}'
             output.write_text(json.dumps(result, indent=2), encoding='utf-8')
@@ -312,7 +318,7 @@ def main(output, profile, expected_settings, bootstrap):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--profile', choices=['api', 'contract', 'observation'], default='api')
+    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief'], default='api')
     parser.add_argument('--expected-settings', type=Path, required=True)
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
     args = parser.parse_args()

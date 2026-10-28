@@ -62,6 +62,24 @@ def test_summary_distinguishes_object_origin_from_vehicle_origin():
     assert result['origin_bridge']['local_minus_global_m'] == [0, 0, 3]
 
 
+def test_export_preserves_belief_evidence_and_source_hashes(tmp_path):
+    module = load_summary()
+    root = tmp_path / 'runtime'
+    folder = root / 'runs/belief01'
+    folder.mkdir(parents=True)
+    (folder / 'smoke_result.json').write_text(json.dumps({'status': 'FAILED', 'profile': 'belief',
+        'belief_probe_sha256': 'probe-sha', 'belief_modules_sha256': {'live_belief.py': 'module-sha'}}))
+    (folder / 'api_probe.json').write_text(json.dumps({'contract': {'belief_contract': {
+        'dispatched_actions': 0, 'accepted_count': 2, 'frames': []}}}))
+    (folder / 'belief_frame_00.png').write_bytes(b'fixture-image')
+    module.export(root, tmp_path / 'out', profile='belief')
+    evidence = json.loads((tmp_path / 'out/belief01.json').read_text())
+    summary = json.loads((tmp_path / 'out/summary.json').read_text())
+    assert evidence['controller']['belief_modules_sha256'] == {'live_belief.py': 'module-sha'}
+    assert summary['runs'][0]['belief_contract']['dispatched_actions'] == 0
+    assert (tmp_path / 'out/belief01_belief_frame_00.png').read_bytes() == b'fixture-image'
+
+
 def test_profile_export_keeps_failed_runs_and_their_provenance(tmp_path):
     module = load_summary()
     root = tmp_path / 'runtime'

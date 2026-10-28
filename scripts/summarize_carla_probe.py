@@ -70,7 +70,8 @@ def summarize(api):
             'paced_delta_s': delta('paced_begin', 'paced_end'),
             'axis_commands': axes, 'command_refresh': cadence_summary,
             'new_collision_axes': contract.get('new_collision_axes'), 'camera': contract.get('camera'),
-            'observation_contract': contract.get('observation_contract')}
+            'observation_contract': contract.get('observation_contract'),
+            'belief_contract': contract.get('belief_contract')}
 
 
 def export(root, output, profile=None, run_prefix=None):
@@ -97,15 +98,17 @@ def export(root, output, profile=None, run_prefix=None):
             'status', 'started_at', 'ended_at', 'profile', 'client_exit_code', 'owned_process_exit_code',
             'protected_unchanged', 'cleanup_confirmed', 'probe_sha256', 'api_probe_sha256',
             'runtime_module_sha256', 'binary_sha256', 'bootstrap', 'observation_probe_sha256',
-            'observation_gate_sha256', 'frames_module_sha256')},
+            'observation_gate_sha256', 'frames_module_sha256', 'belief_probe_sha256', 'belief_modules_sha256')},
             'source_sha256': {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
                               for p in (source, preflight, api_file, folder / 'camera.png', folder / 'client_stderr.txt',
-                                        folder / 'camera_before.png', folder / 'camera_after.png') if p.exists()},
+                                        folder / 'camera_before.png', folder / 'camera_after.png',
+                                        *sorted(folder.glob('belief_frame_*.png'))) if p.exists()},
             'preflight': json.loads(preflight.read_text(encoding='utf-8')) if preflight.exists() else None,
             'api_probe': finite_json(api),
             'nonfinite_policy': 'Nonfinite raw measurements exported as null; raw source hash retained.'}
         (output / f'{name}.json').write_text(json.dumps(evidence, indent=2, allow_nan=False), encoding='utf-8')
-        for image_name in ('camera_before.png', 'camera_after.png'):
+        for image_name in ('camera_before.png', 'camera_after.png',
+                           *(p.name for p in sorted(folder.glob('belief_frame_*.png')))):
             if (folder / image_name).exists():
                 shutil.copyfile(folder / image_name, output / f'{name}_{image_name}')
         runs.append({'run': name, 'status': raw.get('status'),
@@ -123,7 +126,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--profile', choices=['api', 'contract', 'observation'])
+    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief'])
     parser.add_argument('--run-prefix', help='Select a named experiment series, retaining its failed attempts')
     args = parser.parse_args()
     export(args.root, args.output, args.profile, args.run_prefix)
