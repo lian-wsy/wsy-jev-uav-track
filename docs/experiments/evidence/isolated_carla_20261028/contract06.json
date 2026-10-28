@@ -1,0 +1,23 @@
+{
+  "run": "contract06",
+  "controller": {
+    "status": "FAILED",
+    "started_at": 1793179442.7016037,
+    "ended_at": 1793179459.298172,
+    "profile": "contract",
+    "client_exit_code": 1,
+    "owned_process_exit_code": 0,
+    "protected_unchanged": true,
+    "cleanup_confirmed": true,
+    "probe_sha256": "4b4655a5db5d735c5c2382888a945011894436d89168103c136c7f654439f1db",
+    "api_probe_sha256": "18d90207eaae012c800cf5a2d48b7b9896649167a6a234e9016b8beabf58bc91",
+    "runtime_module_sha256": "b6e219a53ca786a49b8f9ee8ad6ea24bf7cea25f2b5166001b3d2c8385020c3b",
+    "binary_sha256": "e39091f72c148db0c6821d4dcbbbba55d768fe67e3320707c4007d2db784b0d7"
+  },
+  "source_sha256": {
+    "smoke_result.json": "2d2c5379bbda19a35bff496d28a71e5c925ae7a53ee227c53cf4f6d90c35dbf1",
+    "client_stderr.txt": "27464429958289fbc8c2096cf87941387dd917218098f4139ba5cb0c843c49db"
+  },
+  "api_probe": {},
+  "nonfinite_policy": "Nonfinite raw measurements exported as null; raw source hash retained."
+}

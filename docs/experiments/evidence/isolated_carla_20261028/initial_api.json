@@ -1,0 +1,169 @@
+{
+  "run": "initial_api",
+  "controller": {
+    "status": "API_SMOKE_COMPLETED",
+    "started_at": 1793177350.4888942,
+    "ended_at": 1793177377.4942908,
+    "profile": null,
+    "client_exit_code": 0,
+    "owned_process_exit_code": 1,
+    "protected_unchanged": true,
+    "cleanup_confirmed": null,
+    "probe_sha256": null,
+    "api_probe_sha256": null,
+    "runtime_module_sha256": null,
+    "binary_sha256": null
+  },
+  "source_sha256": {
+    "smoke_result.json": "8d95dfb35b4fb432edc9ac6bfc725aa60e79c4d6938cc9d810f687fc489f5e09",
+    "api_probe.json": "f10b976d9af619c80bff8b56af2fe207917c55f74ed983a1c3f77a62dcf112c9",
+    "client_stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "api_probe": {
+    "kind": "LIVE_OWNED_API_PROBE",
+    "carla_server": "7a7fdb3-dirty",
+    "carla_client": "7a7fdb3-dirty",
+    "map": "Carla/Maps/Town02",
+    "airsim_server": 1,
+    "vehicles": [
+      "JevDrone"
+    ],
+    "settings_match": true,
+    "samples": [
+      {
+        "wall_s": 1197786.656,
+        "carla_s": 3.9880888052284718,
+        "carla_frame": 219,
+        "airsim_s": 1793177372.7460294,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0031835937406867743,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1197786.765,
+        "carla_s": 4.088089805096388,
+        "carla_frame": 225,
+        "airsim_s": 1793177372.8570318,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0031835937406867743,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1197786.875,
+        "carla_s": 4.204757504165173,
+        "carla_frame": 232,
+        "airsim_s": 1793177372.965034,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0031835937406867743,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1197786.984,
+        "carla_s": 4.304757904261351,
+        "carla_frame": 238,
+        "airsim_s": 1793177373.0730364,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0031835937406867743,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1197787.093,
+        "carla_s": 4.421425607055426,
+        "carla_frame": 245,
+        "airsim_s": 1793177373.1810386,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0031835937406867743,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1197787.203,
+        "carla_s": 4.521426506340504,
+        "carla_frame": 251,
+        "airsim_s": 1793177373.292041,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0031835937406867743,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1197787.312,
+        "carla_s": 4.63809410482645,
+        "carla_frame": 258,
+        "airsim_s": 1793177373.4000435,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0031835937406867743,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1197787.421,
+        "carla_s": 4.738167904317379,
+        "carla_frame": 264,
+        "airsim_s": 1793177373.5080457,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0031835937406867743,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1197787.531,
+        "carla_s": 4.854835506528616,
+        "carla_frame": 271,
+        "airsim_s": 1793177373.616048,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0031835937406867743,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1197787.64,
+        "carla_s": 4.954836305230856,
+        "carla_frame": 277,
+        "airsim_s": 1793177373.7270503,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0031835937406867743,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1197787.75,
+        "carla_s": 5.071503706276417,
+        "carla_frame": 284,
+        "airsim_s": 1793177373.8350527,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0031835937406867743,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1197787.859,
+        "carla_s": 5.171504404395819,
+        "carla_frame": 290,
+        "airsim_s": 1793177373.943055,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0031835937406867743,
+          6.69262170791626
+        ]
+      }
+    ],
+    "note": "No arm, reset, motion, RGB capture or target tracking in this probe."
+  },
+  "nonfinite_policy": "Nonfinite raw measurements exported as null; raw source hash retained."
+}

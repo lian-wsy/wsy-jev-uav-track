@@ -1,0 +1,556 @@
+{
+  "kind": "LIVE_OWNED_DEVELOPMENT_DIAGNOSTICS",
+  "runs": [
+    {
+      "run": "initial_api",
+      "status": "API_SMOKE_COMPLETED",
+      "protected_unchanged": true,
+      "cleanup_confirmed": null,
+      "phase": null,
+      "error": null,
+      "rpc_success_checked": false,
+      "coordinate_status": "NOT_AUDITED",
+      "offset_m": null,
+      "offset_spread_m": null,
+      "pause_delta_s": null,
+      "unpaced_delta_s": null,
+      "paced_delta_s": null,
+      "axis_commands": [],
+      "command_refresh": null,
+      "new_collision_axes": null,
+      "camera": null
+    },
+    {
+      "run": "contract01",
+      "status": "API_SMOKE_COMPLETED",
+      "protected_unchanged": true,
+      "cleanup_confirmed": null,
+      "phase": null,
+      "error": null,
+      "rpc_success_checked": false,
+      "coordinate_status": "NOT_AUDITED",
+      "offset_m": null,
+      "offset_spread_m": null,
+      "pause_delta_s": {
+        "wall_s": 0.40699999989010394,
+        "carla_s": 0.0,
+        "airsim_s": 0.0
+      },
+      "unpaced_delta_s": {
+        "wall_s": 0.31200000015087426,
+        "carla_s": 1.0000000149011612,
+        "airsim_s": 0.31200647354125977
+      },
+      "paced_delta_s": null,
+      "axis_commands": [],
+      "command_refresh": null,
+      "new_collision_axes": null,
+      "camera": {
+        "timestamp_s": 1793177574.3776052,
+        "width": 320,
+        "height": 240,
+        "camera_position": [
+          0.492011696100235,
+          -0.002402343787252903,
+          5.236857891082764
+        ],
+        "png_bytes": 119210
+      }
+    },
+    {
+      "run": "contract02",
+      "status": "API_SMOKE_COMPLETED",
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "phase": "completed",
+      "error": null,
+      "rpc_success_checked": false,
+      "coordinate_status": "NOT_AUDITED",
+      "offset_m": null,
+      "offset_spread_m": null,
+      "pause_delta_s": {
+        "wall_s": 0.40600000019185245,
+        "carla_s": 0.0,
+        "airsim_s": 0.0
+      },
+      "unpaced_delta_s": {
+        "wall_s": 0.31200000015087426,
+        "carla_s": 1.0000000149011612,
+        "airsim_s": 0.31200647354125977
+      },
+      "paced_delta_s": {
+        "wall_s": 1.031999999890104,
+        "carla_s": 1.0000000149011612,
+        "airsim_s": 1.03202223777771
+      },
+      "axis_commands": [],
+      "command_refresh": null,
+      "new_collision_axes": null,
+      "camera": {
+        "timestamp_s": 1793177973.7361236,
+        "width": 320,
+        "height": 240,
+        "camera_position": [
+          0.49288085103034973,
+          -0.0023828125558793545,
+          5.236989498138428
+        ],
+        "png_bytes": 119151
+      }
+    },
+    {
+      "run": "contract03",
+      "status": "API_SMOKE_COMPLETED",
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "phase": "completed",
+      "error": null,
+      "rpc_success_checked": false,
+      "coordinate_status": "INVALID",
+      "offset_m": null,
+      "offset_spread_m": null,
+      "pause_delta_s": {
+        "wall_s": 0.4059999999590218,
+        "carla_s": 0.0,
+        "airsim_s": 0.0
+      },
+      "unpaced_delta_s": {
+        "wall_s": 0.3119999999180436,
+        "carla_s": 1.0000000149011612,
+        "airsim_s": 0.31200671195983887
+      },
+      "paced_delta_s": {
+        "wall_s": 1.0310000001918525,
+        "carla_s": 1.0000000149011612,
+        "airsim_s": 1.0320219993591309
+      },
+      "axis_commands": [
+        {
+          "velocity_command_ned": [
+            0.3,
+            0,
+            0
+          ],
+          "yaw_rate_dps": 0,
+          "command_completion_wall_s": 1.0,
+          "observed_samples": 34,
+          "telemetry_hz": 16.75977653596405,
+          "displacement_including_brake_m": [
+            0.3064817488193512,
+            0.0003246974665671587,
+            0.02824878692626953
+          ],
+          "yaw_change_including_brake_rad": 2.6170956755125485e-05
+        },
+        {
+          "velocity_command_ned": [
+            0,
+            0.3,
+            0
+          ],
+          "yaw_rate_dps": 0,
+          "command_completion_wall_s": 1.0,
+          "observed_samples": 33,
+          "telemetry_hz": 16.251904521644473,
+          "displacement_including_brake_m": [
+            0.05155134201049805,
+            0.24758176691830158,
+            0.0026073455810546875
+          ],
+          "yaw_change_including_brake_rad": -0.0001579382928365569
+        },
+        {
+          "velocity_command_ned": [
+            0,
+            0,
+            -0.3
+          ],
+          "yaw_rate_dps": 0,
+          "command_completion_wall_s": 1.0,
+          "observed_samples": 33,
+          "telemetry_hz": 16.129032256671408,
+          "displacement_including_brake_m": [
+            0.0026189684867858887,
+            0.04676169157028198,
+            -0.3007364273071289
+          ],
+          "yaw_change_including_brake_rad": -2.860229961154648e-06
+        },
+        {
+          "velocity_command_ned": [
+            0,
+            0,
+            0
+          ],
+          "yaw_rate_dps": 15,
+          "command_completion_wall_s": 1.0,
+          "observed_samples": 34,
+          "telemetry_hz": 16.5,
+          "displacement_including_brake_m": [
+            0.00014257431030273438,
+            0.0025725066661834717,
+            0.009916305541992188
+          ],
+          "yaw_change_including_brake_rad": 0.2627313962109271
+        }
+      ],
+      "command_refresh": null,
+      "new_collision_axes": false,
+      "camera": {
+        "timestamp_s": 1793178379.1266494,
+        "width": 320,
+        "height": 240,
+        "camera_position": [
+          0.8565624952316284,
+          0.2979492247104645,
+          4.977837562561035
+        ],
+        "png_bytes": 125894
+      }
+    },
+    {
+      "run": "contract04",
+      "status": "API_SMOKE_COMPLETED",
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "phase": "completed",
+      "error": null,
+      "rpc_success_checked": false,
+      "coordinate_status": "PASS",
+      "offset_m": [
+        -108.27999877929688,
+        -307.85999298095703,
+        4.310000121593475
+      ],
+      "offset_spread_m": [
+        1.52587890625e-05,
+        1.9073486328125e-05,
+        9.5367431640625e-07
+      ],
+      "pause_delta_s": {
+        "wall_s": 0.4059999999590218,
+        "carla_s": 0.0,
+        "airsim_s": 0.0
+      },
+      "unpaced_delta_s": {
+        "wall_s": 0.3130000000819564,
+        "carla_s": 1.0000000149011612,
+        "airsim_s": 0.31500673294067383
+      },
+      "paced_delta_s": {
+        "wall_s": 1.047000000020489,
+        "carla_s": 1.0000000149011612,
+        "airsim_s": 1.0410223007202148
+      },
+      "axis_commands": [
+        {
+          "velocity_command_ned": [
+            0.3,
+            0,
+            0
+          ],
+          "yaw_rate_dps": 0,
+          "command_completion_wall_s": 1.0,
+          "observed_samples": 34,
+          "telemetry_hz": 16.5,
+          "displacement_including_brake_m": [
+            0.3102823495864868,
+            0.0003022393211722374,
+            0.028380393981933594
+          ],
+          "yaw_change_including_brake_rad": 2.697472230704656e-05
+        },
+        {
+          "velocity_command_ned": [
+            0,
+            0.3,
+            0
+          ],
+          "yaw_rate_dps": 0,
+          "command_completion_wall_s": 1.0,
+          "observed_samples": 34,
+          "telemetry_hz": 16.75977653596405,
+          "displacement_including_brake_m": [
+            0.051776885986328125,
+            0.24637965601868927,
+            0.0025758743286132812
+          ],
+          "yaw_change_including_brake_rad": -0.00015787416518220354
+        },
+        {
+          "velocity_command_ned": [
+            0,
+            0,
+            -0.3
+          ],
+          "yaw_rate_dps": 0,
+          "command_completion_wall_s": 1.0150000001303852,
+          "observed_samples": 34,
+          "telemetry_hz": 16.897081413387713,
+          "displacement_including_brake_m": [
+            0.002615511417388916,
+            0.0466475784778595,
+            -0.3009529113769531
+          ],
+          "yaw_change_including_brake_rad": -2.856660707331593e-06
+        },
+        {
+          "velocity_command_ned": [
+            0,
+            0,
+            0
+          ],
+          "yaw_rate_dps": 15,
+          "command_completion_wall_s": 1.0159999998286366,
+          "observed_samples": 34,
+          "telemetry_hz": 16.5,
+          "displacement_including_brake_m": [
+            0.0001424551010131836,
+            0.0025693178176879883,
+            0.009863853454589844
+          ],
+          "yaw_change_including_brake_rad": 0.26265827997061986
+        }
+      ],
+      "command_refresh": null,
+      "new_collision_axes": false,
+      "camera": {
+        "timestamp_s": 1793178653.7741787,
+        "width": 320,
+        "height": 240,
+        "camera_position": [
+          0.857421875,
+          0.2978515625,
+          4.976435661315918
+        ],
+        "png_bytes": 125575
+      }
+    },
+    {
+      "run": "contract05",
+      "status": "FAILED",
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "phase": "takeoff",
+      "error": "RuntimeError: Movement RPC did not acknowledge success",
+      "rpc_success_checked": true,
+      "coordinate_status": "PASS",
+      "offset_m": [
+        -108.27999877929688,
+        -307.85999298095703,
+        4.310000121593475
+      ],
+      "offset_spread_m": [
+        1.52587890625e-05,
+        1.9073486328125e-05,
+        9.5367431640625e-07
+      ],
+      "pause_delta_s": {
+        "wall_s": 0.4220000000204891,
+        "carla_s": 0.0,
+        "airsim_s": 0.0
+      },
+      "unpaced_delta_s": {
+        "wall_s": 0.31200000015087426,
+        "carla_s": 1.0000000149011612,
+        "airsim_s": 0.31200671195983887
+      },
+      "paced_delta_s": {
+        "wall_s": 1.031999999890104,
+        "carla_s": 1.0000000149011612,
+        "airsim_s": 1.026021957397461
+      },
+      "axis_commands": [],
+      "command_refresh": null,
+      "new_collision_axes": null,
+      "camera": null
+    },
+    {
+      "run": "contract06",
+      "status": "FAILED",
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "phase": null,
+      "error": null,
+      "rpc_success_checked": false,
+      "coordinate_status": "NOT_AUDITED",
+      "offset_m": null,
+      "offset_spread_m": null,
+      "pause_delta_s": null,
+      "unpaced_delta_s": null,
+      "paced_delta_s": null,
+      "axis_commands": [],
+      "command_refresh": null,
+      "new_collision_axes": null,
+      "camera": null
+    },
+    {
+      "run": "contract07",
+      "status": "FAILED",
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "phase": "takeoff",
+      "error": "RuntimeError: Movement RPC did not acknowledge success (type=bool)",
+      "rpc_success_checked": true,
+      "coordinate_status": "PASS",
+      "offset_m": [
+        -108.27999877929688,
+        -307.85999298095703,
+        4.310000121593475
+      ],
+      "offset_spread_m": [
+        1.52587890625e-05,
+        1.9073486328125e-05,
+        9.5367431640625e-07
+      ],
+      "pause_delta_s": {
+        "wall_s": 0.40600000019185245,
+        "carla_s": 0.0,
+        "airsim_s": 0.0
+      },
+      "unpaced_delta_s": {
+        "wall_s": 0.3130000000819564,
+        "carla_s": 1.0000000149011612,
+        "airsim_s": 0.31500673294067383
+      },
+      "paced_delta_s": {
+        "wall_s": 1.0309999999590218,
+        "carla_s": 1.0000000149011612,
+        "airsim_s": 1.0320219993591309
+      },
+      "axis_commands": [],
+      "command_refresh": null,
+      "new_collision_axes": null,
+      "camera": null
+    },
+    {
+      "run": "contract08",
+      "status": "API_SMOKE_COMPLETED",
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "phase": "completed",
+      "error": null,
+      "rpc_success_checked": true,
+      "coordinate_status": "PASS",
+      "offset_m": [
+        -108.27999877929688,
+        -307.85999298095703,
+        4.310000121593475
+      ],
+      "offset_spread_m": [
+        1.52587890625e-05,
+        1.9073486328125e-05,
+        9.5367431640625e-07
+      ],
+      "pause_delta_s": {
+        "wall_s": 0.40600000019185245,
+        "carla_s": 0.0,
+        "airsim_s": 0.0
+      },
+      "unpaced_delta_s": {
+        "wall_s": 0.3130000000819564,
+        "carla_s": 1.0000000149011612,
+        "airsim_s": 0.31200671195983887
+      },
+      "paced_delta_s": {
+        "wall_s": 1.0309999999590218,
+        "carla_s": 1.0000000149011612,
+        "airsim_s": 1.0350220203399658
+      },
+      "axis_commands": [
+        {
+          "velocity_command_ned": [
+            0.3,
+            0,
+            0
+          ],
+          "yaw_rate_dps": 0,
+          "command_completion_wall_s": 1.0159999998286366,
+          "observed_samples": 33,
+          "telemetry_hz": 16.37666325561115,
+          "displacement_including_brake_m": [
+            0.3054403066635132,
+            0.0003228518180549145,
+            0.02808856964111328
+          ],
+          "yaw_change_including_brake_rad": 2.583384303458947e-05
+        },
+        {
+          "velocity_command_ned": [
+            0,
+            0.3,
+            0
+          ],
+          "yaw_rate_dps": 0,
+          "command_completion_wall_s": 1.0160000000614673,
+          "observed_samples": 33,
+          "telemetry_hz": 16.129032256671408,
+          "displacement_including_brake_m": [
+            0.05181694030761719,
+            0.24805519613437355,
+            0.0026369094848632812
+          ],
+          "yaw_change_including_brake_rad": -0.00015791244978986818
+        },
+        {
+          "velocity_command_ned": [
+            0,
+            0,
+            -0.3
+          ],
+          "yaw_rate_dps": 0,
+          "command_completion_wall_s": 1.0150000001303852,
+          "observed_samples": 33,
+          "telemetry_hz": 16.260162600718026,
+          "displacement_including_brake_m": [
+            0.0026154518127441406,
+            0.04669877886772156,
+            -0.3008556365966797
+          ],
+          "yaw_change_including_brake_rad": -2.8602833013757767e-06
+        },
+        {
+          "velocity_command_ned": [
+            0,
+            0,
+            0
+          ],
+          "yaw_rate_dps": 15,
+          "command_completion_wall_s": 1.0159999998286366,
+          "observed_samples": 34,
+          "telemetry_hz": 16.62468513963104,
+          "displacement_including_brake_m": [
+            0.00014209747314453125,
+            0.0025673210620880127,
+            0.009833812713623047
+          ],
+          "yaw_change_including_brake_rad": 0.2626117753801126
+        }
+      ],
+      "command_refresh": {
+        "sent_count": 20,
+        "acknowledged_count": 20,
+        "skipped_slots": 0,
+        "brake_sent_s": 1.0054774000309408,
+        "mean_dispatch_hz": 19.871367409855363,
+        "max_dispatch_interval_s": 0.06255859998054802,
+        "max_ack_latency_s": 0.04248800012283027
+      },
+      "new_collision_axes": false,
+      "camera": {
+        "timestamp_s": 1793179815.213145,
+        "width": 320,
+        "height": 240,
+        "camera_position": [
+          1.0238475799560547,
+          0.2980664074420929,
+          4.591460704803467
+        ],
+        "png_bytes": 125349
+      }
+    }
+  ],
+  "not_tracking_evaluation": true,
+  "real_jev_requests": 0,
+  "source_hdf_files_opened": 0
+}
