@@ -1,0 +1,38 @@
+{
+  "run": "origin02",
+  "controller": {
+    "status": "INCOMPLETE_CONTROLLER_RECORD",
+    "started_at": null,
+    "ended_at": null,
+    "profile": null,
+    "client_exit_code": null,
+    "owned_process_exit_code": null,
+    "protected_unchanged": null,
+    "cleanup_confirmed": null,
+    "probe_sha256": null,
+    "api_probe_sha256": null,
+    "runtime_module_sha256": null,
+    "binary_sha256": null,
+    "bootstrap": null,
+    "observation_probe_sha256": null,
+    "observation_gate_sha256": null,
+    "frames_module_sha256": null
+  },
+  "source_sha256": {
+    "preflight.json": "0e18683ce5193c1678a2d36773a8d0b362ebb2ff375dcc5a67c6b269fdf14ee0"
+  },
+  "preflight": {
+    "free_memory_kib": 4111356,
+    "processes": [
+      {
+        "ProcessId": 25920,
+        "ParentProcessId": 58136,
+        "Name": "python.exe",
+        "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+      }
+    ],
+    "listeners": []
+  },
+  "api_probe": {},
+  "nonfinite_policy": "Nonfinite raw measurements exported as null; raw source hash retained."
+}

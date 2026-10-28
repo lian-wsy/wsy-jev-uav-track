@@ -62,6 +62,8 @@ def summarize(api):
     return {'phase': contract.get('phase'), 'error': api.get('contract_error'),
             'rpc_success_checked': api.get('rpc_success_checked', False),
             'coordinate_status': status,
+            'coordinate_target_frame': mapping.get('target_frame'),
+            'origin_bridge': contract.get('origin_bridge'),
             'offset_m': mapping.get('offset_first_m'), 'offset_spread_m': mapping.get('offset_spread_m'),
             'pause_delta_s': delta('pause_start', 'pause_end'),
             'unpaced_delta_s': delta('sync_begin', 'sync_end'),
@@ -71,17 +73,24 @@ def summarize(api):
             'observation_contract': contract.get('observation_contract')}
 
 
-def export(root, output, profile=None):
+def export(root, output, profile=None, run_prefix=None):
     output.mkdir(parents=True, exist_ok=False)
     runs = []
     for folder in [root, *sorted((root / 'runs').iterdir())]:
-        source = folder / 'smoke_result.json'
-        if not source.is_file():
-            continue
-        raw = json.loads(source.read_text(encoding='utf-8'))
-        if profile is not None and raw.get('profile') != profile:
-            continue
         name = 'initial_api' if folder == root else folder.name
+        if run_prefix is not None and not name.startswith(run_prefix):
+            continue
+        source = folder / 'smoke_result.json'
+        preflight = folder / 'preflight.json'
+        if not source.is_file() and not preflight.is_file():
+            continue
+        raw = (json.loads(source.read_text(encoding='utf-8')) if source.is_file()
+               else {'status': 'INCOMPLETE_CONTROLLER_RECORD'})
+        # A prefix explicitly scopes an experiment series. Its preflight-only
+        # attempts have no known profile; retain them as unknown, never as PASS.
+        prefix_selected_incomplete = run_prefix is not None and not source.is_file()
+        if profile is not None and raw.get('profile') != profile and not prefix_selected_incomplete:
+            continue
         api_file = folder / 'api_probe.json'
         api = json.loads(api_file.read_text(encoding='utf-8')) if api_file.exists() else raw.get('client_probe') or {}
         evidence = {'run': name, 'controller': {k: raw.get(k) for k in (
@@ -90,8 +99,9 @@ def export(root, output, profile=None):
             'runtime_module_sha256', 'binary_sha256', 'bootstrap', 'observation_probe_sha256',
             'observation_gate_sha256', 'frames_module_sha256')},
             'source_sha256': {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
-                              for p in (source, api_file, folder / 'camera.png', folder / 'client_stderr.txt',
+                              for p in (source, preflight, api_file, folder / 'camera.png', folder / 'client_stderr.txt',
                                         folder / 'camera_before.png', folder / 'camera_after.png') if p.exists()},
+            'preflight': json.loads(preflight.read_text(encoding='utf-8')) if preflight.exists() else None,
             'api_probe': finite_json(api),
             'nonfinite_policy': 'Nonfinite raw measurements exported as null; raw source hash retained.'}
         (output / f'{name}.json').write_text(json.dumps(evidence, indent=2, allow_nan=False), encoding='utf-8')
@@ -101,7 +111,8 @@ def export(root, output, profile=None):
         runs.append({'run': name, 'status': raw.get('status'),
                      'protected_unchanged': raw.get('protected_unchanged'),
                      'cleanup_confirmed': raw.get('cleanup_confirmed'), **finite_json(summarize(api))})
-    report = {'kind': 'LIVE_OWNED_DEVELOPMENT_DIAGNOSTICS', 'selection_profile': profile, 'runs': runs,
+    report = {'kind': 'LIVE_OWNED_DEVELOPMENT_DIAGNOSTICS', 'selection_profile': profile,
+              'selection_run_prefix': run_prefix, 'runs': runs,
               'not_tracking_evaluation': True, 'real_jev_requests': 0,
               'source_hdf_files_opened': 0}
     (output / 'summary.json').write_text(json.dumps(report, indent=2, allow_nan=False), encoding='utf-8')
@@ -113,5 +124,6 @@ if __name__ == '__main__':
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--profile', choices=['api', 'contract', 'observation'])
+    parser.add_argument('--run-prefix', help='Select a named experiment series, retaining its failed attempts')
     args = parser.parse_args()
-    export(args.root, args.output, args.profile)
+    export(args.root, args.output, args.profile, args.run_prefix)

@@ -40,3 +40,29 @@ def test_local_carlaair_mapping_preserves_horizontal_axes_and_compiles_climb():
     command = compile_carlaair_candidate(action, alignment)
     assert command.velocity_mps == (0.3, 0, -1.8)
     assert command.duration_s == action.duration_s
+
+
+def test_global_object_origin_is_not_vehicle_state_origin():
+    from jev_uav_track.frames import CarlaAirAlignment, AirSimOriginBridge
+    bridge = AirSimOriginBridge.calibrate(
+        CarlaAirAlignment((-100, -200, 4)),
+        [(1, 2, 3), (2, 2, 1)], [(6, -1, 6), (7, -1, 4)])
+    # Hand-derived local = global + (5, -3, 3); CARLA z has opposite sign.
+    assert bridge.global_to_vehicle((10, 20, -2)) == pytest.approx((15, 17, 1))
+    assert bridge.carla_to_vehicle((110, 220, 6)) == pytest.approx((15, 17, 1))
+    assert bridge.vehicle_to_carla((15, 17, 1)) == pytest.approx((110, 220, 6))
+    assert bridge.local_minus_global_m == pytest.approx((5, -3, 3))
+
+
+@pytest.mark.parametrize('global_points,local_points', [
+    ([], []),
+    ([(0, 0, 0)], [(0, 0, 3)]),
+    ([(0, 0, 0), (0, 0, 0)], [(0, 0, 3), (0, 0, 3)]),
+    ([(0, 0, 0), (1, 0, 0)], [(0, 0, 3)]),
+    ([(0, 0, 0), (1, 0, 0)], [(0, 0, 3), (1, 0, 3.2)]),
+    ([(0, 0, 0), (float('nan'), 0, 0)], [(0, 0, 3), (1, 0, 3)]),
+])
+def test_origin_bridge_rejects_unproven_or_inconsistent_pairs(global_points, local_points):
+    from jev_uav_track.frames import CarlaAirAlignment, AirSimOriginBridge
+    with pytest.raises(ValueError):
+        AirSimOriginBridge.calibrate(CarlaAirAlignment((0, 0, 0)), global_points, local_points)

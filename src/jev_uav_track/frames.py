@@ -64,7 +64,10 @@ class CarlaAirAlignment:
     """Local producer mapping, NOT geographic ENU->NED.
 
     AirSim position = (CARLA.x + ox, CARLA.y + oy, -CARLA.z + oz).
-    Offsets must come from a paired own-instance pose calibration.
+    Offsets must come from a paired own-instance pose calibration. The target
+    origin is defined by those pairs: simGetObjectPose is GLOBAL NED, not the
+    vehicle-local NED used by state/camera APIs. Use AirSimOriginBridge when
+    composing an object-landmark calibration with vehicle state.
     """
     offset_m: tuple[float, float, float]
 
@@ -84,6 +87,48 @@ class CarlaAirAlignment:
     def velocity_to_airsim(self, value: Sequence[float]) -> tuple[float, float, float]:
         x, y, z = _vec3(value)
         return x, y, -z
+
+
+@dataclass(frozen=True)
+class AirSimOriginBridge:
+    """Instance-specific translation from global object to vehicle-local NED.
+
+    Both frames have the same axes, but generally different origins. Callers
+    must pair the SAME vehicle actor at paused, separated poses; this numerical
+    check cannot establish actor identity or simultaneity by itself. Recalibrate
+    after reset/respawn/map change. Velocities do not receive this translation.
+    """
+    carla_to_global: CarlaAirAlignment
+    local_minus_global_m: tuple[float, float, float]
+
+    def __post_init__(self):
+        object.__setattr__(self, 'local_minus_global_m', _vec3(self.local_minus_global_m))
+
+    @classmethod
+    def calibrate(cls, carla_to_global, global_points, local_points):
+        if len(global_points) != len(local_points) or len(global_points) < 2:
+            raise ValueError('Need at least two paired vehicle poses')
+        glob = [_vec3(p) for p in global_points]
+        local = [_vec3(p) for p in local_points]
+        if max(math.dist(glob[0], p) for p in glob[1:]) < 0.25:
+            raise ValueError('Origin audit needs at least 0.25 m pose separation')
+        offset = _vec3(tuple(local[0][i] - glob[0][i] for i in range(3)))
+        bridge = cls(carla_to_global, offset)
+        if any(math.dist(bridge.global_to_vehicle(g), l) > 0.02 for g, l in zip(glob, local)):
+            raise ValueError('Global/local origin difference is not constant within 0.02 m')
+        return bridge
+
+    def global_to_vehicle(self, value):
+        point = _vec3(value)
+        return _vec3(tuple(point[i] + self.local_minus_global_m[i] for i in range(3)))
+
+    def carla_to_vehicle(self, value):
+        return self.global_to_vehicle(self.carla_to_global.position_to_airsim(value))
+
+    def vehicle_to_carla(self, value):
+        point = _vec3(value)
+        glob = _vec3(tuple(point[i] - self.local_minus_global_m[i] for i in range(3)))
+        return self.carla_to_global.position_to_carla(glob)
 
 
 def _world_to_enu(value: tuple[float, float, float], frame: CoordinateFrame) -> tuple[float, float, float]:

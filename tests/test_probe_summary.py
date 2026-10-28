@@ -33,6 +33,35 @@ def test_summary_missing_measurement_is_not_zero_or_pass():
     assert result['command_refresh'] is None
 
 
+def test_prefix_export_preserves_preflight_only_attempt_instead_of_hiding_it(tmp_path):
+    module = load_summary()
+    root = tmp_path / 'runtime'
+    for name in ('origin01', 'origin02', 'other01'):
+        (root / 'runs' / name).mkdir(parents=True)
+    (root / 'runs/origin01/smoke_result.json').write_text(json.dumps({'status': 'FAILED'}))
+    (root / 'runs/origin02/preflight.json').write_text(json.dumps({'free_memory_kib': 4111356}))
+    (root / 'runs/other01/smoke_result.json').write_text(json.dumps({'status': 'FAILED'}))
+    output = tmp_path / 'export'
+    module.export(root, output, run_prefix='origin')
+    report = json.loads((output / 'summary.json').read_text())
+    assert [x['run'] for x in report['runs']] == ['origin01', 'origin02']
+    assert report['runs'][1]['status'] == 'INCOMPLETE_CONTROLLER_RECORD'
+    evidence = json.loads((output / 'origin02.json').read_text())
+    assert evidence['preflight']['free_memory_kib'] == 4111356
+    assert 'preflight.json' in evidence['source_sha256']
+    module.export(root, tmp_path / 'filtered', profile='observation', run_prefix='origin')
+    filtered = json.loads((tmp_path / 'filtered/summary.json').read_text())
+    assert [x['run'] for x in filtered['runs']] == ['origin02']
+
+
+def test_summary_distinguishes_object_origin_from_vehicle_origin():
+    api = {'contract': {'coordinate_mapping': {'target_frame': 'airsim_global_object_ned'},
+                       'origin_bridge': {'local_minus_global_m': [0, 0, 3]}}}
+    result = load_summary().summarize(api)
+    assert result['coordinate_target_frame'] == 'airsim_global_object_ned'
+    assert result['origin_bridge']['local_minus_global_m'] == [0, 0, 3]
+
+
 def test_profile_export_keeps_failed_runs_and_their_provenance(tmp_path):
     module = load_summary()
     root = tmp_path / 'runtime'

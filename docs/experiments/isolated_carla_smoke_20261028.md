@@ -44,6 +44,8 @@
 
 ### 坐标
 
+后续原点联验更正：本节 `AirSim` 特指 `simGetObjectPose` 的 **GLOBAL object NED**，不是无人机状态/相机的vehicle-local NED。两者本实例相差约2.80465 m竖直偏移；不得直接将下式用于vehicle state，详见 [原点联验](live_origin_20261028.md)。原始测量未改写。
+
 12 个共同静态地标覆盖 x/y/z 约 239.5 / 270.88 / 20.0 m，支持现有 `CarlaAirAlignment` 的 x/y 保持、z 反号映射：
 
 ```text

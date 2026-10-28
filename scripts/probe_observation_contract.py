@@ -11,6 +11,41 @@ from jev_uav_track.live_observation import CaptureWindow, TemporalObservationGat
 from jev_uav_track.sim_adapter import AirSimWorldVelocityCommand
 
 
+def origin_sample(air):
+    """Read the exact owned actor in GLOBAL and vehicle-local NED while paused."""
+    if air.simIsPause():
+        raise ValueError('Origin probe requires an initially running owned instance')
+    names = air.simListSceneObjects('.*JevDrone.*')
+    if 'JevDrone' not in names:
+        raise ValueError(f'Exact owned actor absent from scene inventory: {names}')
+    air.simPause(True)
+    try:
+        if not air.simIsPause():
+            raise RuntimeError('Owned world did not pause')
+        global_pose = air.simGetObjectPose('JevDrone')
+        local_pose = air.simGetVehiclePose(vehicle_name='JevDrone')
+        state = air.getMultirotorState(vehicle_name='JevDrone')
+        def q(pose):
+            v = pose.orientation
+            return [v.x_val, v.y_val, v.z_val, v.w_val]
+        glob, local = list(global_pose.position), list(local_pose.position)
+        # Translation-only bridge requires the same full orientation, not just yaw.
+        orientation = camera_mount_error(glob, q(global_pose), (0, 0, 0), glob, q(local_pose))
+        state_error = camera_mount_error(local, q(local_pose), (0, 0, 0),
+            list(state.kinematics_estimated.position), q(state.kinematics_estimated))
+        if (orientation['orientation_error_deg'] > 1.0 or state_error['position_error_m'] > 0.02
+                or state_error['orientation_error_deg'] > 1.0):
+            raise ValueError('Object/vehicle/state poses disagree beyond origin translation')
+        return {'actor': 'JevDrone', 'scene_paused': True, 'global_ned_m': glob,
+                'vehicle_local_ned_m': local, 'state_local_ned_m': list(state.kinematics_estimated.position),
+                'global_orientation_xyzw': q(global_pose), 'local_orientation_xyzw': q(local_pose),
+                'state_orientation_xyzw': q(state.kinematics_estimated),
+                'global_local_orientation_error_deg': orientation['orientation_error_deg'],
+                'local_state_error': state_error, 'airsim_s': state.timestamp * 1e-9}
+    finally:
+        air.simPause(False)
+
+
 def image_response(air):
     responses = air.simGetImages([airsim.ImageRequest(
         'front_center', airsim.ImageType.Scene, pixels_as_float=False, compress=True)],

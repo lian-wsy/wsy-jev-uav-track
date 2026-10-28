@@ -1,0 +1,432 @@
+{
+  "run": "origin01",
+  "controller": {
+    "status": "FAILED",
+    "started_at": 1793199057.6347811,
+    "ended_at": 1793199074.9852583,
+    "profile": "observation",
+    "client_exit_code": 1,
+    "owned_process_exit_code": 0,
+    "protected_unchanged": true,
+    "cleanup_confirmed": true,
+    "probe_sha256": "33e466bf1fb436b58a5763149fe607fdeca78efdd853d70b58c5e7db8f909d22",
+    "api_probe_sha256": "80acc618c20447e47cd63af2a140e46c08c6be7d51322cd80c50d5dc8a2dfba2",
+    "runtime_module_sha256": "5184b5df72aef28bb71fe6fc7cc859d331cf4ccaa89e7126bfb4c7d41fc090e7",
+    "binary_sha256": "e39091f72c148db0c6821d4dcbbbba55d768fe67e3320707c4007d2db784b0d7",
+    "bootstrap": "velocity",
+    "observation_probe_sha256": "31e356548aadf082931320f092ab2e02e6e3bd767e49a6e76b4398653128d16f",
+    "observation_gate_sha256": "c2e288d95736d43d665c16b59caf86c693162bdf9004b62e5bc67c9d6d085bff",
+    "frames_module_sha256": "28bd4bcea80870f1dfd05b743e8ab4ce1d5c07817ed3a6e08d3712c4ece9089a"
+  },
+  "source_sha256": {
+    "smoke_result.json": "6709d10fd3ac8b28b22b963229494e7b7d7580ce04718f775aa65df45015a2e5",
+    "preflight.json": "6d508d5b7c27d67502c24c94922cb73b77416ffb98611a714c269994c3debf55",
+    "api_probe.json": "0ace30594e298957d962f4d59c23e27aca5fcd3584b0c345b789b586f09d9ad5",
+    "client_stderr.txt": "1ac47a3623bc2c6ffe35066edaf133bcdc6982df1b32b7214cc14eb7bbc74e0d"
+  },
+  "preflight": {
+    "free_memory_kib": 4203944,
+    "processes": [
+      {
+        "ProcessId": 34812,
+        "ParentProcessId": 80040,
+        "Name": "python.exe",
+        "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+      }
+    ],
+    "listeners": []
+  },
+  "api_probe": {
+    "kind": "LIVE_OWNED_API_PROBE",
+    "carla_server": "7a7fdb3-dirty",
+    "python_version": "3.10.21 | packaged by conda-forge | (main, Aug 21 2026, 22:38:44) [MSC v.1944 64 bit (AMD64)]",
+    "rpc_success_checked": true,
+    "carla_client": "7a7fdb3-dirty",
+    "map": "Carla/Maps/Town02",
+    "airsim_server": 1,
+    "vehicles": [
+      "JevDrone"
+    ],
+    "settings_match": true,
+    "samples": [
+      {
+        "wall_s": 1219483.437,
+        "carla_s": 4.6400292962789536,
+        "carla_frame": 256,
+        "airsim_s": 1793199069.7252736,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1219483.546,
+        "carla_s": 4.756696995347738,
+        "carla_frame": 263,
+        "airsim_s": 1793199069.833276,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1219483.656,
+        "carla_s": 4.873364396393299,
+        "carla_frame": 270,
+        "airsim_s": 1793199069.9442785,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1219483.765,
+        "carla_s": 4.973364993929863,
+        "carla_frame": 276,
+        "airsim_s": 1793199070.0522807,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1219483.875,
+        "carla_s": 5.090032394975424,
+        "carla_frame": 283,
+        "airsim_s": 1793199070.160283,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1219483.984,
+        "carla_s": 5.190033197402954,
+        "carla_frame": 289,
+        "airsim_s": 1793199070.2712853,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1219484.093,
+        "carla_s": 5.306700896471739,
+        "carla_frame": 296,
+        "airsim_s": 1793199070.3792877,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1219484.203,
+        "carla_s": 5.406701594591141,
+        "carla_frame": 302,
+        "airsim_s": 1793199070.48729,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1219484.312,
+        "carla_s": 5.523369494825602,
+        "carla_frame": 309,
+        "airsim_s": 1793199070.5952923,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1219484.421,
+        "carla_s": 5.623369995504618,
+        "carla_frame": 315,
+        "airsim_s": 1793199070.7062945,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1219484.531,
+        "carla_s": 5.740038096904755,
+        "carla_frame": 322,
+        "airsim_s": 1793199070.817297,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ]
+      },
+      {
+        "wall_s": 1219484.64,
+        "carla_s": 5.856705494225025,
+        "carla_frame": 329,
+        "airsim_s": 1793199070.9252994,
+        "position_ned": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ]
+      }
+    ],
+    "note": "Owned development physics probe; may arm/move/capture. Not a tracking comparison.",
+    "contract": {
+      "phase": "origin_before",
+      "pause_start": {
+        "wall_s": 1219484.812,
+        "carla_s": 6.02337309718132,
+        "frame": 339,
+        "airsim_s": 1793199071.090303,
+        "position": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "pause_end": {
+        "wall_s": 1219485.218,
+        "carla_s": 6.02337309718132,
+        "frame": 339,
+        "airsim_s": 1793199071.090303,
+        "position": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "resume": {
+        "wall_s": 1219485.421,
+        "carla_s": 6.623377297073603,
+        "frame": 375,
+        "airsim_s": 1793199071.2943072,
+        "position": [
+          0.03139648213982582,
+          -0.0032031249720603228,
+          6.69262170791626
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "coordinate_mapping": {
+        "target_frame": "airsim_global_object_ned",
+        "samples": [
+          {
+            "carla_object_name": "Arbusto_pine_01_LOD0_575_SM_0",
+            "airsim_actor_name": "Arbusto_pine_01_LOD0_575",
+            "carla_xyz_m": [
+              -12.0,
+              98.9000015258789,
+              0.19999998807907104
+            ],
+            "airsim_ned_m": [
+              -120.27999877929688,
+              -208.95999145507812,
+              4.110000133514404
+            ]
+          },
+          {
+            "carla_object_name": "Arbusto_pine_01_LOD1_578_SM_0",
+            "airsim_actor_name": "Arbusto_pine_01_LOD1_578",
+            "carla_xyz_m": [
+              -5.199999809265137,
+              97.5,
+              0.19999998807907104
+            ],
+            "airsim_ned_m": [
+              -113.47999572753906,
+              -210.36000061035156,
+              4.110000133514404
+            ]
+          },
+          {
+            "carla_object_name": "Arbusto_pine_01_LOD2_581_SM_0",
+            "airsim_actor_name": "Arbusto_pine_01_LOD2_581",
+            "carla_xyz_m": [
+              15.199999809265137,
+              98.9000015258789,
+              0.3999999761581421
+            ],
+            "airsim_ned_m": [
+              -93.07999420166016,
+              -208.95999145507812,
+              3.9099998474121094
+            ]
+          },
+          {
+            "carla_object_name": "Arbusto_pine_01_LOD3_584_SM_0",
+            "airsim_actor_name": "Arbusto_pine_01_LOD3_584",
+            "carla_xyz_m": [
+              137.39999389648438,
+              98.19999694824219,
+              -1.5999999046325684
+            ],
+            "airsim_ned_m": [
+              29.119998931884766,
+              -209.6599884033203,
+              5.909999847412109
+            ]
+          },
+          {
+            "carla_object_name": "Arbusto_pine_01_LOD4_587_SM_0",
+            "airsim_actor_name": "Arbusto_pine_01_LOD4_587",
+            "carla_xyz_m": [
+              227.5,
+              61.69999694824219,
+              3.3999998569488525
+            ],
+            "airsim_ned_m": [
+              119.2199935913086,
+              -246.1599884033203,
+              0.9099999666213989
+            ]
+          },
+          {
+            "carla_object_name": "Arbusto_pine_01_LOD5_590_SM_0",
+            "airsim_actor_name": "Arbusto_pine_01_LOD5_590",
+            "carla_xyz_m": [
+              225.0,
+              76.19999694824219,
+              -0.09999999403953552
+            ],
+            "airsim_ned_m": [
+              116.7199935913086,
+              -231.6599884033203,
+              4.409999847412109
+            ]
+          },
+          {
+            "carla_object_name": "Arbusto_pine_01_LOD6_593_SM_0",
+            "airsim_actor_name": "Arbusto_pine_01_LOD6_593",
+            "carla_xyz_m": [
+              225.79998779296875,
+              82.5999984741211,
+              -0.699999988079071
+            ],
+            "airsim_ned_m": [
+              117.5199966430664,
+              -225.25999450683594,
+              5.009999752044678
+            ]
+          },
+          {
+            "carla_object_name": "Arbusto_pine_01_LOD8_623_SM_0",
+            "airsim_actor_name": "Arbusto_pine_01_LOD8_623",
+            "carla_xyz_m": [
+              203.39999389648438,
+              33.20000076293945,
+              17.100000381469727
+            ],
+            "airsim_ned_m": [
+              95.1199951171875,
+              -274.6600036621094,
+              -12.789999961853027
+            ]
+          },
+          {
+            "carla_object_name": "Arbusto_pine_01_LOD9_626_SM_0",
+            "airsim_actor_name": "Arbusto_pine_01_LOD9_626",
+            "carla_xyz_m": [
+              197.5,
+              33.0,
+              18.399999618530273
+            ],
+            "airsim_ned_m": [
+              89.22000122070312,
+              -274.8599853515625,
+              -14.09000015258789
+            ]
+          },
+          {
+            "carla_object_name": "BP_BillBoard1_2_SM_0",
+            "airsim_actor_name": "BP_BillBoard1_2",
+            "carla_xyz_m": [
+              198.6195831298828,
+              300.46136474609375,
+              0.3230898976325989
+            ],
+            "airsim_ned_m": [
+              90.33958435058594,
+              -7.398632526397705,
+              3.986910104751587
+            ]
+          },
+          {
+            "carla_object_name": "BP_BillBoard2_2_SM_0",
+            "airsim_actor_name": "BP_BillBoard2_2",
+            "carla_xyz_m": [
+              198.5262908935547,
+              303.88067626953125,
+              0.3181251585483551
+            ],
+            "airsim_ned_m": [
+              90.24628448486328,
+              -3.979316234588623,
+              3.991874933242798
+            ]
+          },
+          {
+            "carla_object_name": "BP_BillBoard3_2_SM_0",
+            "airsim_actor_name": "BP_BillBoard3_2",
+            "carla_xyz_m": [
+              2.425989866256714,
+              144.29652404785156,
+              0.3232501149177551
+            ],
+            "airsim_ned_m": [
+              -105.85401153564453,
+              -163.56346130371094,
+              3.9867498874664307
+            ]
+          }
+        ],
+        "offset_first_m": [
+          -108.27999877929688,
+          -307.85999298095703,
+          4.310000121593475
+        ],
+        "offset_spread_m": [
+          1.52587890625e-05,
+          1.9073486328125e-05,
+          9.5367431640625e-07
+        ],
+        "landmark_axis_span_m": [
+          239.5,
+          270.88067626953125,
+          19.999999523162842
+        ],
+        "mapping_pass": true
+      },
+      "origin_bridge": {
+        "samples": []
+      }
+    },
+    "contract_error": "AttributeError: 'MultirotorClient' object has no attribute 'simIsPaused'"
+  },
+  "nonfinite_policy": "Nonfinite raw measurements exported as null; raw source hash retained."
+}

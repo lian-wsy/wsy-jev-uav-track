@@ -93,7 +93,8 @@ in simListSceneObjects but return NaN in simGetObjectPose. Do not use them.
     spread = [max(o[i] for o in offsets) - min(o[i] for o in offsets) for i in range(3)]
     span = [max(s['carla_xyz_m'][i] for s in samples) - min(s['carla_xyz_m'][i] for s in samples)
             for i in range(3)]
-    return {'samples': samples, 'offset_first_m': offsets[0], 'offset_spread_m': spread,
+    return {'target_frame': 'airsim_global_object_ned',
+            'samples': samples, 'offset_first_m': offsets[0], 'offset_spread_m': spread,
             'landmark_axis_span_m': span,
             'mapping_pass': max(spread) < 0.01 and min(span) > 1.0}
 
@@ -118,6 +119,11 @@ def contract_probe(world, air, output, result, bootstrap, observation_contract=F
     result['resume'] = sample()
     result['phase'] = 'coordinate_marker'
     result['coordinate_mapping'] = coordinate_probe(world, air)
+    if observation_contract:
+        from probe_observation_contract import origin_sample
+        result['phase'] = 'origin_before'
+        result['origin_bridge'] = {'samples': []}
+        result['origin_bridge']['samples'].append(origin_sample(air))
     original = world.get_settings()
     try:
         result['phase'] = 'unpaced_ticks'
@@ -224,6 +230,22 @@ def contract_probe(world, air, output, result, bootstrap, observation_contract=F
         result['command_refresh']['after'] = sample()
         result['collision_after_axes'] = air.simGetCollisionInfo(vehicle_name='JevDrone').time_stamp
         result['new_collision_axes'] = result['collision_after_axes'] > result['collision_before']
+        if observation_contract:
+            from jev_uav_track.frames import CarlaAirAlignment, AirSimOriginBridge
+            result['phase'] = 'origin_after'
+            audit = result['origin_bridge']
+            audit['samples'].append(origin_sample(air))
+            mapping = result['coordinate_mapping']
+            if not mapping['mapping_pass']:
+                raise ValueError('CARLA to global NED mapping failed')
+            bridge = AirSimOriginBridge.calibrate(CarlaAirAlignment(tuple(mapping['offset_first_m'])),
+                [x['global_ned_m'] for x in audit['samples']],
+                [x['vehicle_local_ned_m'] for x in audit['samples']])
+            audit.update(local_minus_global_m=bridge.local_minus_global_m,
+                carla_to_vehicle_local_offset_m=bridge.carla_to_vehicle((0, 0, 0)),
+                max_residual_m=max(math.dist(bridge.global_to_vehicle(x['global_ned_m']),
+                    x['vehicle_local_ned_m']) for x in audit['samples']),
+                calibration_pass=True)
         result['phase'] = 'camera'
         image = air.simGetImages([airsim.ImageRequest('front_center', airsim.ImageType.Scene,
                                                      pixels_as_float=False, compress=True)],
