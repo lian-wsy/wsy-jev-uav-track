@@ -97,6 +97,8 @@ while mission_is_running:
 
 训练时 `horizon_frames` 只表示未来帧数，实际时域由 episode 的图像时间戳计算。当前 PASS 数据为约 5 Hz，默认 5 帧对应约 1.0 秒；`KinematicRolloutModel` 也以 1.0 秒为默认 horizon。若显式传入 `rollout_horizon_s` 与时间戳跨度不一致，训练会在读取状态样本前拒绝，避免把 1.0 秒标签和 1.5 秒候选后果混在一起。
 
+仿真边界使用 `frames.py` 的显式坐标契约：世界 ENU、世界 NED 和机体 BODY_FLU。机体量转换到世界量必须带 yaw；CARLA/AirSim adapter 需要在运行前声明实际轴约定并记录转换矩阵，Jev 只接收转换后的高层候选后果，不负责坐标转换。
+
 `training.py` 的 ridge calibrator 使用观测到的相机速度作为动作特征，预测未来可见率、中心误差、距离误差和协方差代理。默认 `target_mode=absolute` 学绝对 outcome；`target_mode=baseline_residual` 学相对透明 rollout 的修正量，推理时再加回每个候选的 baseline，减少把动作分布外误差直接放大的风险。`RolloutTrainingDataset` 会保留 target mode，省略训练 config 时自动沿用它，显式 mode 不一致会直接报错，避免把 residual 标签误存成 absolute 模型。两者都是校准基线，不是反事实世界模型；`learned_rollout.py` 的碰撞概率、障碍余量和能耗仍由安全基线提供。
 
 `evaluation.py` 在记录帧上运行 Mock Jev，报告选择动作、fallback 率、与候选 utility oracle 的 regret，以及真实可见性标注。评估报告中的真实标注和预测后果必须分开解释，不能把单条记录中的动作选择当成因果训练标签。

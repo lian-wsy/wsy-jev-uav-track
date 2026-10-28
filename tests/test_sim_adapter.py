@@ -27,6 +27,7 @@ def test_adapter_contract_accepts_bounded_action_and_observation():
     [
         lambda: SimAction("", duration_s=0.5),
         lambda: SimAction("scan", duration_s=0.0),
+        lambda: SimAction("scan", duration_s=0.5, command_frame="unknown"),
     ],
 )
 def test_adapter_rejects_invalid_actions(factory):

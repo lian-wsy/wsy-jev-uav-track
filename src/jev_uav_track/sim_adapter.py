@@ -10,6 +10,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Mapping, Protocol, Sequence
 
+from .frames import CoordinateFrame
+
 
 @dataclass(frozen=True)
 class SimAction:
@@ -21,12 +23,17 @@ class SimAction:
     forward_mps: float = 0.0
     lateral_mps: float = 0.0
     vertical_mps: float = 0.0
+    command_frame: str = CoordinateFrame.BODY_FLU.value
 
     def __post_init__(self) -> None:
         if not self.name:
             raise ValueError("action name must be non-empty")
         if self.duration_s <= 0.0:
             raise ValueError("action duration must be positive")
+        try:
+            CoordinateFrame(self.command_frame)
+        except ValueError as exc:
+            raise ValueError(f"unsupported action command_frame: {self.command_frame!r}") from exc
 
 
 @dataclass(frozen=True)
