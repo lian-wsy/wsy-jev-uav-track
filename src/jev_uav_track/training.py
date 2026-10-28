@@ -269,13 +269,20 @@ def _validate_horizon_alignment(
     rollout.  The source episode remains read-only.
     """
 
-    if config.timing_tolerance_s <= 0.0:
+    if config.horizon_frames <= 0 or config.stride <= 0:
+        raise ValueError("horizon_frames and stride must be positive")
+    if not math.isfinite(config.timing_tolerance_s) or config.timing_tolerance_s <= 0.0:
         raise ValueError("timing_tolerance_s must be positive")
+    timestamps = [float(t) for t in episode.image_timestamps]
+    if len(timestamps) != episode.frame_count or any(not math.isfinite(t) for t in timestamps):
+        raise ValueError("Episode timestamps must be finite and match frame_count")
+    if any(right <= left for left, right in zip(timestamps, timestamps[1:])):
+        raise ValueError("Episode timestamps must be strictly increasing")
     last_start = episode.frame_count - config.horizon_frames - 1
     if last_start < 0:
         raise ValueError("Episode does not contain enough frames for the requested horizon")
     spans = []
-    for index in range(0, last_start + 1, max(1, config.stride)):
+    for index in range(0, last_start + 1):
         span = float(episode.image_timestamps[index + config.horizon_frames]) - float(
             episode.image_timestamps[index]
         )
@@ -284,8 +291,10 @@ def _validate_horizon_alignment(
     if not spans:
         raise ValueError("Episode timestamps do not define a positive future horizon")
     effective = float(statistics.median(spans))
+    if max(spans) - min(spans) > config.timing_tolerance_s:
+        raise ValueError("Episode has inconsistent future horizons")
     if config.rollout_horizon_s is not None:
-        if config.rollout_horizon_s <= 0.0:
+        if not math.isfinite(config.rollout_horizon_s) or config.rollout_horizon_s <= 0.0:
             raise ValueError("rollout_horizon_s must be positive when set")
         if abs(float(config.rollout_horizon_s) - effective) > config.timing_tolerance_s:
             raise ValueError(
@@ -333,6 +342,9 @@ def build_training_dataset_from_episodes(
             raise ValueError("max_samples_per_episode must be positive")
         cfg = replace(cfg, max_samples=max_samples_per_episode)
     datasets = [build_training_dataset(episode, cfg) for episode in episode_list]
+    horizons = [dataset.resolved_rollout_horizon_s for dataset in datasets]
+    if max(horizons) - min(horizons) > cfg.timing_tolerance_s:
+        raise ValueError("Episodes use inconsistent future horizons")
     return RolloutTrainingDataset(
         features=np.concatenate([dataset.features for dataset in datasets], axis=0),
         labels=np.concatenate([dataset.labels for dataset in datasets], axis=0),

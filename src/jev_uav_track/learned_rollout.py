@@ -8,7 +8,7 @@ from typing import Iterable, List
 
 from .models import CandidateAction, CandidateOutcome, TrackingState
 from .primitives import BehaviorPrimitive
-from .rollout import KinematicRolloutModel
+from .rollout import KinematicRolloutModel, RolloutConfig
 from .training import FEATURE_NAMES, TARGET_MODES, LinearOutcomeModel, feature_vector
 
 
@@ -24,7 +24,19 @@ class LearnedOutcomeRolloutModel:
         prediction_blend: float = 1.0,
     ) -> None:
         self.predictor = predictor
-        self.baseline = baseline or KinematicRolloutModel()
+        summary = predictor.training_summary or {}
+        dataset = summary.get("train_dataset", summary.get("dataset", {}))
+        horizon = dataset.get("resolved_rollout_horizon_s")
+        if horizon is None:
+            raise ValueError("Model has no resolved training horizon; retrain before rollout inference")
+        horizon = float(horizon)
+        if not math.isfinite(horizon) or horizon <= 0:
+            raise ValueError("Model training horizon must be finite and positive")
+        if baseline is not None and not math.isclose(
+            baseline.config.horizon_s, horizon, rel_tol=0.0, abs_tol=1e-6
+        ):
+            raise ValueError("Baseline horizon does not match model training horizon")
+        self.baseline = baseline or KinematicRolloutModel(RolloutConfig(horizon_s=horizon))
         if predictor.target_mode not in TARGET_MODES:
             raise ValueError(f"Unknown predictor target_mode: {predictor.target_mode!r}")
         if max_feature_zscore is not None and max_feature_zscore <= 0.0:

@@ -41,7 +41,7 @@ class KinematicRolloutModel:
 
     def __init__(self, config: RolloutConfig | None = None) -> None:
         self.config = config or RolloutConfig()
-        if self.config.horizon_s <= 0 or self.config.dt_s <= 0:
+        if any(not math.isfinite(v) or v <= 0 for v in (self.config.horizon_s, self.config.dt_s)):
             raise ValueError("Rollout horizon and dt must be positive")
         if any(
             value < 0.0
@@ -65,7 +65,7 @@ class KinematicRolloutModel:
 
     def simulate(self, primitive: BehaviorPrimitive, state: TrackingState) -> CandidateAction:
         cfg = self.config
-        steps = max(1, int(round(cfg.horizon_s / cfg.dt_s)))
+        steps = max(1, math.ceil(cfg.horizon_s / cfg.dt_s))
         vx, vy, vz = primitive.command_mps
         speed = _norm(primitive.command_mps)
         target = state.target

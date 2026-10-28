@@ -380,7 +380,6 @@ def run_closed_loop_replay(
     if outcome_model is not None:
         rollout = LearnedOutcomeRolloutModel(
             outcome_model,
-            baseline=baseline,
             max_feature_zscore=cfg.max_learned_feature_zscore,
             max_state_feature_zscore=cfg.max_learned_state_feature_zscore,
             prediction_blend=cfg.learned_prediction_blend,

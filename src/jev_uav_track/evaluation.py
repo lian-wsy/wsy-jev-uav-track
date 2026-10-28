@@ -83,7 +83,7 @@ def evaluate_episode(
     baseline = KinematicRolloutModel()
     rollout: Any = baseline
     if outcome_model is not None:
-        rollout = LearnedOutcomeRolloutModel(outcome_model, baseline=baseline)
+        rollout = LearnedOutcomeRolloutModel(outcome_model)
     decision_client = client or MockJevClient(temperature=cfg.mock_temperature)
     selection_config = SelectionConfig()
     if not cfg.use_short_history:

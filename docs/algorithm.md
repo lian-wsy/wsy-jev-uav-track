@@ -99,6 +99,8 @@ while mission_is_running:
 
 仿真边界使用 `frames.py` 的显式坐标契约：世界 ENU、世界 NED 和机体 BODY_FLU。机体量转换到世界量必须带 yaw；CARLA/AirSim adapter 需要在运行前声明实际轴约定并记录转换矩阵，Jev 只接收转换后的高层候选后果，不负责坐标转换。
 
+learned rollout 现在从模型 summary 中读取解析时域并配置预测 baseline；显式 baseline 时域不一致会拒绝。缺少解析时域的旧 NPZ 仍可读取权重，但必须重训后才能用于候选 rollout。新增训练对全部时间戳和未来跨度做校验，禁止无声跳过坏窗口；非整数 dt 的轨迹也会抵达实际 horizon。该时域校验不解决源数据坐标和真值观测泄漏问题，当前 HDF5 训练仍为 oracle-state 校准。
+
 `training.py` 的 ridge calibrator 使用观测到的相机速度作为动作特征，预测未来可见率、中心误差、距离误差和协方差代理。默认 `target_mode=absolute` 学绝对 outcome；`target_mode=baseline_residual` 学相对透明 rollout 的修正量，推理时再加回每个候选的 baseline，减少把动作分布外误差直接放大的风险。`RolloutTrainingDataset` 会保留 target mode，省略训练 config 时自动沿用它，显式 mode 不一致会直接报错，避免把 residual 标签误存成 absolute 模型。两者都是校准基线，不是反事实世界模型；`learned_rollout.py` 的碰撞概率、障碍余量和能耗仍由安全基线提供。
 
 `evaluation.py` 在记录帧上运行 Mock Jev，报告选择动作、fallback 率、与候选 utility oracle 的 regret，以及真实可见性标注。评估报告中的真实标注和预测后果必须分开解释，不能把单条记录中的动作选择当成因果训练标签。

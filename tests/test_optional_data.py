@@ -163,6 +163,57 @@ def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
         )
 
 
+@pytest.mark.parametrize("mode", ["absolute", "baseline_residual"])
+def test_saved_model_controls_inference_duration(tmp_path, mode):
+    from jev_uav_track.rollout import KinematicRolloutModel, RolloutConfig
+    path = tmp_path / "timing.hdf5"
+    make_synthetic_episode(path)
+    episode = HDF5Episode.open(path)
+    config = RolloutTrainingConfig(horizon_frames=3, target_mode=mode)
+    model, _ = fit_outcome_model(build_training_dataset(episode, config), config)
+    model.save(tmp_path / "timing.npz")
+    loaded = LinearOutcomeModel.load(tmp_path / "timing.npz")
+    action = LearnedOutcomeRolloutModel(loaded).simulate(
+        DEFAULT_PRIMITIVES[1], episode.tracking_state(0)
+    )
+    assert action.duration_s == pytest.approx(0.6)
+    assert action.trajectory[-1].time_s == pytest.approx(0.6)
+    assert action.trajectory[-1].position_m[0] == pytest.approx(1.5)
+    with pytest.raises(ValueError, match="Baseline horizon"):
+        LearnedOutcomeRolloutModel(loaded, baseline=KinematicRolloutModel(RolloutConfig(horizon_s=1.5)))
+    loaded.training_summary = {}
+    with pytest.raises(ValueError, match="retrain"):
+        LearnedOutcomeRolloutModel(loaded)
+
+
+@pytest.mark.parametrize("fault", ["nan", "duplicate", "reverse", "gap"])
+def test_training_rejects_bad_time_even_outside_sample_stride(tmp_path, fault):
+    path = tmp_path / "timing.hdf5"
+    make_synthetic_episode(path)
+    episode = HDF5Episode.open(path)
+    if fault == "nan":
+        episode.image_timestamps[3] = float("nan")
+    elif fault == "duplicate":
+        episode.image_timestamps[3] = episode.image_timestamps[2]
+    elif fault == "reverse":
+        episode.image_timestamps[3] = episode.image_timestamps[2] - 0.01
+    else:
+        episode.image_timestamps[3:] += 0.2
+    with pytest.raises(ValueError, match="timestamps|inconsistent future horizons"):
+        build_training_dataset(episode, RolloutTrainingConfig(horizon_frames=2, stride=4))
+
+
+def test_concatenation_rejects_different_episode_time_scales(tmp_path):
+    episodes = []
+    for name in ("a", "b"):
+        path = tmp_path / f"{name}.hdf5"
+        make_synthetic_episode(path)
+        episodes.append(HDF5Episode.open(path))
+    episodes[1].image_timestamps *= 2
+    with pytest.raises(ValueError, match="inconsistent future horizons"):
+        build_training_dataset_from_episodes(episodes, RolloutTrainingConfig(horizon_frames=2))
+
+
 def test_training_rejects_rollout_horizon_mismatch(tmp_path) -> None:
     episode_path = tmp_path / "episode.hdf5"
     make_synthetic_episode(episode_path)
