@@ -22,3 +22,29 @@
 本机 `artifacts/cross_episode/jev_comparison.json` 有4个真实决策；`difficult_pass_20261023/jev_mock_utility_fixed_frames.json` 4个、`jev_mock_utility_event_frames.json` 4个；`occlusion_pass_20261023/closed_loop_three_way.json` 8个，共20个历史有结果的决策点，均是冲刺前产物。不能仅用成功记录推断网络attempt总数，也不能把旧日期文件名当完整账本。
 
 未发现覆盖全部失败/重试及冲刺准备阶段的持久化请求账本，故“累计剩余调用额度”记 **UNKNOWN**，自动新付费调用关闭，不能武断写32次可用或12次可用。本轮新增请求数0。D2费用规划已形成；真正准备smoke之前需补完整attempt账本/账户记录核对，未知额度时继续Mock。该项与API key是否存在无关，无需用户重新发送密钥。
+
+## 可执行门控（当日续作）
+
+新增 `request_budget.py`，每次请求在发送前用 SQLite `BEGIN IMMEDIATE` 串行预约并提交，最多8次/批、32次/整个准备期；超时、错误响应、解析失败以及预约后进程退出均不退款。模型发现 GET 也保守计一次。不存在、损坏或未初始化的账本拒绝联网；明确初始化拒绝覆盖任何已有文件。失败后不能删库、从备份回退、换新文件或重建零余额来继续调用。
+
+所有客户端必须共用同一份本机账本。`JEV_BUDGET_LEDGER` 指定它，`JEV_BUDGET_BATCH` 可将同批的多个进程/客户端归为同一批；不设置批次时每个客户端分配一个UUID，新批也受同一总上限。账本应在本机可靠磁盘，不用于网络文件系统，不能依赖云盘多机副本同步实现全局计数。账本不是防管理员篡改的计费系统；迁移前需停止本任务API调用并核对完整账本，不能并行使用复制品。
+
+只有核完准备期所有尝试的账户/运行证据后，才能写无密钥的审计回执：`status=RECONCILED`、`scope=jev-uav-preparation-20261026`、整数`prior_attempts`（0–32，包含失败/重试）、非空`evidence`证据指向。初始化接口：
+
+```python
+from pathlib import Path
+from jev_uav_track.request_budget import initialize_preparation_ledger
+
+# 仅在完成历史审计后执行；不是将未知次数默认置零。
+initialize_preparation_ledger(Path("<task-local-ledger.db>"), Path("<verified-receipt.json>"))
+```
+
+回执是操作者审计声明，代码无法独立证明账户历史真实完整。正式账本本轮**没有创建**，历史仍UNKNOWN；单元测试只在临时目录使用明确标注的合成回执。数据库只存scope、历史次数、回执SHA、批次、操作类别和预约时间，不存key、请求体、响应或异常原文。
+
+`TypeSafeJevClient.from_environment()` 要求环境中的key与账本路径；直接构造却不传budget的客户端也不能联网。`compare_jev.py`、`run_closed_loop_replay.py`、`examples/live_jev_choice.py`均不再读`.env`，旧`--env-file`参数已移除。现有本地密钥文件未读取、未修改；以后只用进程环境。
+
+选择器仍允许失败后安全回退，因此报告新增`real_coverage`：分别列请求数、有效选择响应、已预约尝试、预算拒绝数。没有响应/部分失败时标`INCOMPLETE`及`real_error`，保留诊断轨迹但排除真实Jev成对对照；低置信度回退仍由原fallback字段单独呈现。`COMPLETE`仅表示该次实际请求均有有效响应，不表示所有帧都由Jev控制，也不是仿真验收通过。
+
+本地回归覆盖并发抢最后2次额度、同批8次跨实例持久化、超时计数、缺失/损坏账本拒绝、非法历史次数、成功响应、环境接入、两个CLI额度耗尽后不生成真实对照。所有响应均本地模拟，新增真实请求0。
+
+独立审查还发现默认HTTP重定向可绕过计数并转发Authorization；已改为客户端专属禁止重定向opener，3xx按一次已预约失败处理，不安装全局opener。本机临时loopback服务测试先复现缺陷后通过：首站1次、重定向目标0次、账本1次、coverage不完整；服务测试后关闭，没有外部请求或真实密钥。另验证同批并发最多8次、发送回调能从独立连接读到已提交预约，以及有效低置信度响应的API覆盖完整但策略fallback为真。共17项预算回归通过，审查复核可合并。

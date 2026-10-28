@@ -11,9 +11,11 @@ import math
 import os
 import urllib.error
 import urllib.request
+from pathlib import Path
 from typing import Any, Dict, Mapping, Protocol, Sequence
 
 from .models import CandidateAction, JevDecision, TrackingState
+from .request_budget import BudgetError, RequestBudget
 
 
 class JevClient(Protocol):
@@ -28,6 +30,18 @@ class JevProtocolError(RuntimeError):
 DEFAULT_JEV_ENDPOINT = "https://api.typesafe.ai/v1/systemone"
 DEFAULT_JEV_MODEL = "jev-latest"
 DEFAULT_JEV_MODELS_ENDPOINT = "https://api.typesafe.ai/v1/models"
+
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, request, fp, code, message, headers, new_url):
+        # One reservation must never silently send another request or forward
+        # Authorization to a different origin. 3xx becomes a charged failure.
+        return None
+
+
+def _open_request(request, *, timeout):
+    # Local opener only: do not change transport behavior elsewhere in the app.
+    return urllib.request.build_opener(_NoRedirect()).open(request, timeout=timeout)
 
 
 def build_choice_request(
@@ -137,6 +151,7 @@ class TypeSafeJevClient:
         endpoint: str = DEFAULT_JEV_ENDPOINT,
         model: str = DEFAULT_JEV_MODEL,
         timeout_s: float = 8.0,
+        budget: RequestBudget | None = None,
     ) -> None:
         if not api_key:
             raise ValueError("api_key is required")
@@ -144,6 +159,32 @@ class TypeSafeJevClient:
         self.endpoint = endpoint
         self.model = model
         self.timeout_s = timeout_s
+        self.budget = budget
+        self.choice_requests = 0
+        self.choice_responses = 0
+        self.reserved_attempts = 0
+        self.budget_denials = 0
+
+    def _reserve(self, operation: str) -> None:
+        try:
+            if self.budget is None:
+                raise BudgetError("A reconciled preparation ledger is required")
+            self.budget.reserve(operation)
+        except BudgetError:
+            self.budget_denials += 1
+            raise
+        self.reserved_attempts += 1
+
+    def coverage(self) -> Dict[str, Any]:
+        """Expose API coverage even when the selector converts errors to fallback."""
+        return {
+            "status": ("COMPLETE" if self.choice_requests > 0
+                       and self.choice_requests == self.choice_responses else "INCOMPLETE"),
+            "choice_requests": self.choice_requests,
+            "valid_choice_responses": self.choice_responses,
+            "reserved_attempts": self.reserved_attempts,
+            "budget_denials": self.budget_denials,
+        }
 
     @classmethod
     def from_environment(
@@ -158,11 +199,15 @@ class TypeSafeJevClient:
         api_key = os.getenv(api_key_name, "").strip()
         if not api_key:
             raise ValueError(f"Environment variable {api_key_name} is required")
+        ledger = os.getenv("JEV_BUDGET_LEDGER", "").strip()
+        if not ledger:
+            raise BudgetError("JEV_BUDGET_LEDGER must name the reconciled sprint ledger")
         return cls(
             api_key=api_key,
             endpoint=os.getenv(endpoint_name, DEFAULT_JEV_ENDPOINT),
             model=os.getenv(model_name, DEFAULT_JEV_MODEL),
             timeout_s=timeout_s,
+            budget=RequestBudget(Path(ledger), batch_id=os.getenv("JEV_BUDGET_BATCH")),
         )
 
     def list_models(self) -> Sequence[Mapping[str, Any]]:
@@ -173,17 +218,19 @@ class TypeSafeJevClient:
             headers={"Authorization": f"Bearer {self.api_key}"},
             method="GET",
         )
+        self._reserve("models")
         try:
-            with urllib.request.urlopen(request, timeout=self.timeout_s) as response:
+            with _open_request(request, timeout=self.timeout_s) as response:
                 payload = json.loads(response.read().decode("utf-8"))
         except (urllib.error.URLError, TimeoutError, OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-            raise JevProtocolError(f"Jev model discovery failed: {exc}") from exc
+            raise JevProtocolError(f"Jev model discovery failed: {type(exc).__name__}") from None
         models = payload.get("models") if isinstance(payload, Mapping) else None
         if not isinstance(models, list):
             raise JevProtocolError("Jev model discovery response did not contain a models list")
         return tuple(model for model in models if isinstance(model, Mapping))
 
     def choose(self, state: TrackingState, actions: Sequence[CandidateAction]) -> JevDecision:
+        self.choice_requests += 1
         request_body = json.dumps(build_choice_request(state, actions, self.model)).encode("utf-8")
         request = urllib.request.Request(
             self.endpoint,
@@ -194,12 +241,15 @@ class TypeSafeJevClient:
             },
             method="POST",
         )
+        self._reserve("choice")
         try:
-            with urllib.request.urlopen(request, timeout=self.timeout_s) as response:
+            with _open_request(request, timeout=self.timeout_s) as response:
                 payload = json.loads(response.read().decode("utf-8"))
         except (urllib.error.URLError, TimeoutError, OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-            raise JevProtocolError(f"Jev request failed: {exc}") from exc
-        return _parse_decision(payload, [action.id for action in actions])
+            raise JevProtocolError(f"Jev request failed: {type(exc).__name__}") from None
+        decision = _parse_decision(payload, [action.id for action in actions])
+        self.choice_responses += 1
+        return decision
 
 
 class MockJevClient:

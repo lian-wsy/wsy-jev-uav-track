@@ -76,3 +76,18 @@ git diff --check
 2. 明确本任务可独占的仿真进程/全部可写目录/端口与足够内存资源，或独立用户/机器。当前外部采集上传控制链不由本任务停止或重配。
 3. 在上述隔离成立后进行二进制settings回落、坐标配准、双时钟/暂停、1秒动作和低层周期受限smoke；否则D3现场验收不能通过。
 4. 新真实Jev批次前核对完整attempt账本，未知额度不进行自动付费调用。预算估算已完成，不需要再次发送API key。
+
+## 续查：额外数据位置与预算代码验收
+
+读取用户指定的“上传new”和“@继续 CarlaAir 数据采集并打开格子 在当前这个聊天里继续采集任务，让后打开格子”两个聊天后，仅对新发现目录做文件名/元数据清单核查，没有打开或hash新E盘HDF，也没有控制其他聊天任务。聊天中的暂停/失败是历史记录，不据此推断当前进程状态。
+
+| 来源 | 本次只读观察 | 是否可解除D1 |
+| --- | --- | --- |
+| `E:\CarlaAir_1720\data\trimmed\v3` | 21个HDF5文件名，均Town02 | 否，文件名不是PASS证明，且town已开发使用 |
+| `E:\CarlaAir_C_migrated_20261023` | 131个带town文件名：Town02=55、Town05=11、Town06=1、Town07=32、Town10HD=32 | 否，无新独立town，未做完整接纳审计 |
+| `E:\CarlaAir_Town06_Town07` | 717个HDF样式文件名，多为raw/diagnostics/trial；`diagnostics\town07_v7`枚举报os error1392（目录损坏/不可读取） | 否，未把raw/诊断文件当trimmed PASS；未修复磁盘或继续探读该子树 |
+| `selection/active_dataset_manifest.jsonl` | 1104条；184 SELECTED_PENDING_FULL_V3_ACCEPTANCE，920 PILOT_PENDING_FULL_V3_ACCEPTANCE | 否，selection/PENDING不是完整PASS验收 |
+
+末次资源只读快照未见Carla/UE4进程，仍见外部dashboard python PID4668/PPID16864；可用物理内存约4.92GiB。进程未列出或端口空闲均不构成资源移交；未修改任何外部进程、配置、端口或锁。此前资源记录保留为历史快照，不能当实时状态。
+
+另补一个实际代码缺口：此前8/32上限仅在文档约束，现已接入发送前持久化事务预算，并去掉三个入口的`.env`加载。请求失败照计、缺失/未知账本拒绝联网，部分fallback不得标完整real对照；详见 [预算实现说明](jev_budget_20261028.md)。本轮没有创建正式账本，没有请求真实Jev，没有重训或修改源数据。D1/D2/D3原验收结论不变。

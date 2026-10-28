@@ -23,32 +23,11 @@ from jev_uav_track.jev_client import (
 from jev_uav_track.training import LinearOutcomeModel
 
 
-_ALLOWED_ENV_KEYS = {"JEV_API_KEY", "JEV_ENDPOINT", "JEV_MODEL"}
-
-
-def _load_env_file(path: Path) -> None:
-    """Load only Jev connection variables; never print their values."""
-
-    for raw_line in path.read_text(encoding="utf-8").splitlines():
-        line = raw_line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        name, value = line.split("=", 1)
-        name = name.strip()
-        if name not in _ALLOWED_ENV_KEYS:
-            continue
-        value = value.strip()
-        if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
-            value = value[1:-1]
-        os.environ[name] = value
-
-
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--episode", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--model", type=Path)
-    parser.add_argument("--env-file", type=Path, default=Path(".env"))
     parser.add_argument("--start-frame", type=int, default=0)
     parser.add_argument("--end-frame", type=int)
     parser.add_argument("--stride", type=int, default=8)
@@ -60,8 +39,6 @@ def main() -> None:
     parser.add_argument("--fov-half-angle-deg", type=float, default=75.0)
     args = parser.parse_args()
 
-    if args.env_file.is_file():
-        _load_env_file(args.env_file)
     episode = HDF5Episode.open(args.episode, load_images=False)
     outcome_model = LinearOutcomeModel.load(args.model) if args.model else None
     config = ClosedLoopReplayConfig(
@@ -91,6 +68,7 @@ def main() -> None:
 
     real_report: Dict[str, Any] | None = None
     real_error: str | None = None
+    real_coverage = None
     try:
         real_client = TypeSafeJevClient.from_environment(timeout_s=args.timeout_s)
         real_report = run_closed_loop_replay(
@@ -100,14 +78,17 @@ def main() -> None:
             outcome_model=outcome_model,
             model_name=os.getenv("JEV_MODEL", "jev-latest"),
         )
+        real_coverage = real_client.coverage()
+        if real_coverage["status"] != "COMPLETE":
+            real_error = "INCOMPLETE_REAL_JEV: inspect real_coverage; fallback is not a Jev response"
     except (JevProtocolError, OSError, TimeoutError, ValueError) as exc:
-        real_error = f"{type(exc).__name__}: {exc}"
+        real_error = type(exc).__name__
 
     clients: Dict[str, Dict[str, Any]] = {
         "mock": mock_report,
         "utility": utility_report,
     }
-    if real_report is not None:
+    if real_report is not None and real_error is None:
         clients["real"] = real_report
     report: Dict[str, Any] = {
         "episode": str(episode.path),
@@ -120,6 +101,7 @@ def main() -> None:
         "utility": utility_report,
         "real": real_report,
         "real_error": real_error,
+        "real_coverage": real_coverage,
         "comparisons": compare_closed_loop_reports(clients),
         "note": (
             "All clients replay the same fixed event window. The real client receives "
@@ -135,6 +117,7 @@ def main() -> None:
             {
                 "output": str(args.output.resolve()),
                 "real_error": real_error,
+                "real_coverage": real_coverage,
                 "clients": {
                     name: {
                         "metrics": item["metrics"],

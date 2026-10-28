@@ -60,23 +60,21 @@ pip install -e ".[data,dev]"
 示例使用离线 mock，不需要 API key。若要接入 TypeSafe Jev，可在自己的感知循环中创建 `TypeSafeJevClient`：
 
 ```python
-import os
-
 from jev_uav_track import JevTrackPipeline, TypeSafeJevClient
 
-client = TypeSafeJevClient(api_key=os.environ["JEV_API_KEY"])
+client = TypeSafeJevClient.from_environment()
 pipeline = JevTrackPipeline(client)
 result = pipeline.step(tracking_state, previous_action_id=last_action_id)
 command = result.action.command_mps
 ```
 
-也可以把本地 `.env` 按 `.env.example` 配置后运行真实接口 smoke test：
+真实接口仅从进程环境读取 `JEV_API_KEY`；还须设置 `JEV_BUDGET_LEDGER` 指向经完整历史核对的同一准备期账本。账本初始化、限制及当前阻塞见 [调用预算](docs/experiments/jev_budget_20261028.md)。条件满足后可运行：
 
 ```powershell
 python examples/live_jev_choice.py
 ```
 
-`.env` 已被 Git 忽略，只用于本机测试；不要把真实 key 写进 Python、README、提交记录或 CI 日志。客户端默认请求 `jev-latest`，也会用账户的模型列表发现结果确认可用模型。
+脚本不再读取 `.env`，不接受 `--env-file`；不要把真实 key 写进文件、提交记录或日志。准备期每批最多8次、累计32次，失败也计数；账本缺失、无效或额度耗尽时拒绝联网。示例的模型发现也计一次。当前历史attempt尚未核清，不创建正式账本、不自动调用真实服务。客户端默认 `jev-latest`，正式比较还需固定版本。
 
 `command_mps` 只是高层行为意图，实际工程中应交给经过验证的轨迹生成器和飞控。不要把 Jev 输出直接映射成电机 PWM 或未经约束的姿态力矩。
 
@@ -139,13 +137,12 @@ python scripts/train_cross_episode.py `
 
 该模式仍然只利用记录中的相机速度，不能替代动作执行后的反事实动力学数据。
 
-如果要做真实 Jev 与 Mock Jev 的小规模对照，先确认 `.env` 只在本机存在，然后只取少量记录帧：
+如果要做真实 Jev 与 Mock Jev 的小规模对照，先满足上述环境变量与账本条件，再只取少量记录帧：
 
 ```powershell
 python scripts/compare_jev.py `
   --episode "D:\CarlaAir\data\trimmed\v3\quota_grid_20261004_formal\Town05_bicycle_frequent_turns_long_seed26094453.hdf5" `
   --model artifacts\cross_episode\rollout_model.npz `
-  --env-file .env `
   --output artifacts\cross_episode\jev_comparison.json `
   --max-frames 4 --stride 75
 ```
@@ -239,7 +236,7 @@ python scripts/audit_trimmed_pass_coverage.py `
 python scripts/run_closed_loop_replay.py `
   --episode "D:\CarlaAir\data\trimmed\v3\quota_grid_20260930\Town10HD_bicycle_normal_motion_long_seed260922365.hdf5" `
   --model artifacts\occlusion_pass_20261023\models\rollout_model.npz `
-  --env-file .env --start-frame 168 --end-frame 225 --stride 8 `
+  --start-frame 168 --end-frame 225 --stride 8 `
   --output artifacts\occlusion_pass_20261023\closed_loop_three_way.json
 ```
 
