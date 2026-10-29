@@ -1,0 +1,102 @@
+{
+  "schema": "jev_uav_track.d1_d3_acceptance.v1",
+  "generated_from": "checked_in_evidence_only",
+  "git_head_file_sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+  "criteria": {
+    "D1": {
+      "research_hypothesis_and_sources": {
+        "status": "PASS",
+        "evidence": [
+          "docs/related_work_matrix.md"
+        ],
+        "detail": "Jev boundary and an applicable active-tracking reference are recorded; no novelty or SOTA claim is made."
+      },
+      "development_split_and_sha": {
+        "status": "PASS",
+        "evidence": [
+          "artifacts/acceptance_20261028/development_split_v2.json"
+        ],
+        "detail": "39 PASS episodes: {'train': 28, 'validation': 6, 'development_stress': 5}; unique sha/seed/path=True/True/True."
+      },
+      "independent_final_town_test": {
+        "status": "NOT_MET",
+        "evidence": [
+          "artifacts/acceptance_20261028/development_split_v2.json"
+        ],
+        "detail": "All audited towns already exposed; untouched town data still required"
+      },
+      "metrics_and_fair_comparison_protocol": {
+        "status": "PASS",
+        "evidence": [
+          "docs/metrics_protocol_v1.md"
+        ],
+        "detail": "Fixed-window, failure-inclusive, episode-level comparison and identity/safety limitations are frozen."
+      }
+    },
+    "D2": {
+      "owned_runtime_and_api_contract": {
+        "status": "PASS",
+        "evidence": [
+          "docs/experiments/evidence/isolated_carla_20261028/summary.json",
+          "docs/experiments/evidence/live_origin_20261028/summary.json"
+        ],
+        "detail": "Dedicated runtime, ports, protected settings, cleanup, origin bridge and paced command refresh are evidenced; this is a bounded smoke, not a tracking run."
+      },
+      "jev_budget_and_cost_estimate": {
+        "status": "PASS",
+        "evidence": [
+          "docs/experiments/jev_budget_20261028.md",
+          "src/jev_uav_track/request_budget.py"
+        ],
+        "detail": "Preparation caps are implemented and the report keeps historical attempt reconciliation UNKNOWN."
+      },
+      "real_jev_smoke": {
+        "status": "PARTIAL",
+        "evidence": [
+          "docs/experiments/jev_budget_20261028.md",
+          "docs/experiments/live_belief_20261028.md"
+        ],
+        "detail": "No new real Jev request was made; the bounded live probe used zero Jev calls and therefore cannot be called a real-Jev smoke result."
+      }
+    },
+    "D3": {
+      "coordinate_yaw_and_time_contract": {
+        "status": "PASS",
+        "evidence": [
+          "docs/experiments/live_origin_20261028.md",
+          "docs/experiments/live_observation_20261028.md"
+        ],
+        "detail": "Global object NED and vehicle-local NED are bridged explicitly; paced and paused clocks, bounded freshness and camera extrinsics are measured."
+      },
+      "horizon_and_action_semantics": {
+        "status": "PASS",
+        "evidence": [
+          "docs/experiments/causal_belief_20261028.md",
+          "docs/metrics_protocol_v1.md"
+        ],
+        "detail": "Five-frame horizon is reported as approximately one second and action frame/expiry semantics are fixed; full high-level closed-loop consequence is later-sprint work."
+      },
+      "hidden_truth_isolation_and_live_belief": {
+        "status": "PASS",
+        "evidence": [
+          "docs/experiments/live_belief_20261028.md",
+          "docs/experiments/evidence/live_belief_20261028/belief03.json"
+        ],
+        "detail": "16/16 windows, 12 visible and 4 missing; hidden-frame target queries=0. Input is simulator-visible oracle, not RGB perception."
+      },
+      "formal_tracking_action_execution": {
+        "status": "NOT_AUDITED",
+        "evidence": [
+          "docs/experiments/live_belief_20261028.md"
+        ],
+        "detail": "Missing measured clearance/battery caused all 32 candidate choices to be hard-rejected; no model action was executed."
+      }
+    }
+  },
+  "overall": "PARTIAL",
+  "unresolved": [
+    "D1 independent final-town PASS episodes are absent.",
+    "Historical Jev request ledger is UNKNOWN; no new real Jev smoke is claimed.",
+    "D3 live evidence uses simulator-visible oracle input and did not execute a selected tracking action."
+  ]
+}

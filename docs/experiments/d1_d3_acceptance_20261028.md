@@ -1,5 +1,9 @@
 # D1–D3 今日验收记录（2026-10-28）
 
+## 2026-10-29 复查结果
+
+新增机器审计脚本 `scripts/audit_d1_d3_acceptance.py` 及产物 `artifacts/acceptance_20261029/d1_d3_audit.json`。审计仅读取当前已提交证据：D1 的开发 split/指标协议、D2 的独立 runtime/origin/budget、D3 的坐标/时间/horizon/隐藏真值隔离均逐项记录；独立 final-town test 仍为 `NOT_MET`，真实 Jev smoke 为 `PARTIAL`（0 次新请求），正式 tracking action execution 为 `NOT_AUDITED`。针对性测试 2 项通过。该结论覆盖旧表格的历史快照，不把 10 月 28 日前的代理结果升级为正式 test。
+
 目标：今天按 `docs/sprint_20261026_20261108.md` 原标准逐项复核并补缺；验收不等于保证算法提升。起点 `d9d91ea`，基线 68 测试通过。当前目标已在本聊天建立，未另开调度任务。
 
 **最新续作：D2 有界独立实例可行性已通过，原阻塞不再全部成立。** 用户授权使用空闲本机后，独立副本验证配置/进程/端口/清理，以及坐标、双时钟、限速上升、四轴和客户端刷新；145测试通过。标准起飞False与非锁步未解决，D3 live adapter尚未完整验收，D1独立town test仍缺。详见[完整报告](isolated_carla_smoke_20261028.md)。以下原始表格保留历史上下文，不能当最新状态。

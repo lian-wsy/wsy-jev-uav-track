@@ -2,6 +2,8 @@
 
 更新时间：2026-10-28
 
+2026-10-29 复查：新增 `scripts/audit_d1_d3_acceptance.py`，从已提交证据逐项生成 `artifacts/acceptance_20261029/d1_d3_audit.json`。D1 开发 split/指标、D2 独立 runtime/origin/budget、D3 坐标/时间/horizon/隐藏真值隔离分别通过；独立 final-town PASS 仍缺，真实 Jev 请求仍为 0，现场 tracking action 保持未审计。详见 [日报](experiments/daily_20261029.md)。
+
 ## 当前执行优先级：两周仿真冲刺
 
 2026-10-25 用户明确目标：每天推进，两周内进入 CARLA/AirSim 测试并验证可发表的性能提升。当前执行计划以 [两周冲刺](sprint_20261026_20261108.md) 为准，覆盖 10 月 26 日至 11 月 8 日；下方六阶段保留为长期背景，不再按原 8 周顺序等待仿真。
