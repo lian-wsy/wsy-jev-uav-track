@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping, Sequence
 
 from jev_uav_track.data import HDF5Episode
+from jev_uav_track.holdout import require_development_source
 from jev_uav_track.evaluation import OfflineEvaluationConfig, evaluate_episode
 from jev_uav_track.training import (
     ABLATION_DISABLED_FEATURES,
@@ -16,6 +17,7 @@ from jev_uav_track.training import (
     RolloutTrainingConfig,
     feature_mask_for_ablation,
     fit_outcome_model_cross_episode,
+    load_development_episode,
 )
 
 
@@ -70,6 +72,9 @@ def _run_ablation(
     evaluation_config: OfflineEvaluationConfig,
     model_dir: Path,
 ) -> Dict[str, Any]:
+    # Baseline-only ablations do not fit, but still expose validation outcomes.
+    for episode in [*train_episodes, *validation_episodes]:
+        require_development_source(episode.path, episode.metadata)
     model: LinearOutcomeModel | None
     fit_metrics: Dict[str, Any] | None
     model_path: Path | None = None
@@ -144,9 +149,11 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    train_episodes = [HDF5Episode.open(path, load_images=False) for path in args.train_episode]
+    for path in args.train_episode + args.validation_episode:
+        require_development_source(path)
+    train_episodes = [load_development_episode(path) for path in args.train_episode]
     validation_episodes = [
-        HDF5Episode.open(path, load_images=False) for path in args.validation_episode
+        load_development_episode(path) for path in args.validation_episode
     ]
     names = args.ablation or [
         "kinematic_baseline",

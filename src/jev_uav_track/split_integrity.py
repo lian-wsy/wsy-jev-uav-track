@@ -5,6 +5,8 @@ import re
 from pathlib import Path
 from typing import Mapping, Sequence
 
+from .holdout import require_development_source
+
 
 def validate_split_integrity(entries: Sequence[Mapping]) -> None:
     if not entries:
@@ -20,6 +22,9 @@ def validate_split_integrity(entries: Sequence[Mapping]) -> None:
             raise ValueError("Explicit path and nonnegative integer seed required")
         if not re.fullmatch(r"[0-9a-f]{64}", digest):
             raise ValueError("Full SHA-256 required")
+        # Final-test metadata may be audited, but this does not certify its PASS.
+        if entry.get("split") != "final_test":
+            require_development_source(raw_path, entry)
         path = str(Path(raw_path).resolve()).replace("\\", "/").casefold()
         if path in paths or seed in seeds or digest in digests:
             raise ValueError("Duplicate path, seed, or content in frozen split")

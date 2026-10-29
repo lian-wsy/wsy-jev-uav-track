@@ -6,11 +6,12 @@ import argparse
 import json
 from pathlib import Path
 
-from jev_uav_track.data import HDF5Episode
+from jev_uav_track.holdout import require_development_source
 from jev_uav_track.training import (
     TARGET_MODES,
     RolloutTrainingConfig,
     fit_outcome_model_cross_episode,
+    load_development_episode,
 )
 
 
@@ -42,9 +43,11 @@ def main() -> None:
     parser.add_argument("--target-mode", choices=TARGET_MODES, default="absolute")
     args = parser.parse_args()
 
-    train_episodes = [HDF5Episode.open(path, load_images=False) for path in args.train_episode]
+    for path in args.train_episode + args.validation_episode:
+        require_development_source(path)
+    train_episodes = [load_development_episode(path) for path in args.train_episode]
     validation_episodes = [
-        HDF5Episode.open(path, load_images=False) for path in args.validation_episode
+        load_development_episode(path) for path in args.validation_episode
     ]
     config = RolloutTrainingConfig(
         horizon_frames=args.horizon_frames,

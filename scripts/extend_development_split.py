@@ -15,6 +15,7 @@ from collections import Counter
 from pathlib import Path
 
 from jev_uav_track.data import HDF5Episode
+from jev_uav_track.holdout import require_development_source
 from jev_uav_track.split_integrity import validate_split_integrity
 
 PATTERN = re.compile(r"(?P<cell>.+)_seed(?P<seed>\d+)\.hdf5$")
@@ -31,6 +32,7 @@ def select_additions(rows, *, excluded_seeds, limit):
         seed = int(match["seed"])
         if seed in excluded_seeds:
             continue
+        require_development_source(path, row)
         item = dict(row, seed=seed, filename=path.name, split="train", cell=match["cell"])
         existing = cells.get(match["cell"])
         if existing is None or seed < existing["seed"]:
@@ -73,6 +75,8 @@ def main():
     exclusions = set(exposure["effect_exposed_seeds"]) | {r["seed"] for r in base["episodes"]}
     additions = select_additions(coverage["episodes"], excluded_seeds=exclusions, limit=args.additions)
     entries = [dict(r) for r in base["episodes"]] + additions
+    for entry in entries:
+        require_development_source(entry['path'], entry)
     if not 30 <= len(entries) <= 60:
         raise ValueError(f"30–60 target not met: {len(entries)}; do not silently relax selection")
     sources = {}
@@ -82,6 +86,7 @@ def main():
         path = Path(entry["path"])
         before = path.stat()
         episode = HDF5Episode.open(path, load_images=False)
+        require_development_source(episode.path, episode.metadata)
         if episode.metadata.get("validation_status") != "PASS":
             raise ValueError(f"Source no longer PASS: {path.name}")
         digest = throttled_sha(path, args.hash_mib_per_s)

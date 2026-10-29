@@ -20,6 +20,7 @@ import h5py
 
 from scripts.extend_development_split import throttled_sha
 from jev_uav_track.data import HDF5Episode
+from jev_uav_track.holdout import require_development_source
 from jev_uav_track.primitives import DEFAULT_PRIMITIVES
 from jev_uav_track.split_integrity import validate_split_integrity
 from jev_uav_track.rollout_diagnostics import support_report, compare_predictions
@@ -30,10 +31,12 @@ from jev_uav_track.learned_rollout import LearnedOutcomeRolloutModel
 
 def load_verified(entry, rate):
     path = Path(entry['path'])
+    require_development_source(path, entry)
     before = path.stat()
     if before.st_size != entry['bytes'] or throttled_sha(path, rate) != entry['sha256']:
         raise ValueError(f'Frozen SHA/size mismatch: {path.name}')
     episode = HDF5Episode.open(path, load_images=False)
+    require_development_source(episode.path, episode.metadata)
     after = path.stat()
     if (before.st_size, before.st_mtime_ns) != (after.st_size, after.st_mtime_ns):
         raise ValueError(f'Source changed while reading: {path.name}')

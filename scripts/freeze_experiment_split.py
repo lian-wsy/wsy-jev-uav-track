@@ -16,6 +16,8 @@ import re
 from pathlib import Path
 from typing import Any, Iterable
 
+from jev_uav_track.holdout import require_development_source
+
 
 _SEED_RE = re.compile(r"_seed(?P<seed>\d+)(?:\.hdf5)?$")
 
@@ -40,6 +42,7 @@ def _seed(name: str) -> int | None:
 
 
 def _entry(item: dict[str, Any], *, split: str, source: str) -> dict[str, Any]:
+    require_development_source(item['path'], item)
     status = str(item.get("validation_status", "")).upper()
     if status != "PASS":
         raise ValueError(f"only PASS episodes may enter a split: {item.get('path')}")

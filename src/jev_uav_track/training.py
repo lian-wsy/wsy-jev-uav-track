@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping, Sequence
 
 from .data.hdf5_adapter import HDF5Episode
+from .holdout import require_development_source
 from .models import MissionConstraints, TrackingState
 from .primitives import BehaviorPrimitive
 from .rollout import KinematicRolloutModel, RolloutConfig
@@ -306,12 +307,21 @@ def _validate_horizon_alignment(
 
 
 def _require_verified_episode(episode: HDF5Episode) -> None:
+    require_development_source(episode.path, episode.metadata)
     status = str(episode.metadata.get("validation_status", "")).upper()
     if status != "PASS":
         raise ValueError(
             "Episode training requires validation_status=PASS; "
             f"{episode.path} has {status or 'unreported'}"
         )
+
+
+def load_development_episode(path: str | Path) -> HDF5Episode:
+    """Preflight the path, then check loaded metadata before any sample building."""
+    require_development_source(path)
+    episode = HDF5Episode.open(path, load_images=False)
+    _require_verified_episode(episode)
+    return episode
 
 
 def build_training_dataset_from_episodes(
@@ -549,6 +559,8 @@ def fit_outcome_model(
 ) -> tuple[LinearOutcomeModel, Dict[str, Any]]:
     """Fit on the early portion and report a chronological holdout."""
 
+    for path in dataset.episode_paths:
+        require_development_source(path)
     np = _numpy()
     cfg = config or RolloutTrainingConfig(target_mode=dataset.target_mode)
     if cfg.target_mode != dataset.target_mode:

@@ -7,10 +7,10 @@ from pathlib import Path
 
 import numpy as np
 
-from jev_uav_track.data import HDF5Episode
+from jev_uav_track.holdout import require_development_source
 from jev_uav_track.training import (
     OUTPUT_NAMES, RolloutTrainingConfig, build_training_dataset_from_episodes,
-    fit_outcome_model_cross_episode, LinearOutcomeModel,
+    fit_outcome_model_cross_episode, LinearOutcomeModel, load_development_episode,
 )
 from jev_uav_track.learned_rollout import LearnedOutcomeRolloutModel
 
@@ -22,12 +22,15 @@ def main():
     parser.add_argument("--samples-per-episode", type=int, default=24)
     args = parser.parse_args()
     manifest = json.loads(args.split.read_text(encoding="utf-8"))
+    for entry in manifest['episodes']:
+        if entry['split'] in ('train', 'validation'):
+            require_development_source(entry['path'], entry)
     groups = {}
     for group in ("train", "validation"):
         entries = [e for e in manifest["episodes"] if e["split"] == group]
         if not entries or any(e["validation_status"] != "PASS" for e in entries):
             raise ValueError("Nonempty PASS train/validation groups required")
-        groups[group] = [HDF5Episode.open(e["path"], load_images=False) for e in entries]
+        groups[group] = [load_development_episode(e["path"]) for e in entries]
     args.output.mkdir(parents=True, exist_ok=True)
     results = {}
     for mode in ("absolute", "baseline_residual"):
