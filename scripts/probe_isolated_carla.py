@@ -14,7 +14,8 @@ import shutil
 import subprocess
 import time
 
-from jev_uav_track.isolated_runtime import BINARY, validate_roots, write_settings, launch_arguments
+from jev_uav_track.isolated_runtime import (BINARY, validate_roots, write_settings, launch_arguments,
+    validate_probe_map, require_loaded_map, PROBE_MAPS)
 from jev_uav_track.windows_job import OwnedJob
 
 
@@ -87,7 +88,8 @@ def prepare(source, task):
     print(json.dumps({'prepared': str(task), 'binary_sha256': copy_hash}), flush=True)
 
 
-def smoke(source, task, client_python, run_name, profile, bootstrap):
+def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='Town02'):
+    validate_probe_map(map_name, profile)
     validate_roots(source, task)
     import re
     if not re.fullmatch(r'[A-Za-z0-9_-]{1,60}', run_name):
@@ -96,6 +98,9 @@ def smoke(source, task, client_python, run_name, profile, bootstrap):
     output.mkdir(parents=True, exist_ok=False)
     for folder in ('logs', 'user', 'temp', 'appdata', 'localappdata'):
         (output / folder).mkdir()
+    save(output / 'run_request.json', {'requested_map': map_name, 'profile': profile,
+         'kind': 'API_INFRASTRUCTURE_ONLY' if profile == 'api' else 'DEVELOPMENT_CONTRACT',
+         'created_at': time.time(), 'not_final_test': True})
     prepared = json.loads((task / 'prepared.json').read_text())
     if Path(prepared['source']) != source or prepared['binary_sha256'] != sha(task / 'package' / BINARY):
         raise ValueError('Prepared source/executable mismatch')
@@ -117,7 +122,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap):
     for name, folder in [('TEMP', 'temp'), ('TMP', 'temp'), ('APPDATA', 'appdata'),
                          ('LOCALAPPDATA', 'localappdata'), ('UE-LocalDataCachePath', 'localappdata/ddc')]:
         env[name] = str(output / folder)
-    args = launch_arguments(task, output)
+    args = launch_arguments(task, output, map_name=map_name)
     startup = subprocess.STARTUPINFO()
     startup.dwFlags |= subprocess.STARTF_USESHOWWINDOW
     startup.wShowWindow = 0
@@ -125,6 +130,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap):
     client_process = None
     job = OwnedJob()
     result = {'status': 'FAILED', 'started_at': time.time(), 'client_probe': None,
+              'requested_map': map_name, 'not_final_test': True,
               'profile': profile, 'bootstrap': bootstrap, 'client_python': str(client_python),
               'probe_sha256': sha(Path(__file__)),
               'api_probe_sha256': sha(Path(__file__).with_name('probe_carla_apis.py')),
@@ -163,6 +169,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap):
         client_process = subprocess.Popen([str(client_python), str(Path(__file__).with_name('probe_carla_apis.py')),
                                  '--output', str(output / 'api_probe.json'), '--profile', profile,
                                  '--bootstrap', bootstrap,
+                                 '--expected-map', map_name,
                                  '--expected-settings', str(task / 'settings.json')],
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=env,
                                 creationflags=subprocess.CREATE_NO_WINDOW)
@@ -174,6 +181,9 @@ def smoke(source, task, client_python, run_name, profile, bootstrap):
         if client_process.returncode:
             raise RuntimeError('API probe failed; inspect task-local client logs')
         result['client_probe'] = json.loads((output / 'api_probe.json').read_text())
+        require_loaded_map(result['client_probe'].get('map'), map_name)
+        if result['client_probe'].get('map_match') is not True or result['client_probe'].get('requested_map') != map_name:
+            raise ValueError('Client report lacks verified requested map identity')
         result['status'] = 'API_SMOKE_COMPLETED'
     except Exception as exc:
         result['error'] = f'{type(exc).__name__}: {exc}'
@@ -212,6 +222,7 @@ if __name__ == '__main__':
     parser.add_argument('--run-name', default='smoke01')
     parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief'], default='api')
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
+    parser.add_argument('--map', choices=PROBE_MAPS, default='Town02', dest='map_name')
     args = parser.parse_args()
     if os.name != 'nt':
         raise SystemExit('Windows only')
@@ -221,4 +232,4 @@ if __name__ == '__main__':
     else:
         if not args.client_python or not args.client_python.is_file():
             raise SystemExit('--client-python must be an existing CARLA/AirSim Python runtime')
-        smoke(source, task, args.client_python, args.run_name, args.profile, args.bootstrap)
+        smoke(source, task, args.client_python, args.run_name, args.profile, args.bootstrap, args.map_name)

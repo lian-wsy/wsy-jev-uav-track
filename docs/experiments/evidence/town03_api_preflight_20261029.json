@@ -1,0 +1,29 @@
+{
+  "schema": "jev_uav_track.town03_api_preflight.v1",
+  "run_name": "town03_api01_20261029",
+  "requested_map": "Town03",
+  "profile": "api",
+  "request_created_at_unix_s": 1793283685.467886,
+  "base_commit": "8a96a0106827bec684aba7f683dbf975f3eb0bb9",
+  "result": "REJECTED_BEFORE_PROCESS_CREATION",
+  "reason": "Less than 4 GiB physical memory free; no launch",
+  "command_exit_code": 1,
+  "free_memory_kib": 3237528,
+  "required_memory_kib": 4194304,
+  "observed_python_pid": 46468,
+  "observed_python_role": "probe launcher itself, excluded from external-process gate",
+  "listeners": [],
+  "owner_json_exists": false,
+  "simulator_started": false,
+  "map_loaded_verified": false,
+  "final_test_available": false,
+  "real_jev_requests": 0,
+  "hdf5_read_count": 0,
+  "source_byte_sha256_at_attempt": {
+    "scripts/probe_isolated_carla.py": "8c76f30ec04528c7fe2a7780e987de7f35961521f13ddd3d18b16cab618b9978",
+    "scripts/probe_carla_apis.py": "309e75bddd94af0735457000d9e2713fee8cbe1906e7921be8b7755acc068c38",
+    "src/jev_uav_track/isolated_runtime.py": "b5e47fd791e687301d5084edc78311d0365424f57d8fb432cf60ac9ad13c0140"
+  },
+  "raw_evidence_directory": "D:/JevUavRuns/20261028_d2_probe01/runs/town03_api01_20261029",
+  "evidence_scope": "Launch request and host preflight only; not simulator, map, dataset or policy acceptance"
+}

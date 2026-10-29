@@ -7,6 +7,22 @@ from pathlib import Path
 
 BINARY = Path('CarlaUE4/Binaries/Win64/CarlaUE4-Win64-Shipping.exe')
 PORTS = (3100, 3101, 3102, 42451)
+PROBE_MAPS = ('Town02', 'Town03')
+
+
+def validate_probe_map(map_name: str, profile: str = 'api') -> None:
+    if map_name not in PROBE_MAPS:
+        raise ValueError('Unsupported probe map; use exactly Town02 or Town03')
+    if profile not in ('api', 'contract', 'observation', 'belief'):
+        raise ValueError('Unsupported probe profile')
+    if map_name == 'Town03' and profile != 'api':
+        raise ValueError('Reserved Town03 permits API-only checks, not development motion probes')
+
+
+def require_loaded_map(actual: str, expected: str) -> None:
+    validate_probe_map(expected)
+    if actual not in (expected, f'/Game/Carla/Maps/{expected}'):
+        raise ValueError(f'Loaded map mismatch: expected {expected}, observed {actual}')
 
 
 def require_rpc_success(future, observation=None):
@@ -79,12 +95,13 @@ def write_settings(task: Path) -> Path:
     return path
 
 
-def launch_arguments(task: Path, output: Path | None = None) -> list[str]:
+def launch_arguments(task: Path, output: Path | None = None, *, map_name: str = 'Town02') -> list[str]:
+    validate_probe_map(map_name)
     task = task.resolve()
     output = output.resolve() if output is not None else task
     if not output.is_relative_to(task):
         raise ValueError('Run output must be inside task runtime')
-    return [str(task / 'package' / BINARY), '/Game/Carla/Maps/Town02',
+    return [str(task / 'package' / BINARY), f'/Game/Carla/Maps/{map_name}',
             '-windowed', '-ResX=640', '-ResY=360', '-quality-level=Low',
             '-nosound', '-unattended', '-NoCrashDialog', '-nocrashreports',
             '-carla-rpc-port=3100', '-carla-streaming-port=3101',

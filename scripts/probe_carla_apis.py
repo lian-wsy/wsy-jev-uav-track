@@ -9,7 +9,8 @@ from pathlib import Path
 
 # The simulator's Python 3.10 client need not have this project installed.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
-from jev_uav_track.isolated_runtime import require_rpc_success, command_cadence
+from jev_uav_track.isolated_runtime import (require_rpc_success, command_cadence,
+    validate_probe_map, require_loaded_map, PROBE_MAPS)
 
 import carla
 import airsim
@@ -275,7 +276,8 @@ def contract_probe(world, air, output, result, bootstrap, observation_contract=F
     return result
 
 
-def main(output, profile, expected_settings, bootstrap):
+def main(output, profile, expected_settings, bootstrap, expected_map='Town02'):
+    validate_probe_map(expected_map, profile)
     client = carla.Client('127.0.0.1', 3100)
     client.set_timeout(5)
     air = airsim.MultirotorClient(ip='127.0.0.1', port=42451, timeout_value=5)
@@ -286,6 +288,8 @@ def main(output, profile, expected_settings, bootstrap):
     if settings != expected or expected.get('ApiServerPort') != 42451 or list(expected.get('Vehicles', {})) != ['JevDrone']:
         raise RuntimeError('Loaded AirSim settings are not task-owned settings')
     world = client.get_world()
+    actual_map = world.get_map().name
+    require_loaded_map(actual_map, expected_map)
     samples = []
     for _ in range(12):
         wall = time.monotonic()
@@ -297,7 +301,8 @@ def main(output, profile, expected_settings, bootstrap):
         time.sleep(0.1)
     result = {'kind': 'LIVE_OWNED_API_PROBE', 'carla_server': client.get_server_version(),
               'python_version': sys.version, 'rpc_success_checked': True,
-              'carla_client': client.get_client_version(), 'map': world.get_map().name,
+              'carla_client': client.get_client_version(), 'map': actual_map,
+              'requested_map': expected_map, 'map_match': True,
               'airsim_server': air.getServerVersion(), 'vehicles': air.listVehicles(),
               'settings_match': True, 'samples': samples,
               'note': 'No arm, reset, motion, RGB capture or target tracking in this probe.'}
@@ -321,5 +326,6 @@ if __name__ == '__main__':
     parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief'], default='api')
     parser.add_argument('--expected-settings', type=Path, required=True)
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
+    parser.add_argument('--expected-map', choices=PROBE_MAPS, default='Town02')
     args = parser.parse_args()
-    main(args.output, args.profile, args.expected_settings, args.bootstrap)
+    main(args.output, args.profile, args.expected_settings, args.bootstrap, args.expected_map)
