@@ -1,0 +1,1605 @@
+{
+  "protocol": "recorded_action_calibration_only",
+  "config": {
+    "horizon_frames": 5,
+    "stride": 2,
+    "max_samples": 96,
+    "desired_range_m": 20.0,
+    "ridge_alpha": 1.0,
+    "train_fraction": 0.7,
+    "target_mode": "absolute",
+    "rollout_horizon_s": 1.0,
+    "timing_tolerance_s": 0.05
+  },
+  "split_sha256": "7326f07e67e90ed0e6397bb553abf31e23cd8d594cf647532a5b02447b9f8e87",
+  "hash_mib_per_s": 16.0,
+  "train_count": 28,
+  "validation_count": 6,
+  "test_or_stress_opened": 0,
+  "hyperparameter_search": false,
+  "support": "train min/max plus nearest standardized sample; diagnostic only",
+  "code_sha256": {
+    "src/jev_uav_track/__init__.py": "e5a81e391e7fa6e071ccf0ade2f53c86cad25fe2b98cddf1c3f338ee09053344",
+    "src/jev_uav_track/causal_belief.py": "117a6d1396338789bdc4064b049c68eea2a7a4b911163dabb0ecf6aa66f1bf49",
+    "src/jev_uav_track/closed_loop.py": "68f0705847e48fd8a2b0532406156cc48b09287c84bfaa05d66232383846bfda",
+    "src/jev_uav_track/data/__init__.py": "3479282c80742de3fce3763d17fd5c7b01cf87161af5b1412619695f17d10833",
+    "src/jev_uav_track/data/fingerprint.py": "df50fd378968e9d074bda1cea4e9d5c77ecc0367165c65b8a660b8e996f66d53",
+    "src/jev_uav_track/data/hdf5_adapter.py": "e6b1914a4bf62d3c1d62d7d9f37deb4e31fedae3d941302fdd704eac430f6325",
+    "src/jev_uav_track/demo.py": "df3908acef47a795a2c0c550693d65b640e53669cd847a499f32b218d90127a9",
+    "src/jev_uav_track/evaluation.py": "a6acff0547e1c03b61e003d7d74f68c56f3f006915ff2fa0bff8fb9cba1cfad7",
+    "src/jev_uav_track/event_metrics.py": "53e057687a0ea9da447e61d32bac6ddbaccdb933f7b59689243d9bd6a554dc30",
+    "src/jev_uav_track/frames.py": "28bd4bcea80870f1dfd05b743e8ab4ce1d5c07817ed3a6e08d3712c4ece9089a",
+    "src/jev_uav_track/history.py": "cb872820f1151b1e17f2b56066e4463de38be2cf2bc3e36646071b8f3a5f4781",
+    "src/jev_uav_track/isolated_runtime.py": "5184b5df72aef28bb71fe6fc7cc859d331cf4ccaa89e7126bfb4c7d41fc090e7",
+    "src/jev_uav_track/jev_client.py": "63a5c4ad889af43759247cb8a242417dd22e026e30c091be59c28ce886a000b2",
+    "src/jev_uav_track/learned_rollout.py": "44e7d87f29d913bfadfaa26993e94bd06a75c11137e1b9c7b8f2b70b4d4c580f",
+    "src/jev_uav_track/live_belief.py": "474a03d35671e60bc055b0fcf4abb819f0954b728ba21a814f61b785f79c1141",
+    "src/jev_uav_track/live_observation.py": "c2e288d95736d43d665c16b59caf86c693162bdf9004b62e5bc67c9d6d085bff",
+    "src/jev_uav_track/models.py": "2b41ab0646229fcb7b4b1d2d011674ad88bf053f5ecf097b52f63c33930feff8",
+    "src/jev_uav_track/pipeline.py": "eefaa7bd1348b495945235d949bf1fd892311a11840d9052625bccd8027d56e8",
+    "src/jev_uav_track/primitives.py": "cd038924c874a387e7d0311846bad2575ba338ab0d56db098e4a652969c05c9a",
+    "src/jev_uav_track/request_budget.py": "ce37a56118c37ca3447449520a090dbd08ba89ed1b323af7aa487c4cc44e3b26",
+    "src/jev_uav_track/rollout.py": "b014d1e6dd6bb4534cec43f93ec77ade6ad9f7a9e3a9f0f06188914bebae450a",
+    "src/jev_uav_track/rollout_diagnostics.py": "efbbc7765e65e437b9eb69272ab42a21dde505901f79f1084a4e8ff3b728182b",
+    "src/jev_uav_track/safety.py": "83ed9d1720bf3fa0b752496d2cf2472e0ea6e58567285c3872ccff95a127d00d",
+    "src/jev_uav_track/selector.py": "84dc10bcc7c198f2d521e4aa173ce280b39b98256d3c8152e6142d28f7baf3a1",
+    "src/jev_uav_track/sim_adapter.py": "bad5659696c7a9ae9b7292bffdfe1635ed97a7593392988502fb2d4e382ad27c",
+    "src/jev_uav_track/split_integrity.py": "c0e827f648ead187f40ef04139bbce0e41b2a2ab18e070f1c2073d7fe6278820",
+    "src/jev_uav_track/training.py": "666116886aee3e6ebb19c543ab6805749a3cf80b2a8627e5a8adab35b6bbd2b8",
+    "src/jev_uav_track/windows_job.py": "3994d6a08cf979e186f7aedd6e3de42dadecb7352a2f18da8b68a7d64cdb23c8"
+  },
+  "runner_sha256": "909db0a6c2f954c16958a3dcabf11fc880f9251991e04408f6db573385b59af5",
+  "hash_reader_sha256": "a8e6b23bbc240398d051ec7ed33a8e0650f37c68d1eaa25cc3764ae85835bfb0",
+  "status": "COMPLETED",
+  "python": "3.14.7",
+  "numpy": "2.5.4",
+  "h5py": "3.16.0",
+  "provenance": [
+    {
+      "filename": "Town02_bicycle_frequent_turns_long_seed26094450.hdf5",
+      "split": "train",
+      "seed": 26094450,
+      "sha256": "415331729f7231ba0d876fb0017283eb90095a83d23e3840af382c8b87de7590",
+      "bytes": 322425471,
+      "mtime_ns": 1791972118401700500,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_bicycle_normal_motion_close_seed26094528.hdf5",
+      "split": "train",
+      "seed": 26094528,
+      "sha256": "98245e990c48028a3f5f96e01bd85e230b280df8aaa35620a729af8117d30b15",
+      "bytes": 314756856,
+      "mtime_ns": 1791973389511425500,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_long_seed26094456.hdf5",
+      "split": "train",
+      "seed": 26094456,
+      "sha256": "0485b51c068393f7596030c0c15ec37eb49864538af13d9404b35798a147c2cb",
+      "bytes": 335735353,
+      "mtime_ns": 1791972449435353400,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_close_seed26094535.hdf5",
+      "split": "train",
+      "seed": 26094535,
+      "sha256": "606464c4b32bd313ca6409b944329fc6a861bcf071719edf53a795742e40d48c",
+      "bytes": 322767277,
+      "mtime_ns": 1791973547250217600,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_long_seed26094824.hdf5",
+      "split": "train",
+      "seed": 26094824,
+      "sha256": "6d22c07fe5d6e6da594aa1ced2e633126dd9362366022b51cffb35ddbde207d7",
+      "bytes": 339551027,
+      "mtime_ns": 1791376396323313000,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094463.hdf5",
+      "split": "train",
+      "seed": 26094463,
+      "sha256": "8c21d63b86404a355e68faf4b8a79da3b65d8abc482bcd7448137c948c49f63f",
+      "bytes": 319672005,
+      "mtime_ns": 1791972657214782000,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town02_bicycle_frequent_turns_long_seed26094451.hdf5",
+      "split": "validation",
+      "seed": 26094451,
+      "sha256": "6bb267360cde0eab6b379d5206ba6e88e4233ee7e46a9d2cb30b3b3bbab63307",
+      "bytes": 322642409,
+      "mtime_ns": 1791972165299877600,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_bicycle_normal_motion_close_seed26094529.hdf5",
+      "split": "validation",
+      "seed": 26094529,
+      "sha256": "056fa42c8146ab488f8309cf2d7ee26d4b876be7b017c47089cbe2fcc9fa35ed",
+      "bytes": 315063760,
+      "mtime_ns": 1791973391966113100,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_long_seed26094457.hdf5",
+      "split": "validation",
+      "seed": 26094457,
+      "sha256": "cb6b7da6d67aad82938603f28ca31fde7b728d95cd4526e0c2d7460468e5f32f",
+      "bytes": 335514459,
+      "mtime_ns": 1791972445635040500,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_close_seed26094538.hdf5",
+      "split": "validation",
+      "seed": 26094538,
+      "sha256": "06e6b3be8358c0e8c69cf2614f0f2fd3c09371928a429f42d120aed05aac6db0",
+      "bytes": 322930767,
+      "mtime_ns": 1791973993574713700,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_long_seed26094827.hdf5",
+      "split": "validation",
+      "seed": 26094827,
+      "sha256": "77240e5ae02f948164f59c4aaf931e077bc0c7dbb1fc9484a28713acac8d8f40",
+      "bytes": 340034989,
+      "mtime_ns": 1791380944207789200,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094464.hdf5",
+      "split": "validation",
+      "seed": 26094464,
+      "sha256": "60c424afb34d9d177e913d8fecc287e061390036bb3f00726af1cfd9443e28ca",
+      "bytes": 319587986,
+      "mtime_ns": 1791972669564785300,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town02_bicycle_frequent_turns_long_seed26094452.hdf5",
+      "split": "train",
+      "seed": 26094452,
+      "sha256": "08dcc71857a6a6ad9e1fa31c159af6c664255b756e943535c7280e69bbe275b1",
+      "bytes": 322358074,
+      "mtime_ns": 1791972165749306100,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_bicycle_frequent_turns_long_seed26094454.hdf5",
+      "split": "train",
+      "seed": 26094454,
+      "sha256": "0b9ea32227151a1225080af307115fac66c7049ef2914f290cdbb352e9effe83",
+      "bytes": 329450034,
+      "mtime_ns": 1791972273301429000,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_bicycle_frequent_turns_suitable_seed26094537.hdf5",
+      "split": "train",
+      "seed": 26094537,
+      "sha256": "9d23d92b110e400506ec9aed3fa603794240028f06922e81d20dec4d0f294d2f",
+      "bytes": 332339663,
+      "mtime_ns": 1791973393619427400,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_bicycle_normal_motion_close_seed26094530.hdf5",
+      "split": "train",
+      "seed": 26094530,
+      "sha256": "75b8fd03a74e2fb9d7002f6777d754e99bacc0fe34c6a160e4c5b10f411f2d7b",
+      "bytes": 314390514,
+      "mtime_ns": 1791973393667753200,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_long_seed26094458.hdf5",
+      "split": "train",
+      "seed": 26094458,
+      "sha256": "9b90fca8a6651ae5b6dda27fee1a5033a8be6009e0a9792b3a70fb05091bb1a8",
+      "bytes": 335891042,
+      "mtime_ns": 1791972474102979400,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_suitable_seed26094534.hdf5",
+      "split": "train",
+      "seed": 26094534,
+      "sha256": "af73c3d79728b7d431c38f96b5b56d6584b4eec908fc608e38693055a6820b60",
+      "bytes": 333478665,
+      "mtime_ns": 1791973395948958700,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_pedestrian_normal_motion_close_seed26094738.hdf5",
+      "split": "train",
+      "seed": 26094738,
+      "sha256": "48e6001e9ede6ea6e5dc2db9f2db6f3b7fa583127a96bbfe0530d521ac1e0148",
+      "bytes": 336157664,
+      "mtime_ns": 1791277347359697000,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_pedestrian_normal_motion_long_seed26094872.hdf5",
+      "split": "train",
+      "seed": 26094872,
+      "sha256": "06ba2e9a3a438b47e6c947b40fdcd5b9fb76a98d6033e7f45ea79d2d8b7e2e53",
+      "bytes": 337966071,
+      "mtime_ns": 1791432640154650600,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_pedestrian_normal_motion_suitable_seed26094774.hdf5",
+      "split": "train",
+      "seed": 26094774,
+      "sha256": "09a31ae65faed6555faf6996f9a6c7109c2bc800b9b9f27e64862d62a9863d41",
+      "bytes": 332405444,
+      "mtime_ns": 1791349981309393300,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_close_seed26094539.hdf5",
+      "split": "train",
+      "seed": 26094539,
+      "sha256": "5e0dcf61625fe0a5fe2e09999099d6493d503811320d04279b3375128640464a",
+      "bytes": 322691279,
+      "mtime_ns": 1791973992110834500,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_suitable_seed26094588.hdf5",
+      "split": "train",
+      "seed": 26094588,
+      "sha256": "4e3ffe4cc23b184ceeaa3e484eaf1f23a9ebc0fe9365657bdf281ce4012c8f44",
+      "bytes": 319949272,
+      "mtime_ns": 1791975238893463500,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_bicycle_normal_motion_long_seed26094516.hdf5",
+      "split": "train",
+      "seed": 26094516,
+      "sha256": "0b301501a07227f29b19ebb85694bcf3c00466e98b8cb97958bbdff6d65cedfb",
+      "bytes": 368697461,
+      "mtime_ns": 1791973553976541900,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_bicycle_normal_motion_suitable_seed26094611.hdf5",
+      "split": "train",
+      "seed": 26094611,
+      "sha256": "9b956679c6ad6e91d1709a8f62bbb32da2438e925b31db893b26da42c30b05da",
+      "bytes": 319459198,
+      "mtime_ns": 1791980391518937300,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_pedestrian_frequent_turns_long_seed26094460.hdf5",
+      "split": "train",
+      "seed": 26094460,
+      "sha256": "66b67e55855a4d3bcc0d427febd9f9d69ad4c62ea2863db3c20f69259f5896d6",
+      "bytes": 334994715,
+      "mtime_ns": 1791972483245733300,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_pedestrian_frequent_turns_suitable_seed26094570.hdf5",
+      "split": "train",
+      "seed": 26094570,
+      "sha256": "f7c3ed7a3913c1d4e56484f4172065b97e16610fe94c0ddd6f15d7e6ee40d84e",
+      "bytes": 338409848,
+      "mtime_ns": 1791974457005832500,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_long_seed26094834.hdf5",
+      "split": "train",
+      "seed": 26094834,
+      "sha256": "d7572493cacf9aea3e1ca0553b82ab0e6e1397e389883b058d303eaa9037e099",
+      "bytes": 340045169,
+      "mtime_ns": 1791387469207919600,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_suitable_seed26094726.hdf5",
+      "split": "train",
+      "seed": 26094726,
+      "sha256": "fd7c2ae2addb7d09109d1b76e782637b22dc4ca2f2874083da2124d7e0170391",
+      "bytes": 333643352,
+      "mtime_ns": 1791272313261474200,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town10HD_bicycle_normal_motion_long_seed26094696.hdf5",
+      "split": "train",
+      "seed": 26094696,
+      "sha256": "45b778880075b3ea9af99ec5401fb949c8cb26ebee96c710af1c003bbad6b823",
+      "bytes": 343217238,
+      "mtime_ns": 1791264992756067900,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_close_seed26094470.hdf5",
+      "split": "train",
+      "seed": 26094470,
+      "sha256": "115bbb85b5aaacb40c645e6674f2c8577dcfb0e1c65cf39d79a1180e17e23be3",
+      "bytes": 327457052,
+      "mtime_ns": 1791972622802860400,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094465.hdf5",
+      "split": "train",
+      "seed": 26094465,
+      "sha256": "f4b8cb5648c325374378ed3e46fdf9493c2ab10b2fecca43340b2e1a61e75e95",
+      "bytes": 319609530,
+      "mtime_ns": 1791972694006474100,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_suitable_seed26094581.hdf5",
+      "split": "train",
+      "seed": 26094581,
+      "sha256": "f3a0f2601f43b64bca0e68749544734ad7790c14ec4bfb40b5b86a68b316a830",
+      "bytes": 333391946,
+      "mtime_ns": 1791974773497794500,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_normal_motion_long_seed26094889.hdf5",
+      "split": "train",
+      "seed": 26094889,
+      "sha256": "997c016860dce2bf26ff3d4144609da21917a43d4510f09381614c534391a645",
+      "bytes": 332452237,
+      "mtime_ns": 1791436241781676700,
+      "validation_status": "PASS",
+      "frames": 300
+    }
+  ],
+  "train_samples": 2688,
+  "validation_samples": 576,
+  "train_horizon_s": 0.9999999776482582,
+  "train_strata": {
+    "count": 2688,
+    "visible_ge_0_5": 2688,
+    "occlusion_risk_gt_0_5": 0
+  },
+  "validation_strata": {
+    "count": 576,
+    "visible_ge_0_5": 576,
+    "occlusion_risk_gt_0_5": 0
+  },
+  "aggregate_rmse": {
+    "transparent": {
+      "visibility_probability": 0.13468869279038614,
+      "image_center_error": 0.04254599068066196,
+      "range_error_m": 0.23001305766625188,
+      "covariance_trace": 0.2615181721496862
+    },
+    "absolute": {
+      "visibility_probability": 2.2714207731720165e-16,
+      "image_center_error": 0.0,
+      "range_error_m": 1.5399280447594654,
+      "covariance_trace": 1.3853036590034567e-15
+    },
+    "residual": {
+      "visibility_probability": 0.03357031253169889,
+      "image_center_error": 0.023770603094168688,
+      "range_error_m": 0.22221957182056618,
+      "covariance_trace": 0.06731299145272557
+    }
+  },
+  "validation_by_episode": [
+    {
+      "filename": "Town02_bicycle_frequent_turns_long_seed26094451.hdf5",
+      "samples": 96,
+      "horizon_s": 0.9999999776482582,
+      "rmse": {
+        "transparent": {
+          "visibility_probability": 0.13338821699940231,
+          "image_center_error": 0.037256808188660895,
+          "range_error_m": 0.09992642656567953,
+          "covariance_trace": 0.2569589372722136
+        },
+        "absolute": {
+          "visibility_probability": 3.601100983339316e-16,
+          "image_center_error": 0.0,
+          "range_error_m": 1.4354587114852515,
+          "covariance_trace": 1.3451193188704423e-15
+        },
+        "residual": {
+          "visibility_probability": 0.027878548186286094,
+          "image_center_error": 0.04104570362767822,
+          "range_error_m": 0.20500890185903164,
+          "covariance_trace": 0.055953008537791615
+        }
+      },
+      "recorded_support": {
+        "count": 96,
+        "state_outside_count": 0,
+        "action_outside_count": 0,
+        "joint_box_inside_count": 96,
+        "outside_count_by_feature": {
+          "target_range_m": 0,
+          "target_vx_mps": 0,
+          "target_vy_mps": 0,
+          "target_vz_mps": 0,
+          "uav_vx_mps": 0,
+          "uav_vy_mps": 0,
+          "uav_vz_mps": 0,
+          "visibility_probability": 0,
+          "occlusion_risk": 0,
+          "image_center_error": 0,
+          "uav_speed_mps": 0,
+          "command_vx_mps": 0,
+          "command_vy_mps": 0,
+          "command_vz_mps": 0,
+          "command_yaw_rate_dps": 0
+        },
+        "train_min": {
+          "target_range_m": 8.511964797973633,
+          "target_vx_mps": -2.633380889892578,
+          "target_vy_mps": -2.3973464965820312,
+          "target_vz_mps": -0.03338158130645752,
+          "uav_vx_mps": -5.445671081542969,
+          "uav_vy_mps": -4.16107177734375,
+          "uav_vz_mps": -0.8358955383300781,
+          "visibility_probability": 1.0,
+          "occlusion_risk": 0.0,
+          "image_center_error": 0.0,
+          "uav_speed_mps": 0.018041281335933107,
+          "command_vx_mps": -5.445671081542969,
+          "command_vy_mps": -4.16107177734375,
+          "command_vz_mps": -0.8358955383300781,
+          "command_yaw_rate_dps": 0.0
+        },
+        "train_max": {
+          "target_range_m": 31.05703353881836,
+          "target_vx_mps": 2.3916244506835938,
+          "target_vy_mps": 2.3828506469726562,
+          "target_vz_mps": 0.08751536160707474,
+          "uav_vx_mps": 5.045509338378906,
+          "uav_vy_mps": 5.542635917663574,
+          "uav_vz_mps": 0.7332324981689453,
+          "visibility_probability": 1.0,
+          "occlusion_risk": 0.0,
+          "image_center_error": 0.0,
+          "uav_speed_mps": 5.745372880971137,
+          "command_vx_mps": 5.045509338378906,
+          "command_vy_mps": 5.542635917663574,
+          "command_vz_mps": 0.7332324981689453,
+          "command_yaw_rate_dps": 0.0
+        },
+        "nearest_train_standardized_l2": {
+          "min": 0.02271142933413017,
+          "median": 0.24820220866898524,
+          "p95": 1.0535030725916754,
+          "max": 1.890117009132938
+        },
+        "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+      }
+    },
+    {
+      "filename": "Town05_bicycle_normal_motion_close_seed26094529.hdf5",
+      "samples": 96,
+      "horizon_s": 0.9999999776482582,
+      "rmse": {
+        "transparent": {
+          "visibility_probability": 0.2017974374223769,
+          "image_center_error": 0.0,
+          "range_error_m": 0.1811348091348968,
+          "covariance_trace": 0.395874807922994
+        },
+        "absolute": {
+          "visibility_probability": 1.442222014787673e-16,
+          "image_center_error": 0.0,
+          "range_error_m": 2.636102989497383,
+          "covariance_trace": 1.4366179609917792e-15
+        },
+        "residual": {
+          "visibility_probability": 0.05775092308297991,
+          "image_center_error": 0.018280937583964898,
+          "range_error_m": 0.2639742313234433,
+          "covariance_trace": 0.11592245653153707
+        }
+      },
+      "recorded_support": {
+        "count": 96,
+        "state_outside_count": 0,
+        "action_outside_count": 0,
+        "joint_box_inside_count": 96,
+        "outside_count_by_feature": {
+          "target_range_m": 0,
+          "target_vx_mps": 0,
+          "target_vy_mps": 0,
+          "target_vz_mps": 0,
+          "uav_vx_mps": 0,
+          "uav_vy_mps": 0,
+          "uav_vz_mps": 0,
+          "visibility_probability": 0,
+          "occlusion_risk": 0,
+          "image_center_error": 0,
+          "uav_speed_mps": 0,
+          "command_vx_mps": 0,
+          "command_vy_mps": 0,
+          "command_vz_mps": 0,
+          "command_yaw_rate_dps": 0
+        },
+        "train_min": {
+          "target_range_m": 8.511964797973633,
+          "target_vx_mps": -2.633380889892578,
+          "target_vy_mps": -2.3973464965820312,
+          "target_vz_mps": -0.03338158130645752,
+          "uav_vx_mps": -5.445671081542969,
+          "uav_vy_mps": -4.16107177734375,
+          "uav_vz_mps": -0.8358955383300781,
+          "visibility_probability": 1.0,
+          "occlusion_risk": 0.0,
+          "image_center_error": 0.0,
+          "uav_speed_mps": 0.018041281335933107,
+          "command_vx_mps": -5.445671081542969,
+          "command_vy_mps": -4.16107177734375,
+          "command_vz_mps": -0.8358955383300781,
+          "command_yaw_rate_dps": 0.0
+        },
+        "train_max": {
+          "target_range_m": 31.05703353881836,
+          "target_vx_mps": 2.3916244506835938,
+          "target_vy_mps": 2.3828506469726562,
+          "target_vz_mps": 0.08751536160707474,
+          "uav_vx_mps": 5.045509338378906,
+          "uav_vy_mps": 5.542635917663574,
+          "uav_vz_mps": 0.7332324981689453,
+          "visibility_probability": 1.0,
+          "occlusion_risk": 0.0,
+          "image_center_error": 0.0,
+          "uav_speed_mps": 5.745372880971137,
+          "command_vx_mps": 5.045509338378906,
+          "command_vy_mps": 5.542635917663574,
+          "command_vz_mps": 0.7332324981689453,
+          "command_yaw_rate_dps": 0.0
+        },
+        "nearest_train_standardized_l2": {
+          "min": 0.03730896278286507,
+          "median": 0.1423490312373078,
+          "p95": 0.49163378009158665,
+          "max": 1.14699999951278
+        },
+        "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+      }
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_long_seed26094457.hdf5",
+      "samples": 96,
+      "horizon_s": 0.9999999776482582,
+      "rmse": {
+        "transparent": {
+          "visibility_probability": 0.07979521142213718,
+          "image_center_error": 0.019398798615708326,
+          "range_error_m": 0.07086747411900578,
+          "covariance_trace": 0.15088047502434734
+        },
+        "absolute": {
+          "visibility_probability": 1.8619006149354548e-16,
+          "image_center_error": 0.0,
+          "range_error_m": 1.13236877379283,
+          "covariance_trace": 1.4017594387828537e-15
+        },
+        "residual": {
+          "visibility_probability": 0.02318651634119964,
+          "image_center_error": 0.005829104004212219,
+          "range_error_m": 0.06974602377125529,
+          "covariance_trace": 0.04638265676009014
+        }
+      },
+      "recorded_support": {
+        "count": 96,
+        "state_outside_count": 0,
+        "action_outside_count": 0,
+        "joint_box_inside_count": 96,
+        "outside_count_by_feature": {
+          "target_range_m": 0,
+          "target_vx_mps": 0,
+          "target_vy_mps": 0,
+          "target_vz_mps": 0,
+          "uav_vx_mps": 0,
+          "uav_vy_mps": 0,
+          "uav_vz_mps": 0,
+          "visibility_probability": 0,
+          "occlusion_risk": 0,
+          "image_center_error": 0,
+          "uav_speed_mps": 0,
+          "command_vx_mps": 0,
+          "command_vy_mps": 0,
+          "command_vz_mps": 0,
+          "command_yaw_rate_dps": 0
+        },
+        "train_min": {
+          "target_range_m": 8.511964797973633,
+          "target_vx_mps": -2.633380889892578,
+          "target_vy_mps": -2.3973464965820312,
+          "target_vz_mps": -0.03338158130645752,
+          "uav_vx_mps": -5.445671081542969,
+          "uav_vy_mps": -4.16107177734375,
+          "uav_vz_mps": -0.8358955383300781,
+          "visibility_probability": 1.0,
+          "occlusion_risk": 0.0,
+          "image_center_error": 0.0,
+          "uav_speed_mps": 0.018041281335933107,
+          "command_vx_mps": -5.445671081542969,
+          "command_vy_mps": -4.16107177734375,
+          "command_vz_mps": -0.8358955383300781,
+          "command_yaw_rate_dps": 0.0
+        },
+        "train_max": {
+          "target_range_m": 31.05703353881836,
+          "target_vx_mps": 2.3916244506835938,
+          "target_vy_mps": 2.3828506469726562,
+          "target_vz_mps": 0.08751536160707474,
+          "uav_vx_mps": 5.045509338378906,
+          "uav_vy_mps": 5.542635917663574,
+          "uav_vz_mps": 0.7332324981689453,
+          "visibility_probability": 1.0,
+          "occlusion_risk": 0.0,
+          "image_center_error": 0.0,
+          "uav_speed_mps": 5.745372880971137,
+          "command_vx_mps": 5.045509338378906,
+          "command_vy_mps": 5.542635917663574,
+          "command_vz_mps": 0.7332324981689453,
+          "command_yaw_rate_dps": 0.0
+        },
+        "nearest_train_standardized_l2": {
+          "min": 0.019597256203211674,
+          "median": 0.06373423545557944,
+          "p95": 0.3091995090771187,
+          "max": 0.45497990789450016
+        },
+        "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+      }
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_close_seed26094538.hdf5",
+      "samples": 96,
+      "horizon_s": 0.9999999776482582,
+      "rmse": {
+        "transparent": {
+          "visibility_probability": 0.171633694063761,
+          "image_center_error": 0.08168355220784061,
+          "range_error_m": 0.21956965566316122,
+          "covariance_trace": 0.3354568989222963
+        },
+        "absolute": {
+          "visibility_probability": 2.00788778328138e-16,
+          "image_center_error": 0.0,
+          "range_error_m": 0.5686562912246772,
+          "covariance_trace": 1.3457362644615785e-15
+        },
+        "residual": {
+          "visibility_probability": 0.013543998434288856,
+          "image_center_error": 0.023156308947807586,
+          "range_error_m": 0.13439651899221183,
+          "covariance_trace": 0.026590046653622072
+        }
+      },
+      "recorded_support": {
+        "count": 96,
+        "state_outside_count": 0,
+        "action_outside_count": 0,
+        "joint_box_inside_count": 96,
+        "outside_count_by_feature": {
+          "target_range_m": 0,
+          "target_vx_mps": 0,
+          "target_vy_mps": 0,
+          "target_vz_mps": 0,
+          "uav_vx_mps": 0,
+          "uav_vy_mps": 0,
+          "uav_vz_mps": 0,
+          "visibility_probability": 0,
+          "occlusion_risk": 0,
+          "image_center_error": 0,
+          "uav_speed_mps": 0,
+          "command_vx_mps": 0,
+          "command_vy_mps": 0,
+          "command_vz_mps": 0,
+          "command_yaw_rate_dps": 0
+        },
+        "train_min": {
+          "target_range_m": 8.511964797973633,
+          "target_vx_mps": -2.633380889892578,
+          "target_vy_mps": -2.3973464965820312,
+          "target_vz_mps": -0.03338158130645752,
+          "uav_vx_mps": -5.445671081542969,
+          "uav_vy_mps": -4.16107177734375,
+          "uav_vz_mps": -0.8358955383300781,
+          "visibility_probability": 1.0,
+          "occlusion_risk": 0.0,
+          "image_center_error": 0.0,
+          "uav_speed_mps": 0.018041281335933107,
+          "command_vx_mps": -5.445671081542969,
+          "command_vy_mps": -4.16107177734375,
+          "command_vz_mps": -0.8358955383300781,
+          "command_yaw_rate_dps": 0.0
+        },
+        "train_max": {
+          "target_range_m": 31.05703353881836,
+          "target_vx_mps": 2.3916244506835938,
+          "target_vy_mps": 2.3828506469726562,
+          "target_vz_mps": 0.08751536160707474,
+          "uav_vx_mps": 5.045509338378906,
+          "uav_vy_mps": 5.542635917663574,
+          "uav_vz_mps": 0.7332324981689453,
+          "visibility_probability": 1.0,
+          "occlusion_risk": 0.0,
+          "image_center_error": 0.0,
+          "uav_speed_mps": 5.745372880971137,
+          "command_vx_mps": 5.045509338378906,
+          "command_vy_mps": 5.542635917663574,
+          "command_vz_mps": 0.7332324981689453,
+          "command_yaw_rate_dps": 0.0
+        },
+        "nearest_train_standardized_l2": {
+          "min": 0.0175574306121257,
+          "median": 0.08131233829949536,
+          "p95": 0.27847247806489267,
+          "max": 1.563990942618086
+        },
+        "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+      }
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_long_seed26094827.hdf5",
+      "samples": 96,
+      "horizon_s": 0.9999999776482582,
+      "rmse": {
+        "transparent": {
+          "visibility_probability": 0.08926465920065221,
+          "image_center_error": 0.04878651169255941,
+          "range_error_m": 0.46110915770243754,
+          "covariance_trace": 0.17003527424982448
+        },
+        "absolute": {
+          "visibility_probability": 2.583903469664147e-16,
+          "image_center_error": 0.0,
+          "range_error_m": 1.6485287015186416,
+          "covariance_trace": 1.3769567241676007e-15
+        },
+        "residual": {
+          "visibility_probability": 0.039599597034339,
+          "image_center_error": 0.025605235558127545,
+          "range_error_m": 0.38915960590395976,
+          "covariance_trace": 0.07942267476872494
+        }
+      },
+      "recorded_support": {
+        "count": 96,
+        "state_outside_count": 1,
+        "action_outside_count": 1,
+        "joint_box_inside_count": 95,
+        "outside_count_by_feature": {
+          "target_range_m": 0,
+          "target_vx_mps": 0,
+          "target_vy_mps": 0,
+          "target_vz_mps": 0,
+          "uav_vx_mps": 1,
+          "uav_vy_mps": 0,
+          "uav_vz_mps": 0,
+          "visibility_probability": 0,
+          "occlusion_risk": 0,
+          "image_center_error": 0,
+          "uav_speed_mps": 1,
+          "command_vx_mps": 1,
+          "command_vy_mps": 0,
+          "command_vz_mps": 0,
+          "command_yaw_rate_dps": 0
+        },
+        "train_min": {
+          "target_range_m": 8.511964797973633,
+          "target_vx_mps": -2.633380889892578,
+          "target_vy_mps": -2.3973464965820312,
+          "target_vz_mps": -0.03338158130645752,
+          "uav_vx_mps": -5.445671081542969,
+          "uav_vy_mps": -4.16107177734375,
+          "uav_vz_mps": -0.8358955383300781,
+          "visibility_probability": 1.0,
+          "occlusion_risk": 0.0,
+          "image_center_error": 0.0,
+          "uav_speed_mps": 0.018041281335933107,
+          "command_vx_mps": -5.445671081542969,
+          "command_vy_mps": -4.16107177734375,
+          "command_vz_mps": -0.8358955383300781,
+          "command_yaw_rate_dps": 0.0
+        },
+        "train_max": {
+          "target_range_m": 31.05703353881836,
+          "target_vx_mps": 2.3916244506835938,
+          "target_vy_mps": 2.3828506469726562,
+          "target_vz_mps": 0.08751536160707474,
+          "uav_vx_mps": 5.045509338378906,
+          "uav_vy_mps": 5.542635917663574,
+          "uav_vz_mps": 0.7332324981689453,
+          "visibility_probability": 1.0,
+          "occlusion_risk": 0.0,
+          "image_center_error": 0.0,
+          "uav_speed_mps": 5.745372880971137,
+          "command_vx_mps": 5.045509338378906,
+          "command_vy_mps": 5.542635917663574,
+          "command_vz_mps": 0.7332324981689453,
+          "command_yaw_rate_dps": 0.0
+        },
+        "nearest_train_standardized_l2": {
+          "min": 0.0014478334020927351,
+          "median": 0.05889447827052713,
+          "p95": 0.5616639422208122,
+          "max": 10.843265479678942
+        },
+        "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+      }
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094464.hdf5",
+      "samples": 96,
+      "horizon_s": 0.9999999776482582,
+      "rmse": {
+        "transparent": {
+          "visibility_probability": 0.0808582804844102,
+          "image_center_error": 0.006652696403347507,
+          "range_error_m": 0.09373495869872091,
+          "covariance_trace": 0.15296249189783587
+        },
+        "absolute": {
+          "visibility_probability": 1.316562550716263e-16,
+          "image_center_error": 0.0,
+          "range_error_m": 0.9462630276319101,
+          "covariance_trace": 1.4032942599873118e-15
+        },
+        "residual": {
+          "visibility_probability": 0.018979731716584482,
+          "image_center_error": 0.01206174854478241,
+          "range_error_m": 0.10102501145754123,
+          "covariance_trace": 0.03809376747667749
+        }
+      },
+      "recorded_support": {
+        "count": 96,
+        "state_outside_count": 0,
+        "action_outside_count": 0,
+        "joint_box_inside_count": 96,
+        "outside_count_by_feature": {
+          "target_range_m": 0,
+          "target_vx_mps": 0,
+          "target_vy_mps": 0,
+          "target_vz_mps": 0,
+          "uav_vx_mps": 0,
+          "uav_vy_mps": 0,
+          "uav_vz_mps": 0,
+          "visibility_probability": 0,
+          "occlusion_risk": 0,
+          "image_center_error": 0,
+          "uav_speed_mps": 0,
+          "command_vx_mps": 0,
+          "command_vy_mps": 0,
+          "command_vz_mps": 0,
+          "command_yaw_rate_dps": 0
+        },
+        "train_min": {
+          "target_range_m": 8.511964797973633,
+          "target_vx_mps": -2.633380889892578,
+          "target_vy_mps": -2.3973464965820312,
+          "target_vz_mps": -0.03338158130645752,
+          "uav_vx_mps": -5.445671081542969,
+          "uav_vy_mps": -4.16107177734375,
+          "uav_vz_mps": -0.8358955383300781,
+          "visibility_probability": 1.0,
+          "occlusion_risk": 0.0,
+          "image_center_error": 0.0,
+          "uav_speed_mps": 0.018041281335933107,
+          "command_vx_mps": -5.445671081542969,
+          "command_vy_mps": -4.16107177734375,
+          "command_vz_mps": -0.8358955383300781,
+          "command_yaw_rate_dps": 0.0
+        },
+        "train_max": {
+          "target_range_m": 31.05703353881836,
+          "target_vx_mps": 2.3916244506835938,
+          "target_vy_mps": 2.3828506469726562,
+          "target_vz_mps": 0.08751536160707474,
+          "uav_vx_mps": 5.045509338378906,
+          "uav_vy_mps": 5.542635917663574,
+          "uav_vz_mps": 0.7332324981689453,
+          "visibility_probability": 1.0,
+          "occlusion_risk": 0.0,
+          "image_center_error": 0.0,
+          "uav_speed_mps": 5.745372880971137,
+          "command_vx_mps": 5.045509338378906,
+          "command_vy_mps": 5.542635917663574,
+          "command_vz_mps": 0.7332324981689453,
+          "command_yaw_rate_dps": 0.0
+        },
+        "nearest_train_standardized_l2": {
+          "min": 0.0016609633974668295,
+          "median": 0.04106658407304116,
+          "p95": 0.18636371084894598,
+          "max": 0.3970788808890361
+        },
+        "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+      }
+    }
+  ],
+  "recorded_support": {
+    "count": 576,
+    "state_outside_count": 1,
+    "action_outside_count": 1,
+    "joint_box_inside_count": 575,
+    "outside_count_by_feature": {
+      "target_range_m": 0,
+      "target_vx_mps": 0,
+      "target_vy_mps": 0,
+      "target_vz_mps": 0,
+      "uav_vx_mps": 1,
+      "uav_vy_mps": 0,
+      "uav_vz_mps": 0,
+      "visibility_probability": 0,
+      "occlusion_risk": 0,
+      "image_center_error": 0,
+      "uav_speed_mps": 1,
+      "command_vx_mps": 1,
+      "command_vy_mps": 0,
+      "command_vz_mps": 0,
+      "command_yaw_rate_dps": 0
+    },
+    "train_min": {
+      "target_range_m": 8.511964797973633,
+      "target_vx_mps": -2.633380889892578,
+      "target_vy_mps": -2.3973464965820312,
+      "target_vz_mps": -0.03338158130645752,
+      "uav_vx_mps": -5.445671081542969,
+      "uav_vy_mps": -4.16107177734375,
+      "uav_vz_mps": -0.8358955383300781,
+      "visibility_probability": 1.0,
+      "occlusion_risk": 0.0,
+      "image_center_error": 0.0,
+      "uav_speed_mps": 0.018041281335933107,
+      "command_vx_mps": -5.445671081542969,
+      "command_vy_mps": -4.16107177734375,
+      "command_vz_mps": -0.8358955383300781,
+      "command_yaw_rate_dps": 0.0
+    },
+    "train_max": {
+      "target_range_m": 31.05703353881836,
+      "target_vx_mps": 2.3916244506835938,
+      "target_vy_mps": 2.3828506469726562,
+      "target_vz_mps": 0.08751536160707474,
+      "uav_vx_mps": 5.045509338378906,
+      "uav_vy_mps": 5.542635917663574,
+      "uav_vz_mps": 0.7332324981689453,
+      "visibility_probability": 1.0,
+      "occlusion_risk": 0.0,
+      "image_center_error": 0.0,
+      "uav_speed_mps": 5.745372880971137,
+      "command_vx_mps": 5.045509338378906,
+      "command_vy_mps": 5.542635917663574,
+      "command_vz_mps": 0.7332324981689453,
+      "command_yaw_rate_dps": 0.0
+    },
+    "nearest_train_standardized_l2": {
+      "min": 0.0014478334020927351,
+      "median": 0.09194282735077652,
+      "p95": 0.5336736095327097,
+      "max": 10.843265479678942
+    },
+    "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+  },
+  "candidate_support": {
+    "hold_center": {
+      "command_world_z_up_mps": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "yaw_rate_dps": 0.0,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 0,
+      "joint_box_inside_count": 575,
+      "outside_count_by_feature": {
+        "target_range_m": 0,
+        "target_vx_mps": 0,
+        "target_vy_mps": 0,
+        "target_vz_mps": 0,
+        "uav_vx_mps": 1,
+        "uav_vy_mps": 0,
+        "uav_vz_mps": 0,
+        "visibility_probability": 0,
+        "occlusion_risk": 0,
+        "image_center_error": 0,
+        "uav_speed_mps": 1,
+        "command_vx_mps": 0,
+        "command_vy_mps": 0,
+        "command_vz_mps": 0,
+        "command_yaw_rate_dps": 0
+      },
+      "train_min": {
+        "target_range_m": 8.511964797973633,
+        "target_vx_mps": -2.633380889892578,
+        "target_vy_mps": -2.3973464965820312,
+        "target_vz_mps": -0.03338158130645752,
+        "uav_vx_mps": -5.445671081542969,
+        "uav_vy_mps": -4.16107177734375,
+        "uav_vz_mps": -0.8358955383300781,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 0.018041281335933107,
+        "command_vx_mps": -5.445671081542969,
+        "command_vy_mps": -4.16107177734375,
+        "command_vz_mps": -0.8358955383300781,
+        "command_yaw_rate_dps": 0.0
+      },
+      "train_max": {
+        "target_range_m": 31.05703353881836,
+        "target_vx_mps": 2.3916244506835938,
+        "target_vy_mps": 2.3828506469726562,
+        "target_vz_mps": 0.08751536160707474,
+        "uav_vx_mps": 5.045509338378906,
+        "uav_vy_mps": 5.542635917663574,
+        "uav_vz_mps": 0.7332324981689453,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 5.745372880971137,
+        "command_vx_mps": 5.045509338378906,
+        "command_vy_mps": 5.542635917663574,
+        "command_vz_mps": 0.7332324981689453,
+        "command_yaw_rate_dps": 0.0
+      },
+      "nearest_train_standardized_l2": {
+        "min": 0.175349919380657,
+        "median": 1.3715277245390456,
+        "p95": 2.7154764319012488,
+        "max": 9.381045736171407
+      },
+      "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+    },
+    "follow_predictive": {
+      "command_world_z_up_mps": [
+        2.5,
+        0.0,
+        0.0
+      ],
+      "yaw_rate_dps": 0.0,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 0,
+      "joint_box_inside_count": 575,
+      "outside_count_by_feature": {
+        "target_range_m": 0,
+        "target_vx_mps": 0,
+        "target_vy_mps": 0,
+        "target_vz_mps": 0,
+        "uav_vx_mps": 1,
+        "uav_vy_mps": 0,
+        "uav_vz_mps": 0,
+        "visibility_probability": 0,
+        "occlusion_risk": 0,
+        "image_center_error": 0,
+        "uav_speed_mps": 1,
+        "command_vx_mps": 0,
+        "command_vy_mps": 0,
+        "command_vz_mps": 0,
+        "command_yaw_rate_dps": 0
+      },
+      "train_min": {
+        "target_range_m": 8.511964797973633,
+        "target_vx_mps": -2.633380889892578,
+        "target_vy_mps": -2.3973464965820312,
+        "target_vz_mps": -0.03338158130645752,
+        "uav_vx_mps": -5.445671081542969,
+        "uav_vy_mps": -4.16107177734375,
+        "uav_vz_mps": -0.8358955383300781,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 0.018041281335933107,
+        "command_vx_mps": -5.445671081542969,
+        "command_vy_mps": -4.16107177734375,
+        "command_vz_mps": -0.8358955383300781,
+        "command_yaw_rate_dps": 0.0
+      },
+      "train_max": {
+        "target_range_m": 31.05703353881836,
+        "target_vx_mps": 2.3916244506835938,
+        "target_vy_mps": 2.3828506469726562,
+        "target_vz_mps": 0.08751536160707474,
+        "uav_vx_mps": 5.045509338378906,
+        "uav_vy_mps": 5.542635917663574,
+        "uav_vz_mps": 0.7332324981689453,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 5.745372880971137,
+        "command_vx_mps": 5.045509338378906,
+        "command_vy_mps": 5.542635917663574,
+        "command_vz_mps": 0.7332324981689453,
+        "command_yaw_rate_dps": 0.0
+      },
+      "nearest_train_standardized_l2": {
+        "min": 0.3374000343496028,
+        "median": 2.4552255317233804,
+        "p95": 3.719072703138736,
+        "max": 9.005181972309009
+      },
+      "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+    },
+    "orbit_left": {
+      "command_world_z_up_mps": [
+        0.8,
+        -2.4,
+        0.0
+      ],
+      "yaw_rate_dps": 12.0,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 576,
+      "joint_box_inside_count": 0,
+      "outside_count_by_feature": {
+        "target_range_m": 0,
+        "target_vx_mps": 0,
+        "target_vy_mps": 0,
+        "target_vz_mps": 0,
+        "uav_vx_mps": 1,
+        "uav_vy_mps": 0,
+        "uav_vz_mps": 0,
+        "visibility_probability": 0,
+        "occlusion_risk": 0,
+        "image_center_error": 0,
+        "uav_speed_mps": 1,
+        "command_vx_mps": 0,
+        "command_vy_mps": 0,
+        "command_vz_mps": 0,
+        "command_yaw_rate_dps": 576
+      },
+      "train_min": {
+        "target_range_m": 8.511964797973633,
+        "target_vx_mps": -2.633380889892578,
+        "target_vy_mps": -2.3973464965820312,
+        "target_vz_mps": -0.03338158130645752,
+        "uav_vx_mps": -5.445671081542969,
+        "uav_vy_mps": -4.16107177734375,
+        "uav_vz_mps": -0.8358955383300781,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 0.018041281335933107,
+        "command_vx_mps": -5.445671081542969,
+        "command_vy_mps": -4.16107177734375,
+        "command_vz_mps": -0.8358955383300781,
+        "command_yaw_rate_dps": 0.0
+      },
+      "train_max": {
+        "target_range_m": 31.05703353881836,
+        "target_vx_mps": 2.3916244506835938,
+        "target_vy_mps": 2.3828506469726562,
+        "target_vz_mps": 0.08751536160707474,
+        "uav_vx_mps": 5.045509338378906,
+        "uav_vy_mps": 5.542635917663574,
+        "uav_vz_mps": 0.7332324981689453,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 5.745372880971137,
+        "command_vx_mps": 5.045509338378906,
+        "command_vy_mps": 5.542635917663574,
+        "command_vz_mps": 0.7332324981689453,
+        "command_yaw_rate_dps": 0.0
+      },
+      "nearest_train_standardized_l2": {
+        "min": 12.019555215516842,
+        "median": 12.217725529126332,
+        "p95": 12.616428086522596,
+        "max": 15.17053669026261
+      },
+      "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+    },
+    "orbit_right": {
+      "command_world_z_up_mps": [
+        0.8,
+        2.4,
+        0.0
+      ],
+      "yaw_rate_dps": -12.0,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 576,
+      "joint_box_inside_count": 0,
+      "outside_count_by_feature": {
+        "target_range_m": 0,
+        "target_vx_mps": 0,
+        "target_vy_mps": 0,
+        "target_vz_mps": 0,
+        "uav_vx_mps": 1,
+        "uav_vy_mps": 0,
+        "uav_vz_mps": 0,
+        "visibility_probability": 0,
+        "occlusion_risk": 0,
+        "image_center_error": 0,
+        "uav_speed_mps": 1,
+        "command_vx_mps": 0,
+        "command_vy_mps": 0,
+        "command_vz_mps": 0,
+        "command_yaw_rate_dps": 576
+      },
+      "train_min": {
+        "target_range_m": 8.511964797973633,
+        "target_vx_mps": -2.633380889892578,
+        "target_vy_mps": -2.3973464965820312,
+        "target_vz_mps": -0.03338158130645752,
+        "uav_vx_mps": -5.445671081542969,
+        "uav_vy_mps": -4.16107177734375,
+        "uav_vz_mps": -0.8358955383300781,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 0.018041281335933107,
+        "command_vx_mps": -5.445671081542969,
+        "command_vy_mps": -4.16107177734375,
+        "command_vz_mps": -0.8358955383300781,
+        "command_yaw_rate_dps": 0.0
+      },
+      "train_max": {
+        "target_range_m": 31.05703353881836,
+        "target_vx_mps": 2.3916244506835938,
+        "target_vy_mps": 2.3828506469726562,
+        "target_vz_mps": 0.08751536160707474,
+        "uav_vx_mps": 5.045509338378906,
+        "uav_vy_mps": 5.542635917663574,
+        "uav_vz_mps": 0.7332324981689453,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 5.745372880971137,
+        "command_vx_mps": 5.045509338378906,
+        "command_vy_mps": 5.542635917663574,
+        "command_vz_mps": 0.7332324981689453,
+        "command_yaw_rate_dps": 0.0
+      },
+      "nearest_train_standardized_l2": {
+        "min": 12.034475410012062,
+        "median": 12.261260826907609,
+        "p95": 12.805777722212666,
+        "max": 15.52575672324827
+      },
+      "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+    },
+    "climb": {
+      "command_world_z_up_mps": [
+        0.3,
+        0.0,
+        1.8
+      ],
+      "yaw_rate_dps": 0.0,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 576,
+      "joint_box_inside_count": 0,
+      "outside_count_by_feature": {
+        "target_range_m": 0,
+        "target_vx_mps": 0,
+        "target_vy_mps": 0,
+        "target_vz_mps": 0,
+        "uav_vx_mps": 1,
+        "uav_vy_mps": 0,
+        "uav_vz_mps": 0,
+        "visibility_probability": 0,
+        "occlusion_risk": 0,
+        "image_center_error": 0,
+        "uav_speed_mps": 1,
+        "command_vx_mps": 0,
+        "command_vy_mps": 0,
+        "command_vz_mps": 576,
+        "command_yaw_rate_dps": 0
+      },
+      "train_min": {
+        "target_range_m": 8.511964797973633,
+        "target_vx_mps": -2.633380889892578,
+        "target_vy_mps": -2.3973464965820312,
+        "target_vz_mps": -0.03338158130645752,
+        "uav_vx_mps": -5.445671081542969,
+        "uav_vy_mps": -4.16107177734375,
+        "uav_vz_mps": -0.8358955383300781,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 0.018041281335933107,
+        "command_vx_mps": -5.445671081542969,
+        "command_vy_mps": -4.16107177734375,
+        "command_vz_mps": -0.8358955383300781,
+        "command_yaw_rate_dps": 0.0
+      },
+      "train_max": {
+        "target_range_m": 31.05703353881836,
+        "target_vx_mps": 2.3916244506835938,
+        "target_vy_mps": 2.3828506469726562,
+        "target_vz_mps": 0.08751536160707474,
+        "uav_vx_mps": 5.045509338378906,
+        "uav_vy_mps": 5.542635917663574,
+        "uav_vz_mps": 0.7332324981689453,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 5.745372880971137,
+        "command_vx_mps": 5.045509338378906,
+        "command_vy_mps": 5.542635917663574,
+        "command_vz_mps": 0.7332324981689453,
+        "command_yaw_rate_dps": 0.0
+      },
+      "nearest_train_standardized_l2": {
+        "min": 14.481792583539338,
+        "median": 17.15939535943501,
+        "p95": 18.024990735156543,
+        "max": 23.400567884085262
+      },
+      "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+    },
+    "descend": {
+      "command_world_z_up_mps": [
+        0.2,
+        0.0,
+        -1.2
+      ],
+      "yaw_rate_dps": 0.0,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 576,
+      "joint_box_inside_count": 0,
+      "outside_count_by_feature": {
+        "target_range_m": 0,
+        "target_vx_mps": 0,
+        "target_vy_mps": 0,
+        "target_vz_mps": 0,
+        "uav_vx_mps": 1,
+        "uav_vy_mps": 0,
+        "uav_vz_mps": 0,
+        "visibility_probability": 0,
+        "occlusion_risk": 0,
+        "image_center_error": 0,
+        "uav_speed_mps": 1,
+        "command_vx_mps": 0,
+        "command_vy_mps": 0,
+        "command_vz_mps": 576,
+        "command_yaw_rate_dps": 0
+      },
+      "train_min": {
+        "target_range_m": 8.511964797973633,
+        "target_vx_mps": -2.633380889892578,
+        "target_vy_mps": -2.3973464965820312,
+        "target_vz_mps": -0.03338158130645752,
+        "uav_vx_mps": -5.445671081542969,
+        "uav_vy_mps": -4.16107177734375,
+        "uav_vz_mps": -0.8358955383300781,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 0.018041281335933107,
+        "command_vx_mps": -5.445671081542969,
+        "command_vy_mps": -4.16107177734375,
+        "command_vz_mps": -0.8358955383300781,
+        "command_yaw_rate_dps": 0.0
+      },
+      "train_max": {
+        "target_range_m": 31.05703353881836,
+        "target_vx_mps": 2.3916244506835938,
+        "target_vy_mps": 2.3828506469726562,
+        "target_vz_mps": 0.08751536160707474,
+        "uav_vx_mps": 5.045509338378906,
+        "uav_vy_mps": 5.542635917663574,
+        "uav_vz_mps": 0.7332324981689453,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 5.745372880971137,
+        "command_vx_mps": 5.045509338378906,
+        "command_vy_mps": 5.542635917663574,
+        "command_vz_mps": 0.7332324981689453,
+        "command_yaw_rate_dps": 0.0
+      },
+      "nearest_train_standardized_l2": {
+        "min": 7.187580484230687,
+        "median": 11.064724837104873,
+        "p95": 11.788293259662138,
+        "max": 15.626194117250835
+      },
+      "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+    },
+    "scan_reacquire": {
+      "command_world_z_up_mps": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "yaw_rate_dps": 28.0,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 576,
+      "joint_box_inside_count": 0,
+      "outside_count_by_feature": {
+        "target_range_m": 0,
+        "target_vx_mps": 0,
+        "target_vy_mps": 0,
+        "target_vz_mps": 0,
+        "uav_vx_mps": 1,
+        "uav_vy_mps": 0,
+        "uav_vz_mps": 0,
+        "visibility_probability": 0,
+        "occlusion_risk": 0,
+        "image_center_error": 0,
+        "uav_speed_mps": 1,
+        "command_vx_mps": 0,
+        "command_vy_mps": 0,
+        "command_vz_mps": 0,
+        "command_yaw_rate_dps": 576
+      },
+      "train_min": {
+        "target_range_m": 8.511964797973633,
+        "target_vx_mps": -2.633380889892578,
+        "target_vy_mps": -2.3973464965820312,
+        "target_vz_mps": -0.03338158130645752,
+        "uav_vx_mps": -5.445671081542969,
+        "uav_vy_mps": -4.16107177734375,
+        "uav_vz_mps": -0.8358955383300781,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 0.018041281335933107,
+        "command_vx_mps": -5.445671081542969,
+        "command_vy_mps": -4.16107177734375,
+        "command_vz_mps": -0.8358955383300781,
+        "command_yaw_rate_dps": 0.0
+      },
+      "train_max": {
+        "target_range_m": 31.05703353881836,
+        "target_vx_mps": 2.3916244506835938,
+        "target_vy_mps": 2.3828506469726562,
+        "target_vz_mps": 0.08751536160707474,
+        "uav_vx_mps": 5.045509338378906,
+        "uav_vy_mps": 5.542635917663574,
+        "uav_vz_mps": 0.7332324981689453,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 5.745372880971137,
+        "command_vx_mps": 5.045509338378906,
+        "command_vy_mps": 5.542635917663574,
+        "command_vz_mps": 0.7332324981689453,
+        "command_yaw_rate_dps": 0.0
+      },
+      "nearest_train_standardized_l2": {
+        "min": 28.000549058799308,
+        "median": 28.03357083718153,
+        "p95": 28.13136761804789,
+        "max": 29.529714172408436
+      },
+      "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+    },
+    "safe_hover": {
+      "command_world_z_up_mps": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "yaw_rate_dps": 0.0,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 0,
+      "joint_box_inside_count": 575,
+      "outside_count_by_feature": {
+        "target_range_m": 0,
+        "target_vx_mps": 0,
+        "target_vy_mps": 0,
+        "target_vz_mps": 0,
+        "uav_vx_mps": 1,
+        "uav_vy_mps": 0,
+        "uav_vz_mps": 0,
+        "visibility_probability": 0,
+        "occlusion_risk": 0,
+        "image_center_error": 0,
+        "uav_speed_mps": 1,
+        "command_vx_mps": 0,
+        "command_vy_mps": 0,
+        "command_vz_mps": 0,
+        "command_yaw_rate_dps": 0
+      },
+      "train_min": {
+        "target_range_m": 8.511964797973633,
+        "target_vx_mps": -2.633380889892578,
+        "target_vy_mps": -2.3973464965820312,
+        "target_vz_mps": -0.03338158130645752,
+        "uav_vx_mps": -5.445671081542969,
+        "uav_vy_mps": -4.16107177734375,
+        "uav_vz_mps": -0.8358955383300781,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 0.018041281335933107,
+        "command_vx_mps": -5.445671081542969,
+        "command_vy_mps": -4.16107177734375,
+        "command_vz_mps": -0.8358955383300781,
+        "command_yaw_rate_dps": 0.0
+      },
+      "train_max": {
+        "target_range_m": 31.05703353881836,
+        "target_vx_mps": 2.3916244506835938,
+        "target_vy_mps": 2.3828506469726562,
+        "target_vz_mps": 0.08751536160707474,
+        "uav_vx_mps": 5.045509338378906,
+        "uav_vy_mps": 5.542635917663574,
+        "uav_vz_mps": 0.7332324981689453,
+        "visibility_probability": 1.0,
+        "occlusion_risk": 0.0,
+        "image_center_error": 0.0,
+        "uav_speed_mps": 5.745372880971137,
+        "command_vx_mps": 5.045509338378906,
+        "command_vy_mps": 5.542635917663574,
+        "command_vz_mps": 0.7332324981689453,
+        "command_yaw_rate_dps": 0.0
+      },
+      "nearest_train_standardized_l2": {
+        "min": 0.175349919380657,
+        "median": 1.3715277245390456,
+        "p95": 2.7154764319012488,
+        "max": 9.381045736171407
+      },
+      "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+    }
+  },
+  "models_sha256": {
+    "absolute": "dc20cf1705884c54cf2c11d61935aac35224798d524e99289cbda60c1bd76a57",
+    "baseline_residual": "f2328a17bc43baa8d4c9258c459e8ef3df0cba092635d2c19051ba96152d3759"
+  },
+  "limitations": [
+    "Oracle HDF states with backward velocity, not visibility-gated live belief.",
+    "Camera velocity is a recorded action proxy, yaw input is fixed zero; no counterfactual labels.",
+    "Raw unbounded regression RMSE; deployed clipping/blending not evaluated.",
+    "No test/stress HDF, simulator, real Jev, or tracking-policy actions.",
+    "Support boxes and distances cannot prove causal action support or a safe OOD threshold."
+  ]
+}
