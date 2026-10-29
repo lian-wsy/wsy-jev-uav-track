@@ -1,0 +1,44 @@
+{
+  "schema": "jev_uav_track.holdout_map_reservation.v1",
+  "date_timezone": "2026-10-29 Asia/Shanghai",
+  "source_commit_before_reservation": "efa52b2ba1e6933ecbd24eba15eaeffec9e66e82",
+  "map": "Town03",
+  "status": "RESERVED_PENDING_DATA_AND_RUNTIME",
+  "authorization": "User selected town3 as independent test map",
+  "accepted_final_test_episodes": 0,
+  "final_test_available": false,
+  "protocol_automatically_enforced": false,
+  "independent_runtime_root": "D:/JevUavRuns/20261028_d2_probe01/package",
+  "assets": [
+    {
+      "relative_path": "CarlaUE4/Content/Carla/Maps/Town03.umap",
+      "bytes": 1946291,
+      "sha256": "68ffea3a284901587100b1ff15a34d5e90a9246c16276c8820e5a58e86d7047c"
+    },
+    {
+      "relative_path": "CarlaUE4/Content/Carla/Maps/Town03.uexp",
+      "bytes": 23324136,
+      "sha256": "2d595bb371018345fb56b90b15edbe0cf3800a798b666cf4e41eb7d96de1f33b"
+    }
+  ],
+  "precheck": {
+    "kind": "READ_ONLY_HOST_SNAPSHOT_NOT_RUNTIME_ACCEPTANCE",
+    "free_physical_memory_kib": 2884404,
+    "existing_launch_minimum_kib": 4194304,
+    "matching_external_processes": [],
+    "matching_listeners": [],
+    "checked_ports": [2000, 2001, 2002, 3100, 3101, 3102, 41451, 42451],
+    "launch_decision": "NOT_STARTED_MEMORY_BELOW_EXISTING_GATE"
+  },
+  "exposure_check": {
+    "scope": "Repository docs/scripts/src/tests before this reservation; JSON/JSONL/Markdown/Python",
+    "pattern": "town0?3 case insensitive",
+    "matches": 0,
+    "external_usage_proven_absent": false
+  },
+  "simulator_started": false,
+  "town03_loaded_verified": false,
+  "hdf5_read_count": 0,
+  "real_jev_requests": 0,
+  "existing_split_changed": false
+}

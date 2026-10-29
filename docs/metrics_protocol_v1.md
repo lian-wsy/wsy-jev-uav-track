@@ -6,7 +6,9 @@
 
 旧 17 episode 的划分和结果不可覆盖；39 episode 开发扩展只增加 train，沿用6 validation与5 development_stress。已发现24个训练/效果评估暴露seed不能成为final test。五个已审核town均暴露，独立town test暂缺，不能以“不同文件路径”代替独立性。质量完整性检查和 SHA 不视作训练，但不能据此证明外部从未用过。
 
-未来 final test 必须来自此前未用于训练、校准、候选设计或阈值选择的独立town，按scene/seed分组并记录源episode、SHA和派生关系。只允许验证结构/完整性，不读方法得分调参；方法配置、种子列表、样本量与排除条件必须在运行前冻结。版本2 split的新增训练数据尚未用于拟合，旧模型报告仍对应旧6/6。
+未来 final test 必须来自此前未用于训练、校准、候选设计或阈值选择的独立town，按scene/seed分组并记录源episode、SHA和派生关系。只允许验证结构/完整性，不读方法得分调参；方法配置、种子列表、样本量与排除条件必须在运行前冻结。2026-10-29 D4已用版本2 split完成28 train/6 validation拟合，旧6/6报告仍保留其原范围，不与新结果混算。
+
+2026-10-29用户指定Town03作为独立测试地图，见[Town03保留协议](town03_holdout_protocol_v1.md)。地图选择已登记，PASS测试episode仍为0；不得因为本机安装了地图而将final_test_available设为true。开发训练/校准和控制调试仍使用原开发地图。
 
 ## 方法与预算
 
