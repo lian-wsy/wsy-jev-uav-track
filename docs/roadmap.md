@@ -2,6 +2,8 @@
 
 更新时间：2026-10-28
 
+2026-10-29 审计修正：首版“文件存在即PASS”判定已撤回；v2仅读公开证据、文档项记REQUIRES_REVIEW，并重放完整16帧belief。原Python3.10重放通过，3.14文本差异保留，整体仍PARTIAL。见[日报](experiments/daily_20261029.md)。下条为首版记录。
+
 2026-10-29 复查：新增 `scripts/audit_d1_d3_acceptance.py`，从已提交证据逐项生成 `artifacts/acceptance_20261029/d1_d3_audit.json`。D1 开发 split/指标、D2 独立 runtime/origin/budget、D3 坐标/时间/horizon/隐藏真值隔离分别通过；独立 final-town PASS 仍缺，真实 Jev 请求仍为 0，现场 tracking action 保持未审计。详见 [日报](experiments/daily_20261029.md)。
 
 ## 当前执行优先级：两周仿真冲刺

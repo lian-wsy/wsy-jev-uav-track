@@ -2,6 +2,8 @@
 
 ## 2026-10-29 复查结果
 
+修正：73e5ff8首版自动审计将文档存在误记为PASS，且依赖未提交的私有manifest。现在改用公开数据导出、明确文档项 `REQUIRES_REVIEW` 并重放全部belief帧；[v2结果](evidence/d1_d3_audit_20261029_v2_py310.json)与[说明](daily_20261029.md)优先。下面首版以及10/28各表是历史快照，不能视作自动证明。正式闭环执行属于D6/D7，D3原始契约与闭环效果分开验收；D1独立town仍未通过。
+
 新增机器审计脚本 `scripts/audit_d1_d3_acceptance.py` 及产物 `artifacts/acceptance_20261029/d1_d3_audit.json`。审计仅读取当前已提交证据：D1 的开发 split/指标协议、D2 的独立 runtime/origin/budget、D3 的坐标/时间/horizon/隐藏真值隔离均逐项记录；独立 final-town test 仍为 `NOT_MET`，真实 Jev smoke 为 `PARTIAL`（0 次新请求），正式 tracking action execution 为 `NOT_AUDITED`。针对性测试 2 项通过。该结论覆盖旧表格的历史快照，不把 10 月 28 日前的代理结果升级为正式 test。
 
 目标：今天按 `docs/sprint_20261026_20261108.md` 原标准逐项复核并补缺；验收不等于保证算法提升。起点 `d9d91ea`，基线 68 测试通过。当前目标已在本聊天建立，未另开调度任务。

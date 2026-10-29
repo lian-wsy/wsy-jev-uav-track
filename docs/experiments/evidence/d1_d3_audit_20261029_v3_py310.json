@@ -1,0 +1,137 @@
+{
+  "schema": "jev_uav_track.d1_d3_acceptance.v2",
+  "generated_from": "checked_in_evidence_only",
+  "source_commit": "73e5ff88b6186a5b9e2cd407729947a82331d628",
+  "auditor_sha256": "196aefd8c19a84dfebb134571ff89a3003aab0b23dbb9dc5e34a1c54d2db29e9",
+  "evidence_sha256": {
+    "docs/experiments/causal_belief_20261028.md": "bafadbf34c1aa91666bbb1a540ee366fa5deff4b99b5a90699bba79deb9329df",
+    "docs/experiments/development_split_v2_20261028.json": "f839cd727c2b58e2dc3069b7b62843686a7c38f4d4e2c219010e648bca491f58",
+    "docs/experiments/evidence/isolated_carla_20261028/summary.json": "d7d1ad3c3a6540cca10fc38c4ce6c5c8b7d7f4dbefd41be75d0ba923c23f36ca",
+    "docs/experiments/evidence/live_belief_20261028/belief03.json": "ccab9258aa97abbeb877c299705b0423952933c03e3f3bdaeeb3a7262fe59906",
+    "docs/experiments/evidence/live_origin_20261028/summary.json": "bddd73847448726b9e9a4f0fb17cfcf030d0d54d697c8611c2c2fded9ea9d7d7",
+    "docs/experiments/jev_budget_20261028.md": "266677e174ddadb983b8a2d775a6c2e1f8f4867d8ed84ee064243e95afc28c5d",
+    "docs/experiments/live_belief_20261028.md": "5a1feee837b9bcee9b5e02710bb9cfcdab49182cb2701dc8b5a46ab711c96b5f",
+    "docs/experiments/live_observation_20261028.md": "6457aae51fe4b726c030eb3ba1ee1e2ae8d8158b51a28ef2ff26f8c9ee2a9772",
+    "docs/experiments/live_origin_20261028.md": "936b78b70b5ca5b60bb20a6b9467ef7d46bc844be5506196de276f475d79e714",
+    "docs/metrics_protocol_v1.md": "4889c06a2e6602d364bb152529d4be44e49620fb0350f24957bddea8fef35741",
+    "docs/related_work_matrix.md": "250fbf9afb7f161e388ebfd6becdc3f861a25ece62496e37840d9c7a01d25418",
+    "src/jev_uav_track/request_budget.py": "ce37a56118c37ca3447449520a090dbd08ba89ed1b323af7aa487c4cc44e3b26"
+  },
+  "live_replay": {
+    "status": "PASS",
+    "kind": "OFFLINE_REPRODUCTION_OF_LIVE_SHADOW_INPUTS",
+    "python_version": "3.10.21 | packaged by conda-forge | (main, Aug 21 2026, 22:38:44) [MSC v.1944 64 bit (AMD64)]",
+    "strict_text": false,
+    "text_differences": [],
+    "float_abs_tolerance": 1e-12,
+    "float_relative_tolerance": 1e-12,
+    "verified_frames": 16,
+    "visible_frames": 12,
+    "missing_frames": 4,
+    "verified_candidate_predictions": 128,
+    "verified_safety_rejections": 32,
+    "mean_capture_ms": 34.704824996879324,
+    "max_capture_ms": 77.04750006087124,
+    "observed_capture_hz": 5.020007742873706,
+    "not_tracking_evaluation": true,
+    "no_policy_actions_executed": true
+  },
+  "criteria": {
+    "D1": {
+      "research_hypothesis_and_sources": {
+        "status": "REQUIRES_REVIEW",
+        "evidence": [
+          "docs/related_work_matrix.md"
+        ],
+        "detail": "Jev boundary and an applicable active-tracking reference are recorded; no novelty or SOTA claim is made."
+      },
+      "development_split_and_sha": {
+        "status": "PARTIAL",
+        "evidence": [
+          "docs/experiments/development_split_v2_20261028.json"
+        ],
+        "detail": "39 exported entries: {'train': 28, 'validation': 6, 'development_stress': 5}; unique sha/seed/filename=True/True/True. Metadata consistency only; original HDF PASS, path uniqueness and file SHA are not revalidated here."
+      },
+      "independent_final_town_test": {
+        "status": "NOT_MET",
+        "evidence": [
+          "docs/experiments/development_split_v2_20261028.json"
+        ],
+        "detail": "The public manifest declares no independent final-town test. A future positive declaration requires a provenance review, not an automatic PASS."
+      },
+      "metrics_and_fair_comparison_protocol": {
+        "status": "REQUIRES_REVIEW",
+        "evidence": [
+          "docs/metrics_protocol_v1.md"
+        ],
+        "detail": "Fixed-window, failure-inclusive, episode-level comparison and identity/safety limitations are frozen."
+      }
+    },
+    "D2": {
+      "owned_runtime_and_api_contract": {
+        "status": "REQUIRES_REVIEW",
+        "evidence": [
+          "docs/experiments/evidence/isolated_carla_20261028/summary.json",
+          "docs/experiments/evidence/live_origin_20261028/summary.json"
+        ],
+        "detail": "Recorded lifecycle flags and 20 acknowledged commands are consistent. This summary check does not independently validate ownership, source hashes or current runtime isolation; inspect the raw probe and report."
+      },
+      "jev_budget_and_cost_estimate": {
+        "status": "REQUIRES_REVIEW",
+        "evidence": [
+          "docs/experiments/jev_budget_20261028.md",
+          "src/jev_uav_track/request_budget.py"
+        ],
+        "detail": "Preparation caps are implemented and the report keeps historical attempt reconciliation UNKNOWN."
+      },
+      "real_jev_smoke": {
+        "status": "PARTIAL",
+        "evidence": [
+          "docs/experiments/jev_budget_20261028.md",
+          "docs/experiments/live_belief_20261028.md"
+        ],
+        "detail": "No new real Jev request was made; the bounded live probe used zero Jev calls and therefore cannot be called a real-Jev smoke result."
+      }
+    },
+    "D3": {
+      "coordinate_yaw_and_time_contract": {
+        "status": "REQUIRES_REVIEW",
+        "evidence": [
+          "docs/experiments/live_origin_20261028.md",
+          "docs/experiments/live_observation_20261028.md"
+        ],
+        "detail": "Global object NED and vehicle-local NED are bridged explicitly; paced and paused clocks, bounded freshness and camera extrinsics are measured."
+      },
+      "horizon_and_action_semantics": {
+        "status": "REQUIRES_REVIEW",
+        "evidence": [
+          "docs/experiments/causal_belief_20261028.md",
+          "docs/metrics_protocol_v1.md"
+        ],
+        "detail": "Five-frame horizon is reported as approximately one second and action frame/expiry semantics are fixed; full high-level closed-loop consequence is later-sprint work."
+      },
+      "hidden_truth_isolation_and_live_belief": {
+        "status": "PASS",
+        "evidence": [
+          "docs/experiments/live_belief_20261028.md",
+          "docs/experiments/evidence/live_belief_20261028/belief03.json"
+        ],
+        "detail": "16/16 recorded windows, 12 visible and 4 missing; full replay status=PASS. Input is simulator-visible oracle, not RGB perception. Total query count is not a per-frame RPC log."
+      },
+      "formal_tracking_action_execution": {
+        "status": "NOT_AUDITED",
+        "evidence": [
+          "docs/experiments/live_belief_20261028.md"
+        ],
+        "detail": "Missing measured clearance/battery caused all 32 candidate choices to be hard-rejected; no model action was executed."
+      }
+    }
+  },
+  "scope": "Evidence inventory plus metadata/causal replay checks; NOT a complete automatic acceptance certificate. REQUIRES_REVIEW items are document or summary references only.",
+  "overall": "PARTIAL",
+  "unresolved": [
+    "D1 independent final-town PASS episodes are absent.",
+    "Historical Jev request ledger is UNKNOWN; no new real Jev smoke is claimed.",
+    "D3 live evidence uses simulator-visible oracle input and did not execute a selected tracking action."
+  ]
+}
