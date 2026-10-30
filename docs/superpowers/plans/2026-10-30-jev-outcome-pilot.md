@@ -24,22 +24,22 @@
 
 Files: `src/jev_uav_track/request_budget.py`, `src/jev_uav_track/jev_client.py`, `tests/test_pilot_request_budget.py`.
 
-- [ ] RED: exercise `initialize_pilot_ledger(path, receipt)` with new-scope authorization, reserve eight requests across restarted clients/batches and reject ninth; reject implicit old-scope access, malformed receipts, overwrites and concurrent excess.
-- [ ] GREEN: add `PILOT_SCOPE`, initializer, explicit `RequestBudget(..., scope=PILOT_SCOPE)`, and `JEV_BUDGET_SCOPE` environment selection. Keep old receipts and tests unchanged.
-- [ ] Run `python -m pytest -q tests/test_pilot_request_budget.py tests/test_jev_request_budget.py`; full regression; commit only owned files and send commit to video task for reviewed integration.
+- [x] RED: exercise `initialize_pilot_ledger(path, receipt)` with new-scope authorization, reserve eight requests across restarted clients/batches and reject ninth; reject implicit old-scope access, malformed receipts, overwrites and concurrent excess.
+- [x] GREEN: add `PILOT_SCOPE`, initializer, explicit `RequestBudget(..., scope=PILOT_SCOPE)`, and `JEV_BUDGET_SCOPE` environment selection. Keep old receipts and tests unchanged.
+- [x] Run `python -m pytest -q tests/test_pilot_request_budget.py tests/test_jev_request_budget.py`; full regression; commit only owned files and send commit to video task for reviewed integration.
 
 ## Task 2: Causal recorder with independent outcome files
 
 Files: `src/jev_uav_track/decision_dataset.py`, `tests/test_decision_dataset.py`.
 
-- [ ] RED: create `DecisionDatasetWriter(root, protocol)`, freeze a decision input with candidate set and history timestamps; reject future observation/history, unsafe or duplicate candidates and heldout maps. Preserve original bytes after labels are written.
-- [ ] RED: record advice from real/mock/utility, distinguish API-supplied probabilities from compatibility one-hot defaults; errors only by approved code, never arbitrary exception text. Record real action outcomes with exact action id and observed timing, without treating unexecuted alternatives as labels.
-- [ ] GREEN: exclusive per-record JSON files, finite JSON, conservative integrity validation, input SHA linkage. Reject overwrite, unknown decisions and invalid timestamps. Use owned output only.
-- [ ] Run `python -m pytest -q tests/test_decision_dataset.py`; run offline synthetic minimal reproduction marked SYNTHETIC/NOT_AUDITED, never as collected episodes. Commit and send recorder interface to runner owner.
+- [x] RED: create `DecisionDatasetWriter(root, protocol)`, freeze a decision input with candidate set and history timestamps; reject future observation/history, unsafe or duplicate candidates and heldout maps. Preserve original bytes after labels are written.
+- [x] RED: record advice from real/mock/utility, distinguish API-supplied probabilities from compatibility one-hot defaults; errors only by approved code, never arbitrary exception text. Record real action outcomes with exact action id and observed timing, without treating unexecuted alternatives as labels.
+- [x] GREEN: exclusive per-record JSON files, finite JSON, conservative integrity validation, input SHA linkage. Reject overwrite, unknown decisions and invalid timestamps. Use owned output only.
+- [x] Run `python -m pytest -q tests/test_decision_dataset.py`; run offline synthetic minimal reproduction marked SYNTHETIC/NOT_AUDITED, never as collected episodes. Commit and send recorder interface to runner owner.
 
 ## Task 3: Sole-runner integration and acceptance
 
-- [ ] Runner owner integrates verified commits without overwriting concurrent changes; both tasks use the same new ledger and explicit scope.
+- [x] Runner owner integrates verified commits without overwriting concurrent changes; both tasks use the same new ledger and explicit scope. Verified main commits 0aa0516 and 0dbf1f2; one pilot ledger initialized, zero attempts at handoff.
 - [ ] Before run, freeze episode/seed/decision sampling schedule and controller. Confirm measured safety input sources; otherwise retain no-execution result.
 - [ ] Owner executes serial bounded pilot in independent development instance, retaining all failed attempts; no Town03 development. Verify reset error before any paired claim.
 - [ ] Audit actual data, snapshot/candidate/outcome hashes, source clocks, executed command logs, missing strata and request count; review PASS separately. Train only from admitted actual outcomes; no training from synthetic smoke or Jev advice as truth.
