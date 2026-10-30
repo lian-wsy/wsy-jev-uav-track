@@ -28,3 +28,11 @@
 编码报告 VIDEO_INTEGRITY_VERIFIED：100 输入/100 解码帧，源帧时间跨度 19.622087s，视频呈现跨度 19.64s，差 0.017913s；encoder/decoder exit code 均 0，未请求插帧或复制。输出 SHA256 `d6e313ffe517aa25a21496dac58fa1eda207b69b9c776d84e53d0a62a09d4241`。本聊天检查了报告和全帧状态字段，没有重新运行编码或把编码完整性当模型效果认证。
 
 运行方正在处理真实安全输入和执行链。电量没有测量来源时保持未知；任何另建的仿真资源模型应有明确授权与 simulator_model 标签。六集/八决策 pilot、PASS数据准入和新训练仍未完成。
+
+## 续作：只读完整性审核入口
+
+补齐 `scripts/audit_decision_dataset.py`，仅读取已结束的记录目录。核对 protocol→input→advice/outcome 哈希、来源、时间顺序、完整 Jev 请求模板、候选/命令/时长及未执行标签。空记录或缺 outcome 为 INCOMPLETE；断链、损坏、未知记录文件或合同违规为 INVALID。CHECKED 仅表示列出的记录完整性检查通过，绝不自动 PASS、认定真实调用或接纳训练样本。
+
+审查复现了三类遗漏：问题结构缺失/候选 criteria 不一致、非数值动作向量也能靠相等性通过，以及超大整数导致 OverflowError。新增失败回归后，加入完整请求重建、三维有限值动作验证和数值拒绝；JSON 反序列化列表与模型元组的差异在 wire 格式归一化后复核。总计 24 项审核测试，联合记录器 57 项通过；最终独立副本全套 **358 passed / 1 skipped**，compileall/diff 通过。
+
+对既有 `decision_dataset_smoke_20261030_reviewed` 做最小复现：CHECKED，1 个 SYNTHETIC 记录，live_execution_records=0，actual_live_jev_responses_verified=0，admitted_training_samples=0；真实 attempt 与场景覆盖仍 NOT_VERIFIED_BY_DATASET。没有读写任何旧 HDF，没有从合成记录训练，没有启动另一个仿真。当前实际闭环仍由唯一运行方实现，未将新审核工具当作现场验收完成。

@@ -63,3 +63,15 @@ Independent review found candidate holdout metadata, conflicting episode provena
 - Real safety provenance is not yet sufficient for execution; AirSim battery absence must remain unknown unless a justified explicit simulator resource model is approved and implemented. Never fill 100% to pass a gate.
 - Intended visible/occluded/out-of-frame strata are protocol intent, not measured coverage. Real identity crossing remains NOT_AUDITED.
 - No new model training until actual observed outcomes pass review. D5 negative results and Town03 holdout status remain unchanged.
+
+## Read-only integrity inventory
+
+```powershell
+python scripts/audit_decision_dataset.py <completed-run-directory>
+```
+
+This reader never edits the run. It checks protocol/input/advice/outcome hash links, known source conflicts and heldout hints, temporal ordering, request-state equality, candidate partitions, advice provenance, executed-command correspondence and reported durations. Unexpected record files and truncated/invalid JSON are rejected. Missing outcomes and empty runs report INCOMPLETE; broken links or checked contracts report INVALID. CLI exit 0 means CHECKED for these invariants only, exit 2 means incomplete/invalid. Re-run only on a terminal run: a concurrent writer can legitimately yield an incomplete snapshot.
+
+The report **always** retains training_admission=NOT_AUDITED and admitted_training_samples=0. API response *records* are separate from authenticated responses and budget attempts; attempts cannot be inferred from successes/failures written by a recorder. Intended scenario labels do not verify observed strata. SYNTHETIC execution receipts do not increase live_execution_records. Camera-only NOT_EXECUTED entries cannot count as collision-free labels.
+
+Independent provenance, API/ledger reconciliation for this new batch, actual telemetry/frames/command acknowledgements, metric recomputation and eventual train/validation admission remain separate. Hash-consistent fabricated files are possible: this utility is not an authenticity or tamper-proof system. It does not inspect installed model/code files merely because their fingerprints are included in a protocol.
