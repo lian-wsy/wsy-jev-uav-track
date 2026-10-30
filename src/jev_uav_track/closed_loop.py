@@ -119,14 +119,6 @@ def _sample_indices(
     return [indices[position] for position in positions]
 
 
-def _static_clearance(episode: Any) -> float:
-    value = episode.metadata.get("minimum_static_clearance_m", 10.0)
-    try:
-        return max(0.0, float(value))
-    except (TypeError, ValueError):
-        return 10.0
-
-
 class _IdentityTracker:
     """A deliberately conservative sticky identity tracker for replay.
 
@@ -282,7 +274,7 @@ def _make_state(
         constraints=constraints,
         mission_goal="Maintain target identity and visual visibility in closed-loop replay",
         obstacle_context=(
-            "Kinematic replay proxy; recorded static clearance="
+            "Kinematic replay proxy; initial-state margin (not a live sensor)="
             f"{sim_uav.minimum_obstacle_margin_m:.2f}m"
         ),
         environment=environment,
@@ -361,7 +353,9 @@ def run_closed_loop_replay(
         first.uav,
         yaw_deg=first.uav.yaw_deg,
         battery_percent=cfg.initial_battery_percent,
-        minimum_obstacle_margin_m=_static_clearance(episode),
+        # Do not replace a causal initial state with the full-episode minimum.
+        # HDF adapters without timestamped clearance fail closed at zero.
+        minimum_obstacle_margin_m=first.uav.minimum_obstacle_margin_m,
     )
     decision_client = client or MockJevClient()
     selection_config = SelectionConfig()

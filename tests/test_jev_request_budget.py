@@ -201,7 +201,9 @@ def test_environment_wiring_and_success_accounting(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize("script,options", [
     ("compare_jev", ["--max-frames", "3", "--stride", "1"]),
-    ("run_closed_loop_replay", ["--max-decisions", "3", "--stride", "1"]),
+    # Synthetic budget test only: allow zero-margin proxy candidates so this
+    # exercises exhausted API budget, not the missing-clearance safety gate.
+    ("run_closed_loop_replay", ["--max-decisions", "3", "--stride", "1", "--minimum-obstacle-margin-m", "0"]),
 ])
 def test_cli_budget_fallback_is_not_reported_as_complete_real_jev(tmp_path, monkeypatch, script, options):
     import importlib.util

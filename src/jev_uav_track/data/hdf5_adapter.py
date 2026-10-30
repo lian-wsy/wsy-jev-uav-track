@@ -283,11 +283,10 @@ class HDF5Episode:
         in_frame = bool(self.target_in_frame[index])
         occluded = bool(self.target_occluded[index])
         covariance = 0.05 + (0.8 if occluded else 0.0) + (0.95 if not in_frame else 0.0)
-        static_clearance = self.metadata.get("minimum_static_clearance_m", 10.0)
-        try:
-            static_clearance = max(0.0, float(static_clearance))
-        except (TypeError, ValueError):
-            static_clearance = 10.0
+        # The producer writes the minimum over the WHOLE episode after capture.
+        # It is an audit label, not a timestamped observation available here.
+        # No per-frame clearance sensor is mapped: never invent a safe margin.
+        static_clearance = 0.0
         environment = {
             "source_path": str(self.path),
             "frame_index": index,
@@ -297,6 +296,7 @@ class HDF5Episode:
             "image_width": self.image_width,
             "target_pixel_height": float(self.target_pixel_height[index]),
             "visibility_observed": bool(self.metadata.get("visibility_observed", False)),
+            "obstacle_margin_source": "unobserved_fail_closed",
         }
         target = TargetBelief(
             position_m=target_position,
@@ -321,7 +321,7 @@ class HDF5Episode:
             uav=uav,
             constraints=constraints or MissionConstraints(),
             mission_goal="Maintain target identity and visual visibility",
-            obstacle_context=f"CarlaAir episode; measured static clearance={static_clearance:.2f}m",
+            obstacle_context="No timestamped obstacle clearance; margin=0 (unknown, not measured collision)",
             history_summary="",
             environment=environment,
         )
