@@ -21,7 +21,7 @@ def validate_probe_map(map_name: str, profile: str = 'api') -> None:
 
 def require_loaded_map(actual: str, expected: str) -> None:
     validate_probe_map(expected)
-    if actual not in (expected, f'/Game/Carla/Maps/{expected}'):
+    if actual not in (expected, f'/Game/Carla/Maps/{expected}', f'Carla/Maps/{expected}'):
         raise ValueError(f'Loaded map mismatch: expected {expected}, observed {actual}')
 
 
@@ -101,7 +101,10 @@ def launch_arguments(task: Path, output: Path | None = None, *, map_name: str = 
     output = output.resolve() if output is not None else task
     if not output.is_relative_to(task):
         raise ValueError('Run output must be inside task runtime')
-    return [str(task / 'package' / BINARY), f'/Game/Carla/Maps/{map_name}',
+    # This is the direct Shipping binary, not the root CarlaUE4.exe bootstrap.
+    # Match the packaged Windows launcher's NeedsProjectArg branch; otherwise
+    # the map URL occupies the project slot and the default town may be loaded.
+    return [str(task / 'package' / BINARY), 'CarlaUE4', f'/Game/Carla/Maps/{map_name}',
             '-windowed', '-ResX=640', '-ResY=360', '-quality-level=Low',
             '-nosound', '-unattended', '-NoCrashDialog', '-nocrashreports',
             '-carla-rpc-port=3100', '-carla-streaming-port=3101',

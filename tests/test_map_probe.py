@@ -12,10 +12,12 @@ def test_launcher_accepts_only_explicit_map_and_preserves_isolation(tmp_path):
     from jev_uav_track.isolated_runtime import launch_arguments
     task = tmp_path / 'owned'
     args = launch_arguments(task, task / 'runs/api01', map_name='Town03')
-    assert args[1] == '/Game/Carla/Maps/Town03'
+    # The direct Shipping executable needs the project token before the URL.
+    # The package's root bootstrap executable is not used by this owner.
+    assert args[1:3] == ['CarlaUE4', '/Game/Carla/Maps/Town03']
     assert '-carla-rpc-port=3100' in args
     assert args[-2:] == ['--settings', str(task / 'settings.json')]
-    assert launch_arguments(task)[1] == '/Game/Carla/Maps/Town02'
+    assert launch_arguments(task)[1:3] == ['CarlaUE4', '/Game/Carla/Maps/Town02']
 
 
 @pytest.mark.parametrize('map_name', ['Town3', 'Town03_Opt', 'Town03?listen', '../Town03',
@@ -80,13 +82,14 @@ def test_client_rejects_map_mismatch_before_sampling(tmp_path, monkeypatch, sett
     assert not (tmp_path / 'result.json').exists()
 
 
-def test_town03_api_probe_records_verified_map_without_motion_surface(tmp_path, monkeypatch, settings_path):
+@pytest.mark.parametrize('world_name', ['Town03', '/Game/Carla/Maps/Town03', 'Carla/Maps/Town03'])
+def test_town03_api_probe_records_verified_map_without_motion_surface(tmp_path, monkeypatch, settings_path, world_name):
     path, settings = settings_path
-    module, counts = load_client_probe(monkeypatch, '/Game/Carla/Maps/Town03', settings)
+    module, counts = load_client_probe(monkeypatch, world_name, settings)
     output = tmp_path / 'result.json'
     module.main(output, 'api', path, 'takeoff', expected_map='Town03')
     result = json.loads(output.read_text())
-    assert result['map'] == '/Game/Carla/Maps/Town03'
+    assert result['map'] == world_name
     assert result['requested_map'] == 'Town03'
     assert result['map_match'] is True
     assert counts['observations'] == 12

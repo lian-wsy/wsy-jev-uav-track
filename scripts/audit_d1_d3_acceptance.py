@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / 'src'))
 from scripts.check_live_belief_evidence import verify
+from jev_uav_track.request_budget import PILOT_SCOPE, PILOT_LIMIT
 
 
 def _read(relative: str) -> Any:
@@ -48,6 +49,29 @@ def _criterion(status: str, evidence: list[str], detail: str) -> dict[str, Any]:
 
 
 def build_audit() -> dict[str, Any]:
+    pilot_path = 'docs/experiments/pilot_authorization_20261030.json'
+    try:
+        pilot = _read(pilot_path)
+    except (OSError, ValueError):
+        pilot = None
+    pilot_ok = (
+        isinstance(pilot, dict)
+        and pilot.get('status') == 'AUTHORIZED_NEW_PILOT_SCOPE'
+        and pilot.get('scope') == PILOT_SCOPE
+        and type(pilot.get('request_limit')) is int
+        and pilot.get('request_limit') == PILOT_LIMIT
+        and pilot.get('historical_preparation_attempts') == 'UNKNOWN'
+        and isinstance(pilot.get('evidence'), str) and bool(pilot['evidence'].strip())
+    )
+    authorization = {
+        'pilot_receipt_status': 'RECORDED' if pilot_ok else 'NOT_MET',
+        'historical_attempts': 'UNKNOWN',
+        'pilot_scope': PILOT_SCOPE if pilot_ok else None,
+        'pilot_attempt_limit': PILOT_LIMIT if pilot_ok else None,
+        'historical_reconciliation_required_for_pilot': False if pilot_ok else None,
+        'live_requests_verified': False,
+        'detail': 'Receipt consistency only: does not inspect a live ledger, remaining allowance, credentials or API results.',
+    }
     split_path = "docs/experiments/development_split_v2_20261028.json"
     split = _read(split_path)
     episodes = split["episodes"]
@@ -127,13 +151,14 @@ def build_audit() -> dict[str, Any]:
         ),
         "jev_budget_and_cost_estimate": _criterion(
             "REQUIRES_REVIEW" if budget_ok else "NOT_MET",
-            ["docs/experiments/jev_budget_20261028.md", "src/jev_uav_track/request_budget.py"],
-            "Preparation caps are implemented and the report keeps historical attempt reconciliation UNKNOWN.",
+            ["docs/experiments/jev_budget_20261028.md", "src/jev_uav_track/request_budget.py",
+             "docs/experiments/pilot_budget_20261030.md", pilot_path],
+            "Historical attempts remain UNKNOWN. A valid new pilot receipt supersedes historical reconciliation only for its own shared eight-attempt scope; receipt status=" + authorization['pilot_receipt_status'] + ". Actual cost, runtime and API evidence still require review.",
         ),
         "real_jev_smoke": _criterion(
             "PARTIAL",
             ["docs/experiments/jev_budget_20261028.md", "docs/experiments/live_belief_20261028.md"],
-            "No new real Jev request was made; the bounded live probe used zero Jev calls and therefore cannot be called a real-Jev smoke result.",
+            "The referenced 10/28 bounded live probe used zero Jev calls. This inventory does not inspect current pilot results or deny that other runs may have called Jev; a new receipt alone is not a real-Jev smoke result.",
         ),
     }
 
@@ -153,15 +178,18 @@ def build_audit() -> dict[str, Any]:
             ["docs/experiments/live_belief_20261028.md", "docs/experiments/evidence/live_belief_20261028/belief03.json"],
             f"{len(frames)}/16 recorded windows, {len(visible)} visible and {len(missing)} missing; full replay status={live_replay['status']}. Input is simulator-visible oracle, not RGB perception. Total query count is not a per-frame RPC log.",
         ),
-        "formal_tracking_action_execution": _criterion(
+    }
+    later_stage_diagnostics = {
+        "formal_tracking_action_execution": {**_criterion(
             "NOT_AUDITED",
             ["docs/experiments/live_belief_20261028.md"],
-            "Missing measured clearance/battery caused all 32 candidate choices to be hard-rejected; no model action was executed.",
-        ),
+            "In the referenced 10/28 run, missing measured clearance/battery caused all 32 choices to be hard-rejected; no model action was executed. Current video runs are outside this checked-in evidence inventory.",
+        ), 'planned_stage': 'D6/D7', 'required_for_D1_D3': False},
     }
 
     criteria = {"D1": d1, "D2": d2, "D3": d3}
-    evidence_paths = sorted({path for day in criteria.values() for item in day.values() for path in item['evidence']})
+    evidence_groups = [*criteria.values(), later_stage_diagnostics]
+    evidence_paths = sorted({path for day in evidence_groups for item in day.values() for path in item['evidence']})
     source_commit = None
     # Exported trees have no repository identity; never inherit an enclosing repo.
     if (ROOT / '.git').exists():
@@ -173,19 +201,25 @@ def build_audit() -> dict[str, Any]:
             if head.returncode == 0:
                 source_commit = head.stdout.strip()
     return {
-        "schema": "jev_uav_track.d1_d3_acceptance.v2",
+        "schema": "jev_uav_track.d1_d3_acceptance.v3",
         "generated_from": "checked_in_evidence_only",
         "source_commit": source_commit,
         "auditor_sha256": _sha256(Path(__file__)),
         "evidence_sha256": {path: _sha256(ROOT / path) if (ROOT / path).is_file() else None for path in evidence_paths},
         "live_replay": live_replay,
         "criteria": criteria,
+        "later_stage_diagnostics": later_stage_diagnostics,
+        "jev_authorization": authorization,
         "scope": "Evidence inventory plus metadata/causal replay checks; NOT a complete automatic acceptance certificate. REQUIRES_REVIEW items are document or summary references only.",
         "overall": "PARTIAL",
         "unresolved": [
             "D1 independent final-town PASS episodes are absent.",
-            "Historical Jev request ledger is UNKNOWN; no new real Jev smoke is claimed.",
-            "D3 live evidence uses simulator-visible oracle input and did not execute a selected tracking action.",
+            "Document and summary references marked REQUIRES_REVIEW still need substantive acceptance review.",
+            "This inventory does not verify pilot requests or new live Jev smoke evidence; authorization is not usage evidence.",
+        ],
+        "limitations": [
+            "Historical preparation attempts remain UNKNOWN; they are not a prerequisite for a valid separately authorized pilot.",
+            "D3 live evidence uses simulator-visible oracle input, not RGB perception; tracking execution is a D6/D7 diagnostic.",
         ],
     }
 
