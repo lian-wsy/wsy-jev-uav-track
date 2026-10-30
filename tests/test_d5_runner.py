@@ -28,7 +28,7 @@ def manifest_fixture(tmp_path):
 def test_d5_runner_heldout_calibration_and_no_stress_read(tmp_path):
     from scripts.run_d5_calibration import run
     split, _ = manifest_fixture(tmp_path)
-    report = run(split, tmp_path / 'out', samples=3, rate=1000, calibration_count=4, alpha=.2)
+    report = run(split, tmp_path / 'out', samples=3, rate=1000, calibration_count=4, alpha=.2, input_mode='oracle')
     assert report['status'] == 'COMPLETED'
     groups = report['partition']
     assert len(groups['fit']) == 1 and len(groups['calibration']) == 4
@@ -80,6 +80,6 @@ def test_missing_visibility_annotations_report_unknown_not_visible(tmp_path):
     p = Path(e['path'])
     e.update(bytes=p.stat().st_size, sha256=hashlib.sha256(p.read_bytes()).hexdigest())
     split.write_text(json.dumps({'episodes': entries}))
-    report = run(split, tmp_path / 'out', samples=3, rate=1000, calibration_count=4, alpha=.2)
+    report = run(split, tmp_path / 'out', samples=3, rate=1000, calibration_count=4, alpha=.2, input_mode='oracle')
     assert report['validation_strata']['unknown']['count'] == 3
     assert report['validation_strata']['visible']['status'] == 'NOT_EVALUATED'

@@ -20,9 +20,10 @@ import numpy as np
 
 from scripts.run_d4_rollout import load_verified
 from jev_uav_track.split_integrity import validate_split_integrity
+from jev_uav_track.causal_recorded_inputs import iter_causal_recorded_states
 from jev_uav_track.training import (RolloutTrainingConfig, build_training_dataset,
     build_training_dataset_from_episodes, fit_outcome_model_cross_episode,
-    LinearOutcomeModel, feature_vector, OUTPUT_NAMES)
+    LinearOutcomeModel, feature_vector, OUTPUT_NAMES, INPUT_MODES)
 from jev_uav_track.residual_intervals import (episode_max_radius, interval_metrics,
     correction_mask, IntervalGatedRolloutModel)
 from jev_uav_track.learned_rollout import LearnedOutcomeRolloutModel
@@ -45,14 +46,22 @@ def partition_entries(entries, calibration_count):
             'validation': validation}
 
 
-def sampled_indices(episode, cfg, features):
+def sampled_inputs(episode, cfg, features, constraints):
     indices = list(range(0, episode.frame_count - cfg.horizon_frames, cfg.stride))
     if len(indices) > cfg.max_samples:
         indices = [indices[i] for i in np.linspace(0, len(indices)-1, cfg.max_samples).round().astype(int)]
-    # Guard against silent drift from the training sampler/feature construction.
-    actual = np.array([feature_vector(episode.tracking_state(i), episode.camera_velocities[i]) for i in indices])
+    if cfg.input_mode == 'causal_visible':
+        selected = set(indices)
+        # Sampling selects diagnostic rows, not the estimator's observation history.
+        states = [state for i, state in enumerate(iter_causal_recorded_states(
+            episode, constraints, max(indices, default=-1) + 1)) if i in selected]
+    else:
+        states = [episode.tracking_state(i, constraints=constraints) for i in indices]
+    # Verify the actual candidate inputs against the fitted/calibrated features.
+    actual = np.array([feature_vector(state, episode.camera_velocities[i])
+                       for i, state in zip(indices, states)])
     np.testing.assert_array_equal(actual, features)
-    return indices
+    return indices, states
 
 
 def strata_masks(episode, indices, annotations_complete):
@@ -74,7 +83,10 @@ def _rmse(truth, predictions):
             for name, value in predictions.items()}
 
 
-def run(split_path, output, samples=96, rate=16., calibration_count=10, alpha=.1):
+def run(split_path, output, samples=96, rate=16., calibration_count=10, alpha=.1,
+        input_mode='causal_visible'):
+    if input_mode not in INPUT_MODES:
+        raise ValueError('Unsupported input_mode')
     if type(samples) is not int or samples < 1 or not math.isfinite(rate) or rate <= 0:
         raise ValueError('Positive samples and finite hash rate required')
     # Refuse insufficient episode counts before opening source HDFs.
@@ -84,10 +96,11 @@ def run(split_path, output, samples=96, rate=16., calibration_count=10, alpha=.1
     raw = split_path.read_bytes()
     partition = partition_entries(json.loads(raw)['episodes'], calibration_count)
     output.mkdir(parents=True, exist_ok=False)
-    cfg = RolloutTrainingConfig(max_samples=samples, rollout_horizon_s=1., target_mode='baseline_residual')
+    cfg = RolloutTrainingConfig(max_samples=samples, rollout_horizon_s=1.,
+                               target_mode='baseline_residual', input_mode=input_mode)
     code_paths = sorted((ROOT / 'src/jev_uav_track').rglob('*.py')) + [
         Path(__file__), ROOT / 'scripts/run_d4_rollout.py', ROOT / 'scripts/extend_development_split.py']
-    protocol = {'schema': 'jev_uav_track.d5.v1', 'kind': 'OFFLINE_RECORDED_ACTION_CALIBRATION',
+    protocol = {'schema': 'jev_uav_track.d5.v2', 'kind': 'OFFLINE_RECORDED_ACTION_CALIBRATION',
         'config': asdict(cfg), 'alpha': alpha, 'nominal_coverage': 1-alpha,
         'split_sha256': hashlib.sha256(raw).hexdigest(), 'hash_mib_per_s': rate,
         'partition_rule': 'ascending frozen train SHA; first calibration_count for calibration',
@@ -157,7 +170,7 @@ def run(split_path, output, samples=96, rate=16., calibration_count=10, alpha=.1
             raw_prediction = baseline + prediction
             accepted, inside = correction_mask(fit.features, data.features, prediction, radius)
             gated_prediction = baseline + np.where(accepted, prediction, 0.)
-            indices = sampled_indices(episode, cfg, data.features)
+            indices, states = sampled_inputs(episode, cfg, data.features, constraints)
             masks = strata_masks(episode, indices, annotations[str(episode.path)])
             scores = interval_metrics(absolute.labels, raw_prediction, radius)
             rows.append({'filename': episode.path.name, 'samples': data.sample_count,
@@ -168,8 +181,7 @@ def run(split_path, output, samples=96, rate=16., calibration_count=10, alpha=.1
                                               'interval_gated': gated_prediction})})
             truth_all.append(absolute.labels); raw_all.append(raw_prediction); baseline_all.append(baseline)
             gated_all.append(gated_prediction); accepted_all.append(accepted); masks_all.append(masks)
-            for index in indices:
-                state = episode.tracking_state(index, constraints=constraints)
+            for index, state in zip(indices, states):
                 methods = {'transparent': baseline_model.generate(DEFAULT_PRIMITIVES, state),
                     'residual': learned_model.generate(DEFAULT_PRIMITIVES, state),
                     'interval_gated': gated_model.generate(DEFAULT_PRIMITIVES, state)}
@@ -198,6 +210,8 @@ def run(split_path, output, samples=96, rate=16., calibration_count=10, alpha=.1
                     per_id['count'] += 1; per_id['full_fallback_count'] += int(fallback)
                     per_id['outside_fit_box_count'] += int(outside)
                 records.write(json.dumps({'filename': episode.path.name, 'frame_index': index,
+                    'input_mode': input_mode,
+                    'missing_safety_measurements': list(state.environment.get('missing_safety_measurements', [])),
                     'timestamp_s': state.target.timestamp_s, 'ungated_diagnostic_ranking': ranking,
                     'mock_ungated_ranking': mock_rank, 'safe_utility_choice': selected,
                     'safe_candidate_ids': [a.id for a in safe['transparent']],
@@ -226,7 +240,9 @@ def run(split_path, output, samples=96, rate=16., calibration_count=10, alpha=.1
         'aggregate_rmse': _rmse(truth, {'transparent': baseline, 'residual': raw_prediction, 'interval_gated': gated_prediction}),
         'action_diagnostics': decisions,
         'limitations': [
-            'Offline HDF oracle states and backward camera-velocity action proxy; not visibility-gated live perception.',
+            ('Visible-oracle causal states, not RGB perception; backward camera-velocity action proxy.'
+             if input_mode == 'causal_visible' else
+             'Legacy privileged HDF oracle states and backward camera-velocity action proxy; not causal perception.'),
             'Nominal episode quantile, not guaranteed coverage: curated towns/seeds need not be exchangeable.',
             'Per-output intervals over sampled frames, not simultaneous across outputs or unseen time steps.',
             'Candidate counterfactual coverage NOT_EVALUATED; fit box cannot establish causal support.',
@@ -252,6 +268,8 @@ if __name__ == '__main__':
     parser.add_argument('--calibration-episodes', type=int, default=10)
     parser.add_argument('--alpha', type=float, default=.1)
     parser.add_argument('--hash-mib-per-s', type=float, default=16.)
+    parser.add_argument('--input-mode', choices=INPUT_MODES, default='causal_visible',
+                        help='causal_visible by default; oracle only for explicit historical reproduction')
     args = parser.parse_args()
     run(args.split, args.output, args.samples_per_episode, args.hash_mib_per_s,
-        args.calibration_episodes, args.alpha)
+        args.calibration_episodes, args.alpha, args.input_mode)

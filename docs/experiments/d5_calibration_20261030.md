@@ -1,5 +1,7 @@
 # D5：episode 隔离残差区间与动作诊断
 
+历史报告：本文件结果来自旧oracle输入。后续D5默认已改为causal_visible，见[因果输入修复与重跑](d5_causal_calibration_20261030.md)。复现本文件旧结果时必须显式传 `--input-mode oracle`；不能把下面的数字视为新因果模型结果。
+
 2026-10-30，Asia/Shanghai。目的不是证明跟踪提升，而是检查记录动作残差预测的可信范围、回退成分和候选排序变化。D1–D3 尚未整体完成；本实验不使用独立测试地图，不执行闭环。
 
 ## 冻结方案
@@ -33,7 +35,7 @@
 ```powershell
 $env:OPENBLAS_NUM_THREADS='1'
 $env:OMP_NUM_THREADS='1'
-python scripts/run_d5_calibration.py --split artifacts/acceptance_20261028/development_split_v2.json --output artifacts/d5_calibration_20261030 --samples-per-episode 96 --calibration-episodes 10 --alpha 0.1 --hash-mib-per-s 16
+python scripts/run_d5_calibration.py --split artifacts/acceptance_20261028/development_split_v2.json --output artifacts/d5_oracle_reproduction_new --samples-per-episode 96 --calibration-episodes 10 --alpha 0.1 --hash-mib-per-s 16 --input-mode oracle
 python -m pytest -q tests/test_residual_intervals.py tests/test_d5_runner.py tests/test_future_invariance.py
 ```
 
