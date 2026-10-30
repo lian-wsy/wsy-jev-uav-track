@@ -20,3 +20,11 @@
 真实执行仍需完整安全输入。执行侧确认 AirSim API 缺电量字段；不能虚构 100% 放行。相机诊断即便成功，也只证明记录链；安全拒绝必须写 NOT_EXECUTED/metrics=null，不能作零碰撞/跟踪成功/模型收益证据。
 
 下一项：唯一运行方完成现场诊断并提供实际终态，集成已交付记录器；独立审核实际输入/动作/标签及完整 episode 证据后才谈训练。原 D1–D3 尚未整体验收，Town03 PASS 仍缺；目标保持进行中，不伪称已通过。
+
+## 第二轮现场结果核对
+
+本聊天随后只读解析 `camera_recording02_20261030/smoke_result.json` 及编码报告，核对到：API_SMOKE_COMPLETED，实际地图 Carla/Maps/Town02，100 帧，总录制工作耗时 19.849954s；100/100 capture 都是 NOT_EXECUTED、tracking_metrics=null，动作数与真实 Jev 请求数均 0。cleanup_confirmed/protected_unchanged=true，postflight listeners=[]。这是独立实例真实相机诊断，不是跟踪或动作后果数据集。
+
+编码报告 VIDEO_INTEGRITY_VERIFIED：100 输入/100 解码帧，源帧时间跨度 19.622087s，视频呈现跨度 19.64s，差 0.017913s；encoder/decoder exit code 均 0，未请求插帧或复制。输出 SHA256 `d6e313ffe517aa25a21496dac58fa1eda207b69b9c776d84e53d0a62a09d4241`。本聊天检查了报告和全帧状态字段，没有重新运行编码或把编码完整性当模型效果认证。
+
+运行方正在处理真实安全输入和执行链。电量没有测量来源时保持未知；任何另建的仿真资源模型应有明确授权与 simulator_model 标签。六集/八决策 pilot、PASS数据准入和新训练仍未完成。
