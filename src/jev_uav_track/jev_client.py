@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any, Dict, Mapping, Protocol, Sequence
 
 from .models import CandidateAction, JevDecision, TrackingState
-from .request_budget import BudgetError, RequestBudget
+from .request_budget import BudgetError, RequestBudget, SCOPE
 
 
 class JevClient(Protocol):
@@ -168,7 +168,7 @@ class TypeSafeJevClient:
     def _reserve(self, operation: str) -> None:
         try:
             if self.budget is None:
-                raise BudgetError("A reconciled preparation ledger is required")
+                raise BudgetError("An authorized request ledger is required")
             self.budget.reserve(operation)
         except BudgetError:
             self.budget_denials += 1
@@ -201,13 +201,14 @@ class TypeSafeJevClient:
             raise ValueError(f"Environment variable {api_key_name} is required")
         ledger = os.getenv("JEV_BUDGET_LEDGER", "").strip()
         if not ledger:
-            raise BudgetError("JEV_BUDGET_LEDGER must name the reconciled sprint ledger")
+            raise BudgetError("JEV_BUDGET_LEDGER must name the shared authorized ledger")
         return cls(
             api_key=api_key,
             endpoint=os.getenv(endpoint_name, DEFAULT_JEV_ENDPOINT),
             model=os.getenv(model_name, DEFAULT_JEV_MODEL),
             timeout_s=timeout_s,
-            budget=RequestBudget(Path(ledger), batch_id=os.getenv("JEV_BUDGET_BATCH")),
+            budget=RequestBudget(Path(ledger), batch_id=os.getenv("JEV_BUDGET_BATCH"),
+                                 scope=os.getenv("JEV_BUDGET_SCOPE", SCOPE)),
         )
 
     def list_models(self) -> Sequence[Mapping[str, Any]]:

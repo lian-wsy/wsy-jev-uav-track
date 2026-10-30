@@ -1,0 +1,7 @@
+{
+  "status": "AUTHORIZED_NEW_PILOT_SCOPE",
+  "scope": "jev-uav-outcome-pilot-20261030",
+  "historical_preparation_attempts": "UNKNOWN",
+  "request_limit": 8,
+  "evidence": "2026-10-30 Asia/Shanghai: user explicitly waived historical reconciliation, then approved a six-development-episode/eight-real-Jev-decision pilot in chat 01a15db0-00af-76f0-8353-141eec7de894. Discovery, failures and retries count toward eight attempts; video and dataset share ONE ledger. This is new authorization, not reconstructed historical usage."
+}
