@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import math
-from collections import Counter
+from collections import Counter, deque
 from dataclasses import dataclass, replace
 from typing import Any, Dict, Iterable, Mapping, Optional, Sequence
 
 from .data.hdf5_adapter import HDF5Episode
-from .history import attach_history, build_episode_belief_history
+from .history import attach_history, build_episode_belief_history, build_target_belief_history
+from .causal_recorded_inputs import iter_causal_recorded_states
 from .jev_client import JevClient, MockJevClient
 from .learned_rollout import LearnedOutcomeRolloutModel
 from .models import CandidateAction, MissionConstraints
@@ -34,6 +35,48 @@ class OfflineEvaluationConfig:
     history_window_size: int = 8
     use_identity_confidence: bool = True
     identity_neutral_confidence: float = 0.5
+    input_mode: str = 'auto'
+
+
+def _resolve_input_mode(requested: str, model: LinearOutcomeModel | None) -> str:
+    if requested not in {'auto', 'oracle', 'causal_visible'}:
+        raise ValueError(f'Unknown evaluation input_mode: {requested!r}')
+    model_mode = None
+    if model is not None:
+        summary = model.training_summary or {}
+        modes = [summary[key]['input_mode']
+                 for key in ('config', 'dataset', 'train_dataset')
+                 if 'input_mode' in summary.get(key, {})]
+        if any(mode not in ('oracle', 'causal_visible') for mode in modes) or len(set(modes)) > 1:
+            raise ValueError('Model input_mode declarations are invalid or inconsistent')
+        # Models predating the input contract were trained with oracle states.
+        model_mode = modes[0] if modes else 'oracle'
+    if requested != 'auto' and model_mode is not None and requested != model_mode:
+        raise ValueError('Evaluation input_mode does not match model training input_mode')
+    return (model_mode or 'oracle') if requested == 'auto' else requested
+
+
+def _evaluation_inputs(episode, cfg, constraints, indices, mode):
+    if mode == 'causal_visible':
+        if cfg.use_short_history and cfg.history_window_size <= 0:
+            raise ValueError('history_window_size must be positive')
+        window = deque(maxlen=cfg.history_window_size if cfg.use_short_history else 1)
+        selected = set(indices)
+        # Start at frame zero even when evaluation starts later or is sparse.
+        for index, state in enumerate(iter_causal_recorded_states(
+                episode, constraints, max(indices, default=-1) + 1)):
+            window.append(state)
+            if index in selected:
+                history = (build_target_belief_history(list(window), cfg.history_window_size)
+                           if cfg.use_short_history else None)
+                yield index, state, history
+    else:
+        for index in indices:
+            state = episode.tracking_state(index, constraints=constraints)
+            history = (build_episode_belief_history(episode, index,
+                       window_size=cfg.history_window_size, constraints=constraints)
+                       if cfg.use_short_history else None)
+            yield index, state, history
 
 
 def _sample_indices(
@@ -65,7 +108,7 @@ def evaluate_episode(
     client: JevClient | None = None,
     outcome_model: LinearOutcomeModel | None = None,
 ) -> Dict[str, Any]:
-    """Evaluate selector behavior without sending frames or state to Jev.
+    """Evaluate recorded states; only an explicitly supplied client may network.
 
     The default ``MockJevClient`` is a deterministic Jev-shaped baseline. The
     report labels actual annotations separately from predicted outcomes because
@@ -75,6 +118,7 @@ def evaluate_episode(
     """
 
     cfg = config or OfflineEvaluationConfig()
+    input_mode = _resolve_input_mode(cfg.input_mode, outcome_model)
     constraints = MissionConstraints(
         desired_range_m=cfg.desired_range_m,
         minimum_obstacle_margin_m=cfg.minimum_obstacle_margin_m,
@@ -98,24 +142,18 @@ def evaluate_episode(
     )
 
     records: list[Dict[str, Any]] = []
+    blocked_records: list[Dict[str, Any]] = []
     previous_action_id: Optional[str] = None
     skipped = 0
-    for frame_index in _sample_indices(
+    indices = _sample_indices(
         episode.frame_count,
         cfg.max_frames,
         cfg.stride,
         cfg.start_frame,
         cfg.end_frame,
-    ):
-        state = episode.tracking_state(frame_index, constraints=constraints)
-        history = None
-        if cfg.use_short_history:
-            history = build_episode_belief_history(
-                episode,
-                frame_index,
-                window_size=cfg.history_window_size,
-                constraints=constraints,
-            )
+    )
+    for frame_index, state, history in _evaluation_inputs(episode, cfg, constraints, indices, input_mode):
+        if history is not None:
             state = attach_history(state, history)
         if not cfg.use_identity_confidence:
             state = replace(
@@ -142,6 +180,12 @@ def evaluate_episode(
             safe_actions, rejected_ids = list(candidates), ()
         if not safe_actions:
             skipped += 1
+            blocked_records.append({
+                'frame_index': frame_index, 'reason': 'no_safe_candidate',
+                'rejected_action_ids': list(rejected_ids),
+                'missing_safety_measurements': list(state.environment.get('missing_safety_measurements', [])),
+                'history_length': history.length if history is not None else 0,
+            })
             continue
         result = selector.select(
             state,
@@ -235,10 +279,14 @@ def evaluate_episode(
         "visibility_observed": bool(episode.metadata.get("visibility_observed", False)),
         "backend": getattr(decision_client, "__class__", type(decision_client)).__name__,
         "rollout_model": "linear-outcome-calibrator-v0" if outcome_model else "kinematic-rollout-v0",
+        "input_mode": input_mode,
+        "input_contract": ('visible_oracle_with_causal_history_not_rgb_detector'
+                           if input_mode == 'causal_visible' else 'privileged_recorded_oracle'),
         "config": cfg.__dict__,
         "metrics": report_metrics,
         "choice_counts": dict(choice_counts),
         "records": records,
+        "blocked_records": blocked_records,
     }
 
 

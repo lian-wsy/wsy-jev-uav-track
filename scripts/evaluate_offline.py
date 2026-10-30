@@ -16,6 +16,8 @@ def main() -> None:
     parser.add_argument("--episode", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--model", type=Path)
+    parser.add_argument('--input-mode', choices=['auto', 'oracle', 'causal_visible'], default='auto',
+                        help='auto follows model metadata; without a model defaults to legacy oracle')
     parser.add_argument("--max-frames", type=int, default=32)
     parser.add_argument("--stride", type=int, default=5)
     parser.add_argument("--desired-range-m", type=float, default=20.0)
@@ -26,6 +28,7 @@ def main() -> None:
     report = evaluate_episode(
         episode,
         OfflineEvaluationConfig(
+            input_mode=args.input_mode,
             max_frames=args.max_frames,
             stride=args.stride,
             desired_range_m=args.desired_range_m,

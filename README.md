@@ -50,6 +50,8 @@
 
 ## 本地运行
 
+手动体验入口及当前实时跟踪限制见[体验说明](docs/manual_experience.md)。2026-10-30因果模型的离线评估已按模型元数据自动选择输入契约；修复、真实validation最小复现及门控拒绝结果见[D3评估报告](docs/experiments/d3_causal_evaluation_20261030.md)。
+
 ```powershell
 cd "D:\WPS Cloud\WPSDrive\1574147233\WPS云盘\wsy-jev-uav-track"
 python -m venv .venv
