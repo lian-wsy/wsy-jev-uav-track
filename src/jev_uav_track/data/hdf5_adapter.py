@@ -146,6 +146,7 @@ class HDF5Episode:
                 raise HDF5SchemaError("image/state timestamps must align within 1 microsecond")
 
             camera_positions_all = read("action/camera_positions")
+            camera_position_observed = camera_positions_all is not None
             if camera_positions_all is None:
                 camera_positions_all = np.zeros_like(positions)
             camera_positions_all = np.asarray(camera_positions_all, dtype=np.float32)
@@ -186,10 +187,12 @@ class HDF5Episode:
                 visible = np.ones(frame_count, dtype=bool)
             visible = np.asarray(visible, dtype=bool).reshape(-1)
             in_frame = read("visibility/target_in_frame")
+            in_frame_observed = in_frame is not None
             if in_frame is None:
                 in_frame = visible.copy()
             in_frame = np.asarray(in_frame, dtype=bool).reshape(-1)
             occluded = read("visibility/target_occluded")
+            occlusion_observed = occluded is not None
             if occluded is None:
                 occluded = np.zeros(frame_count, dtype=bool)
             occluded = np.asarray(occluded, dtype=bool).reshape(-1)
@@ -209,6 +212,9 @@ class HDF5Episode:
                 "source_path": str(source),
                 "schema": _decode(h5.attrs.get("schema", "unknown")),
                 "visibility_observed": bool(visible_observed),
+                "in_frame_observed": bool(in_frame_observed),
+                "occlusion_observed": bool(occlusion_observed),
+                "camera_position_observed": bool(camera_position_observed),
                 "image_color_order": _decode(h5.attrs.get("image_color_order", "unknown")),
             }
             for key, value in h5.attrs.items():

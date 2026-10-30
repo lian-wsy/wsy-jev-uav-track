@@ -43,7 +43,8 @@ def test_support_rejects_empty_or_nonfinite_input(values):
         support_report(values, np.zeros((1, 15)))
 
 
-def test_runner_trains_verified_files_without_opening_nonexistent_stress(tmp_path):
+@pytest.mark.parametrize('input_mode', ['oracle', 'causal_visible'])
+def test_runner_trains_verified_files_without_opening_nonexistent_stress(tmp_path, input_mode):
     import hashlib
     import json
     import h5py
@@ -56,6 +57,7 @@ def test_runner_trains_verified_files_without_opening_nonexistent_stress(tmp_pat
         make_synthetic_episode(path)
         with h5py.File(path, 'r+') as h5:
             h5.attrs['synthetic_seed'] = seed
+            h5.create_dataset('action/camera_rotations', data=np.zeros((24, 3)))
         entries.append({'path': str(path), 'filename': path.name, 'split': group,
                         'seed': seed, 'validation_status': 'PASS', 'frame_count': 12,
                         'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()})
@@ -63,10 +65,14 @@ def test_runner_trains_verified_files_without_opening_nonexistent_stress(tmp_pat
                     'seed': 3, 'validation_status': 'PASS', 'sha256': 'a' * 64})
     manifest = tmp_path / 'split.json'
     manifest.write_text(json.dumps({'episodes': entries}))
-    report = run(manifest, tmp_path / 'out', samples=3, rate=1000)
+    report = run(manifest, tmp_path / 'out', samples=3, rate=1000, input_mode=input_mode)
     assert report['train_samples'] == 3
     assert report['validation_samples'] == 3
     assert len(report['provenance']) == 2
+    assert report['config']['input_mode'] == input_mode
+    from jev_uav_track.training import LinearOutcomeModel
+    saved = LinearOutcomeModel.load(tmp_path / 'out/baseline_residual.npz')
+    assert saved.training_summary['train_dataset']['input_mode'] == input_mode
     assert report['candidate_support']['scan_reacquire']['action_outside_count'] == 3
     assert (tmp_path / 'out/baseline_residual.npz').is_file()
     with pytest.raises(FileExistsError):

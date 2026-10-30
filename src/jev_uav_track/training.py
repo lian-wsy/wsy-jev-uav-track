@@ -47,6 +47,7 @@ OUTPUT_NAMES = (
 )
 
 TARGET_MODES = ("absolute", "baseline_residual")
+INPUT_MODES = ("oracle", "causal_visible")
 
 
 ABLATION_DISABLED_FEATURES = {
@@ -140,6 +141,8 @@ class RolloutTrainingConfig:
     # explicit value is useful for a simulator contract and is checked.
     rollout_horizon_s: float | None = None
     timing_tolerance_s: float = 0.05
+    # Preserve historical experiments; new causal fits must opt in explicitly.
+    input_mode: str = "oracle"
 
 
 @dataclass
@@ -151,8 +154,11 @@ class RolloutTrainingDataset:
     episode_paths: tuple[str, ...] = ()
     target_mode: str = "absolute"
     resolved_rollout_horizon_s: float | None = None
+    input_mode: str = "oracle"
 
     def __post_init__(self) -> None:
+        if self.input_mode not in INPUT_MODES:
+            raise ValueError(f"Unknown input_mode {self.input_mode!r}")
         if self.target_mode not in TARGET_MODES:
             raise ValueError(
                 f"Unknown dataset target_mode {self.target_mode!r}; choose from {TARGET_MODES}"
@@ -171,6 +177,7 @@ class RolloutTrainingDataset:
             "output_names": list(self.output_names),
             "episode_paths": list(self.episode_paths),
             "target_mode": self.target_mode,
+            "input_mode": self.input_mode,
             "resolved_rollout_horizon_s": self.resolved_rollout_horizon_s,
         }
 
@@ -189,6 +196,8 @@ def build_training_dataset(
     _require_verified_episode(episode)
     np = _numpy()
     cfg = config or RolloutTrainingConfig()
+    if cfg.input_mode not in INPUT_MODES:
+        raise ValueError(f"Unknown input_mode {cfg.input_mode!r}")
     if cfg.target_mode not in TARGET_MODES:
         raise ValueError(
             f"Unknown target_mode {cfg.target_mode!r}; choose from {TARGET_MODES}"
@@ -214,9 +223,19 @@ def build_training_dataset(
         desired_range_m=cfg.desired_range_m,
         minimum_obstacle_margin_m=0.0,
     )
+    causal_inputs = {}
+    if cfg.input_mode == 'causal_visible' and indices:
+        from .causal_recorded_inputs import iter_causal_recorded_states
+        selected_indices = set(indices)
+        # Sampling controls loss rows, not the information available at t.
+        for index, state in enumerate(iter_causal_recorded_states(episode, constraints, indices[-1] + 1)):
+            if index in selected_indices:
+                causal_inputs[index] = state
     for index in indices:
         future_index = index + cfg.horizon_frames
-        state = episode.tracking_state(index, constraints=constraints)
+        state = (causal_inputs[index] if cfg.input_mode == 'causal_visible'
+                 else episode.tracking_state(index, constraints=constraints))
+        # Privileged future state is supervision only, never a causal feature.
         future = episode.tracking_state(future_index, constraints=constraints)
         features.append(feature_vector(state, episode.camera_velocities[index]))
         future_outcome = (
@@ -256,6 +275,7 @@ def build_training_dataset(
         episode_paths=(str(episode.path),),
         target_mode=cfg.target_mode,
         resolved_rollout_horizon_s=effective_horizon_s,
+        input_mode=cfg.input_mode,
     )
 
 
@@ -363,6 +383,7 @@ def build_training_dataset_from_episodes(
         episode_paths=paths,
         target_mode=datasets[0].target_mode,
         resolved_rollout_horizon_s=datasets[0].resolved_rollout_horizon_s,
+        input_mode=datasets[0].input_mode,
     )
 
 
@@ -499,6 +520,7 @@ def _masked_dataset(
         episode_paths=dataset.episode_paths,
         target_mode=dataset.target_mode,
         resolved_rollout_horizon_s=dataset.resolved_rollout_horizon_s,
+        input_mode=dataset.input_mode,
     )
 
 
@@ -562,7 +584,9 @@ def fit_outcome_model(
     for path in dataset.episode_paths:
         require_development_source(path)
     np = _numpy()
-    cfg = config or RolloutTrainingConfig(target_mode=dataset.target_mode)
+    cfg = config or RolloutTrainingConfig(target_mode=dataset.target_mode, input_mode=dataset.input_mode)
+    if cfg.input_mode != dataset.input_mode:
+        raise ValueError('Training config input_mode does not match dataset')
     if cfg.target_mode != dataset.target_mode:
         raise ValueError(
             "Training config target_mode does not match dataset: "
@@ -592,6 +616,7 @@ def fit_outcome_model(
         "target_mode": cfg.target_mode,
         "resolved_rollout_horizon_s": dataset.resolved_rollout_horizon_s,
         "train_count": split,
+        "input_mode": dataset.input_mode,
         "eval_count": count - split,
         "train_rmse": dict(zip(dataset.output_names, _rmse(train_predictions, train_y))),
         "eval_rmse": dict(zip(dataset.output_names, _rmse(eval_predictions, dataset.labels[split:]))),
@@ -655,6 +680,7 @@ def fit_outcome_model_cross_episode(
         episode_paths=tuple(str(episode.path) for episode in validation_list),
         target_mode=train_dataset.target_mode,
         resolved_rollout_horizon_s=train_dataset.resolved_rollout_horizon_s,
+        input_mode=train_dataset.input_mode,
     )
     mask = _normalise_feature_mask(feature_mask, train_dataset.features.shape[1])
     model = _fit_ridge_model(
@@ -685,6 +711,7 @@ def fit_outcome_model_cross_episode(
         "target_mode": cfg.target_mode,
         "resolved_rollout_horizon_s": train_dataset.resolved_rollout_horizon_s,
         "train_episode_count": len(train_list),
+        "input_mode": cfg.input_mode,
         "validation_episode_count": len(validation_list),
         "train_episodes": [str(episode.path) for episode in train_list],
         "validation_episodes": [str(episode.path) for episode in validation_list],

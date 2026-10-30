@@ -24,7 +24,7 @@ from jev_uav_track.holdout import require_development_source
 from jev_uav_track.primitives import DEFAULT_PRIMITIVES
 from jev_uav_track.split_integrity import validate_split_integrity
 from jev_uav_track.rollout_diagnostics import support_report, compare_predictions
-from jev_uav_track.training import (RolloutTrainingConfig, build_training_dataset,
+from jev_uav_track.training import (INPUT_MODES, RolloutTrainingConfig, build_training_dataset,
     build_training_dataset_from_episodes, fit_outcome_model_cross_episode, LinearOutcomeModel)
 from jev_uav_track.learned_rollout import LearnedOutcomeRolloutModel
 
@@ -47,9 +47,11 @@ def load_verified(entry, rate):
                      'validation_status': 'PASS', 'frames': episode.frame_count}
 
 
-def run(split_path, output, samples=96, rate=16.):
+def run(split_path, output, samples=96, rate=16., input_mode='oracle'):
     if type(samples) is not int or samples < 1 or not math.isfinite(rate) or rate <= 0:
         raise ValueError('Positive sample count and finite hash rate required')
+    if input_mode not in INPUT_MODES:
+        raise ValueError('Unsupported input_mode')
     raw = split_path.read_bytes()
     manifest = json.loads(raw)
     validate_split_integrity(manifest['episodes'])
@@ -57,7 +59,8 @@ def run(split_path, output, samples=96, rate=16.):
     if not all(any(e['split'] == g for e in entries) for g in ('train', 'validation')):
         raise ValueError('Nonempty train and validation required')
     output.mkdir(parents=True, exist_ok=False)
-    cfg = RolloutTrainingConfig(max_samples=samples, rollout_horizon_s=1., target_mode='absolute')
+    cfg = RolloutTrainingConfig(max_samples=samples, rollout_horizon_s=1., target_mode='absolute',
+                               input_mode=input_mode)
     protocol = {'protocol': 'recorded_action_calibration_only', 'config': asdict(cfg),
                 'split_sha256': hashlib.sha256(raw).hexdigest(), 'hash_mib_per_s': rate,
                 'train_count': sum(e['split'] == 'train' for e in entries),
@@ -126,8 +129,10 @@ def run(split_path, output, samples=96, rate=16.):
         'recorded_support': support_report(train.features, features),
         'candidate_support': candidates,
         'models_sha256': {mode: hashlib.sha256((output / f'{mode}.npz').read_bytes()).hexdigest() for mode in models},
-        'limitations': ['Oracle HDF states with backward velocity, not visibility-gated live belief.',
-                       'Camera velocity is a recorded action proxy, yaw input is fixed zero; no counterfactual labels.',
+        'limitations': [('Oracle HDF states with backward velocity, not visibility-gated live belief.'
+                         if input_mode == 'oracle' else
+                         'Visibility-gated recorded oracle observations; not an RGB detector. Future truth is labels only; image-center input is a bearing proxy.'),
+                       'Camera velocity is a recorded action proxy, command yaw-rate input is fixed zero; no counterfactual labels.',
                        'Raw unbounded regression RMSE; deployed clipping/blending not evaluated.',
                        'No test/stress HDF, simulator, real Jev, or tracking-policy actions.',
                        'Support boxes and distances cannot prove causal action support or a safe OOD threshold.'],
@@ -144,5 +149,6 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--samples-per-episode', type=int, default=96)
     parser.add_argument('--hash-mib-per-s', type=float, default=16.)
+    parser.add_argument('--input-mode', choices=INPUT_MODES, default='oracle')
     args = parser.parse_args()
-    run(args.split, args.output, args.samples_per_episode, args.hash_mib_per_s)
+    run(args.split, args.output, args.samples_per_episode, args.hash_mib_per_s, args.input_mode)

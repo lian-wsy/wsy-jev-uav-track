@@ -2,6 +2,8 @@
 
 更新时间：2026-10-30
 
+**10/30最新优先级：先补D1–D3原验收。** 逐项状态见[优先复核](experiments/d1_d3_priority_20261030.md)，真实Jev小规模调用已有[独立记录复核](experiments/d2_real_jev_smoke_review_20261030.md)。正在补旧oracle训练与live可见belief不一致的输入契约，见[D3因果训练协议](experiments/d3_causal_training_20261030.md)。D1 Town03 PASS尚缺；不以D6/D7视频替代，也不把旧oracle模型改名为causal。
+
 **当前授权范围（覆盖下方历史排程）：** 用户 10/29 将本轮任务收敛为补齐 D1–D5，10/30 继续执行。不得自动进入 D6–D14。D5 校准与因果复核见 [10/30 日报](experiments/daily_20261030.md)；下方两周/长期路线仅为历史背景，未满足项不得按日期记通过。
 
 2026-10-29 审计修正：首版“文件存在即PASS”判定已撤回；v2仅读公开证据、文档项记REQUIRES_REVIEW，并重放完整16帧belief。原Python3.10重放通过，3.14文本差异保留，整体仍PARTIAL。见[日报](experiments/daily_20261029.md)。下条为首版记录。

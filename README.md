@@ -99,6 +99,8 @@ python examples/live_jev_choice.py
 
 ## CarlaAir 小规模离线实验
 
+训练输入契约：历史命令默认 `--input-mode oracle`，用于复现旧记录动作校准；新因果训练请在 `train_rollout_model.py`、`train_cross_episode.py` 或 `run_d4_rollout.py` 显式传 `--input-mode causal_visible`。该模式只在明确可见且在框、不遮挡时接收目标位置/身份，用过去可见观测估计速度；未来真值仅作标签。缺少可见性或相机位姿来源就拒绝，模型摘要保存模式，不覆盖旧权重。这仍是可见标注辅助输入，不是RGB视觉跟踪。协议和验证见[D3因果训练记录](docs/experiments/d3_causal_training_20261030.md)。
+
 适配器以只读方式打开 HDF5，默认不加载约 400 MB 的 RGB 张量，只读取状态、时间戳和可见性标注。训练脚本拟合一个小型 ridge outcome calibrator，用来校准候选 rollout；它不会修改源文件，也不会启动采集器或上传器。
 
 ```powershell

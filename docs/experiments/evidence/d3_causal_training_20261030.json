@@ -1,0 +1,799 @@
+{
+  "protocol": "recorded_action_calibration_only",
+  "config": {
+    "horizon_frames": 5,
+    "stride": 2,
+    "max_samples": 96,
+    "desired_range_m": 20,
+    "ridge_alpha": 1,
+    "train_fraction": 0.7,
+    "target_mode": "absolute",
+    "rollout_horizon_s": 1,
+    "timing_tolerance_s": 0.05,
+    "input_mode": "causal_visible"
+  },
+  "split_sha256": "7326f07e67e90ed0e6397bb553abf31e23cd8d594cf647532a5b02447b9f8e87",
+  "hash_mib_per_s": 16,
+  "train_count": 28,
+  "validation_count": 6,
+  "test_or_stress_opened": 0,
+  "hyperparameter_search": false,
+  "support": "train min/max plus nearest standardized sample; diagnostic only",
+  "code_sha256": {
+    "src/jev_uav_track/__init__.py": "7158ed0e49a4b83083431fcfc3f103abc5388d80981f30ea23bfc813cddc4378",
+    "src/jev_uav_track/causal_belief.py": "cec6db2d74b4dd182bb8ccb334d30367f5687a7650869edf206ea24e4adc45c1",
+    "src/jev_uav_track/causal_recorded_inputs.py": "e8f0545a58c237fd8e9e2572f20b89c5a05a7e9c0286bb66e32c92940a074b32",
+    "src/jev_uav_track/closed_loop.py": "6d17f89e599712d10db7f98843621b2bb0a114b3f389a45e25e88a6c9af19dbb",
+    "src/jev_uav_track/data/__init__.py": "87563afa290b6ad5f637a1834b28d2ff0115e63db93ddc6af5ee2e4d57b8cb0a",
+    "src/jev_uav_track/data/fingerprint.py": "e488a559d0e17f85101c5f041a090c0c6f9ecd323f32b4743ede0d7a6b9909aa",
+    "src/jev_uav_track/data/hdf5_adapter.py": "f49252cf1fb7c6296dc4dc64575aab4757800eebf7f00c3eb36f391934a5a9cf",
+    "src/jev_uav_track/decision_dataset.py": "03fababb170e0a577abd45e046531665b14ece1c301b40c8e4588b458675b80c",
+    "src/jev_uav_track/decision_dataset_audit.py": "af5787258aeb783e1b20e944f564983f6099af9117dcd6f27749e9ec027a0894",
+    "src/jev_uav_track/demo.py": "bc306ac908435cff01e461af48a9b6787d4c1f4190f3e1336277360ffdbb3ead",
+    "src/jev_uav_track/evaluation.py": "a069aa43d570b5cf31638aedac68119edfe3e398309146598c0eb0cb22d29ec8",
+    "src/jev_uav_track/event_metrics.py": "53e057687a0ea9da447e61d32bac6ddbaccdb933f7b59689243d9bd6a554dc30",
+    "src/jev_uav_track/frames.py": "28bd4bcea80870f1dfd05b743e8ab4ce1d5c07817ed3a6e08d3712c4ece9089a",
+    "src/jev_uav_track/history.py": "72b1684a57fb869cc844e557cac7b26ca10149c5438cd9ae3b3e2612396b1778",
+    "src/jev_uav_track/holdout.py": "d1246db7b520e9de30c9a2fe71f006342718f7d0b6b2719aaa7636df98ada0d5",
+    "src/jev_uav_track/isolated_runtime.py": "1745ec667175acdecab97f38e5ee5860a1861a422130d8927e7b8861035cac85",
+    "src/jev_uav_track/jev_client.py": "38726c84fa0ee0622bc158f945008dea3b751d785c7d36604706240fbc6b85a4",
+    "src/jev_uav_track/learned_rollout.py": "8390bc28170856bf863bdaa41ce543972c322c738a69d9f2935102fc466b3c9e",
+    "src/jev_uav_track/live_belief.py": "474a03d35671e60bc055b0fcf4abb819f0954b728ba21a814f61b785f79c1141",
+    "src/jev_uav_track/live_observation.py": "c2e288d95736d43d665c16b59caf86c693162bdf9004b62e5bc67c9d6d085bff",
+    "src/jev_uav_track/models.py": "11d156c18f2d34c08092dcfe57d5dd268e9856234cf00d8a9e2d02c300bad793",
+    "src/jev_uav_track/pipeline.py": "0b2a7358d8252cdb4ad78e2c91546838549fda3d5550ff978d5844f05342cad6",
+    "src/jev_uav_track/primitives.py": "53f3e7448c2762c2a7818ca4547f8aeba92b03846c0a7cb46dbe6c39360caeb2",
+    "src/jev_uav_track/request_budget.py": "b805cb04be4741febd4697af203cf86af67b25194dd2b1c6ac9f8f5312f2940a",
+    "src/jev_uav_track/residual_intervals.py": "e2117eb6f93b3d62750dcb4445378adaaf2b17091c8ab837db1016a4d6385fe8",
+    "src/jev_uav_track/rollout.py": "6a2758a3fb1f358564bc620c2353020ba5e1e7306677c9a3b2b09ef7cd654026",
+    "src/jev_uav_track/rollout_diagnostics.py": "2667fb1625b89fd2a329c26cf00a6e25d5409f7151a3c2f7e0bb41872f700346",
+    "src/jev_uav_track/safety.py": "4f80741347f5ad642c6a827555f4654ca0248a7e76683b1067941416453cb05e",
+    "src/jev_uav_track/selector.py": "185893651a8fa294607b9acd0c8908d4379a81c3f9f5792e97c174a38ab7e907",
+    "src/jev_uav_track/sim_adapter.py": "bad5659696c7a9ae9b7292bffdfe1635ed97a7593392988502fb2d4e382ad27c",
+    "src/jev_uav_track/split_integrity.py": "507048ca8d9ce86883f9cd424763ac8c3115d65d1c4acd6031287c8798ab0c80",
+    "src/jev_uav_track/training.py": "6a789ee1c73910147da2cb7833039e04533fd0da806d880b5b32d410df8a0ab4",
+    "src/jev_uav_track/windows_job.py": "3994d6a08cf979e186f7aedd6e3de42dadecb7352a2f18da8b68a7d64cdb23c8"
+  },
+  "runner_sha256": "82278f4ad7a23dba0b27e30d4fd8c184ca3e452227da7d5378cf444152bcf7f2",
+  "hash_reader_sha256": "940350d615e294601318a32873c2e630361f902ac45c25b254fd2f2f5244e785",
+  "status": "COMPLETED",
+  "python": "3.14.7",
+  "numpy": "2.5.4",
+  "h5py": "3.16.0",
+  "provenance": [
+    {
+      "filename": "Town02_bicycle_frequent_turns_long_seed26094450.hdf5",
+      "split": "train",
+      "seed": 26094450,
+      "sha256": "415331729f7231ba0d876fb0017283eb90095a83d23e3840af382c8b87de7590",
+      "bytes": 322425471,
+      "mtime_ns": 1791972118401700600,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_bicycle_normal_motion_close_seed26094528.hdf5",
+      "split": "train",
+      "seed": 26094528,
+      "sha256": "98245e990c48028a3f5f96e01bd85e230b280df8aaa35620a729af8117d30b15",
+      "bytes": 314756856,
+      "mtime_ns": 1791973389511425500,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_long_seed26094456.hdf5",
+      "split": "train",
+      "seed": 26094456,
+      "sha256": "0485b51c068393f7596030c0c15ec37eb49864538af13d9404b35798a147c2cb",
+      "bytes": 335735353,
+      "mtime_ns": 1791972449435353300,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_close_seed26094535.hdf5",
+      "split": "train",
+      "seed": 26094535,
+      "sha256": "606464c4b32bd313ca6409b944329fc6a861bcf071719edf53a795742e40d48c",
+      "bytes": 322767277,
+      "mtime_ns": 1791973547250217500,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_long_seed26094824.hdf5",
+      "split": "train",
+      "seed": 26094824,
+      "sha256": "6d22c07fe5d6e6da594aa1ced2e633126dd9362366022b51cffb35ddbde207d7",
+      "bytes": 339551027,
+      "mtime_ns": 1791376396323313000,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094463.hdf5",
+      "split": "train",
+      "seed": 26094463,
+      "sha256": "8c21d63b86404a355e68faf4b8a79da3b65d8abc482bcd7448137c948c49f63f",
+      "bytes": 319672005,
+      "mtime_ns": 1791972657214782000,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town02_bicycle_frequent_turns_long_seed26094451.hdf5",
+      "split": "validation",
+      "seed": 26094451,
+      "sha256": "6bb267360cde0eab6b379d5206ba6e88e4233ee7e46a9d2cb30b3b3bbab63307",
+      "bytes": 322642409,
+      "mtime_ns": 1791972165299877600,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_bicycle_normal_motion_close_seed26094529.hdf5",
+      "split": "validation",
+      "seed": 26094529,
+      "sha256": "056fa42c8146ab488f8309cf2d7ee26d4b876be7b017c47089cbe2fcc9fa35ed",
+      "bytes": 315063760,
+      "mtime_ns": 1791973391966113000,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_long_seed26094457.hdf5",
+      "split": "validation",
+      "seed": 26094457,
+      "sha256": "cb6b7da6d67aad82938603f28ca31fde7b728d95cd4526e0c2d7460468e5f32f",
+      "bytes": 335514459,
+      "mtime_ns": 1791972445635040500,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_close_seed26094538.hdf5",
+      "split": "validation",
+      "seed": 26094538,
+      "sha256": "06e6b3be8358c0e8c69cf2614f0f2fd3c09371928a429f42d120aed05aac6db0",
+      "bytes": 322930767,
+      "mtime_ns": 1791973993574713600,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_long_seed26094827.hdf5",
+      "split": "validation",
+      "seed": 26094827,
+      "sha256": "77240e5ae02f948164f59c4aaf931e077bc0c7dbb1fc9484a28713acac8d8f40",
+      "bytes": 340034989,
+      "mtime_ns": 1791380944207789300,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094464.hdf5",
+      "split": "validation",
+      "seed": 26094464,
+      "sha256": "60c424afb34d9d177e913d8fecc287e061390036bb3f00726af1cfd9443e28ca",
+      "bytes": 319587986,
+      "mtime_ns": 1791972669564785400,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town02_bicycle_frequent_turns_long_seed26094452.hdf5",
+      "split": "train",
+      "seed": 26094452,
+      "sha256": "08dcc71857a6a6ad9e1fa31c159af6c664255b756e943535c7280e69bbe275b1",
+      "bytes": 322358074,
+      "mtime_ns": 1791972165749306000,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_bicycle_frequent_turns_long_seed26094454.hdf5",
+      "split": "train",
+      "seed": 26094454,
+      "sha256": "0b9ea32227151a1225080af307115fac66c7049ef2914f290cdbb352e9effe83",
+      "bytes": 329450034,
+      "mtime_ns": 1791972273301429000,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_bicycle_frequent_turns_suitable_seed26094537.hdf5",
+      "split": "train",
+      "seed": 26094537,
+      "sha256": "9d23d92b110e400506ec9aed3fa603794240028f06922e81d20dec4d0f294d2f",
+      "bytes": 332339663,
+      "mtime_ns": 1791973393619427300,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_bicycle_normal_motion_close_seed26094530.hdf5",
+      "split": "train",
+      "seed": 26094530,
+      "sha256": "75b8fd03a74e2fb9d7002f6777d754e99bacc0fe34c6a160e4c5b10f411f2d7b",
+      "bytes": 314390514,
+      "mtime_ns": 1791973393667753200,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_long_seed26094458.hdf5",
+      "split": "train",
+      "seed": 26094458,
+      "sha256": "9b90fca8a6651ae5b6dda27fee1a5033a8be6009e0a9792b3a70fb05091bb1a8",
+      "bytes": 335891042,
+      "mtime_ns": 1791972474102979300,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_suitable_seed26094534.hdf5",
+      "split": "train",
+      "seed": 26094534,
+      "sha256": "af73c3d79728b7d431c38f96b5b56d6584b4eec908fc608e38693055a6820b60",
+      "bytes": 333478665,
+      "mtime_ns": 1791973395948958700,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_pedestrian_normal_motion_close_seed26094738.hdf5",
+      "split": "train",
+      "seed": 26094738,
+      "sha256": "48e6001e9ede6ea6e5dc2db9f2db6f3b7fa583127a96bbfe0530d521ac1e0148",
+      "bytes": 336157664,
+      "mtime_ns": 1791277347359697000,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_pedestrian_normal_motion_long_seed26094872.hdf5",
+      "split": "train",
+      "seed": 26094872,
+      "sha256": "06ba2e9a3a438b47e6c947b40fdcd5b9fb76a98d6033e7f45ea79d2d8b7e2e53",
+      "bytes": 337966071,
+      "mtime_ns": 1791432640154650600,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town05_pedestrian_normal_motion_suitable_seed26094774.hdf5",
+      "split": "train",
+      "seed": 26094774,
+      "sha256": "09a31ae65faed6555faf6996f9a6c7109c2bc800b9b9f27e64862d62a9863d41",
+      "bytes": 332405444,
+      "mtime_ns": 1791349981309393400,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_close_seed26094539.hdf5",
+      "split": "train",
+      "seed": 26094539,
+      "sha256": "5e0dcf61625fe0a5fe2e09999099d6493d503811320d04279b3375128640464a",
+      "bytes": 322691279,
+      "mtime_ns": 1791973992110834400,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_suitable_seed26094588.hdf5",
+      "split": "train",
+      "seed": 26094588,
+      "sha256": "4e3ffe4cc23b184ceeaa3e484eaf1f23a9ebc0fe9365657bdf281ce4012c8f44",
+      "bytes": 319949272,
+      "mtime_ns": 1791975238893463600,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_bicycle_normal_motion_long_seed26094516.hdf5",
+      "split": "train",
+      "seed": 26094516,
+      "sha256": "0b301501a07227f29b19ebb85694bcf3c00466e98b8cb97958bbdff6d65cedfb",
+      "bytes": 368697461,
+      "mtime_ns": 1791973553976542000,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_bicycle_normal_motion_suitable_seed26094611.hdf5",
+      "split": "train",
+      "seed": 26094611,
+      "sha256": "9b956679c6ad6e91d1709a8f62bbb32da2438e925b31db893b26da42c30b05da",
+      "bytes": 319459198,
+      "mtime_ns": 1791980391518937300,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_pedestrian_frequent_turns_long_seed26094460.hdf5",
+      "split": "train",
+      "seed": 26094460,
+      "sha256": "66b67e55855a4d3bcc0d427febd9f9d69ad4c62ea2863db3c20f69259f5896d6",
+      "bytes": 334994715,
+      "mtime_ns": 1791972483245733400,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_pedestrian_frequent_turns_suitable_seed26094570.hdf5",
+      "split": "train",
+      "seed": 26094570,
+      "sha256": "f7c3ed7a3913c1d4e56484f4172065b97e16610fe94c0ddd6f15d7e6ee40d84e",
+      "bytes": 338409848,
+      "mtime_ns": 1791974457005832400,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_long_seed26094834.hdf5",
+      "split": "train",
+      "seed": 26094834,
+      "sha256": "d7572493cacf9aea3e1ca0553b82ab0e6e1397e389883b058d303eaa9037e099",
+      "bytes": 340045169,
+      "mtime_ns": 1791387469207919600,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_suitable_seed26094726.hdf5",
+      "split": "train",
+      "seed": 26094726,
+      "sha256": "fd7c2ae2addb7d09109d1b76e782637b22dc4ca2f2874083da2124d7e0170391",
+      "bytes": 333643352,
+      "mtime_ns": 1791272313261474300,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town10HD_bicycle_normal_motion_long_seed26094696.hdf5",
+      "split": "train",
+      "seed": 26094696,
+      "sha256": "45b778880075b3ea9af99ec5401fb949c8cb26ebee96c710af1c003bbad6b823",
+      "bytes": 343217238,
+      "mtime_ns": 1791264992756067800,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_close_seed26094470.hdf5",
+      "split": "train",
+      "seed": 26094470,
+      "sha256": "115bbb85b5aaacb40c645e6674f2c8577dcfb0e1c65cf39d79a1180e17e23be3",
+      "bytes": 327457052,
+      "mtime_ns": 1791972622802860300,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094465.hdf5",
+      "split": "train",
+      "seed": 26094465,
+      "sha256": "f4b8cb5648c325374378ed3e46fdf9493c2ab10b2fecca43340b2e1a61e75e95",
+      "bytes": 319609530,
+      "mtime_ns": 1791972694006474000,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_suitable_seed26094581.hdf5",
+      "split": "train",
+      "seed": 26094581,
+      "sha256": "f3a0f2601f43b64bca0e68749544734ad7790c14ec4bfb40b5b86a68b316a830",
+      "bytes": 333391946,
+      "mtime_ns": 1791974773497794600,
+      "validation_status": "PASS",
+      "frames": 300
+    },
+    {
+      "filename": "Town10HD_pedestrian_normal_motion_long_seed26094889.hdf5",
+      "split": "train",
+      "seed": 26094889,
+      "sha256": "997c016860dce2bf26ff3d4144609da21917a43d4510f09381614c534391a645",
+      "bytes": 332452237,
+      "mtime_ns": 1791436241781676800,
+      "validation_status": "PASS",
+      "frames": 300
+    }
+  ],
+  "train_samples": 2688,
+  "validation_samples": 576,
+  "train_horizon_s": 0.9999999776482582,
+  "train_strata": {
+    "count": 2688,
+    "visible_ge_0_5": 2688,
+    "occlusion_risk_gt_0_5": 0
+  },
+  "validation_strata": {
+    "count": 576,
+    "visible_ge_0_5": 576,
+    "occlusion_risk_gt_0_5": 0
+  },
+  "aggregate_rmse": {
+    "transparent": {
+      "visibility_probability": 0.13472862904773075,
+      "image_center_error": 0.2829040656296014,
+      "range_error_m": 0.24311573916753085,
+      "covariance_trace": 0.26159955910609545
+    },
+    "absolute": {
+      "visibility_probability": 1.618017543498952e-15,
+      "image_center_error": 0,
+      "range_error_m": 1.4842686385264767,
+      "covariance_trace": 1.3998928551309062e-15
+    },
+    "residual": {
+      "visibility_probability": 0.03256168613729916,
+      "image_center_error": 0.03484190069370545,
+      "range_error_m": 0.22824929011985334,
+      "covariance_trace": 0.06553571788274117
+    }
+  },
+  "validation_by_episode": [
+    {
+      "filename": "Town02_bicycle_frequent_turns_long_seed26094451.hdf5",
+      "samples": 96,
+      "horizon_s": 0.9999999776482582,
+      "rmse": {
+        "transparent": {
+          "visibility_probability": 0.1335846458184145,
+          "image_center_error": 0.6830685390907093,
+          "range_error_m": 0.10340186510362373,
+          "covariance_trace": 0.25734849859069997
+        },
+        "absolute": {
+          "visibility_probability": 2.6319057797179512e-15,
+          "image_center_error": 0,
+          "range_error_m": 1.6336111447746005,
+          "covariance_trace": 1.3221811901969033e-15
+        },
+        "residual": {
+          "visibility_probability": 0.03356553119159387,
+          "image_center_error": 0.06940064937595121,
+          "range_error_m": 0.20426258835571107,
+          "covariance_trace": 0.0680857973903866
+        }
+      },
+      "recorded_support": {
+        "count": 96,
+        "state_outside_count": 0,
+        "action_outside_count": 0
+      }
+    },
+    {
+      "filename": "Town05_bicycle_normal_motion_close_seed26094529.hdf5",
+      "samples": 96,
+      "horizon_s": 0.9999999776482582,
+      "rmse": {
+        "transparent": {
+          "visibility_probability": 0.20161304118930864,
+          "image_center_error": 0,
+          "range_error_m": 0.188984414077724,
+          "covariance_trace": 0.39550944953087774
+        },
+        "absolute": {
+          "visibility_probability": 9.426004885478495e-16,
+          "image_center_error": 0,
+          "range_error_m": 2.6402878345277356,
+          "covariance_trace": 1.4162893762594224e-15
+        },
+        "residual": {
+          "visibility_probability": 0.05765421011709697,
+          "image_center_error": 0.020175358332997086,
+          "range_error_m": 0.2671852855841335,
+          "covariance_trace": 0.1157675856361569
+        }
+      },
+      "recorded_support": {
+        "count": 96,
+        "state_outside_count": 0,
+        "action_outside_count": 0
+      }
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_long_seed26094457.hdf5",
+      "samples": 96,
+      "horizon_s": 0.9999999776482582,
+      "rmse": {
+        "transparent": {
+          "visibility_probability": 0.07974533312942746,
+          "image_center_error": 0.05057063390911026,
+          "range_error_m": 0.08412633637352977,
+          "covariance_trace": 0.15078429542622648
+        },
+        "absolute": {
+          "visibility_probability": 4.564927381489205e-16,
+          "image_center_error": 0,
+          "range_error_m": 0.9136109542061566,
+          "covariance_trace": 1.4226872539490363e-15
+        },
+        "residual": {
+          "visibility_probability": 0.018788618896877565,
+          "image_center_error": 0.006644969150828968,
+          "range_error_m": 0.07697230948571904,
+          "covariance_trace": 0.0377939220231827
+        }
+      },
+      "recorded_support": {
+        "count": 96,
+        "state_outside_count": 0,
+        "action_outside_count": 0
+      }
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_close_seed26094538.hdf5",
+      "samples": 96,
+      "horizon_s": 0.9999999776482582,
+      "rmse": {
+        "transparent": {
+          "visibility_probability": 0.17195069490545167,
+          "image_center_error": 0.08801878247733029,
+          "range_error_m": 0.26434141127100347,
+          "covariance_trace": 0.33608840315550237
+        },
+        "absolute": {
+          "visibility_probability": 1.4780115487551606e-15,
+          "image_center_error": 0,
+          "range_error_m": 0.4688837781469876,
+          "covariance_trace": 1.3769013584046023e-15
+        },
+        "residual": {
+          "visibility_probability": 0.012497896596663002,
+          "image_center_error": 0.02885202292158968,
+          "range_error_m": 0.182856802399359,
+          "covariance_trace": 0.02451168975600374
+        }
+      },
+      "recorded_support": {
+        "count": 96,
+        "state_outside_count": 0,
+        "action_outside_count": 0
+      }
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_long_seed26094827.hdf5",
+      "samples": 96,
+      "horizon_s": 0.9999999776482582,
+      "rmse": {
+        "transparent": {
+          "visibility_probability": 0.0891930987670101,
+          "image_center_error": 0.05161455815569764,
+          "range_error_m": 0.47107808846872057,
+          "covariance_trace": 0.16990416214879245
+        },
+        "absolute": {
+          "visibility_probability": 2.2776207987441263e-15,
+          "image_center_error": 0,
+          "range_error_m": 1.418235549440203,
+          "covariance_trace": 1.4384292474285512e-15
+        },
+        "residual": {
+          "visibility_probability": 0.03462779142895145,
+          "image_center_error": 0.027481896595712055,
+          "range_error_m": 0.3871386143274678,
+          "covariance_trace": 0.0698115788026714
+        }
+      },
+      "recorded_support": {
+        "count": 96,
+        "state_outside_count": 1,
+        "action_outside_count": 1
+      }
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094464.hdf5",
+      "samples": 96,
+      "horizon_s": 0.9999999776482582,
+      "rmse": {
+        "transparent": {
+          "visibility_probability": 0.08084785978862057,
+          "image_center_error": 0.025629578745305987,
+          "range_error_m": 0.09672814324134738,
+          "covariance_trace": 0.1529420110814353
+        },
+        "absolute": {
+          "visibility_probability": 5.585701844806365e-16,
+          "image_center_error": 0,
+          "range_error_m": 0.7159511712691514,
+          "covariance_trace": 1.4195725641474623e-15
+        },
+        "residual": {
+          "visibility_probability": 0.014234958292306348,
+          "image_center_error": 0.020697912065008678,
+          "range_error_m": 0.10118100361321286,
+          "covariance_trace": 0.02879083549703119
+        }
+      },
+      "recorded_support": {
+        "count": 96,
+        "state_outside_count": 0,
+        "action_outside_count": 0
+      }
+    }
+  ],
+  "recorded_support": {
+    "count": 576,
+    "state_outside_count": 1,
+    "action_outside_count": 1,
+    "joint_box_inside_count": 575,
+    "outside_count_by_feature": {
+      "target_range_m": 0,
+      "target_vx_mps": 0,
+      "target_vy_mps": 0,
+      "target_vz_mps": 0,
+      "uav_vx_mps": 1,
+      "uav_vy_mps": 0,
+      "uav_vz_mps": 0,
+      "visibility_probability": 0,
+      "occlusion_risk": 0,
+      "image_center_error": 0,
+      "uav_speed_mps": 1,
+      "command_vx_mps": 1,
+      "command_vy_mps": 0,
+      "command_vz_mps": 0,
+      "command_yaw_rate_dps": 0
+    },
+    "train_min": {
+      "target_range_m": 8.511964969476612,
+      "target_vx_mps": -2.633323728292966,
+      "target_vy_mps": -2.397499138060938,
+      "target_vz_mps": -0.030748071836264546,
+      "uav_vx_mps": -5.445671081542969,
+      "uav_vy_mps": -4.16107177734375,
+      "uav_vz_mps": -0.8358955383300781,
+      "visibility_probability": 1,
+      "occlusion_risk": 0,
+      "image_center_error": 0.000002948644637020455,
+      "uav_speed_mps": 0.018041281335933107,
+      "command_vx_mps": -5.445671081542969,
+      "command_vy_mps": -4.16107177734375,
+      "command_vz_mps": -0.8358955383300781,
+      "command_yaw_rate_dps": 0
+    },
+    "train_max": {
+      "target_range_m": 31.057033965142093,
+      "target_vx_mps": 2.3810577924786016,
+      "target_vy_mps": 2.382812553260011,
+      "target_vz_mps": 0.08312031812489744,
+      "uav_vx_mps": 5.045509338378906,
+      "uav_vy_mps": 5.542635917663574,
+      "uav_vz_mps": 0.7332324981689453,
+      "visibility_probability": 1,
+      "occlusion_risk": 0,
+      "image_center_error": 1,
+      "uav_speed_mps": 5.745372880971137,
+      "command_vx_mps": 5.045509338378906,
+      "command_vy_mps": 5.542635917663574,
+      "command_vz_mps": 0.7332324981689453,
+      "command_yaw_rate_dps": 0
+    },
+    "nearest_train_standardized_l2": {
+      "min": 0.0014758064841907514,
+      "median": 0.09559977067000307,
+      "p95": 0.5735954461172097,
+      "max": 10.689617923536591
+    },
+    "interpretation": "Inside marginal box is necessary only, not joint/action causal support. No threshold is tuned or used for inference."
+  },
+  "candidate_support": {
+    "hold_center": {
+      "command_world_z_up_mps": [
+        0,
+        0,
+        0
+      ],
+      "yaw_rate_dps": 0,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 0,
+      "joint_box_inside_count": 575
+    },
+    "follow_predictive": {
+      "command_world_z_up_mps": [
+        2.5,
+        0,
+        0
+      ],
+      "yaw_rate_dps": 0,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 0,
+      "joint_box_inside_count": 575
+    },
+    "orbit_left": {
+      "command_world_z_up_mps": [
+        0.8,
+        -2.4,
+        0
+      ],
+      "yaw_rate_dps": 12,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 576,
+      "joint_box_inside_count": 0
+    },
+    "orbit_right": {
+      "command_world_z_up_mps": [
+        0.8,
+        2.4,
+        0
+      ],
+      "yaw_rate_dps": -12,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 576,
+      "joint_box_inside_count": 0
+    },
+    "climb": {
+      "command_world_z_up_mps": [
+        0.3,
+        0,
+        1.8
+      ],
+      "yaw_rate_dps": 0,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 576,
+      "joint_box_inside_count": 0
+    },
+    "descend": {
+      "command_world_z_up_mps": [
+        0.2,
+        0,
+        -1.2
+      ],
+      "yaw_rate_dps": 0,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 576,
+      "joint_box_inside_count": 0
+    },
+    "scan_reacquire": {
+      "command_world_z_up_mps": [
+        0,
+        0,
+        0
+      ],
+      "yaw_rate_dps": 28,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 576,
+      "joint_box_inside_count": 0
+    },
+    "safe_hover": {
+      "command_world_z_up_mps": [
+        0,
+        0,
+        0
+      ],
+      "yaw_rate_dps": 0,
+      "count": 576,
+      "state_outside_count": 1,
+      "action_outside_count": 0,
+      "joint_box_inside_count": 575
+    }
+  },
+  "models_sha256": {
+    "absolute": "d6a66344894ed24b7e4c389a900139b7cff555ecfc257c898d4ec779a1886cac",
+    "baseline_residual": "a3542d8e3f2730f8c0a597fa83b3c9fc225c50e147aa047c7b56f5f0fd01b560"
+  },
+  "limitations": [
+    "Visibility-gated recorded oracle observations; not an RGB detector. Future truth is labels only; image-center input is a bearing proxy.",
+    "Camera velocity is a recorded action proxy, command yaw-rate input is fixed zero; no counterfactual labels.",
+    "Raw unbounded regression RMSE; deployed clipping/blending not evaluated.",
+    "No test/stress HDF, simulator, real Jev, or tracking-policy actions.",
+    "Support boxes and distances cannot prove causal action support or a safe OOD threshold."
+  ],
+  "export_note": "Public subset of local report. Source HDF and model binaries remain local; full support arrays in local artifacts.",
+  "episode_mean_range_rmse_m": {
+    "transparent": 0.20144337642265817,
+    "absolute": 1.2984300720608057,
+    "residual": 0.20326610062760053
+  }
+}

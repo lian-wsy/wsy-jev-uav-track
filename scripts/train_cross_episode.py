@@ -9,6 +9,7 @@ from pathlib import Path
 from jev_uav_track.holdout import require_development_source
 from jev_uav_track.training import (
     TARGET_MODES,
+    INPUT_MODES,
     RolloutTrainingConfig,
     fit_outcome_model_cross_episode,
     load_development_episode,
@@ -41,6 +42,7 @@ def main() -> None:
     parser.add_argument("--max-samples-per-episode", type=int, default=64)
     parser.add_argument("--desired-range-m", type=float, default=20.0)
     parser.add_argument("--target-mode", choices=TARGET_MODES, default="absolute")
+    parser.add_argument("--input-mode", choices=INPUT_MODES, default="oracle")
     args = parser.parse_args()
 
     for path in args.train_episode + args.validation_episode:
@@ -55,6 +57,7 @@ def main() -> None:
         max_samples=args.max_samples_per_episode,
         desired_range_m=args.desired_range_m,
         target_mode=args.target_mode,
+        input_mode=args.input_mode,
         rollout_horizon_s=args.rollout_horizon_s,
     )
     model, metrics = fit_outcome_model_cross_episode(
