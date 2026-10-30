@@ -1,6 +1,8 @@
 # Jev UAV Track 长期研发计划
 
-更新时间：2026-10-30
+更新时间：2026-10-31
+
+**10/31离线优化已交付：** 在已修复causal输入上完成6/12/18集linear/RFF64与校准修正比例对照，34/34源核验；18集RFF64固定validation距离RMSE降17.86%，5集改善、1集越界回退。无闭环/困难场景/Jev收益认证，不自动部署，不联系视频聊天。见[日报](experiments/daily_20261031.md)。旧D5全部回退结果保留，新实验不改写历史。
 
 **10/30最新优先级：先补D1–D3原验收。** 逐项状态见[优先复核](experiments/d1_d3_priority_20261030.md)，真实Jev小规模调用已有[独立记录复核](experiments/d2_real_jev_smoke_review_20261030.md)。正在补旧oracle训练与live可见belief不一致的输入契约，见[D3因果训练协议](experiments/d3_causal_training_20261030.md)。D1 Town03 PASS尚缺；不以D6/D7视频替代，也不把旧oracle模型改名为causal。
 

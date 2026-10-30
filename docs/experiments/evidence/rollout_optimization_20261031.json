@@ -1,0 +1,2763 @@
+{
+  "status": "COMPLETED",
+  "protocol": {
+    "schema": "jev_uav_track.rollout_optimization.v1",
+    "split_sha256": "7326f07e67e90ed0e6397bb553abf31e23cd8d594cf647532a5b02447b9f8e87",
+    "input_mode": "causal_visible",
+    "partition": {
+      "fit": [
+        "Town06_bicycle_normal_motion_suitable_seed26094588.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094539.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094535.hdf5",
+        "Town07_pedestrian_frequent_turns_long_seed26094460.hdf5",
+        "Town07_pedestrian_normal_motion_long_seed26094824.hdf5",
+        "Town05_bicycle_normal_motion_close_seed26094530.hdf5",
+        "Town10HD_pedestrian_frequent_turns_long_seed26094463.hdf5",
+        "Town05_bicycle_normal_motion_close_seed26094528.hdf5",
+        "Town10HD_pedestrian_normal_motion_long_seed26094889.hdf5",
+        "Town05_pedestrian_frequent_turns_long_seed26094458.hdf5",
+        "Town07_bicycle_normal_motion_suitable_seed26094611.hdf5",
+        "Town05_bicycle_frequent_turns_suitable_seed26094537.hdf5",
+        "Town05_pedestrian_frequent_turns_suitable_seed26094534.hdf5",
+        "Town07_pedestrian_normal_motion_long_seed26094834.hdf5",
+        "Town10HD_pedestrian_frequent_turns_suitable_seed26094581.hdf5",
+        "Town10HD_pedestrian_frequent_turns_long_seed26094465.hdf5",
+        "Town07_pedestrian_frequent_turns_suitable_seed26094570.hdf5",
+        "Town07_pedestrian_normal_motion_suitable_seed26094726.hdf5"
+      ],
+      "calibration": [
+        "Town05_pedestrian_frequent_turns_long_seed26094456.hdf5",
+        "Town05_pedestrian_normal_motion_long_seed26094872.hdf5",
+        "Town02_bicycle_frequent_turns_long_seed26094452.hdf5",
+        "Town05_pedestrian_normal_motion_suitable_seed26094774.hdf5",
+        "Town07_bicycle_normal_motion_long_seed26094516.hdf5",
+        "Town05_bicycle_frequent_turns_long_seed26094454.hdf5",
+        "Town10HD_pedestrian_frequent_turns_close_seed26094470.hdf5",
+        "Town02_bicycle_frequent_turns_long_seed26094450.hdf5",
+        "Town10HD_bicycle_normal_motion_long_seed26094696.hdf5",
+        "Town05_pedestrian_normal_motion_close_seed26094738.hdf5"
+      ],
+      "validation": [
+        "Town05_bicycle_normal_motion_close_seed26094529.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094538.hdf5",
+        "Town10HD_pedestrian_frequent_turns_long_seed26094464.hdf5",
+        "Town02_bicycle_frequent_turns_long_seed26094451.hdf5",
+        "Town07_pedestrian_normal_motion_long_seed26094827.hdf5",
+        "Town05_pedestrian_frequent_turns_long_seed26094457.hdf5"
+      ]
+    },
+    "fit_sizes": [
+      6,
+      12,
+      18
+    ],
+    "subset_rule": "nested ascending frozen SHA; no seed search",
+    "models": [
+      "linear",
+      "rff64"
+    ],
+    "ridge_alpha": 1.0,
+    "random_feature_seed": 20261031,
+    "rff_dimensions": 64,
+    "rff_scale": "1/sqrt(input_dimension), standardization fit only",
+    "shrinkage_grid": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "shrinkage_selection": "episode-equal calibration MSE, per-output; ties choose smaller",
+    "validation_used_for_selection": false,
+    "test_or_stress_opened": 0,
+    "samples_per_episode": 96,
+    "horizon_s": 1.0,
+    "stride": 2,
+    "legacy_interval_alpha": 0.1,
+    "hash_mib_per_s": 16.0,
+    "code_sha256": {
+      "src/jev_uav_track/__init__.py": "7158ed0e49a4b83083431fcfc3f103abc5388d80981f30ea23bfc813cddc4378",
+      "src/jev_uav_track/causal_belief.py": "cec6db2d74b4dd182bb8ccb334d30367f5687a7650869edf206ea24e4adc45c1",
+      "src/jev_uav_track/causal_recorded_inputs.py": "e8f0545a58c237fd8e9e2572f20b89c5a05a7e9c0286bb66e32c92940a074b32",
+      "src/jev_uav_track/closed_loop.py": "6d17f89e599712d10db7f98843621b2bb0a114b3f389a45e25e88a6c9af19dbb",
+      "src/jev_uav_track/data/__init__.py": "87563afa290b6ad5f637a1834b28d2ff0115e63db93ddc6af5ee2e4d57b8cb0a",
+      "src/jev_uav_track/data/fingerprint.py": "e488a559d0e17f85101c5f041a090c0c6f9ecd323f32b4743ede0d7a6b9909aa",
+      "src/jev_uav_track/data/hdf5_adapter.py": "f49252cf1fb7c6296dc4dc64575aab4757800eebf7f00c3eb36f391934a5a9cf",
+      "src/jev_uav_track/decision_dataset.py": "03fababb170e0a577abd45e046531665b14ece1c301b40c8e4588b458675b80c",
+      "src/jev_uav_track/decision_dataset_audit.py": "af5787258aeb783e1b20e944f564983f6099af9117dcd6f27749e9ec027a0894",
+      "src/jev_uav_track/demo.py": "bc306ac908435cff01e461af48a9b6787d4c1f4190f3e1336277360ffdbb3ead",
+      "src/jev_uav_track/evaluation.py": "0c1ffc8865c57bdb92b25ce66293a545c2065abae4deeaaa8b15bd1362a0fed4",
+      "src/jev_uav_track/event_metrics.py": "53e057687a0ea9da447e61d32bac6ddbaccdb933f7b59689243d9bd6a554dc30",
+      "src/jev_uav_track/frames.py": "28bd4bcea80870f1dfd05b743e8ab4ce1d5c07817ed3a6e08d3712c4ece9089a",
+      "src/jev_uav_track/history.py": "72b1684a57fb869cc844e557cac7b26ca10149c5438cd9ae3b3e2612396b1778",
+      "src/jev_uav_track/holdout.py": "d1246db7b520e9de30c9a2fe71f006342718f7d0b6b2719aaa7636df98ada0d5",
+      "src/jev_uav_track/isolated_runtime.py": "1745ec667175acdecab97f38e5ee5860a1861a422130d8927e7b8861035cac85",
+      "src/jev_uav_track/jev_client.py": "38726c84fa0ee0622bc158f945008dea3b751d785c7d36604706240fbc6b85a4",
+      "src/jev_uav_track/learned_rollout.py": "8390bc28170856bf863bdaa41ce543972c322c738a69d9f2935102fc466b3c9e",
+      "src/jev_uav_track/live_belief.py": "474a03d35671e60bc055b0fcf4abb819f0954b728ba21a814f61b785f79c1141",
+      "src/jev_uav_track/live_observation.py": "c2e288d95736d43d665c16b59caf86c693162bdf9004b62e5bc67c9d6d085bff",
+      "src/jev_uav_track/models.py": "11d156c18f2d34c08092dcfe57d5dd268e9856234cf00d8a9e2d02c300bad793",
+      "src/jev_uav_track/pipeline.py": "0b2a7358d8252cdb4ad78e2c91546838549fda3d5550ff978d5844f05342cad6",
+      "src/jev_uav_track/primitives.py": "53f3e7448c2762c2a7818ca4547f8aeba92b03846c0a7cb46dbe6c39360caeb2",
+      "src/jev_uav_track/request_budget.py": "b805cb04be4741febd4697af203cf86af67b25194dd2b1c6ac9f8f5312f2940a",
+      "src/jev_uav_track/residual_intervals.py": "e2117eb6f93b3d62750dcb4445378adaaf2b17091c8ab837db1016a4d6385fe8",
+      "src/jev_uav_track/residual_study.py": "cd2dc9c3a519c83d6a7599cae939b13cbe3b71b186a19a6fc66b16fbb1236441",
+      "src/jev_uav_track/rollout.py": "6a2758a3fb1f358564bc620c2353020ba5e1e7306677c9a3b2b09ef7cd654026",
+      "src/jev_uav_track/rollout_diagnostics.py": "2667fb1625b89fd2a329c26cf00a6e25d5409f7151a3c2f7e0bb41872f700346",
+      "src/jev_uav_track/safety.py": "4f80741347f5ad642c6a827555f4654ca0248a7e76683b1067941416453cb05e",
+      "src/jev_uav_track/selector.py": "185893651a8fa294607b9acd0c8908d4379a81c3f9f5792e97c174a38ab7e907",
+      "src/jev_uav_track/sim_adapter.py": "bad5659696c7a9ae9b7292bffdfe1635ed97a7593392988502fb2d4e382ad27c",
+      "src/jev_uav_track/split_integrity.py": "507048ca8d9ce86883f9cd424763ac8c3115d65d1c4acd6031287c8798ab0c80",
+      "src/jev_uav_track/training.py": "6a789ee1c73910147da2cb7833039e04533fd0da806d880b5b32d410df8a0ab4",
+      "src/jev_uav_track/windows_job.py": "3994d6a08cf979e186f7aedd6e3de42dadecb7352a2f18da8b68a7d64cdb23c8",
+      "scripts/run_rollout_optimization.py": "d3896b617b9fc80e65ae6c2df229fdba69eca58e07c6a8a0a0d6be59c949c0ad",
+      "scripts/run_d5_calibration.py": "d8964f1a64d39d556847f4220cc420b4a9a2b5c3b2400b650d449cb21a609f6d",
+      "scripts/run_d4_rollout.py": "82278f4ad7a23dba0b27e30d4fd8c184ca3e452227da7d5378cf444152bcf7f2",
+      "scripts/extend_development_split.py": "940350d615e294601318a32873c2e630361f902ac45c25b254fd2f2f5244e785"
+    }
+  },
+  "provenance": [
+    {
+      "filename": "Town06_bicycle_normal_motion_suitable_seed26094588.hdf5",
+      "split": "train",
+      "seed": 26094588,
+      "sha256": "4e3ffe4cc23b184ceeaa3e484eaf1f23a9ebc0fe9365657bdf281ce4012c8f44",
+      "bytes": 319949272,
+      "mtime_ns": 1791975238893463500,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_close_seed26094539.hdf5",
+      "split": "train",
+      "seed": 26094539,
+      "sha256": "5e0dcf61625fe0a5fe2e09999099d6493d503811320d04279b3375128640464a",
+      "bytes": 322691279,
+      "mtime_ns": 1791973992110834500,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_close_seed26094535.hdf5",
+      "split": "train",
+      "seed": 26094535,
+      "sha256": "606464c4b32bd313ca6409b944329fc6a861bcf071719edf53a795742e40d48c",
+      "bytes": 322767277,
+      "mtime_ns": 1791973547250217600,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town07_pedestrian_frequent_turns_long_seed26094460.hdf5",
+      "split": "train",
+      "seed": 26094460,
+      "sha256": "66b67e55855a4d3bcc0d427febd9f9d69ad4c62ea2863db3c20f69259f5896d6",
+      "bytes": 334994715,
+      "mtime_ns": 1791972483245733300,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_long_seed26094824.hdf5",
+      "split": "train",
+      "seed": 26094824,
+      "sha256": "6d22c07fe5d6e6da594aa1ced2e633126dd9362366022b51cffb35ddbde207d7",
+      "bytes": 339551027,
+      "mtime_ns": 1791376396323313000,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town05_bicycle_normal_motion_close_seed26094530.hdf5",
+      "split": "train",
+      "seed": 26094530,
+      "sha256": "75b8fd03a74e2fb9d7002f6777d754e99bacc0fe34c6a160e4c5b10f411f2d7b",
+      "bytes": 314390514,
+      "mtime_ns": 1791973393667753200,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094463.hdf5",
+      "split": "train",
+      "seed": 26094463,
+      "sha256": "8c21d63b86404a355e68faf4b8a79da3b65d8abc482bcd7448137c948c49f63f",
+      "bytes": 319672005,
+      "mtime_ns": 1791972657214782000,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town05_bicycle_normal_motion_close_seed26094528.hdf5",
+      "split": "train",
+      "seed": 26094528,
+      "sha256": "98245e990c48028a3f5f96e01bd85e230b280df8aaa35620a729af8117d30b15",
+      "bytes": 314756856,
+      "mtime_ns": 1791973389511425500,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town10HD_pedestrian_normal_motion_long_seed26094889.hdf5",
+      "split": "train",
+      "seed": 26094889,
+      "sha256": "997c016860dce2bf26ff3d4144609da21917a43d4510f09381614c534391a645",
+      "bytes": 332452237,
+      "mtime_ns": 1791436241781676700,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_long_seed26094458.hdf5",
+      "split": "train",
+      "seed": 26094458,
+      "sha256": "9b90fca8a6651ae5b6dda27fee1a5033a8be6009e0a9792b3a70fb05091bb1a8",
+      "bytes": 335891042,
+      "mtime_ns": 1791972474102979400,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town07_bicycle_normal_motion_suitable_seed26094611.hdf5",
+      "split": "train",
+      "seed": 26094611,
+      "sha256": "9b956679c6ad6e91d1709a8f62bbb32da2438e925b31db893b26da42c30b05da",
+      "bytes": 319459198,
+      "mtime_ns": 1791980391518937300,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town05_bicycle_frequent_turns_suitable_seed26094537.hdf5",
+      "split": "train",
+      "seed": 26094537,
+      "sha256": "9d23d92b110e400506ec9aed3fa603794240028f06922e81d20dec4d0f294d2f",
+      "bytes": 332339663,
+      "mtime_ns": 1791973393619427400,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_suitable_seed26094534.hdf5",
+      "split": "train",
+      "seed": 26094534,
+      "sha256": "af73c3d79728b7d431c38f96b5b56d6584b4eec908fc608e38693055a6820b60",
+      "bytes": 333478665,
+      "mtime_ns": 1791973395948958700,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_long_seed26094834.hdf5",
+      "split": "train",
+      "seed": 26094834,
+      "sha256": "d7572493cacf9aea3e1ca0553b82ab0e6e1397e389883b058d303eaa9037e099",
+      "bytes": 340045169,
+      "mtime_ns": 1791387469207919600,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_suitable_seed26094581.hdf5",
+      "split": "train",
+      "seed": 26094581,
+      "sha256": "f3a0f2601f43b64bca0e68749544734ad7790c14ec4bfb40b5b86a68b316a830",
+      "bytes": 333391946,
+      "mtime_ns": 1791974773497794500,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094465.hdf5",
+      "split": "train",
+      "seed": 26094465,
+      "sha256": "f4b8cb5648c325374378ed3e46fdf9493c2ab10b2fecca43340b2e1a61e75e95",
+      "bytes": 319609530,
+      "mtime_ns": 1791972694006474100,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town07_pedestrian_frequent_turns_suitable_seed26094570.hdf5",
+      "split": "train",
+      "seed": 26094570,
+      "sha256": "f7c3ed7a3913c1d4e56484f4172065b97e16610fe94c0ddd6f15d7e6ee40d84e",
+      "bytes": 338409848,
+      "mtime_ns": 1791974457005832500,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_suitable_seed26094726.hdf5",
+      "split": "train",
+      "seed": 26094726,
+      "sha256": "fd7c2ae2addb7d09109d1b76e782637b22dc4ca2f2874083da2124d7e0170391",
+      "bytes": 333643352,
+      "mtime_ns": 1791272313261474200,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "fit"
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_long_seed26094456.hdf5",
+      "split": "train",
+      "seed": 26094456,
+      "sha256": "0485b51c068393f7596030c0c15ec37eb49864538af13d9404b35798a147c2cb",
+      "bytes": 335735353,
+      "mtime_ns": 1791972449435353400,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "calibration"
+    },
+    {
+      "filename": "Town05_pedestrian_normal_motion_long_seed26094872.hdf5",
+      "split": "train",
+      "seed": 26094872,
+      "sha256": "06ba2e9a3a438b47e6c947b40fdcd5b9fb76a98d6033e7f45ea79d2d8b7e2e53",
+      "bytes": 337966071,
+      "mtime_ns": 1791432640154650600,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "calibration"
+    },
+    {
+      "filename": "Town02_bicycle_frequent_turns_long_seed26094452.hdf5",
+      "split": "train",
+      "seed": 26094452,
+      "sha256": "08dcc71857a6a6ad9e1fa31c159af6c664255b756e943535c7280e69bbe275b1",
+      "bytes": 322358074,
+      "mtime_ns": 1791972165749306100,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "calibration"
+    },
+    {
+      "filename": "Town05_pedestrian_normal_motion_suitable_seed26094774.hdf5",
+      "split": "train",
+      "seed": 26094774,
+      "sha256": "09a31ae65faed6555faf6996f9a6c7109c2bc800b9b9f27e64862d62a9863d41",
+      "bytes": 332405444,
+      "mtime_ns": 1791349981309393300,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "calibration"
+    },
+    {
+      "filename": "Town07_bicycle_normal_motion_long_seed26094516.hdf5",
+      "split": "train",
+      "seed": 26094516,
+      "sha256": "0b301501a07227f29b19ebb85694bcf3c00466e98b8cb97958bbdff6d65cedfb",
+      "bytes": 368697461,
+      "mtime_ns": 1791973553976541900,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "calibration"
+    },
+    {
+      "filename": "Town05_bicycle_frequent_turns_long_seed26094454.hdf5",
+      "split": "train",
+      "seed": 26094454,
+      "sha256": "0b9ea32227151a1225080af307115fac66c7049ef2914f290cdbb352e9effe83",
+      "bytes": 329450034,
+      "mtime_ns": 1791972273301429000,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "calibration"
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_close_seed26094470.hdf5",
+      "split": "train",
+      "seed": 26094470,
+      "sha256": "115bbb85b5aaacb40c645e6674f2c8577dcfb0e1c65cf39d79a1180e17e23be3",
+      "bytes": 327457052,
+      "mtime_ns": 1791972622802860400,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "calibration"
+    },
+    {
+      "filename": "Town02_bicycle_frequent_turns_long_seed26094450.hdf5",
+      "split": "train",
+      "seed": 26094450,
+      "sha256": "415331729f7231ba0d876fb0017283eb90095a83d23e3840af382c8b87de7590",
+      "bytes": 322425471,
+      "mtime_ns": 1791972118401700500,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "calibration"
+    },
+    {
+      "filename": "Town10HD_bicycle_normal_motion_long_seed26094696.hdf5",
+      "split": "train",
+      "seed": 26094696,
+      "sha256": "45b778880075b3ea9af99ec5401fb949c8cb26ebee96c710af1c003bbad6b823",
+      "bytes": 343217238,
+      "mtime_ns": 1791264992756067900,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "calibration"
+    },
+    {
+      "filename": "Town05_pedestrian_normal_motion_close_seed26094738.hdf5",
+      "split": "train",
+      "seed": 26094738,
+      "sha256": "48e6001e9ede6ea6e5dc2db9f2db6f3b7fa583127a96bbfe0530d521ac1e0148",
+      "bytes": 336157664,
+      "mtime_ns": 1791277347359697000,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "calibration"
+    },
+    {
+      "filename": "Town05_bicycle_normal_motion_close_seed26094529.hdf5",
+      "split": "validation",
+      "seed": 26094529,
+      "sha256": "056fa42c8146ab488f8309cf2d7ee26d4b876be7b017c47089cbe2fcc9fa35ed",
+      "bytes": 315063760,
+      "mtime_ns": 1791973391966113100,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "validation"
+    },
+    {
+      "filename": "Town06_bicycle_normal_motion_close_seed26094538.hdf5",
+      "split": "validation",
+      "seed": 26094538,
+      "sha256": "06e6b3be8358c0e8c69cf2614f0f2fd3c09371928a429f42d120aed05aac6db0",
+      "bytes": 322930767,
+      "mtime_ns": 1791973993574713700,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "validation"
+    },
+    {
+      "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094464.hdf5",
+      "split": "validation",
+      "seed": 26094464,
+      "sha256": "60c424afb34d9d177e913d8fecc287e061390036bb3f00726af1cfd9443e28ca",
+      "bytes": 319587986,
+      "mtime_ns": 1791972669564785300,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "validation"
+    },
+    {
+      "filename": "Town02_bicycle_frequent_turns_long_seed26094451.hdf5",
+      "split": "validation",
+      "seed": 26094451,
+      "sha256": "6bb267360cde0eab6b379d5206ba6e88e4233ee7e46a9d2cb30b3b3bbab63307",
+      "bytes": 322642409,
+      "mtime_ns": 1791972165299877600,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "validation"
+    },
+    {
+      "filename": "Town07_pedestrian_normal_motion_long_seed26094827.hdf5",
+      "split": "validation",
+      "seed": 26094827,
+      "sha256": "77240e5ae02f948164f59c4aaf931e077bc0c7dbb1fc9484a28713acac8d8f40",
+      "bytes": 340034989,
+      "mtime_ns": 1791380944207789200,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "validation"
+    },
+    {
+      "filename": "Town05_pedestrian_frequent_turns_long_seed26094457.hdf5",
+      "split": "validation",
+      "seed": 26094457,
+      "sha256": "cb6b7da6d67aad82938603f28ca31fde7b728d95cd4526e0c2d7460468e5f32f",
+      "bytes": 335514459,
+      "mtime_ns": 1791972445635040500,
+      "validation_status": "PASS",
+      "frames": 300,
+      "role": "validation"
+    }
+  ],
+  "experiments": [
+    {
+      "fit_count": 6,
+      "model": "linear",
+      "fit_episodes": [
+        "Town06_bicycle_normal_motion_suitable_seed26094588.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094539.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094535.hdf5",
+        "Town07_pedestrian_frequent_turns_long_seed26094460.hdf5",
+        "Town07_pedestrian_normal_motion_long_seed26094824.hdf5",
+        "Town05_bicycle_normal_motion_close_seed26094530.hdf5"
+      ],
+      "fit_rmse": {
+        "visibility_probability": 0.028277656515562095,
+        "image_center_error": 0.016797668515122516,
+        "range_error_m": 0.24988906462586033,
+        "covariance_trace": 0.05677599289181907
+      },
+      "model_sha256": "d398e13480161168771e5f45b403c2b8e18aef24c5984242c0f7b759cb793dac",
+      "blend": {
+        "visibility_probability": 0.75,
+        "image_center_error": 0.75,
+        "range_error_m": 0.25,
+        "covariance_trace": 0.75
+      },
+      "calibration": {
+        "grid": [
+          0.0,
+          0.25,
+          0.5,
+          0.75,
+          1.0
+        ],
+        "episode_equal_mse": [
+          [
+            0.026630261091202635,
+            0.20700345114766922,
+            0.046213168532707856,
+            0.10127633034617856
+          ],
+          [
+            0.024577783530429883,
+            0.20683778403875097,
+            0.04585913548167914,
+            0.09352563759634158
+          ],
+          [
+            0.02321678644418635,
+            0.20673337368221203,
+            0.0490755870086993,
+            0.08840055368244415
+          ],
+          [
+            0.022547269832472027,
+            0.2066902200780524,
+            0.05586252311376834,
+            0.08590107860448623
+          ],
+          [
+            0.022569233695286923,
+            0.20670832322627214,
+            0.06621994379688624,
+            0.08602721236246785
+          ]
+        ],
+        "selected_grid_indices": [
+          3,
+          3,
+          1,
+          3
+        ],
+        "selection_data": "calibration_only",
+        "coverage_guarantee": false
+      },
+      "old_interval_radius": {
+        "visibility_probability": 0.8284034856707051,
+        "image_center_error": 1.0890842106362877,
+        "range_error_m": 2.3785879991102146,
+        "covariance_trace": 1.652457127438661
+      },
+      "aggregate_rmse": {
+        "baseline": {
+          "visibility_probability": 0.13472862904773075,
+          "image_center_error": 0.2829040656296013,
+          "range_error_m": 0.2431157391675308,
+          "covariance_trace": 0.2615995591060956
+        },
+        "raw": {
+          "visibility_probability": 0.11885673462253839,
+          "image_center_error": 0.05341390056344355,
+          "range_error_m": 0.31270478233033,
+          "covariance_trace": 0.2397194675547371
+        },
+        "old_gate": {
+          "visibility_probability": 0.13472862904773075,
+          "image_center_error": 0.2829040656296013,
+          "range_error_m": 0.2431157391675308,
+          "covariance_trace": 0.2615995591060956
+        },
+        "shrinkage": {
+          "visibility_probability": 0.09607523393013367,
+          "image_center_error": 0.28186911435709755,
+          "range_error_m": 0.23046882255729195,
+          "covariance_trace": 0.18693933742819885
+        }
+      },
+      "episode_equal_rmse": {
+        "baseline": {
+          "visibility_probability": 0.12615577893303884,
+          "image_center_error": 0.14981701539635892,
+          "range_error_m": 0.20144337642265817,
+          "covariance_trace": 0.24376280332225572
+        },
+        "raw": {
+          "visibility_probability": 0.0656858066726121,
+          "image_center_error": 0.03681655512585511,
+          "range_error_m": 0.2670542355569326,
+          "covariance_trace": 0.13224499903914724
+        },
+        "old_gate": {
+          "visibility_probability": 0.12615577893303884,
+          "image_center_error": 0.14981701539635892,
+          "range_error_m": 0.20144337642265817,
+          "covariance_trace": 0.24376280332225572
+        },
+        "shrinkage": {
+          "visibility_probability": 0.07881216823237207,
+          "image_center_error": 0.14400778304744913,
+          "range_error_m": 0.19877174751230417,
+          "covariance_trace": 0.15304594483916706
+        }
+      },
+      "validation": [
+        {
+          "filename": "Town05_bicycle_normal_motion_close_seed26094529.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.20161304118930864,
+              "image_center_error": 0.0,
+              "range_error_m": 0.188984414077724,
+              "covariance_trace": 0.39550944953087774
+            },
+            "raw": {
+              "visibility_probability": 0.02844146896551533,
+              "image_center_error": 0.012986080429347844,
+              "range_error_m": 0.30868729329076156,
+              "covariance_trace": 0.057078451774600865
+            },
+            "old_gate": {
+              "visibility_probability": 0.20161304118930864,
+              "image_center_error": 0.0,
+              "range_error_m": 0.188984414077724,
+              "covariance_trace": 0.39550944953087774
+            },
+            "shrinkage": {
+              "visibility_probability": 0.07035602478724592,
+              "image_center_error": 0.009739560322010883,
+              "range_error_m": 0.21714469316848573,
+              "covariance_trace": 0.13893970807190553
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        },
+        {
+          "filename": "Town06_bicycle_normal_motion_close_seed26094538.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.17195069490545167,
+              "image_center_error": 0.08801878247733029,
+              "range_error_m": 0.26434141127100347,
+              "covariance_trace": 0.33608840315550237
+            },
+            "raw": {
+              "visibility_probability": 0.007540873419412061,
+              "image_center_error": 0.005408542810031977,
+              "range_error_m": 0.11425533197035992,
+              "covariance_trace": 0.015129396832606052
+            },
+            "old_gate": {
+              "visibility_probability": 0.17195069490545167,
+              "image_center_error": 0.08801878247733029,
+              "range_error_m": 0.26434141127100347,
+              "covariance_trace": 0.33608840315550237
+            },
+            "shrinkage": {
+              "visibility_probability": 0.17048853555410162,
+              "image_center_error": 0.08762341919345559,
+              "range_error_m": 0.25375992508480266,
+              "covariance_trace": 0.3332634964386174
+            }
+          },
+          "supported_fraction": 0.010416666666666666,
+          "shrinkage_nonzero_fraction": 0.010416666666666666
+        },
+        {
+          "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094464.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.08084785978862057,
+              "image_center_error": 0.025629578745305987,
+              "range_error_m": 0.09672814324134738,
+              "covariance_trace": 0.1529420110814353
+            },
+            "raw": {
+              "visibility_probability": 0.017308712540737178,
+              "image_center_error": 0.025953523674990184,
+              "range_error_m": 0.16367261718335774,
+              "covariance_trace": 0.034483972050379536
+            },
+            "old_gate": {
+              "visibility_probability": 0.08084785978862057,
+              "image_center_error": 0.025629578745305987,
+              "range_error_m": 0.09672814324134738,
+              "covariance_trace": 0.1529420110814353
+            },
+            "shrinkage": {
+              "visibility_probability": 0.022614941595613922,
+              "image_center_error": 0.02625156779710565,
+              "range_error_m": 0.10310442597759682,
+              "covariance_trace": 0.04225946648741189
+            }
+          },
+          "supported_fraction": 0.9583333333333334,
+          "shrinkage_nonzero_fraction": 0.9583333333333334
+        },
+        {
+          "filename": "Town02_bicycle_frequent_turns_long_seed26094451.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            },
+            "raw": {
+              "visibility_probability": 0.2860697707508305,
+              "image_center_error": 0.11986940375533153,
+              "range_error_m": 0.6022160020192631,
+              "covariance_trace": 0.5771037314992301
+            },
+            "old_gate": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            },
+            "shrinkage": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            }
+          },
+          "supported_fraction": 0.0,
+          "shrinkage_nonzero_fraction": 0.0
+        },
+        {
+          "filename": "Town07_pedestrian_normal_motion_long_seed26094827.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.0891930987670101,
+              "image_center_error": 0.05161455815569764,
+              "range_error_m": 0.47107808846872057,
+              "covariance_trace": 0.16990416214879245
+            },
+            "raw": {
+              "visibility_probability": 0.038806179294795844,
+              "image_center_error": 0.01668527818555059,
+              "range_error_m": 0.248111361774645,
+              "covariance_trace": 0.07778920985898188
+            },
+            "old_gate": {
+              "visibility_probability": 0.0891930987670101,
+              "image_center_error": 0.05161455815569764,
+              "range_error_m": 0.47107808846872057,
+              "covariance_trace": 0.16990416214879245
+            },
+            "shrinkage": {
+              "visibility_probability": 0.046133042581979304,
+              "image_center_error": 0.026294626334302157,
+              "range_error_m": 0.4205534555892233,
+              "covariance_trace": 0.09010023266780201
+            }
+          },
+          "supported_fraction": 0.9791666666666666,
+          "shrinkage_nonzero_fraction": 0.9791666666666666
+        },
+        {
+          "filename": "Town05_pedestrian_frequent_turns_long_seed26094457.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.07974533312942746,
+              "image_center_error": 0.05057063390911026,
+              "range_error_m": 0.08412633637352977,
+              "covariance_trace": 0.15078429542622648
+            },
+            "raw": {
+              "visibility_probability": 0.01594783506438175,
+              "image_center_error": 0.039996501899878543,
+              "range_error_m": 0.16538280710320813,
+              "covariance_trace": 0.03188523221908502
+            },
+            "old_gate": {
+              "visibility_probability": 0.07974533312942746,
+              "image_center_error": 0.05057063390911026,
+              "range_error_m": 0.08412633637352977,
+              "covariance_trace": 0.15078429542622648
+            },
+            "shrinkage": {
+              "visibility_probability": 0.029695819056877067,
+              "image_center_error": 0.031068985547111152,
+              "range_error_m": 0.09466612015009274,
+              "covariance_trace": 0.05636426677856551
+            }
+          },
+          "supported_fraction": 0.9166666666666666,
+          "shrinkage_nonzero_fraction": 0.9166666666666666
+        }
+      ],
+      "candidate_diagnostics": {
+        "count": 4608,
+        "outside_fit_box": 3495,
+        "old_gate_any_correction": 0,
+        "shrinkage_any_correction": 1113,
+        "executed_actions": 0,
+        "counterfactual_benefit": "NOT_EVALUATED"
+      }
+    },
+    {
+      "fit_count": 6,
+      "model": "rff64",
+      "fit_episodes": [
+        "Town06_bicycle_normal_motion_suitable_seed26094588.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094539.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094535.hdf5",
+        "Town07_pedestrian_frequent_turns_long_seed26094460.hdf5",
+        "Town07_pedestrian_normal_motion_long_seed26094824.hdf5",
+        "Town05_bicycle_normal_motion_close_seed26094530.hdf5"
+      ],
+      "fit_rmse": {
+        "visibility_probability": 0.021721158690184074,
+        "image_center_error": 0.009369733383445022,
+        "range_error_m": 0.1572320795961968,
+        "covariance_trace": 0.043628456857056165
+      },
+      "model_sha256": "b54c6ffac995e56af1bfcf934b5f747b61601d1ac5f81530e2592976b0bc5f2e",
+      "blend": {
+        "visibility_probability": 1.0,
+        "image_center_error": 1.0,
+        "range_error_m": 0.0,
+        "covariance_trace": 1.0
+      },
+      "calibration": {
+        "grid": [
+          0.0,
+          0.25,
+          0.5,
+          0.75,
+          1.0
+        ],
+        "episode_equal_mse": [
+          [
+            0.026630261091202635,
+            0.20700345114766922,
+            0.046213168532707856,
+            0.10127633034617856
+          ],
+          [
+            0.024907358852449584,
+            0.20685961325806296,
+            0.04635171362548279,
+            0.09481823233813155
+          ],
+          [
+            0.023663262050177068,
+            0.20675975418836495,
+            0.05330867080050775,
+            0.0901535345737867
+          ],
+          [
+            0.022897970684385077,
+            0.20670387393857542,
+            0.0670840400577827,
+            0.08728223705314406
+          ],
+          [
+            0.02261148475507362,
+            0.20669197250869425,
+            0.08767782139730769,
+            0.08620433977620359
+          ]
+        ],
+        "selected_grid_indices": [
+          4,
+          4,
+          0,
+          4
+        ],
+        "selection_data": "calibration_only",
+        "coverage_guarantee": false
+      },
+      "old_interval_radius": {
+        "visibility_probability": 0.18029389382281924,
+        "image_center_error": 0.9613305361558717,
+        "range_error_m": 2.041198485593079,
+        "covariance_trace": 0.3589010807598816
+      },
+      "aggregate_rmse": {
+        "baseline": {
+          "visibility_probability": 0.13472862904773075,
+          "image_center_error": 0.2829040656296013,
+          "range_error_m": 0.2431157391675308,
+          "covariance_trace": 0.2615995591060956
+        },
+        "raw": {
+          "visibility_probability": 0.029754578563150474,
+          "image_center_error": 0.24316129029025405,
+          "range_error_m": 0.3040801180169467,
+          "covariance_trace": 0.05984536992349121
+        },
+        "old_gate": {
+          "visibility_probability": 0.12351169379873256,
+          "image_center_error": 0.2829040656296013,
+          "range_error_m": 0.2431157391675308,
+          "covariance_trace": 0.24040801082164012
+        },
+        "shrinkage": {
+          "visibility_probability": 0.09087829331013106,
+          "image_center_error": 0.281685804518299,
+          "range_error_m": 0.2431157391675308,
+          "covariance_trace": 0.17676786445346618
+        }
+      },
+      "episode_equal_rmse": {
+        "baseline": {
+          "visibility_probability": 0.12615577893303884,
+          "image_center_error": 0.14981701539635892,
+          "range_error_m": 0.20144337642265817,
+          "covariance_trace": 0.24376280332225572
+        },
+        "raw": {
+          "visibility_probability": 0.0258742765037418,
+          "image_center_error": 0.11199895246064513,
+          "range_error_m": 0.26743002575210556,
+          "covariance_trace": 0.05206669725460428
+        },
+        "old_gate": {
+          "visibility_probability": 0.11821592162577112,
+          "image_center_error": 0.14981701539635892,
+          "range_error_m": 0.20144337642265817,
+          "covariance_trace": 0.2289601201017065
+        },
+        "shrinkage": {
+          "visibility_probability": 0.06750314000600488,
+          "image_center_error": 0.14158783930148905,
+          "range_error_m": 0.20144337642265817,
+          "covariance_trace": 0.13147448109326362
+        }
+      },
+      "validation": [
+        {
+          "filename": "Town05_bicycle_normal_motion_close_seed26094529.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.20161304118930864,
+              "image_center_error": 0.0,
+              "range_error_m": 0.188984414077724,
+              "covariance_trace": 0.39550944953087774
+            },
+            "raw": {
+              "visibility_probability": 0.02469496509275044,
+              "image_center_error": 0.008479673520320521,
+              "range_error_m": 0.21589504413131858,
+              "covariance_trace": 0.04955704404056728
+            },
+            "old_gate": {
+              "visibility_probability": 0.15270462756907432,
+              "image_center_error": 0.0,
+              "range_error_m": 0.188984414077724,
+              "covariance_trace": 0.30511775002515007
+            },
+            "shrinkage": {
+              "visibility_probability": 0.02469496509275044,
+              "image_center_error": 0.008479673520320521,
+              "range_error_m": 0.188984414077724,
+              "covariance_trace": 0.04955704404056728
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        },
+        {
+          "filename": "Town06_bicycle_normal_motion_close_seed26094538.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.17195069490545167,
+              "image_center_error": 0.08801878247733029,
+              "range_error_m": 0.26434141127100347,
+              "covariance_trace": 0.33608840315550237
+            },
+            "raw": {
+              "visibility_probability": 0.007994508721106278,
+              "image_center_error": 0.006435121540622846,
+              "range_error_m": 0.11135917263216412,
+              "covariance_trace": 0.015893808601714316
+            },
+            "old_gate": {
+              "visibility_probability": 0.17046825676628516,
+              "image_center_error": 0.08801878247733029,
+              "range_error_m": 0.26434141127100347,
+              "covariance_trace": 0.333231416051033
+            },
+            "shrinkage": {
+              "visibility_probability": 0.17046825676628516,
+              "image_center_error": 0.0875755468476843,
+              "range_error_m": 0.26434141127100347,
+              "covariance_trace": 0.333231416051033
+            }
+          },
+          "supported_fraction": 0.010416666666666666,
+          "shrinkage_nonzero_fraction": 0.010416666666666666
+        },
+        {
+          "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094464.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.08084785978862057,
+              "image_center_error": 0.025629578745305987,
+              "range_error_m": 0.09672814324134738,
+              "covariance_trace": 0.1529420110814353
+            },
+            "raw": {
+              "visibility_probability": 0.01775661241173862,
+              "image_center_error": 0.018439072121337368,
+              "range_error_m": 0.13254571277907404,
+              "covariance_trace": 0.03600558430335073
+            },
+            "old_gate": {
+              "visibility_probability": 0.08121983233341071,
+              "image_center_error": 0.025629578745305987,
+              "range_error_m": 0.09672814324134738,
+              "covariance_trace": 0.1529420110814353
+            },
+            "shrinkage": {
+              "visibility_probability": 0.023138215919085974,
+              "image_center_error": 0.02350537170144951,
+              "range_error_m": 0.09672814324134738,
+              "covariance_trace": 0.04470364377061982
+            }
+          },
+          "supported_fraction": 0.9583333333333334,
+          "shrinkage_nonzero_fraction": 0.9583333333333334
+        },
+        {
+          "filename": "Town02_bicycle_frequent_turns_long_seed26094451.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            },
+            "raw": {
+              "visibility_probability": 0.05370036740059596,
+              "image_center_error": 0.594235743489677,
+              "range_error_m": 0.516230008765522,
+              "covariance_trace": 0.10802590334579248
+            },
+            "old_gate": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            },
+            "shrinkage": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            }
+          },
+          "supported_fraction": 0.0,
+          "shrinkage_nonzero_fraction": 0.0
+        },
+        {
+          "filename": "Town07_pedestrian_normal_motion_long_seed26094827.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.0891930987670101,
+              "image_center_error": 0.05161455815569764,
+              "range_error_m": 0.47107808846872057,
+              "covariance_trace": 0.16990416214879245
+            },
+            "raw": {
+              "visibility_probability": 0.017374486098475233,
+              "image_center_error": 0.01197506642101471,
+              "range_error_m": 0.3984692247549776,
+              "covariance_trace": 0.03536145413289391
+            },
+            "old_gate": {
+              "visibility_probability": 0.08991497388190652,
+              "image_center_error": 0.05161455815569764,
+              "range_error_m": 0.47107808846872057,
+              "covariance_trace": 0.17163511864636105
+            },
+            "shrinkage": {
+              "visibility_probability": 0.019778972009482088,
+              "image_center_error": 0.01619860028175696,
+              "range_error_m": 0.47107808846872057,
+              "covariance_trace": 0.03883364883751058
+            }
+          },
+          "supported_fraction": 0.9791666666666666,
+          "shrinkage_nonzero_fraction": 0.9791666666666666
+        },
+        {
+          "filename": "Town05_pedestrian_frequent_turns_long_seed26094457.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.07974533312942746,
+              "image_center_error": 0.05057063390911026,
+              "range_error_m": 0.08412633637352977,
+              "covariance_trace": 0.15078429542622648
+            },
+            "raw": {
+              "visibility_probability": 0.033724719297784284,
+              "image_center_error": 0.032429037670898324,
+              "range_error_m": 0.23008099144957675,
+              "covariance_trace": 0.06755638910330694
+            },
+            "old_gate": {
+              "visibility_probability": 0.08140319338553555,
+              "image_center_error": 0.05057063390911026,
+              "range_error_m": 0.08412633637352977,
+              "covariance_trace": 0.15348592621555973
+            },
+            "shrinkage": {
+              "visibility_probability": 0.033353784430011135,
+              "image_center_error": 0.030699304367013756,
+              "range_error_m": 0.08412633637352977,
+              "covariance_trace": 0.06517263526915104
+            }
+          },
+          "supported_fraction": 0.9166666666666666,
+          "shrinkage_nonzero_fraction": 0.9166666666666666
+        }
+      ],
+      "candidate_diagnostics": {
+        "count": 4608,
+        "outside_fit_box": 3495,
+        "old_gate_any_correction": 3,
+        "shrinkage_any_correction": 1113,
+        "executed_actions": 0,
+        "counterfactual_benefit": "NOT_EVALUATED"
+      }
+    },
+    {
+      "fit_count": 12,
+      "model": "linear",
+      "fit_episodes": [
+        "Town06_bicycle_normal_motion_suitable_seed26094588.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094539.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094535.hdf5",
+        "Town07_pedestrian_frequent_turns_long_seed26094460.hdf5",
+        "Town07_pedestrian_normal_motion_long_seed26094824.hdf5",
+        "Town05_bicycle_normal_motion_close_seed26094530.hdf5",
+        "Town10HD_pedestrian_frequent_turns_long_seed26094463.hdf5",
+        "Town05_bicycle_normal_motion_close_seed26094528.hdf5",
+        "Town10HD_pedestrian_normal_motion_long_seed26094889.hdf5",
+        "Town05_pedestrian_frequent_turns_long_seed26094458.hdf5",
+        "Town07_bicycle_normal_motion_suitable_seed26094611.hdf5",
+        "Town05_bicycle_frequent_turns_suitable_seed26094537.hdf5"
+      ],
+      "fit_rmse": {
+        "visibility_probability": 0.034271790165114634,
+        "image_center_error": 0.019229983124897376,
+        "range_error_m": 0.276729966921483,
+        "covariance_trace": 0.06880414039046984
+      },
+      "model_sha256": "4ee5864bab2c12b2661e71ca72e8c11ef4772df19a31de92342c513a3aeb2c70",
+      "blend": {
+        "visibility_probability": 0.75,
+        "image_center_error": 1.0,
+        "range_error_m": 0.25,
+        "covariance_trace": 0.75
+      },
+      "calibration": {
+        "grid": [
+          0.0,
+          0.25,
+          0.5,
+          0.75,
+          1.0
+        ],
+        "episode_equal_mse": [
+          [
+            0.026630261091202635,
+            0.20700345114766922,
+            0.046213168532707856,
+            0.10127633034617856
+          ],
+          [
+            0.024399602813480793,
+            0.20680572621518692,
+            0.04561250652162528,
+            0.0928331108199702
+          ],
+          [
+            0.022971333109507663,
+            0.20666476125964653,
+            0.04725947113766635,
+            0.08745357264255771
+          ],
+          [
+            0.022345451979283254,
+            0.2065805562810481,
+            0.051154062380831034,
+            0.08513771581394111
+          ],
+          [
+            0.02252195942280756,
+            0.20655311127939155,
+            0.057296280251119346,
+            0.08588554033412041
+          ]
+        ],
+        "selected_grid_indices": [
+          3,
+          4,
+          1,
+          3
+        ],
+        "selection_data": "calibration_only",
+        "coverage_guarantee": false
+      },
+      "old_interval_radius": {
+        "visibility_probability": 0.8726366853903977,
+        "image_center_error": 0.45802743921721656,
+        "range_error_m": 3.600029654143772,
+        "covariance_trace": 1.744004714531737
+      },
+      "aggregate_rmse": {
+        "baseline": {
+          "visibility_probability": 0.13472862904773075,
+          "image_center_error": 0.2829040656296013,
+          "range_error_m": 0.2431157391675308,
+          "covariance_trace": 0.2615995591060956
+        },
+        "raw": {
+          "visibility_probability": 0.14512203855444816,
+          "image_center_error": 0.04884023139051834,
+          "range_error_m": 0.485078566670779,
+          "covariance_trace": 0.29236942469835336
+        },
+        "old_gate": {
+          "visibility_probability": 0.13472862904773075,
+          "image_center_error": 0.2829040656296013,
+          "range_error_m": 0.2431157391675308,
+          "covariance_trace": 0.2615995591060956
+        },
+        "shrinkage": {
+          "visibility_probability": 0.07077516643530317,
+          "image_center_error": 0.279222304141628,
+          "range_error_m": 0.23030732376663168,
+          "covariance_trace": 0.137423095899877
+        }
+      },
+      "episode_equal_rmse": {
+        "baseline": {
+          "visibility_probability": 0.12615577893303884,
+          "image_center_error": 0.14981701539635892,
+          "range_error_m": 0.20144337642265817,
+          "covariance_trace": 0.24376280332225572
+        },
+        "raw": {
+          "visibility_probability": 0.08002461197687254,
+          "image_center_error": 0.029527076193840627,
+          "range_error_m": 0.3614262238876471,
+          "covariance_trace": 0.1610029996932944
+        },
+        "old_gate": {
+          "visibility_probability": 0.12615577893303884,
+          "image_center_error": 0.14981701539635892,
+          "range_error_m": 0.20144337642265817,
+          "covariance_trace": 0.24376280332225572
+        },
+        "shrinkage": {
+          "visibility_probability": 0.06060285770836054,
+          "image_center_error": 0.125329531598831,
+          "range_error_m": 0.1972275130367237,
+          "covariance_trace": 0.11790425142362652
+        }
+      },
+      "validation": [
+        {
+          "filename": "Town05_bicycle_normal_motion_close_seed26094529.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.20161304118930864,
+              "image_center_error": 0.0,
+              "range_error_m": 0.188984414077724,
+              "covariance_trace": 0.39550944953087774
+            },
+            "raw": {
+              "visibility_probability": 0.031070363620142035,
+              "image_center_error": 0.013108438852839206,
+              "range_error_m": 0.3224302380444842,
+              "covariance_trace": 0.06232510440475872
+            },
+            "old_gate": {
+              "visibility_probability": 0.20161304118930864,
+              "image_center_error": 0.0,
+              "range_error_m": 0.188984414077724,
+              "covariance_trace": 0.39550944953087774
+            },
+            "shrinkage": {
+              "visibility_probability": 0.07306968406393662,
+              "image_center_error": 0.013108438852839206,
+              "range_error_m": 0.2204177229414478,
+              "covariance_trace": 0.14434876454486956
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        },
+        {
+          "filename": "Town06_bicycle_normal_motion_close_seed26094538.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.17195069490545167,
+              "image_center_error": 0.08801878247733029,
+              "range_error_m": 0.26434141127100347,
+              "covariance_trace": 0.33608840315550237
+            },
+            "raw": {
+              "visibility_probability": 0.005941592208339052,
+              "image_center_error": 0.004246098908870373,
+              "range_error_m": 0.10586995883903183,
+              "covariance_trace": 0.011879074324426253
+            },
+            "old_gate": {
+              "visibility_probability": 0.17195069490545167,
+              "image_center_error": 0.08801878247733029,
+              "range_error_m": 0.26434141127100347,
+              "covariance_trace": 0.33608840315550237
+            },
+            "shrinkage": {
+              "visibility_probability": 0.043227243175623487,
+              "image_center_error": 0.004246098908870373,
+              "range_error_m": 0.21820996330967396,
+              "covariance_trace": 0.08453375757835882
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        },
+        {
+          "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094464.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.08084785978862057,
+              "image_center_error": 0.025629578745305987,
+              "range_error_m": 0.09672814324134738,
+              "covariance_trace": 0.1529420110814353
+            },
+            "raw": {
+              "visibility_probability": 0.015217688643630347,
+              "image_center_error": 0.02649015729182673,
+              "range_error_m": 0.18916109761167824,
+              "covariance_trace": 0.0302141086740161
+            },
+            "old_gate": {
+              "visibility_probability": 0.08084785978862057,
+              "image_center_error": 0.025629578745305987,
+              "range_error_m": 0.09672814324134738,
+              "covariance_trace": 0.1529420110814353
+            },
+            "shrinkage": {
+              "visibility_probability": 0.025952926955255133,
+              "image_center_error": 0.026353754212257077,
+              "range_error_m": 0.11367601269998534,
+              "covariance_trace": 0.049474761047520896
+            }
+          },
+          "supported_fraction": 0.9895833333333334,
+          "shrinkage_nonzero_fraction": 0.9895833333333334
+        },
+        {
+          "filename": "Town02_bicycle_frequent_turns_long_seed26094451.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            },
+            "raw": {
+              "visibility_probability": 0.34768041444879827,
+              "image_center_error": 0.11510236246642624,
+              "range_error_m": 1.0619605805767096,
+              "covariance_trace": 0.7005843943490572
+            },
+            "old_gate": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            },
+            "shrinkage": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            }
+          },
+          "supported_fraction": 0.0,
+          "shrinkage_nonzero_fraction": 0.0
+        },
+        {
+          "filename": "Town07_pedestrian_normal_motion_long_seed26094827.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.0891930987670101,
+              "image_center_error": 0.05161455815569764,
+              "range_error_m": 0.47107808846872057,
+              "covariance_trace": 0.16990416214879245
+            },
+            "raw": {
+              "visibility_probability": 0.06280669451214488,
+              "image_center_error": 0.007351849913829735,
+              "range_error_m": 0.3266306361283419,
+              "covariance_trace": 0.12611138566928895
+            },
+            "old_gate": {
+              "visibility_probability": 0.0891930987670101,
+              "image_center_error": 0.05161455815569764,
+              "range_error_m": 0.47107808846872057,
+              "covariance_trace": 0.16990416214879245
+            },
+            "shrinkage": {
+              "visibility_probability": 0.059313114774202334,
+              "image_center_error": 0.014336808799058529,
+              "range_error_m": 0.4359093267503966,
+              "covariance_trace": 0.11674908265792655
+            }
+          },
+          "supported_fraction": 0.9791666666666666,
+          "shrinkage_nonzero_fraction": 0.9791666666666666
+        },
+        {
+          "filename": "Town05_pedestrian_frequent_turns_long_seed26094457.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.07974533312942746,
+              "image_center_error": 0.05057063390911026,
+              "range_error_m": 0.08412633637352977,
+              "covariance_trace": 0.15078429542622648
+            },
+            "raw": {
+              "visibility_probability": 0.017430918428180592,
+              "image_center_error": 0.0108635497292515,
+              "range_error_m": 0.16250483212563702,
+              "covariance_trace": 0.034903930738219284
+            },
+            "old_gate": {
+              "visibility_probability": 0.07974533312942746,
+              "image_center_error": 0.05057063390911026,
+              "range_error_m": 0.08412633637352977,
+              "covariance_trace": 0.15078429542622648
+            },
+            "shrinkage": {
+              "visibility_probability": 0.028469531462731183,
+              "image_center_error": 0.0108635497292515,
+              "range_error_m": 0.0917501874152149,
+              "covariance_trace": 0.054970644122383394
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        }
+      ],
+      "candidate_diagnostics": {
+        "count": 4608,
+        "outside_fit_box": 3177,
+        "old_gate_any_correction": 0,
+        "shrinkage_any_correction": 1431,
+        "executed_actions": 0,
+        "counterfactual_benefit": "NOT_EVALUATED"
+      }
+    },
+    {
+      "fit_count": 12,
+      "model": "rff64",
+      "fit_episodes": [
+        "Town06_bicycle_normal_motion_suitable_seed26094588.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094539.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094535.hdf5",
+        "Town07_pedestrian_frequent_turns_long_seed26094460.hdf5",
+        "Town07_pedestrian_normal_motion_long_seed26094824.hdf5",
+        "Town05_bicycle_normal_motion_close_seed26094530.hdf5",
+        "Town10HD_pedestrian_frequent_turns_long_seed26094463.hdf5",
+        "Town05_bicycle_normal_motion_close_seed26094528.hdf5",
+        "Town10HD_pedestrian_normal_motion_long_seed26094889.hdf5",
+        "Town05_pedestrian_frequent_turns_long_seed26094458.hdf5",
+        "Town07_bicycle_normal_motion_suitable_seed26094611.hdf5",
+        "Town05_bicycle_frequent_turns_suitable_seed26094537.hdf5"
+      ],
+      "fit_rmse": {
+        "visibility_probability": 0.02533670147653384,
+        "image_center_error": 0.01387819336180541,
+        "range_error_m": 0.16893840668268773,
+        "covariance_trace": 0.05089893207955332
+      },
+      "model_sha256": "7428e2637ca1bf9c2698351be82c3a51ee55e5394048a9fb4084503b7446bba7",
+      "blend": {
+        "visibility_probability": 1.0,
+        "image_center_error": 1.0,
+        "range_error_m": 0.25,
+        "covariance_trace": 1.0
+      },
+      "calibration": {
+        "grid": [
+          0.0,
+          0.25,
+          0.5,
+          0.75,
+          1.0
+        ],
+        "episode_equal_mse": [
+          [
+            0.026630261091202635,
+            0.20700345114766922,
+            0.046213168532707856,
+            0.10127633034617856
+          ],
+          [
+            0.02482065967772908,
+            0.20682321956400104,
+            0.046110838972965695,
+            0.0944800929506148
+          ],
+          [
+            0.023509007983785003,
+            0.20669136972169744,
+            0.05189516411077346,
+            0.08955437501720995
+          ],
+          [
+            0.022695306009370413,
+            0.2066079016207584,
+            0.06356614394613115,
+            0.08649917654596403
+          ],
+          [
+            0.022379553754485297,
+            0.20657281526118393,
+            0.08112377847903877,
+            0.08531449753687703
+          ]
+        ],
+        "selected_grid_indices": [
+          4,
+          4,
+          1,
+          4
+        ],
+        "selection_data": "calibration_only",
+        "coverage_guarantee": false
+      },
+      "old_interval_radius": {
+        "visibility_probability": 0.27397512032229254,
+        "image_center_error": 0.9697891318400462,
+        "range_error_m": 2.400730518971626,
+        "covariance_trace": 0.550490573808558
+      },
+      "aggregate_rmse": {
+        "baseline": {
+          "visibility_probability": 0.13472862904773075,
+          "image_center_error": 0.2829040656296013,
+          "range_error_m": 0.2431157391675308,
+          "covariance_trace": 0.2615995591060956
+        },
+        "raw": {
+          "visibility_probability": 0.038522206787616906,
+          "image_center_error": 0.2464660217509874,
+          "range_error_m": 0.25090757761989607,
+          "covariance_trace": 0.07732382018281189
+        },
+        "old_gate": {
+          "visibility_probability": 0.13472862904773075,
+          "image_center_error": 0.2829040656296013,
+          "range_error_m": 0.2431157391675308,
+          "covariance_trace": 0.2615995591060956
+        },
+        "shrinkage": {
+          "visibility_probability": 0.05729087744435096,
+          "image_center_error": 0.27908578856285776,
+          "range_error_m": 0.22918455887234718,
+          "covariance_trace": 0.11072012363146533
+        }
+      },
+      "episode_equal_rmse": {
+        "baseline": {
+          "visibility_probability": 0.12615577893303884,
+          "image_center_error": 0.14981701539635892,
+          "range_error_m": 0.20144337642265817,
+          "covariance_trace": 0.24376280332225572
+        },
+        "raw": {
+          "visibility_probability": 0.029755671570636216,
+          "image_center_error": 0.11124119845768843,
+          "range_error_m": 0.21794836136554321,
+          "covariance_trace": 0.05968706267856283
+        },
+        "old_gate": {
+          "visibility_probability": 0.12615577893303884,
+          "image_center_error": 0.14981701539635892,
+          "range_error_m": 0.20144337642265817,
+          "covariance_trace": 0.24376280332225572
+        },
+        "shrinkage": {
+          "visibility_probability": 0.03808983471660098,
+          "image_center_error": 0.12368375772299951,
+          "range_error_m": 0.18732009055132592,
+          "covariance_trace": 0.07436620875262205
+        }
+      },
+      "validation": [
+        {
+          "filename": "Town05_bicycle_normal_motion_close_seed26094529.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.20161304118930864,
+              "image_center_error": 0.0,
+              "range_error_m": 0.188984414077724,
+              "covariance_trace": 0.39550944953087774
+            },
+            "raw": {
+              "visibility_probability": 0.023538045078483918,
+              "image_center_error": 0.009941246039972571,
+              "range_error_m": 0.2052470307172174,
+              "covariance_trace": 0.04722018855542686
+            },
+            "old_gate": {
+              "visibility_probability": 0.20161304118930864,
+              "image_center_error": 0.0,
+              "range_error_m": 0.188984414077724,
+              "covariance_trace": 0.39550944953087774
+            },
+            "shrinkage": {
+              "visibility_probability": 0.023538045078483918,
+              "image_center_error": 0.009941246039972571,
+              "range_error_m": 0.18569142026114355,
+              "covariance_trace": 0.04722018855542686
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        },
+        {
+          "filename": "Town06_bicycle_normal_motion_close_seed26094538.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.17195069490545167,
+              "image_center_error": 0.08801878247733029,
+              "range_error_m": 0.26434141127100347,
+              "covariance_trace": 0.33608840315550237
+            },
+            "raw": {
+              "visibility_probability": 0.017139040947583624,
+              "image_center_error": 0.006261689408583286,
+              "range_error_m": 0.11482066111479602,
+              "covariance_trace": 0.03422858099683792
+            },
+            "old_gate": {
+              "visibility_probability": 0.17195069490545167,
+              "image_center_error": 0.08801878247733029,
+              "range_error_m": 0.26434141127100347,
+              "covariance_trace": 0.33608840315550237
+            },
+            "shrinkage": {
+              "visibility_probability": 0.017139040947583624,
+              "image_center_error": 0.006261689408583286,
+              "range_error_m": 0.20111229117946264,
+              "covariance_trace": 0.03422858099683792
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        },
+        {
+          "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094464.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.08084785978862057,
+              "image_center_error": 0.025629578745305987,
+              "range_error_m": 0.09672814324134738,
+              "covariance_trace": 0.1529420110814353
+            },
+            "raw": {
+              "visibility_probability": 0.01289871914000867,
+              "image_center_error": 0.013873772572332441,
+              "range_error_m": 0.11250338062677318,
+              "covariance_trace": 0.025782460880053672
+            },
+            "old_gate": {
+              "visibility_probability": 0.08084785978862057,
+              "image_center_error": 0.025629578745305987,
+              "range_error_m": 0.09672814324134738,
+              "covariance_trace": 0.1529420110814353
+            },
+            "shrinkage": {
+              "visibility_probability": 0.014706884869850365,
+              "image_center_error": 0.013431471092769837,
+              "range_error_m": 0.0945325383083227,
+              "covariance_trace": 0.02871649067947677
+            }
+          },
+          "supported_fraction": 0.9895833333333334,
+          "shrinkage_nonzero_fraction": 0.9895833333333334
+        },
+        {
+          "filename": "Town02_bicycle_frequent_turns_long_seed26094451.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            },
+            "raw": {
+              "visibility_probability": 0.0839169168013586,
+              "image_center_error": 0.6029413378722631,
+              "range_error_m": 0.32282241389155086,
+              "covariance_trace": 0.16850093894167753
+            },
+            "old_gate": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            },
+            "shrinkage": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            }
+          },
+          "supported_fraction": 0.0,
+          "shrinkage_nonzero_fraction": 0.0
+        },
+        {
+          "filename": "Town07_pedestrian_normal_motion_long_seed26094827.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.0891930987670101,
+              "image_center_error": 0.05161455815569764,
+              "range_error_m": 0.47107808846872057,
+              "covariance_trace": 0.16990416214879245
+            },
+            "raw": {
+              "visibility_probability": 0.022157092581952254,
+              "image_center_error": 0.019616722633639203,
+              "range_error_m": 0.4389832469687531,
+              "covariance_trace": 0.044444891698626074
+            },
+            "old_gate": {
+              "visibility_probability": 0.0891930987670101,
+              "image_center_error": 0.05161455815569764,
+              "range_error_m": 0.47107808846872057,
+              "covariance_trace": 0.16990416214879245
+            },
+            "shrinkage": {
+              "visibility_probability": 0.020686176710843263,
+              "image_center_error": 0.014587178486622157,
+              "range_error_m": 0.46354832655870776,
+              "covariance_trace": 0.04073817869453588
+            }
+          },
+          "supported_fraction": 0.9791666666666666,
+          "shrinkage_nonzero_fraction": 0.9791666666666666
+        },
+        {
+          "filename": "Town05_pedestrian_frequent_turns_long_seed26094457.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.07974533312942746,
+              "image_center_error": 0.05057063390911026,
+              "range_error_m": 0.08412633637352977,
+              "covariance_trace": 0.15078429542622648
+            },
+            "raw": {
+              "visibility_probability": 0.018884214874430223,
+              "image_center_error": 0.014812422219339991,
+              "range_error_m": 0.11331343487416877,
+              "covariance_trace": 0.037945314998754906
+            },
+            "old_gate": {
+              "visibility_probability": 0.07974533312942746,
+              "image_center_error": 0.05057063390911026,
+              "range_error_m": 0.08412633637352977,
+              "covariance_trace": 0.15078429542622648
+            },
+            "shrinkage": {
+              "visibility_probability": 0.018884214874430223,
+              "image_center_error": 0.014812422219339991,
+              "range_error_m": 0.07563410189669507,
+              "covariance_trace": 0.037945314998754906
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        }
+      ],
+      "candidate_diagnostics": {
+        "count": 4608,
+        "outside_fit_box": 3177,
+        "old_gate_any_correction": 0,
+        "shrinkage_any_correction": 1431,
+        "executed_actions": 0,
+        "counterfactual_benefit": "NOT_EVALUATED"
+      }
+    },
+    {
+      "fit_count": 18,
+      "model": "linear",
+      "fit_episodes": [
+        "Town06_bicycle_normal_motion_suitable_seed26094588.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094539.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094535.hdf5",
+        "Town07_pedestrian_frequent_turns_long_seed26094460.hdf5",
+        "Town07_pedestrian_normal_motion_long_seed26094824.hdf5",
+        "Town05_bicycle_normal_motion_close_seed26094530.hdf5",
+        "Town10HD_pedestrian_frequent_turns_long_seed26094463.hdf5",
+        "Town05_bicycle_normal_motion_close_seed26094528.hdf5",
+        "Town10HD_pedestrian_normal_motion_long_seed26094889.hdf5",
+        "Town05_pedestrian_frequent_turns_long_seed26094458.hdf5",
+        "Town07_bicycle_normal_motion_suitable_seed26094611.hdf5",
+        "Town05_bicycle_frequent_turns_suitable_seed26094537.hdf5",
+        "Town05_pedestrian_frequent_turns_suitable_seed26094534.hdf5",
+        "Town07_pedestrian_normal_motion_long_seed26094834.hdf5",
+        "Town10HD_pedestrian_frequent_turns_suitable_seed26094581.hdf5",
+        "Town10HD_pedestrian_frequent_turns_long_seed26094465.hdf5",
+        "Town07_pedestrian_frequent_turns_suitable_seed26094570.hdf5",
+        "Town07_pedestrian_normal_motion_suitable_seed26094726.hdf5"
+      ],
+      "fit_rmse": {
+        "visibility_probability": 0.03317310644705596,
+        "image_center_error": 0.01958196003202569,
+        "range_error_m": 0.3015782400290043,
+        "covariance_trace": 0.06659897155374273
+      },
+      "model_sha256": "bbe1c37b27557a6abd20cf26104eab37f1de930a2d80954d510d464da7dcdede",
+      "blend": {
+        "visibility_probability": 1.0,
+        "image_center_error": 1.0,
+        "range_error_m": 0.5,
+        "covariance_trace": 1.0
+      },
+      "calibration": {
+        "grid": [
+          0.0,
+          0.25,
+          0.5,
+          0.75,
+          1.0
+        ],
+        "episode_equal_mse": [
+          [
+            0.026630261091202635,
+            0.20700345114766922,
+            0.046213168532707856,
+            0.10127633034617856
+          ],
+          [
+            0.024882536556404166,
+            0.20681764994979623,
+            0.04592485968453604,
+            0.09472478768573073
+          ],
+          [
+            0.023593266853419077,
+            0.2066797733006899,
+            0.045877036621028,
+            0.08988642956612468
+          ],
+          [
+            0.02276245198224736,
+            0.20658982120035022,
+            0.04606969934218374,
+            0.08676125598736037
+          ],
+          [
+            0.022390091942889025,
+            0.2065477936487771,
+            0.04650284784800325,
+            0.08534926694943781
+          ]
+        ],
+        "selected_grid_indices": [
+          4,
+          4,
+          2,
+          4
+        ],
+        "selection_data": "calibration_only",
+        "coverage_guarantee": false
+      },
+      "old_interval_radius": {
+        "visibility_probability": 0.6035028850650671,
+        "image_center_error": 0.4271120880047301,
+        "range_error_m": 3.7194465781160573,
+        "covariance_trace": 1.2167113724037266
+      },
+      "aggregate_rmse": {
+        "baseline": {
+          "visibility_probability": 0.13472862904773075,
+          "image_center_error": 0.2829040656296013,
+          "range_error_m": 0.2431157391675308,
+          "covariance_trace": 0.2615995591060956
+        },
+        "raw": {
+          "visibility_probability": 0.12762466834752115,
+          "image_center_error": 0.04747087212987314,
+          "range_error_m": 0.42633914816903473,
+          "covariance_trace": 0.25769645319264856
+        },
+        "old_gate": {
+          "visibility_probability": 0.13472862904773075,
+          "image_center_error": 0.2829040656296013,
+          "range_error_m": 0.2431157391675308,
+          "covariance_trace": 0.2615995591060956
+        },
+        "shrinkage": {
+          "visibility_probability": 0.05939249524293597,
+          "image_center_error": 0.27921189720885015,
+          "range_error_m": 0.20701198574494267,
+          "covariance_trace": 0.11509941910701249
+        }
+      },
+      "episode_equal_rmse": {
+        "baseline": {
+          "visibility_probability": 0.12615577893303884,
+          "image_center_error": 0.14981701539635892,
+          "range_error_m": 0.20144337642265817,
+          "covariance_trace": 0.24376280332225572
+        },
+        "raw": {
+          "visibility_probability": 0.06959359198121261,
+          "image_center_error": 0.029472988470917588,
+          "range_error_m": 0.3067502678873293,
+          "covariance_trace": 0.1402349726938456
+        },
+        "old_gate": {
+          "visibility_probability": 0.12615577893303884,
+          "image_center_error": 0.14981701539635892,
+          "range_error_m": 0.20144337642265817,
+          "covariance_trace": 0.24376280332225572
+        },
+        "shrinkage": {
+          "visibility_probability": 0.0409819122608403,
+          "image_center_error": 0.12563221993944843,
+          "range_error_m": 0.18287567893514642,
+          "covariance_trace": 0.08022771862181714
+        }
+      },
+      "validation": [
+        {
+          "filename": "Town05_bicycle_normal_motion_close_seed26094529.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.20161304118930864,
+              "image_center_error": 0.0,
+              "range_error_m": 0.188984414077724,
+              "covariance_trace": 0.39550944953087774
+            },
+            "raw": {
+              "visibility_probability": 0.04552347314845725,
+              "image_center_error": 0.01292922451305533,
+              "range_error_m": 0.2722021257567373,
+              "covariance_trace": 0.09131500662703279
+            },
+            "old_gate": {
+              "visibility_probability": 0.20161304118930864,
+              "image_center_error": 0.0,
+              "range_error_m": 0.188984414077724,
+              "covariance_trace": 0.39550944953087774
+            },
+            "shrinkage": {
+              "visibility_probability": 0.04552347314845725,
+              "image_center_error": 0.01292922451305533,
+              "range_error_m": 0.22901463876022748,
+              "covariance_trace": 0.09131500662703279
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        },
+        {
+          "filename": "Town06_bicycle_normal_motion_close_seed26094538.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.17195069490545167,
+              "image_center_error": 0.08801878247733029,
+              "range_error_m": 0.26434141127100347,
+              "covariance_trace": 0.33608840315550237
+            },
+            "raw": {
+              "visibility_probability": 0.0146681266569687,
+              "image_center_error": 0.008065481122268783,
+              "range_error_m": 0.12398469682725433,
+              "covariance_trace": 0.029413224759010793
+            },
+            "old_gate": {
+              "visibility_probability": 0.17195069490545167,
+              "image_center_error": 0.08801878247733029,
+              "range_error_m": 0.26434141127100347,
+              "covariance_trace": 0.33608840315550237
+            },
+            "shrinkage": {
+              "visibility_probability": 0.0146681266569687,
+              "image_center_error": 0.008065481122268783,
+              "range_error_m": 0.1885304599248358,
+              "covariance_trace": 0.029413224759010793
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        },
+        {
+          "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094464.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.08084785978862057,
+              "image_center_error": 0.025629578745305987,
+              "range_error_m": 0.09672814324134738,
+              "covariance_trace": 0.1529420110814353
+            },
+            "raw": {
+              "visibility_probability": 0.011190135808046444,
+              "image_center_error": 0.02456488563981556,
+              "range_error_m": 0.14846219430468258,
+              "covariance_trace": 0.021967164688995254
+            },
+            "old_gate": {
+              "visibility_probability": 0.08084785978862057,
+              "image_center_error": 0.025629578745305987,
+              "range_error_m": 0.09672814324134738,
+              "covariance_trace": 0.1529420110814353
+            },
+            "shrinkage": {
+              "visibility_probability": 0.011190135808046444,
+              "image_center_error": 0.02456488563981556,
+              "range_error_m": 0.11996831102817179,
+              "covariance_trace": 0.021967164688995254
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        },
+        {
+          "filename": "Town02_bicycle_frequent_turns_long_seed26094451.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            },
+            "raw": {
+              "visibility_probability": 0.30743911496134807,
+              "image_center_error": 0.11178042726797525,
+              "range_error_m": 0.9566878741669591,
+              "covariance_trace": 0.6209199832095892
+            },
+            "old_gate": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            },
+            "shrinkage": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            }
+          },
+          "supported_fraction": 0.0,
+          "shrinkage_nonzero_fraction": 0.0
+        },
+        {
+          "filename": "Town07_pedestrian_normal_motion_long_seed26094827.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.0891930987670101,
+              "image_center_error": 0.05161455815569764,
+              "range_error_m": 0.47107808846872057,
+              "covariance_trace": 0.16990416214879245
+            },
+            "raw": {
+              "visibility_probability": 0.024184172477586648,
+              "image_center_error": 0.010138541810664446,
+              "range_error_m": 0.2257746581342895,
+              "covariance_trace": 0.04867048450947514
+            },
+            "old_gate": {
+              "visibility_probability": 0.0891930987670101,
+              "image_center_error": 0.05161455815569764,
+              "range_error_m": 0.47107808846872057,
+              "covariance_trace": 0.16990416214879245
+            },
+            "shrinkage": {
+              "visibility_probability": 0.02636856329828634,
+              "image_center_error": 0.01580581879911537,
+              "range_error_m": 0.3694588954082028,
+              "covariance_trace": 0.05219844469619367
+            }
+          },
+          "supported_fraction": 0.9791666666666666,
+          "shrinkage_nonzero_fraction": 0.9791666666666666
+        },
+        {
+          "filename": "Town05_pedestrian_frequent_turns_long_seed26094457.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.07974533312942746,
+              "image_center_error": 0.05057063390911026,
+              "range_error_m": 0.08412633637352977,
+              "covariance_trace": 0.15078429542622648
+            },
+            "raw": {
+              "visibility_probability": 0.014556528834868574,
+              "image_center_error": 0.009359370471726153,
+              "range_error_m": 0.11339005813405294,
+              "covariance_trace": 0.029123972368970328
+            },
+            "old_gate": {
+              "visibility_probability": 0.07974533312942746,
+              "image_center_error": 0.05057063390911026,
+              "range_error_m": 0.08412633637352977,
+              "covariance_trace": 0.15078429542622648
+            },
+            "shrinkage": {
+              "visibility_probability": 0.014556528834868574,
+              "image_center_error": 0.009359370471726153,
+              "range_error_m": 0.08687990338581707,
+              "covariance_trace": 0.029123972368970328
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        }
+      ],
+      "candidate_diagnostics": {
+        "count": 4608,
+        "outside_fit_box": 3174,
+        "old_gate_any_correction": 0,
+        "shrinkage_any_correction": 1434,
+        "executed_actions": 0,
+        "counterfactual_benefit": "NOT_EVALUATED"
+      }
+    },
+    {
+      "fit_count": 18,
+      "model": "rff64",
+      "fit_episodes": [
+        "Town06_bicycle_normal_motion_suitable_seed26094588.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094539.hdf5",
+        "Town06_bicycle_normal_motion_close_seed26094535.hdf5",
+        "Town07_pedestrian_frequent_turns_long_seed26094460.hdf5",
+        "Town07_pedestrian_normal_motion_long_seed26094824.hdf5",
+        "Town05_bicycle_normal_motion_close_seed26094530.hdf5",
+        "Town10HD_pedestrian_frequent_turns_long_seed26094463.hdf5",
+        "Town05_bicycle_normal_motion_close_seed26094528.hdf5",
+        "Town10HD_pedestrian_normal_motion_long_seed26094889.hdf5",
+        "Town05_pedestrian_frequent_turns_long_seed26094458.hdf5",
+        "Town07_bicycle_normal_motion_suitable_seed26094611.hdf5",
+        "Town05_bicycle_frequent_turns_suitable_seed26094537.hdf5",
+        "Town05_pedestrian_frequent_turns_suitable_seed26094534.hdf5",
+        "Town07_pedestrian_normal_motion_long_seed26094834.hdf5",
+        "Town10HD_pedestrian_frequent_turns_suitable_seed26094581.hdf5",
+        "Town10HD_pedestrian_frequent_turns_long_seed26094465.hdf5",
+        "Town07_pedestrian_frequent_turns_suitable_seed26094570.hdf5",
+        "Town07_pedestrian_normal_motion_suitable_seed26094726.hdf5"
+      ],
+      "fit_rmse": {
+        "visibility_probability": 0.021806692999270343,
+        "image_center_error": 0.013395259544379872,
+        "range_error_m": 0.20848522808910028,
+        "covariance_trace": 0.043802340063714966
+      },
+      "model_sha256": "4dbd6366dc77087a15c756b93545f9f6a5b05accfe87d6b1f9fb9498424fcdbe",
+      "blend": {
+        "visibility_probability": 1.0,
+        "image_center_error": 1.0,
+        "range_error_m": 0.5,
+        "covariance_trace": 1.0
+      },
+      "calibration": {
+        "grid": [
+          0.0,
+          0.25,
+          0.5,
+          0.75,
+          1.0
+        ],
+        "episode_equal_mse": [
+          [
+            0.026630261091202635,
+            0.20700345114766922,
+            0.046213168532707856,
+            0.10127633034617856
+          ],
+          [
+            0.025066085239411718,
+            0.20681853837571773,
+            0.04567254734551464,
+            0.09544736173907609
+          ],
+          [
+            0.023866430987296138,
+            0.20668360296308688,
+            0.045538904110957165,
+            0.09096609775894422
+          ],
+          [
+            0.0230312983348559,
+            0.2065986449097766,
+            0.045812238829035415,
+            0.08783253840578291
+          ],
+          [
+            0.022560687282090996,
+            0.206563664215787,
+            0.046492551499749415,
+            0.08604668367959217
+          ]
+        ],
+        "selected_grid_indices": [
+          4,
+          4,
+          2,
+          4
+        ],
+        "selection_data": "calibration_only",
+        "coverage_guarantee": false
+      },
+      "old_interval_radius": {
+        "visibility_probability": 0.2715290365436825,
+        "image_center_error": 0.9523750927499707,
+        "range_error_m": 1.8222424162856128,
+        "covariance_trace": 0.5451658931410975
+      },
+      "aggregate_rmse": {
+        "baseline": {
+          "visibility_probability": 0.13472862904773075,
+          "image_center_error": 0.2829040656296013,
+          "range_error_m": 0.2431157391675308,
+          "covariance_trace": 0.2615995591060956
+        },
+        "raw": {
+          "visibility_probability": 0.030248108528945446,
+          "image_center_error": 0.23905891157223721,
+          "range_error_m": 0.23515619628969955,
+          "covariance_trace": 0.06089690268634089
+        },
+        "old_gate": {
+          "visibility_probability": 0.13472862904773075,
+          "image_center_error": 0.2829040656296013,
+          "range_error_m": 0.2431157391675308,
+          "covariance_trace": 0.2615995591060956
+        },
+        "shrinkage": {
+          "visibility_probability": 0.05673504437955691,
+          "image_center_error": 0.2790435009880037,
+          "range_error_m": 0.19969951391854582,
+          "covariance_trace": 0.10958343038455948
+        }
+      },
+      "episode_equal_rmse": {
+        "baseline": {
+          "visibility_probability": 0.12615577893303884,
+          "image_center_error": 0.14981701539635892,
+          "range_error_m": 0.20144337642265817,
+          "covariance_trace": 0.24376280332225572
+        },
+        "raw": {
+          "visibility_probability": 0.023864612844294555,
+          "image_center_error": 0.10679528209352561,
+          "range_error_m": 0.20331750663206127,
+          "covariance_trace": 0.04796170281752391
+        },
+        "old_gate": {
+          "visibility_probability": 0.12615577893303884,
+          "image_center_error": 0.14981701539635892,
+          "range_error_m": 0.20144337642265817,
+          "covariance_trace": 0.24376280332225572
+        },
+        "shrinkage": {
+          "visibility_probability": 0.035953438122498745,
+          "image_center_error": 0.12285553192857777,
+          "range_error_m": 0.16616108409987598,
+          "covariance_trace": 0.07011045224494276
+        }
+      },
+      "validation": [
+        {
+          "filename": "Town05_bicycle_normal_motion_close_seed26094529.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.20161304118930864,
+              "image_center_error": 0.0,
+              "range_error_m": 0.188984414077724,
+              "covariance_trace": 0.39550944953087774
+            },
+            "raw": {
+              "visibility_probability": 0.024544972197086876,
+              "image_center_error": 0.010479185545990786,
+              "range_error_m": 0.17917341518992516,
+              "covariance_trace": 0.049243670905250836
+            },
+            "old_gate": {
+              "visibility_probability": 0.20161304118930864,
+              "image_center_error": 0.0,
+              "range_error_m": 0.188984414077724,
+              "covariance_trace": 0.39550944953087774
+            },
+            "shrinkage": {
+              "visibility_probability": 0.024544972197086876,
+              "image_center_error": 0.010479185545990786,
+              "range_error_m": 0.17398395964696176,
+              "covariance_trace": 0.049243670905250836
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        },
+        {
+          "filename": "Town06_bicycle_normal_motion_close_seed26094538.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.17195069490545167,
+              "image_center_error": 0.08801878247733029,
+              "range_error_m": 0.26434141127100347,
+              "covariance_trace": 0.33608840315550237
+            },
+            "raw": {
+              "visibility_probability": 0.01734016099334054,
+              "image_center_error": 0.00698952693249745,
+              "range_error_m": 0.10141270524477529,
+              "covariance_trace": 0.034626109518210275
+            },
+            "old_gate": {
+              "visibility_probability": 0.17195069490545167,
+              "image_center_error": 0.08801878247733029,
+              "range_error_m": 0.26434141127100347,
+              "covariance_trace": 0.33608840315550237
+            },
+            "shrinkage": {
+              "visibility_probability": 0.01734016099334054,
+              "image_center_error": 0.00698952693249745,
+              "range_error_m": 0.14797854002947633,
+              "covariance_trace": 0.034626109518210275
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        },
+        {
+          "filename": "Town10HD_pedestrian_frequent_turns_long_seed26094464.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.08084785978862057,
+              "image_center_error": 0.025629578745305987,
+              "range_error_m": 0.09672814324134738,
+              "covariance_trace": 0.1529420110814353
+            },
+            "raw": {
+              "visibility_probability": 0.009391182315652644,
+              "image_center_error": 0.011786582496408494,
+              "range_error_m": 0.10976433442819318,
+              "covariance_trace": 0.018843097704552853
+            },
+            "old_gate": {
+              "visibility_probability": 0.08084785978862057,
+              "image_center_error": 0.025629578745305987,
+              "range_error_m": 0.09672814324134738,
+              "covariance_trace": 0.1529420110814353
+            },
+            "shrinkage": {
+              "visibility_probability": 0.009391182315652644,
+              "image_center_error": 0.011786582496408494,
+              "range_error_m": 0.095509365342252,
+              "covariance_trace": 0.018843097704552853
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        },
+        {
+          "filename": "Town02_bicycle_frequent_turns_long_seed26094451.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            },
+            "raw": {
+              "visibility_probability": 0.06403655618433789,
+              "image_center_error": 0.5850097089609761,
+              "range_error_m": 0.4073976485105533,
+              "covariance_trace": 0.12911195570779813
+            },
+            "old_gate": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            },
+            "shrinkage": {
+              "visibility_probability": 0.1335846458184145,
+              "image_center_error": 0.6830685390907093,
+              "range_error_m": 0.10340186510362373,
+              "covariance_trace": 0.25734849859069997
+            }
+          },
+          "supported_fraction": 0.0,
+          "shrinkage_nonzero_fraction": 0.0
+        },
+        {
+          "filename": "Town07_pedestrian_normal_motion_long_seed26094827.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.0891930987670101,
+              "image_center_error": 0.05161455815569764,
+              "range_error_m": 0.47107808846872057,
+              "covariance_trace": 0.16990416214879245
+            },
+            "raw": {
+              "visibility_probability": 0.011795633156429066,
+              "image_center_error": 0.015458680985302578,
+              "range_error_m": 0.316609690644,
+              "covariance_trace": 0.0236838936282922
+            },
+            "old_gate": {
+              "visibility_probability": 0.0891930987670101,
+              "image_center_error": 0.05161455815569764,
+              "range_error_m": 0.47107808846872057,
+              "covariance_trace": 0.16990416214879245
+            },
+            "shrinkage": {
+              "visibility_probability": 0.014780495191577588,
+              "image_center_error": 0.013761349865882361,
+              "range_error_m": 0.40231013719957115,
+              "covariance_trace": 0.028339847309903486
+            }
+          },
+          "supported_fraction": 0.9791666666666666,
+          "shrinkage_nonzero_fraction": 0.9791666666666666
+        },
+        {
+          "filename": "Town05_pedestrian_frequent_turns_long_seed26094457.hdf5",
+          "samples": 96,
+          "strata": {
+            "visible": 96,
+            "occluded": 0,
+            "out_of_frame": 0,
+            "unknown": 0
+          },
+          "rmse": {
+            "baseline": {
+              "visibility_probability": 0.07974533312942746,
+              "image_center_error": 0.05057063390911026,
+              "range_error_m": 0.08412633637352977,
+              "covariance_trace": 0.15078429542622648
+            },
+            "raw": {
+              "visibility_probability": 0.016079172218920298,
+              "image_center_error": 0.011048007639978112,
+              "range_error_m": 0.10554724577492068,
+              "covariance_trace": 0.03226148944103919
+            },
+            "old_gate": {
+              "visibility_probability": 0.07974533312942746,
+              "image_center_error": 0.05057063390911026,
+              "range_error_m": 0.08412633637352977,
+              "covariance_trace": 0.15078429542622648
+            },
+            "shrinkage": {
+              "visibility_probability": 0.016079172218920298,
+              "image_center_error": 0.011048007639978112,
+              "range_error_m": 0.07378263727737083,
+              "covariance_trace": 0.03226148944103919
+            }
+          },
+          "supported_fraction": 1.0,
+          "shrinkage_nonzero_fraction": 1.0
+        }
+      ],
+      "candidate_diagnostics": {
+        "count": 4608,
+        "outside_fit_box": 3174,
+        "old_gate_any_correction": 0,
+        "shrinkage_any_correction": 1434,
+        "executed_actions": 0,
+        "counterfactual_benefit": "NOT_EVALUATED"
+      }
+    }
+  ],
+  "automatically_selected_deployment_model": null,
+  "limitations": [
+    "Recorded velocity is an action proxy, not randomized action outcomes.",
+    "Visible-oracle inputs and rule-derived labels, not RGB perception.",
+    "Single nested episode ordering; size effects confounded with added episode composition.",
+    "Calibration-selected shrinkage is a heuristic, not guaranteed coverage or safety.",
+    "No actions executed. Candidate correction acceptance does not prove benefit.",
+    "Six development validation episodes already used historically; not an independent final test.",
+    "All declared comparisons reported; no threshold/model selection using validation."
+  ]
+}

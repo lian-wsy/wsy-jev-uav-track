@@ -101,6 +101,8 @@ python examples/live_jev_choice.py
 
 ## CarlaAir 小规模离线实验
 
+2026-10-31：新增固定6/12/18集、linear/RFF64模型与校准修正比例对照。18集RFF64在同一开发validation上的距离预测RMSE从baseline 0.243116m降至0.199700m，5集改善、1集保持基线；这只是记录动作预测，未验证闭环或Jev收益，也未自动部署。全部组合与复现见[优化报告](docs/experiments/rollout_optimization_20261031.md)。
+
 D5校准入口现在默认使用 `causal_visible`，拟合、校准和候选诊断保持一致；原18/10/6划分已完整重跑，结果仍为全部回退、无learned收益。数值、复现命令和限制见[D5因果校准报告](docs/experiments/d5_causal_calibration_20261030.md)。复现旧D5实验须显式指定 `--input-mode oracle`。
 
 训练输入契约：历史命令默认 `--input-mode oracle`，用于复现旧记录动作校准；新因果训练请在 `train_rollout_model.py`、`train_cross_episode.py` 或 `run_d4_rollout.py` 显式传 `--input-mode causal_visible`。该模式只在明确可见且在框、不遮挡时接收目标位置/身份，用过去可见观测估计速度；未来真值仅作标签。缺少可见性或相机位姿来源就拒绝，模型摘要保存模式，不覆盖旧权重。这仍是可见标注辅助输入，不是RGB视觉跟踪。协议和验证见[D3因果训练记录](docs/experiments/d3_causal_training_20261030.md)。
