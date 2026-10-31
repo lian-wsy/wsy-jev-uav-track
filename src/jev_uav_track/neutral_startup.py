@@ -5,6 +5,7 @@ observed, followed by a NORMAL actuator zero transaction and unchanged stop
 verification using that genuinely Flying baseline. No state is manufactured.
 """
 from dataclasses import asdict
+import math
 import time
 
 from .actuation import BoundedActuator, StopVerifier, _telemetry_code
@@ -23,7 +24,7 @@ one <=150 ms window. The point margin is not certified body clearance.
 """
     if type(collision_baseline_ns) is not int or collision_baseline_ns < 0:
         raise ValueError('INITIALIZATION_COLLISION_BASELINE_INVALID')
-    result.update(status='INITIALIZING', transactions=[], input_trace=[], stop_trace=[],
+    result.update(status='INITIALIZING', transactions=[], input_trace=[], stop_trace=[], settling_trace=[],
                   owner_termination_required=False, initialization_is_tracking=False)
 
     def read():
@@ -65,10 +66,30 @@ one <=150 ms window. The point margin is not certified body clearance.
             result['owner_termination_required'] |= actuator.requires_owner_termination or actuator.in_flight
             actuator.close()
 
-    transact(read(), startup=True)
+    initial = transact(read(), startup=True)
     airborne = read()
-    if airborne.landed_state != 1:
-        raise ValueError('INITIALIZATION_STILL_LANDED')
+    # Startup motor/velocity transients are not an already-established hover.
+    # Allow a bounded, measured warmup under the existing zero goal, with NO
+    # repeated commands. Only then start the unchanged 0.5 s stop experiment.
+    result['settling_deadline_s'] = initial.neutral_completed_s + 1.
+    while True:
+        now = clock()
+        if now >= result['settling_deadline_s']:
+            raise ValueError('INITIALIZATION_SETTLING_TIMEOUT')
+        if airborne.landed_state != 1:
+            raise ValueError('INITIALIZATION_STILL_LANDED')
+        stable = (math.hypot(*airborne.linear_velocity_mps) <= .05
+                  and math.hypot(*airborne.angular_velocity_rad_s) <= .05)
+        result['settling_trace'].append({'telemetry':asdict(airborne),'now_s':now,
+            'verdict':'INITIALIZATION_STABLE' if stable else 'INITIALIZATION_SETTLING'})
+        if stable:
+            break
+        previous = airborne
+        sleep(.05)
+        airborne = read()
+        if (airborne.source_timestamp_ns <= previous.source_timestamp_ns
+                or airborne.wall_start_s <= previous.wall_end_s):
+            raise ValueError('INITIALIZATION_REPLAYED_TELEMETRY')
     receipt = transact(airborne, startup=False)
     verifier = StopVerifier(receipt, airborne)
     while True:

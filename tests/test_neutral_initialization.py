@@ -124,3 +124,36 @@ def test_startup_failure_never_authorizes_tracking_or_blindly_retries(kwargs,err
     assert result['status']!='AIRBORNE_READY'
     assert len(result['transactions'])==transaction_count
     assert all(c=='cancel' or c.velocity_mps==(0.,0.,0.) for c in commands)
+
+
+def test_startup_waits_for_measured_stability_before_starting_normal_stop_transaction():
+    run=startup_runner()
+    read,factory,commands=native_edges()
+    airborne_reads=0
+    def settling():
+        nonlocal airborne_reads
+        sample,margin=read()
+        if sample.landed_state==1:
+            airborne_reads+=1
+            if airborne_reads<=3:
+                sample=replace(sample,linear_velocity_mps=(0.,0.,.09))
+        return sample,margin
+    result={}
+    run(settling,factory,result,collision_baseline_ns=0)
+    assert result['transactions'][1]['baseline_telemetry']['linear_velocity_mps']==(0.,0.,0.)
+    assert result['settling_trace'][0]['verdict']=='INITIALIZATION_SETTLING'
+    assert result['settling_trace'][-1]['verdict']=='INITIALIZATION_STABLE'
+    assert len(result['transactions'])==2  # No repeated startup thrust commands.
+
+
+def test_initialization_never_settles_has_bounded_deadline_and_no_second_transaction():
+    run=startup_runner()
+    read,factory,commands=native_edges()
+    def moving():
+        sample,margin=read()
+        return replace(sample,linear_velocity_mps=(0.,0.,.09)),margin
+    result={}
+    with pytest.raises(ValueError,match='SETTLING_TIMEOUT'):
+        run(moving,factory,result,collision_baseline_ns=0)
+    assert len(result['transactions'])==1
+    assert result['status']!='AIRBORNE_READY'
