@@ -322,8 +322,11 @@ EVERY prefix. This transactional loop does not claim sustained 20 Hz control.
                     raise ValueError('CURRENT_DISPATCH_' + row['transport_submission'])
             # Initial/no advice or between-transaction idle is not a stop claim.
             # A safety rejection during an RPC revokes that one pending lease.
+            # Ordinary advice expiry emits no new prefix. Let the already
+            # bounded transaction finish its cancel/neutral tail; its original
+            # deadline/watchdog remain in force while fresh advice is requested.
             elif tick.command is None and actuator.in_flight and tick.reason_code not in (
-                    'TICK_TOO_SOON', 'NO_ADVICE', 'REQUEST_PENDING'):
+                    'TICK_TOO_SOON', 'NO_ADVICE', 'REQUEST_PENDING', 'ACTION_EXPIRED'):
                 actuator.halt()
                 raise ValueError('CURRENT_INPUT_REVOKED_DURING_RPC')
             sleep(max(.001, .05 - (clock() - began)))

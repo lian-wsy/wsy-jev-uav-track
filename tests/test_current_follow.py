@@ -185,11 +185,12 @@ def test_owner_recomputes_stop_evidence_instead_of_trusting_success_string(failu
 
 
 @pytest.mark.parametrize('rollout_kind', ['transparent', 'current_causal'])
-def test_session_connects_real_coordinator_controller_and_transport_without_network(rollout_kind):
+def test_session_connects_real_coordinator_controller_and_transport_without_network(rollout_kind, monkeypatch):
     import time
+    import threading
     from dataclasses import replace
     from jev_uav_track.actuation import FlightTelemetry
-    from jev_uav_track.async_control import MeasuredSafety
+    from jev_uav_track.async_control import MeasuredSafety, BoundedControlLoop
     from jev_uav_track.frames import CarlaAirAlignment
     from jev_uav_track.jev_client import MockJevClient
     from jev_uav_track.live_observation import CaptureWindow
@@ -200,6 +201,17 @@ def test_session_connects_real_coordinator_controller_and_transport_without_netw
     session = DeterministicMockSession()
     state = session.reset(seed=17, scenario='normal').state
     calls = []
+    inside_first_send=threading.Event()
+    expiry_delivered=threading.Event()
+    real_tick=BoundedControlLoop.tick
+    def expire_during_native_call(loop,*args):
+        # Inject a normal advice-boundary event while the real actuator is in
+        # its native RPC. Do not replace coordinator/transaction/safety logic.
+        if inside_first_send.is_set() and not expiry_delivered.is_set():
+            loop.coordinator.revoke('ACTION_EXPIRED')
+            expiry_delivered.set()
+        return real_tick(loop,*args)
+    monkeypatch.setattr(BoundedControlLoop,'tick',expire_during_native_call)
     def telemetry():
         end = time.perf_counter()
         return FlightTelemetry(end-.001, end, int(end*1e9), 1, (0.,0.,0.), (0.,0.,0.), False, 0)
@@ -213,7 +225,15 @@ def test_session_connects_real_coordinator_controller_and_transport_without_netw
             'target_measurement_world_m': list(state.target.position_m),
             'center_error': .1, 'collision_new': False}
     class Port:
-        def send(self, command): calls.append(command); return True
+        def send(self, command):
+            calls.append(command)
+            if len(calls)==1:
+                inside_first_send.set()
+                expiry_delivered.wait(.08)
+                inside_first_send.clear()
+            else:
+                time.sleep(.05)
+            return True
         def cancel(self): calls.append('cancel')
     result = {}
     rollout = None
@@ -224,13 +244,16 @@ def test_session_connects_real_coordinator_controller_and_transport_without_netw
     arm_time=time.perf_counter()-.5
     m.run_control_session(capture, telemetry, lambda: Port(),
         JevTrackPipeline(MockJevClient(), primitives=BOUNDED_PRIMITIVES, rollout_model=rollout),
-        CarlaAirAlignment((0.,0.,0.)), result, duration_s=.4, energy_start_s=arm_time)
+        CarlaAirAlignment((0.,0.,0.)), result, duration_s=1.3, energy_start_s=arm_time)
     assert len(result['frames']) >= 3
     assert result['prefixes']
     assert result['stop_verdict'] == 'STOP_VERIFIED'
     assert any(command == 'cancel' for command in calls)
     assert all(command == 'cancel' or command.duration_s <= .05 for command in calls)
     assert result['selection_counts']['accepted'] >= 1
+    assert any(row['reason_code']=='ACTION_EXPIRED' for row in result['ticks'])
+    assert result['selection_counts']['requests']>=2
+    assert expiry_delivered.is_set()
     assert result['metrics']['motion_observed'] is False
     assert result['energy_start_s']==arm_time
     assert result['ticks'][0]['energy']['battery_percent']<89.99
