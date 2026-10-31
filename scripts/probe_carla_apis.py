@@ -300,7 +300,7 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
     actual_map = world.get_map().name
     require_loaded_map(actual_map, expected_map)
     samples = []
-    for _ in range(0 if profile == 'safety' else 12):
+    for _ in range(0 if profile in ('safety', 'sweep') else 12):
         wall = time.monotonic()
         snap = world.get_snapshot()
         state = air.getMultirotorState(vehicle_name='JevDrone')
@@ -324,6 +324,12 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
         result['safety_probe'] = probe_safety_inputs(air.client.call,
             distance_sensor_name=sensor_names['distance'], lidar_name=sensor_names['lidar'],
             capture_geometry=capture_geometry)
+    if profile == 'sweep':
+        from jev_uav_track.obstacle_probe import probe_obstacle_sweep
+        result['kind'] = 'LIVE_OWNED_OBSTACLE_SWEEP_FIXTURE'
+        result['note'] = ('Owned static props and obstacle sensors only; no UAV arm/motion/reset/images. '
+                          'Fixture responses do not certify UAV clearance or control readiness.')
+        result['sweep_probe'] = probe_obstacle_sweep(world, carla)
     if profile in ('contract', 'observation', 'belief'):
         result['contract'] = {}
         result['note'] = 'Owned development physics probe; may arm/move/capture. Not a tracking comparison.'
@@ -335,19 +341,23 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
             output.write_text(json.dumps(result, indent=2), encoding='utf-8')
             raise
     output.write_text(json.dumps(result, indent=2, allow_nan=False), encoding='utf-8')
-    summary = {k: v for k, v in result.items() if k not in ('samples', 'safety_probe')}
+    summary = {k: v for k, v in result.items() if k not in ('samples', 'safety_probe', 'sweep_probe')}
+    if profile == 'sweep':
+        summary['sweep_probe'] = {k: v for k, v in result['sweep_probe'].items() if k != 'cases'}
     if profile == 'safety':
         summary['safety_probe'] = {k: v for k, v in result['safety_probe'].items()
                                   if k not in ('queries', 'samples')}
     print(json.dumps(summary))  # Full geometry remains in the dedicated JSON, not stdout.
     if profile == 'safety' and result['safety_probe']['status'] != 'DIAGNOSTIC_COMPLETED':
         raise SystemExit(2)
+    if profile == 'sweep' and result['sweep_probe']['status'] != 'FIXTURE_RESPONSE_VERIFIED':
+        raise SystemExit(2)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief', 'safety'], default='api')
+    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief', 'safety', 'sweep'], default='api')
     parser.add_argument('--expected-settings', type=Path, required=True)
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
     parser.add_argument('--expected-map', choices=PROBE_MAPS, default='Town02')
