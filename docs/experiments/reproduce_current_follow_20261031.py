@@ -1,20 +1,24 @@
-"""Read-only summaries of ALL seven ordered attempts, including failures.
+"""Read-only summaries of ordered attempts, including failures.
 
 No simulator, training data, key, or network access. Never overwrite evidence.
 Run from the repository with PYTHONPATH=src and an explicit new output path.
+Default preserves the published 01-07 report; --last-attempt includes later runs.
 """
 import argparse
 import hashlib
 import json
 import math
+from collections import Counter
 from pathlib import Path
 
 from jev_uav_track.current_follow import follow_metrics
 
 
-def summarize(root):
+def summarize(root, last_attempt=7):
+    if type(last_attempt) is not int or not 7 <= last_attempt <= 99:
+        raise ValueError('Include all original attempts and an explicit bounded last attempt')
     attempts=[]
-    for index in range(1,8):
+    for index in range(1,last_attempt+1):
         path=root/f'town02_current_follow{index:02d}_20261031'
         def read(name):
             source=path/name
@@ -55,6 +59,34 @@ def summarize(root):
             'map_config_restored':owner.get('map_config_restored'),
             'sensor_config_restored':owner.get('sensor_config_restored'),
             'files':files})
+        if last_attempt > 7:
+            attempts[-1]['rollout_variant'] = run.get('rollout_variant','original_interval_fallback')
+            attempts[-1]['acceptance_error'] = run.get('acceptance_error')
+            attempts[-1]['prefix_errors'] = [
+                {'kind':p.get('prefix_failure_kind'),'type':p.get('prefix_error_type')}
+                for p in prefixes if p.get('prefix_failure_kind')]
+            visible = [f for f in frames if f['visible']]
+            target_displacement = ([visible[-1]['target_measurement_world_m'][i]-
+                                    visible[0]['target_measurement_world_m'][i] for i in range(3)]
+                                   if len(visible)>=2 else None)
+            final_stop = run.get('stop_trace',[])
+            attempts[-1]['motion_diagnostics'] = {
+                'uav_progress_m':attempts[-1]['uav_progress_along_target_direction_m'],
+                'target_progress_m':sum(target_displacement[i]*direction[i] for i in range(2))
+                    if target_displacement is not None and direction is not None else None,
+                'altitude_change_m':displacement[2] if displacement else None,
+                'issued_prefix_seconds':sum(p['command']['duration_s'] for p in prefixes if p.get('command')),
+                'forward_command_integral_m':sum(sum(p['command']['velocity_mps'][i]*direction[i]
+                    for i in range(2))*p['command']['duration_s'] for p in prefixes if p.get('command'))
+                    if direction is not None else None,
+                'command_integral_scope':'ALL_RECEIPTED_COMMANDS_INCLUDING_UNCERTAIN_EXCLUDES_UNRECEIPTED_SUBMISSIONS_NOT_ACTUAL_MOTION_OR_BOUND',
+                'choices':dict(Counter(s['action_id'] for s in run.get('selections',[]))),
+                'last_stop_speed_mps':math.hypot(*final_stop[-1]['telemetry']['linear_velocity_mps'])
+                    if final_stop else None,
+                'last_stop_observation_after_neutral_s':final_stop[-1]['now_s']-prefixes[-1]['neutral_completed_s']
+                    if final_stop and prefixes else None}
+            if run.get('status') == 'FOLLOW_NOT_ACCEPTED' and run.get('error') is None and metrics:
+                attempts[-1]['metrics_scope'] = 'CONTROL_WINDOW_RETURNED_FINAL_ACCEPTANCE_FAILED_NOT_EFFECT_BENCHMARK'
     return {'kind':'ALL_CURRENT_FOLLOW_ATTEMPTS_NOT_SUCCESS_BENCHMARK',
         'attempts':attempts,'real_jev_gain':'NOT_EVALUATED','learned_gain':'NOT_EVALUATED',
         'source_hdf_reads':0,'training_runs':0,'new_pass_episodes':0,
@@ -65,10 +97,11 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(__doc__)
     parser.add_argument('--runs',required=True,type=Path)
     parser.add_argument('--output',required=True,type=Path)
+    parser.add_argument('--last-attempt',type=int,default=7)
     args=parser.parse_args()
     if args.output.resolve().is_relative_to(args.runs.resolve()):
         raise ValueError('Output must not modify original run directories')
-    report=summarize(args.runs)
+    report=summarize(args.runs,last_attempt=args.last_attempt)
     with args.output.open('x',encoding='utf-8') as handle:
         json.dump(report,handle,indent=2,allow_nan=False)
     print(json.dumps({'attempts':len(report['attempts']),
