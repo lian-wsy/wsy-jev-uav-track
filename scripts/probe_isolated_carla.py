@@ -18,7 +18,7 @@ from dataclasses import asdict
 
 from jev_uav_track.isolated_runtime import (BINARY, validate_roots, write_settings, launch_arguments,
     validate_probe_map, require_loaded_map, PROBE_MAPS, RuntimePorts, DEFAULT_PORTS,
-    add_port_arguments, ports_from_arguments)
+    add_port_arguments, ports_from_arguments, OwnedMapConfiguration)
 from jev_uav_track.windows_job import OwnedJob
 
 
@@ -144,6 +144,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
     startup.wShowWindow = 0
     process = None
     client_process = None
+    map_configuration = None
     job = OwnedJob()
     result = {'status': 'FAILED', 'started_at': time.time(), 'client_probe': None,
               'requested_map': map_name, 'not_final_test': True, 'ports': asdict(ports),
@@ -160,6 +161,8 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
                                'selector.py', 'safety.py', 'jev_client.py', 'models.py', 'primitives.py')},
               'binary_sha256': prepared['binary_sha256']}
     try:
+        map_configuration = OwnedMapConfiguration(source, task, output, map_name)
+        map_configuration.apply()
         process = subprocess.Popen(args, cwd=task / 'package', env=env, startupinfo=startup)
         job.assign(process)
         save(output / 'owner.json', {'pid': process.pid, 'started_at': result['started_at'],
@@ -225,12 +228,30 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
     except Exception as exc:
         result['error'] = f'{type(exc).__name__}: {exc}'
     finally:
-        job.close()
+        result['cleanup_errors'] = {}
+        try:
+            job.close()
+        except Exception as exc:
+            result['cleanup_errors']['job'] = f'{type(exc).__name__}: {exc}'
+        owned_stopped = True
+        for name, owned in (('client', client_process), ('owned_process', process)):
+            if owned is None:
+                continue
+            try:
+                # Retained handles identify only this launch, never a reused PID.
+                if owned.poll() is None:
+                    owned.terminate()
+                owned.wait(timeout=15)
+                result[name + '_exit_code'] = owned.returncode
+            except Exception as exc:
+                result['cleanup_errors'][name] = f'{type(exc).__name__}: {exc}'
+            try:
+                owned_stopped = (owned.poll() is not None) and owned_stopped
+            except Exception as exc:
+                owned_stopped = False
+                result['cleanup_errors'][name + '_poll'] = f'{type(exc).__name__}: {exc}'
+        result['owned_handles_stopped'] = owned_stopped
         if client_process is not None:
-            if client_process.poll() is None:
-                client_process.terminate()
-            client_process.wait(timeout=15)
-            result['client_exit_code'] = client_process.returncode
             if not (output / 'client_stdout.txt').exists():
                 try:
                     stdout, stderr = client_process.communicate(timeout=5)
@@ -238,12 +259,17 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
                     (output / 'client_stderr.txt').write_text(stderr, encoding='utf-8')
                 except Exception as exc:
                     result['client_log_error'] = f'{type(exc).__name__}: {exc}'
-        if process is not None:
-            # Popen retains the original Windows process handle: no PID/name reuse.
-            if process.poll() is None:
-                process.terminate()
-            process.wait(timeout=15)
-            result['owned_process_exit_code'] = process.returncode
+        result['map_config_restored'] = False
+        try:
+            if map_configuration is not None:
+                if not owned_stopped:
+                    raise RuntimeError('Owned processes not confirmed stopped; map backup retained')
+                map_configuration.restore()
+                result['map_configuration'] = map_configuration.audit
+                result['map_config_restored'] = (not map_configuration.applied
+                                                 or map_configuration.audit['restored'])
+        except Exception as exc:
+            result['map_restore_error'] = f'{type(exc).__name__}: {exc}'
         # Audit reads can fail for the same reason as the runtime monitor.
         # Keep each verdict fail-closed and preserve the original probe error.
         result.update(protected_unchanged=False, postflight=None, cleanup_confirmed=False)
@@ -253,12 +279,13 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
             result['protected_audit_error'] = f'{type(exc).__name__}: {exc}'
         try:
             result['postflight'] = snapshot(ports=ports)
-            result['cleanup_confirmed'] = (not result['postflight']['listeners']
-                and not any(p['ProcessId'] == process.pid for p in result['postflight']['processes'])
-                if process is not None else True)
+            owned_pids = {owned.pid for owned in (process, client_process) if owned is not None}
+            result['cleanup_confirmed'] = (owned_stopped and not result['postflight']['listeners']
+                and not any(p['ProcessId'] in owned_pids for p in result['postflight']['processes']))
         except Exception as exc:
             result['postflight_error'] = f'{type(exc).__name__}: {exc}'
-        if not result['cleanup_confirmed'] or not result['protected_unchanged']:
+        if (result['cleanup_errors'] or not result['cleanup_confirmed']
+                or not result['protected_unchanged'] or not result['map_config_restored']):
             result['status'] = 'AUDIT_FAILED'
         result['ended_at'] = time.time()
         save(output / 'smoke_result.json', result)

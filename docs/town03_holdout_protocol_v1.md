@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-- `RESERVED_PENDING_DATA_AND_RUNTIME`：保留给最终跨地图测试，当前接纳的Town03 PASS episode为0。
+- `RESERVED_PENDING_PASS_DATA`（2026-10-31更新）：api04已在本聊天新独立副本完成实际Town03 API-only核验，12次状态读取、配置恢复与清理通过；未解锁/运动/reset/取图/评策略。见[现场报告](experiments/town03_api_map_fix_20261031.md)。当前接纳的Town03 PASS episode仍为0，旧资源拒绝记录保留为历史快照。
 - 现有39集开发划分保持28 train、6 validation、5 development_stress。既有D4模型与结果不重命名为Town03测试。
 - 在本次登记前，对本仓库docs/scripts/src/tests中的JSON、JSONL、Markdown与Python检索 `town0?3` 未找到匹配；现有开发manifest没有Town03。此检查只覆盖本项目记录，不能证明其他项目/外部预训练从未使用Town03。
 - 本任务独立发行副本中存在Town03.umap及Town03.uexp，文件大小和SHA见[只读预检查](experiments/evidence/town03_reservation_20261029.json)。文件存在不证明成功加载，也不证明CARLA与AirSim在此地图可正常联用。

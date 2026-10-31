@@ -2,6 +2,10 @@
 from __future__ import annotations
 
 import json
+import hashlib
+import os
+import re
+import stat
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -97,6 +101,130 @@ def validate_roots(source: Path, task: Path) -> None:
     source, task = source.resolve(), task.resolve()
     if source == task or source.is_relative_to(task) or task.is_relative_to(source):
         raise ValueError('Task runtime and source package must have disjoint roots')
+
+
+class OwnedMapConfiguration:
+    """Temporarily select a map in an independent package, then restore bytes.
+
+    The packaged CarlaAir launcher updates these defaults as well as its map
+    argument. Never call that shared launcher or edit its source config here.
+    The caller must first prove process/resource isolation and stop its owned
+    process before restoring. This class enforces only the file boundary.
+    """
+
+    def __init__(self, source: Path, task: Path, output: Path, map_name: str):
+        validate_roots(source, task)
+        validate_probe_map(map_name)
+        self.task = task.absolute()
+        self.output = output.absolute()
+        if not self.output.is_relative_to(self.task) or self.output == self.task:
+            raise ValueError('Map evidence must be inside the owned runtime')
+        self.path = self.task / 'package/CarlaUE4/Config/DefaultEngine.ini'
+        self.map_name = map_name
+        self.original = None
+        self.configured = None
+        self.applied = False
+        self._audit_bytes = None
+        self.audit = {'requested_map': map_name, 'path': str(self.path),
+                      'applied': False, 'restored': False}
+
+    def _check_path(self, path):
+        for item in (path, *path.parents):
+            if item == self.task.parent:
+                break
+            info = item.lstat()
+            if item.is_symlink() or getattr(info, 'st_file_attributes', 0) & stat.FILE_ATTRIBUTE_REPARSE_POINT:
+                raise ValueError('Owned map paths cannot contain links or reparse points')
+        if not path.resolve().is_relative_to(self.task.resolve()):
+            raise ValueError('Owned map path escapes the runtime')
+        if path.is_file() and path.stat().st_nlink != 1:
+            raise ValueError('Owned map file cannot be a shared hardlink')
+
+    def _save_audit(self):
+        self._check_path(self.output)
+        path = self.output / 'map_config.json'
+        data = json.dumps(self.audit, indent=2).encode('utf-8')
+        if self._audit_bytes is None:
+            # An existing receipt, including a link, is never ours to overwrite.
+            with path.open('xb') as handle:
+                handle.write(data)
+                handle.flush()
+                os.fsync(handle.fileno())
+        else:
+            self._check_path(path)
+            if path.read_bytes() != self._audit_bytes:
+                raise RuntimeError('Map audit receipt changed during probe; refusing overwrite')
+            temporary = self.output / 'map_config.update.tmp'
+            with temporary.open('xb') as handle:
+                handle.write(data)
+                handle.flush()
+                os.fsync(handle.fileno())
+            self._check_path(path)
+            os.replace(temporary, path)
+        self._audit_bytes = data
+
+    def _replace_config(self, data, phase):
+        # Exclusive task-local temporary file plus replace avoids half-written
+        # defaults. A failed temporary write is retained for diagnosis.
+        self._check_path(self.path)
+        temporary = self.path.with_name(self.path.name + '.' + self.output.name + '.' + phase + '.tmp')
+        with temporary.open('xb') as handle:
+            handle.write(data)
+            handle.flush()
+            os.fsync(handle.fileno())
+        self._check_path(self.path)
+        os.replace(temporary, self.path)
+
+    def apply(self):
+        if self.original is not None:
+            raise ValueError('Map configuration may only be applied once')
+        self._check_path(self.path)
+        self._check_path(self.output)
+        original = self.path.read_bytes()
+        text = original.decode('utf-8')
+        keys = {'EditorStartupMap': 0, 'GameDefaultMap': 0, 'ServerDefaultMap': 0}
+        section, sections, lines = False, 0, []
+        for line in text.splitlines(keepends=True):
+            header = line.strip().lstrip('\ufeff')
+            if header.startswith('['):
+                section = header == '[/Script/EngineSettings.GameMapsSettings]'
+                sections += int(section)
+            match = re.match(r'^(\s*)(EditorStartupMap|GameDefaultMap|ServerDefaultMap)\s*=([^\r\n]*)(\r?\n)?$', line)
+            if section and match:
+                key = match[2]
+                keys[key] += 1
+                line = f'{match[1]}{key}=/Game/Carla/Maps/{self.map_name}{match[4] or ""}'
+            lines.append(line)
+        if sections != 1 or set(keys.values()) != {1}:
+            raise ValueError('Map defaults missing or ambiguous; no configuration changed')
+        configured = ''.join(lines).encode('utf-8')
+        backup = self.output / 'map_config_before.ini'
+        with backup.open('xb') as handle:
+            handle.write(original)
+            handle.flush()
+            os.fsync(handle.fileno())
+        self.original, self.configured = original, configured
+        self.audit.update(before_sha256=hashlib.sha256(original).hexdigest(),
+                          configured_sha256=hashlib.sha256(configured).hexdigest(), backup=str(backup))
+        self._save_audit()
+        self._replace_config(configured, 'apply')
+        self.applied = True
+        self.audit['applied'] = True
+        self._save_audit()
+
+    def restore(self):
+        if not self.applied:
+            return
+        self._check_path(self.path)
+        if self.path.read_bytes() != self.configured:
+            raise RuntimeError('Owned map configuration changed during probe; refusing overwrite')
+        self._replace_config(self.original, 'restore')
+        restored = self.path.read_bytes()
+        self.audit.update(restored=restored == self.original,
+                          restored_sha256=hashlib.sha256(restored).hexdigest())
+        self._save_audit()
+        if not self.audit['restored']:
+            raise RuntimeError('Owned map configuration restoration failed')
 
 
 def write_settings(task: Path, *, ports: RuntimePorts = DEFAULT_PORTS) -> Path:

@@ -45,6 +45,12 @@ def owned_receipt(tmp_path, frozen_ports):
     binary = task / 'package' / runtime.BINARY
     binary.parent.mkdir(parents=True)
     binary.write_bytes(b'synthetic executable, never executed')
+    config = task / 'package/CarlaUE4/Config/DefaultEngine.ini'
+    config.parent.mkdir(parents=True)
+    config.write_text('[/Script/EngineSettings.GameMapsSettings]\n'
+                      'EditorStartupMap=/Game/Carla/Maps/Town02\n'
+                      'GameDefaultMap=/Game/Carla/Maps/Town02\n'
+                      'ServerDefaultMap=/Game/Carla/Maps/Town02\n')
     receipt = {'source': str(source), 'binary_sha256': launcher.sha(binary)}
     if frozen_ports is not None:
         receipt['ports'] = frozen_ports
@@ -167,36 +173,52 @@ def test_all_contract_telemetry_connections_use_independent_port(tmp_path, monke
     assert connections == [42461] * 5  # one velocity reader plus four axis readers
 
 
-@pytest.mark.parametrize('phase', ['waiting', 'complete', 'success', 'legacy'])
+@pytest.mark.parametrize('phase', ['waiting', 'complete', 'success', 'legacy', 'map_switch',
+                                 'job_close_failure', 'process_wait_failure', 'client_wait_failure'])
 def test_client_memory_guard_and_owned_cleanup(tmp_path, monkeypatch, phase):
+    cleanup_failure = phase in ('job_close_failure', 'process_wait_failure', 'client_wait_failure')
     endpoints = ports() if phase != 'legacy' else ports(3100, 3101, 3102, 42451)
     frozen = None if phase == 'legacy' else {'carla_rpc': 3200, 'carla_streaming': 3201,
         'carla_secondary': 3202, 'airsim_rpc': 42461}
     source, task = owned_receipt(tmp_path, frozen)
+    map_name = 'Town03' if phase == 'map_switch' or cleanup_failure else 'Town02'
+    config = task / 'package/CarlaUE4/Config/DefaultEngine.ini'
+    config_before = config.read_bytes()
     monkeypatch.setattr(launcher, 'protected_files', lambda _: {})
     launched, assigned, closed = [], [], []
     class Process:
         def __init__(self, command, **kwargs):
+            if map_name == 'Town03':
+                assert config.read_text().count('/Game/Carla/Maps/Town03') == 3
             self.pid = 9000 + len(launched)
             self.returncode = None
             self.command = command
             launched.append(self)
         def poll(self): return self.returncode
-        def terminate(self): self.returncode = -1
-        def wait(self, **kwargs): return self.returncode
+        def terminate(self):
+            if ((phase == 'process_wait_failure' and self.pid == 9000)
+                    or (phase == 'client_wait_failure' and self.pid == 9001)):
+                raise OSError('synthetic owned termination failure')
+            self.returncode = -1
+        def wait(self, **kwargs):
+            if self.returncode is None:
+                raise launcher.subprocess.TimeoutExpired(self.command, kwargs['timeout'])
+            return self.returncode
         def communicate(self, **kwargs):
             if self.returncode is not None:
                 return 'synthetic stdout', 'synthetic stderr'
-            if phase == 'waiting':
+            if phase in ('waiting', 'client_wait_failure'):
                 raise launcher.subprocess.TimeoutExpired(self.command, kwargs['timeout'])
             self.returncode = 0
             Path(self.command[self.command.index('--output') + 1]).write_text(json.dumps({
-                'map': 'Town02', 'map_match': True, 'requested_map': 'Town02'}))
+                'map': map_name, 'map_match': True, 'requested_map': map_name}))
             return 'synthetic stdout', 'synthetic stderr'
     class Job:
         def assign(self, process): assigned.append(process.pid)
         def close(self):
             closed.append(True)
+            if cleanup_failure:
+                raise OSError('synthetic job close failure')
             for process in launched: process.returncode = -1
     monkeypatch.setattr(launcher.subprocess, 'Popen', Process)
     monkeypatch.setattr(launcher, 'OwnedJob', Job)
@@ -205,18 +227,38 @@ def test_client_memory_guard_and_owned_cleanup(tmp_path, monkeypatch, phase):
         {'processes': [], 'listeners': [{'LocalPort': endpoints.carla_rpc, 'OwningProcess': 9000},
                                        {'LocalPort': endpoints.airsim_rpc, 'OwningProcess': 9000}], 'free_memory_kib': 2 * 1024**2},
         {'processes': [], 'listeners': [], 'free_memory_kib': 2 * 1024**2},
-        {'processes': [], 'listeners': [], 'free_memory_kib': 768 * 1024 - 1 if phase in ('waiting', 'complete') else 2 * 1024**2},
-        {'processes': [], 'listeners': [], 'free_memory_kib': 2 * 1024**2}]
+        {'processes': [], 'listeners': [], 'free_memory_kib': 768 * 1024 - 1 if phase in ('waiting', 'complete', 'client_wait_failure') else 2 * 1024**2},
+        {'processes': ([{'ProcessId': 9000 if phase == 'process_wait_failure' else 9001}]
+                       if phase in ('process_wait_failure', 'client_wait_failure') else []),
+         'listeners': [], 'free_memory_kib': 2 * 1024**2}]
     def query(command):
         assert str(endpoints.carla_rpc) in command and str(endpoints.airsim_rpc) in command
         return samples.pop(0)
     monkeypatch.setattr(launcher, 'ps_json', query)
-    if phase in ('waiting', 'complete'):
+    if phase in ('waiting', 'complete') or cleanup_failure:
         with pytest.raises(SystemExit):
-            launcher.smoke(source, task, Path(sys.executable), 'memory', 'api', 'takeoff', ports=endpoints)
+            launcher.smoke(source, task, Path(sys.executable), 'memory', 'api', 'takeoff',
+                           map_name=map_name, ports=endpoints)
     else:
-        launcher.smoke(source, task, Path(sys.executable), 'memory', 'api', 'takeoff', ports=endpoints)
+        launcher.smoke(source, task, Path(sys.executable), 'memory', 'api', 'takeoff',
+                       map_name=map_name, ports=endpoints)
     result = json.loads((task / 'runs/memory/smoke_result.json').read_text())
+    if cleanup_failure:
+        assert result['status'] == 'AUDIT_FAILED'
+        assert 'synthetic job close failure' in result['cleanup_errors']['job']
+        stopped = phase == 'job_close_failure'
+        assert result['cleanup_confirmed'] is stopped
+        assert result['map_config_restored'] is stopped
+        if stopped:
+            assert config.read_bytes() == config_before
+        else:
+            assert config.read_text().count('/Game/Carla/Maps/Town03') == 3
+            assert (task / 'runs/memory/map_config_before.ini').read_bytes() == config_before
+            assert 'not confirmed stopped' in result['map_restore_error']
+        assert result['ended_at'] >= result['started_at']
+        return
+    assert config.read_bytes() == config_before
+    assert json.loads((task / 'runs/memory/map_config.json').read_text())['restored'] is True
     if phase in ('waiting', 'complete'):
         assert '768 MiB' in result['error']
         assert result['status'] == 'FAILED'

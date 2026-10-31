@@ -1,0 +1,396 @@
+{
+  "schema": "jev_uav_track.town03_map_fix.v1",
+  "evidence_kind": "LIVE_OWNED_API_INFRASTRUCTURE",
+  "runtime_root": "D:/JevUavRuns/20261031_d6_probe01",
+  "implementation_base_commit": "0d6f1e855638474afe3a18dc9e7aa14ea335b181",
+  "implementation_identity": "uncommitted_at_run; exact source SHA recorded per run",
+  "previous_preflight_evidence": "d6_runtime_preflight_20261031.json",
+  "attempts": [
+    {
+      "run": "town03_api03_20261031",
+      "status": "FAILED",
+      "requested_map": "Town03",
+      "observed_map": "Carla/Maps/Town02",
+      "observed_map_source": "client_stderr.txt",
+      "owned_shipping_pid": 25724,
+      "preflight_free_memory_kib": 5460460,
+      "last_runtime_free_memory_kib": 3404108,
+      "observed_listeners": [
+        {
+          "LocalPort": 42461,
+          "OwningProcess": 25724
+        },
+        {
+          "LocalPort": 3202,
+          "OwningProcess": 25724
+        },
+        {
+          "LocalPort": 3201,
+          "OwningProcess": 25724
+        },
+        {
+          "LocalPort": 3200,
+          "OwningProcess": 25724
+        }
+      ],
+      "duration_s": 28.15054678916931,
+      "client_exit_code": 1,
+      "error": "RuntimeError: API probe failed; inspect task-local client logs",
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "map_config_restored": null,
+      "map_configuration": null,
+      "probe_sha256": "3d18bd38dd7c0c30e8821e53bedba0975a8cf76e37d788f39dd859231e7be565",
+      "runtime_module_sha256": "74217d43723089b982f9ce1fe9e8d5ca4ceeabf064f14226c8fee50d218ef1f1",
+      "api_probe_sha256": "9782b30d4f49862102fe9da72dffd701d261b0d41e46498eb423580b35948b8f",
+      "api_result": null,
+      "receipts": [
+        {
+          "relative_path": "runs/town03_api03_20261031/run_request.json",
+          "bytes": 285,
+          "sha256": "4148bed4d62d4a3f7eda2c3e952f7b7b27cb1dfe761e78a0aae7f96987a7c6c8"
+        },
+        {
+          "relative_path": "runs/town03_api03_20261031/preflight.json",
+          "bytes": 249,
+          "sha256": "ecba0d0471abe6ecff5009dfdc689bcdc81f451fd33590e0c7d4f3ce24991cb7"
+        },
+        {
+          "relative_path": "runs/town03_api03_20261031/owner.json",
+          "bytes": 834,
+          "sha256": "5520aecb7b9c124333c24cdca818664623fb3e9fc406e1d77fa7a4d0b3595d64"
+        },
+        {
+          "relative_path": "runs/town03_api03_20261031/last_runtime_snapshot.json",
+          "bytes": 786,
+          "sha256": "b418b341cceadaf43fa87261f5df2d9a4f8cab2ffd71f704f961b36606388799"
+        },
+        {
+          "relative_path": "runs/town03_api03_20261031/client_stderr.txt",
+          "bytes": 691,
+          "sha256": "8adb4e9ce13bbaeccdf483009c58be43922ff5186379954b0216ce996fa90cef"
+        },
+        {
+          "relative_path": "runs/town03_api03_20261031/smoke_result.json",
+          "bytes": 2595,
+          "sha256": "dd66f2381a0d5374d123f839502df4530e248499ca75399691261efb83d416f8"
+        }
+      ]
+    },
+    {
+      "run": "town03_api04_20261031",
+      "status": "API_SMOKE_COMPLETED",
+      "requested_map": "Town03",
+      "observed_map": "Carla/Maps/Town03",
+      "observed_map_source": "api_probe.json",
+      "owned_shipping_pid": 80104,
+      "preflight_free_memory_kib": 5001552,
+      "last_runtime_free_memory_kib": 2875316,
+      "observed_listeners": [
+        {
+          "LocalPort": 42461,
+          "OwningProcess": 80104
+        },
+        {
+          "LocalPort": 3202,
+          "OwningProcess": 80104
+        },
+        {
+          "LocalPort": 3201,
+          "OwningProcess": 80104
+        },
+        {
+          "LocalPort": 3200,
+          "OwningProcess": 80104
+        }
+      ],
+      "duration_s": 21.5910587310791,
+      "client_exit_code": 0,
+      "error": null,
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "map_config_restored": true,
+      "map_configuration": {
+        "requested_map": "Town03",
+        "path": "D:\\JevUavRuns\\20261031_d6_probe01\\package\\CarlaUE4\\Config\\DefaultEngine.ini",
+        "applied": true,
+        "restored": true,
+        "before_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+        "configured_sha256": "893d31f60652474629ba42eb16d16bd2788dae1f3b26457336f434bf55172035",
+        "backup": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town03_api04_20261031\\map_config_before.ini",
+        "restored_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64"
+      },
+      "probe_sha256": "138fec244fb78acbb1da97d5fb21e5f31501081da4e87792c05547e4201dba7e",
+      "runtime_module_sha256": "a7882b4bd1963e403781976de764e7b6bb9304cf49a8c578ec56da584622fb8e",
+      "api_probe_sha256": "9782b30d4f49862102fe9da72dffd701d261b0d41e46498eb423580b35948b8f",
+      "api_result": {
+        "kind": "LIVE_OWNED_API_PROBE",
+        "carla_server": "7a7fdb3-dirty",
+        "python_version": "3.10.21 | packaged by conda-forge | (main, Aug 21 2026, 22:38:44) [MSC v.1944 64 bit (AMD64)]",
+        "rpc_success_checked": true,
+        "carla_client": "7a7fdb3-dirty",
+        "map": "Carla/Maps/Town03",
+        "requested_map": "Town03",
+        "map_match": true,
+        "airsim_server": 1,
+        "vehicles": [
+          "JevDrone"
+        ],
+        "settings_match": true,
+        "samples": [
+          {
+            "wall_s": 1442513.093,
+            "carla_s": 4.014590986073017,
+            "carla_frame": 208,
+            "airsim_s": 1793422098.3264453,
+            "position_ned": [
+              0.002915038960054517,
+              -0.00034729004255495965,
+              6.796367645263672
+            ]
+          },
+          {
+            "wall_s": 1442513.203,
+            "carla_s": 4.131258483976126,
+            "carla_frame": 215,
+            "airsim_s": 1793422098.4374478,
+            "position_ned": [
+              0.002915038960054517,
+              -0.00034729004255495965,
+              6.796367645263672
+            ]
+          },
+          {
+            "wall_s": 1442513.312,
+            "carla_s": 4.23125908523798,
+            "carla_frame": 221,
+            "airsim_s": 1793422098.5484502,
+            "position_ned": [
+              0.002915038960054517,
+              -0.00034729004255495965,
+              6.796367645263672
+            ]
+          },
+          {
+            "wall_s": 1442513.421,
+            "carla_s": 4.347926385700703,
+            "carla_frame": 228,
+            "airsim_s": 1793422098.6564524,
+            "position_ned": [
+              0.002915038960054517,
+              -0.00034729004255495965,
+              6.796367645263672
+            ]
+          },
+          {
+            "wall_s": 1442513.531,
+            "carla_s": 4.447927083820105,
+            "carla_frame": 234,
+            "airsim_s": 1793422098.7644548,
+            "position_ned": [
+              0.002915038960054517,
+              -0.00034729004255495965,
+              6.796367645263672
+            ]
+          },
+          {
+            "wall_s": 1442513.64,
+            "carla_s": 4.564594384282827,
+            "carla_frame": 241,
+            "airsim_s": 1793422098.872457,
+            "position_ned": [
+              0.002915038960054517,
+              -0.00034729004255495965,
+              6.796367645263672
+            ]
+          },
+          {
+            "wall_s": 1442513.75,
+            "carla_s": 4.66459508612752,
+            "carla_frame": 247,
+            "airsim_s": 1793422098.9804595,
+            "position_ned": [
+              0.002915038960054517,
+              -0.00034729004255495965,
+              6.796367645263672
+            ]
+          },
+          {
+            "wall_s": 1442513.859,
+            "carla_s": 4.781262286007404,
+            "carla_frame": 254,
+            "airsim_s": 1793422099.0914617,
+            "position_ned": [
+              0.002915038960054517,
+              -0.00034729004255495965,
+              6.796367645263672
+            ]
+          },
+          {
+            "wall_s": 1442513.968,
+            "carla_s": 4.881262984126806,
+            "carla_frame": 260,
+            "airsim_s": 1793422099.199464,
+            "position_ned": [
+              0.002915038960054517,
+              -0.00034729004255495965,
+              6.796367645263672
+            ]
+          },
+          {
+            "wall_s": 1442514.078,
+            "carla_s": 4.997930485755205,
+            "carla_frame": 267,
+            "airsim_s": 1793422099.3074663,
+            "position_ned": [
+              0.002915038960054517,
+              -0.00034729004255495965,
+              6.796367645263672
+            ]
+          },
+          {
+            "wall_s": 1442514.171,
+            "carla_s": 5.097931083291769,
+            "carla_frame": 273,
+            "airsim_s": 1793422099.4154687,
+            "position_ned": [
+              0.002915038960054517,
+              -0.00034729004255495965,
+              6.796367645263672
+            ]
+          },
+          {
+            "wall_s": 1442514.281,
+            "carla_s": 5.214598584920168,
+            "carla_frame": 280,
+            "airsim_s": 1793422099.5264711,
+            "position_ned": [
+              0.002915038960054517,
+              -0.00034729004255495965,
+              6.796367645263672
+            ]
+          }
+        ],
+        "ports": {
+          "carla_rpc": 3200,
+          "carla_streaming": 3201,
+          "carla_secondary": 3202,
+          "airsim_rpc": 42461
+        },
+        "note": "No arm, reset, motion, RGB capture or target tracking in this probe."
+      },
+      "receipts": [
+        {
+          "relative_path": "runs/town03_api04_20261031/run_request.json",
+          "bytes": 284,
+          "sha256": "ffc84e9a708d21bcefb5dcf64995e8b9049c7063663b107591a6268526736ee2"
+        },
+        {
+          "relative_path": "runs/town03_api04_20261031/preflight.json",
+          "bytes": 249,
+          "sha256": "8303797f853d68999a1e5b1938bed1e3f4ec6d954e851fb80ad6d4818f6f2601"
+        },
+        {
+          "relative_path": "runs/town03_api04_20261031/owner.json",
+          "bytes": 834,
+          "sha256": "997f17c0dc8bec5486146a9769982204f6113024c5f59e3e07b839a73b2b5f86"
+        },
+        {
+          "relative_path": "runs/town03_api04_20261031/last_runtime_snapshot.json",
+          "bytes": 786,
+          "sha256": "8133d8db425ff59aacc1771fefe8d8847f9c3c2fb611d286ff3f3cb1c19fe420"
+        },
+        {
+          "relative_path": "runs/town03_api04_20261031/client_stderr.txt",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative_path": "runs/town03_api04_20261031/smoke_result.json",
+          "bytes": 7461,
+          "sha256": "f6a63d871e376f02529e792bdc07afe4434fe2bf8c93d99d2db5dfe89966a780"
+        },
+        {
+          "relative_path": "runs/town03_api04_20261031/api_probe.json",
+          "bytes": 3947,
+          "sha256": "4cd2f34f40406b521a05811b1f51138805d060449f491b433db3dfa7ac960ad1"
+        },
+        {
+          "relative_path": "runs/town03_api04_20261031/map_config.json",
+          "bytes": 535,
+          "sha256": "accf62e12bdfa2b552d4fff757a23ead9be2466d3c5ea075a3ceecaf5821539a"
+        },
+        {
+          "relative_path": "runs/town03_api04_20261031/map_config_before.ini",
+          "bytes": 15138,
+          "sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64"
+        }
+      ]
+    }
+  ],
+  "protected_source_check": [
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\CarSimConfig.ini",
+      "expected_sha256": "8e96e9fb4d695eb6d21f9d7b9da4fcbd583312b45e63cc20b7b222d4d8a22f90",
+      "actual_sha256": "8e96e9fb4d695eb6d21f9d7b9da4fcbd583312b45e63cc20b7b222d4d8a22f90",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultEngine.ini",
+      "expected_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+      "actual_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultGame.ini",
+      "expected_sha256": "94427ca09cb488081350225a7d3c5b0e22843ae17cb61cb1ebd4af39ad695df0",
+      "actual_sha256": "94427ca09cb488081350225a7d3c5b0e22843ae17cb61cb1ebd4af39ad695df0",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultGameUserSettings.ini",
+      "expected_sha256": "2168f96d659f41a33b4fbb5bfc3143a1437bc6059b0d018d532f74a4c2e71691",
+      "actual_sha256": "2168f96d659f41a33b4fbb5bfc3143a1437bc6059b0d018d532f74a4c2e71691",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultInput.ini",
+      "expected_sha256": "1ed4e4714a4476b2e2bb15e59afef2fea5413487aa13dfc86114205adb55dec4",
+      "actual_sha256": "1ed4e4714a4476b2e2bb15e59afef2fea5413487aa13dfc86114205adb55dec4",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultScalability.ini",
+      "expected_sha256": "06fef2edfee12b05f55b914ca8fa8e490e1b708ab8869f20136874ba2897f606",
+      "actual_sha256": "06fef2edfee12b05f55b914ca8fa8e490e1b708ab8869f20136874ba2897f606",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\OptionalModules.ini",
+      "expected_sha256": "91745741cf40de17e1ec47a8a922db851fcdf4403df86b237f3ef03682719f45",
+      "actual_sha256": "91745741cf40de17e1ec47a8a922db851fcdf4403df86b237f3ef03682719f45",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\20748\\Documents\\AirSim\\settings.json",
+      "expected_sha256": "de89442d0093ffb47f7d05a3859206698145f15b2ff99b675e8149a858c8f048",
+      "actual_sha256": "de89442d0093ffb47f7d05a3859206698145f15b2ff99b675e8149a858c8f048",
+      "unchanged": true
+    }
+  ],
+  "startup_min_free_memory_kib": 4194304,
+  "runtime_min_free_memory_kib": 786432,
+  "town03_pass_episodes": 0,
+  "real_jev_calls": 0,
+  "new_training_runs": 0,
+  "motion_commands": 0,
+  "image_captures": 0,
+  "world_resets": 0,
+  "not_final_test": true,
+  "limitations": [
+    "API-only; not PASS episode or tracking evidence",
+    "Runtime snapshots are sampled, not continuous RAM minima",
+    "03 failure retained; 04 success does not rewrite 01-03",
+    "Current startup config requires canonical map key casing; case-variant duplicate hardening deferred"
+  ]
+}
