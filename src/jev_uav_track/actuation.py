@@ -134,6 +134,7 @@ class BoundedActuator:
         self._revoked = threading.Event()
         self._closed = False
         self._clock_floor = None
+        self._clock_lock = threading.Lock()
         self._last_tick = self._last_source = None
         self._collision_event = None
         self.requires_owner_termination = False
@@ -152,6 +153,12 @@ class BoundedActuator:
         self._revoked.set()
 
     def _now(self):
+        # All supervisor and worker reads share a monotonic floor. Hold only
+        # around the clock/read check, NEVER while calling a transport RPC.
+        with self._clock_lock:
+            return self._read_clock()
+
+    def _read_clock(self):
         try:
             now = self.clock()
         except Exception:
@@ -207,15 +214,15 @@ class BoundedActuator:
     def _execute(self, tick, sample, submitted):
         receipt = ActuationReceipt(self.generation, tick.request_id, submitted, "REVOKED_BEFORE_SEND")
         if self._revoked.is_set():
-            return replace(receipt, completed_s=submitted)
+            return replace(receipt, completed_s=self._now())
         try:
             if self._port is None:
                 self._port = self.transport_factory()
         except Exception:
-            return replace(receipt, status="PORT_UNAVAILABLE", completed_s=submitted)
+            return replace(receipt, status="PORT_UNAVAILABLE", completed_s=self._now())
         # Factory can be slow: expiry, state and revocation are checked AFTER it.
-        now = self.clock()
-        if not finite_number(now) or now < submitted:
+        now = self._now()
+        if now is None:
             return replace(receipt, status="CLOCK_INVALID", owner_termination_required=True)
         if self._revoked.is_set():
             return replace(receipt, completed_s=now)
@@ -240,8 +247,8 @@ class BoundedActuator:
                 neutral = self._port.send(AirSimWorldVelocityCommand((0., 0., 0.), 0., .05)) is True
             except Exception:
                 pass
-        completed = self.clock()
-        valid_clock = finite_number(completed) and completed >= now
+        completed = self._now()
+        valid_clock = completed is not None
         failed = not (acknowledged and canceled and neutral and valid_clock)
         return replace(receipt,
             status="TRANSACTION_UNCERTAIN" if failed else "PREFIX_AND_NEUTRAL_ACKNOWLEDGED",
@@ -265,6 +272,9 @@ class BoundedActuator:
         except BaseException:
             receipt = ActuationReceipt(self.generation, pending.tick.request_id,
                 pending.submitted_s, "TRANSACTION_UNCERTAIN", owner_termination_required=True)
+        # Completion may race the first poll clock read. Compare against a
+        # read taken AFTER retrieving the already-completed Future.
+        now = self._now()
         if (receipt.owner_termination_required or receipt.completed_s is None or now is None
                 or receipt.completed_s > now or receipt.completed_s < pending.submitted_s
                 or receipt.completed_s >= pending.submitted_s + self.transaction_timeout_s):

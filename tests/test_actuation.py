@@ -285,6 +285,58 @@ def test_future_completion_timestamp_cannot_be_accepted_after_local_clock_revers
     assert actuator.poll().owner_termination_required
 
 
+def test_worker_clock_cannot_rewind_below_an_observed_supervisor_time_and_revive_lease():
+    clock, executor, port, actuator = setup()
+    actuator.submit(prefix(), telemetry())
+    clock.now = 1.195  # past the lease, before the transaction watchdog
+    actuator.poll()
+    clock.now = 1.18
+    executor.complete()
+    clock.now = 1.196
+    receipt = actuator.poll()
+    assert receipt.owner_termination_required is True
+    assert port.calls == []
+
+
+def test_completion_during_poll_does_not_compare_against_an_earlier_clock(monkeypatch):
+    clock, executor, port, actuator = setup()
+    actuator.submit(prefix(), telemetry())
+    future, fn = executor.pending
+    done = future.done
+
+    def complete_during_done_check():
+        clock.now = 1.02
+        executor.complete()
+        return done()
+
+    monkeypatch.setattr(future, "done", complete_during_done_check)
+    clock.now = 1.01
+    receipt = actuator.poll()
+    assert receipt.prefix_acknowledged is True
+    assert receipt.completed_s == 1.02
+    assert receipt.owner_termination_required is False
+
+
+def test_revoked_and_factory_failure_receipts_record_actual_completion_not_submission():
+    clock, executor, port, actuator = setup()
+    actuator.submit(prefix(), telemetry())
+    actuator.halt()
+    clock.now = 1.1
+    executor.complete()
+    assert actuator.poll().completed_s == 1.1
+
+    def unavailable():
+        clock.now = 1.08
+        raise RuntimeError("SECRET")
+
+    clock, executor, port, actuator = setup(factory=unavailable)
+    actuator.submit(prefix(), telemetry())
+    executor.complete()
+    receipt = actuator.poll()
+    assert receipt.status == "PORT_UNAVAILABLE"
+    assert receipt.completed_s == 1.08
+
+
 def successful_receipt():
     clock, executor, port, actuator = setup()
     actuator.submit(prefix(), telemetry())
