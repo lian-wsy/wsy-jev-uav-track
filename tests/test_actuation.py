@@ -64,6 +64,23 @@ class RecordingPort:
             raise RuntimeError("SECRET_ERROR_MUST_NOT_ESCAPE")
 
 
+@pytest.mark.parametrize('response,kind,error_type',[
+    (False,'RETURNED_FALSE',None),
+    (RuntimeError('SECRET_ERROR_MUST_NOT_ESCAPE'),'EXCEPTION','RuntimeError'),
+])
+def test_uncertain_prefix_retains_safe_failure_kind_without_exception_message(response,kind,error_type):
+    from dataclasses import asdict
+    import json
+    clock,executor,port,actuator=setup(RecordingPort(responses=(response,True)))
+    assert actuator.submit(prefix(),telemetry())=='SUBMITTED'
+    executor.complete()
+    receipt=actuator.poll()
+    assert getattr(receipt,'prefix_failure_kind',None)==kind
+    assert receipt.prefix_error_type==error_type
+    assert 'SECRET_ERROR' not in json.dumps(asdict(receipt))
+    assert receipt.owner_termination_required and receipt.neutral_acknowledged
+
+
 def setup(port=None, factory=None):
     from jev_uav_track.actuation import BoundedActuator
     clock, executor = Clock(), ControlledExecutor()

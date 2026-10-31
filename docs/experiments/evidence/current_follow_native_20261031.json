@@ -1,0 +1,759 @@
+{
+  "kind": "ALL_CURRENT_FOLLOW_ATTEMPTS_NOT_SUCCESS_BENCHMARK",
+  "attempts": [
+    {
+      "run": "town02_current_follow01_20261031",
+      "original_directory": "D:/JevUavRuns/20261031_d6_probe01/runs/town02_current_follow01_20261031",
+      "status": "NOT_LAUNCHED",
+      "phase": "preflight",
+      "error": null,
+      "owner_status": null,
+      "model": null,
+      "method": null,
+      "real_jev_calls": 0,
+      "initialization_status": "NOT_RUN",
+      "initialization_stop": null,
+      "frame_count": 0,
+      "prefix_receipts": 0,
+      "prefix_submissions": 0,
+      "acknowledged_prefixes": 0,
+      "unconfirmed_submissions": 0,
+      "stop_verdict": null,
+      "metrics_scope": "PARTIAL_ABORTED_TRAJECTORY_NOT_EFFECT_BENCHMARK",
+      "partial_metrics": null,
+      "uav_displacement_xyz_m": null,
+      "uav_progress_along_target_direction_m": null,
+      "selections": [],
+      "selection_counts": null,
+      "target_destroyed": null,
+      "protected_unchanged": null,
+      "cleanup_confirmed": null,
+      "map_config_restored": null,
+      "sensor_config_restored": null,
+      "files": {
+        "preflight.json": {
+          "bytes": 1555,
+          "sha256": "1bea7d4f9570e713e8c99a5f6443d9cc305caf7aa54c137bcc9bae6445fece9f"
+        },
+        "run_request.json": {
+          "bytes": 366,
+          "sha256": "654229bff2efa0d345de028f48b1d3997b40efb8894df085982ddf339b18e126"
+        }
+      }
+    },
+    {
+      "run": "town02_current_follow02_20261031",
+      "original_directory": "D:/JevUavRuns/20261031_d6_probe01/runs/town02_current_follow02_20261031",
+      "status": "FOLLOW_ABORTED",
+      "phase": "prearm",
+      "error": "PREARM_MEASURED_INPUT_REJECTED",
+      "owner_status": "FAILED",
+      "model": {
+        "model_sha256": "b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189",
+        "input_mode": "causal_visible",
+        "artifact_sha256": {
+          "d5_residual.npz": "b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189",
+          "calibration.json": "fa6b59e42df90ce15e39a1ea83652ff223a7e8c4517a15d1471c5f4d44d27d00",
+          "protocol.json": "dd8ca2293f586000ab8fa71f4d7d4725fd9696a50d881bafa5e567bcf6428130"
+        },
+        "interval_gate": "ORIGINAL_UNCHANGED",
+        "resolved_training_horizon_s": 0.9999999776482582,
+        "execution_candidate_horizon_s": 1.0,
+        "horizon_agreement_tolerance_s": 1e-06
+      },
+      "method": "mock_jev",
+      "real_jev_calls": 0,
+      "initialization_status": "NOT_RUN",
+      "initialization_stop": null,
+      "frame_count": 0,
+      "prefix_receipts": 0,
+      "prefix_submissions": 0,
+      "acknowledged_prefixes": 0,
+      "unconfirmed_submissions": 0,
+      "stop_verdict": null,
+      "metrics_scope": "PARTIAL_ABORTED_TRAJECTORY_NOT_EFFECT_BENCHMARK",
+      "partial_metrics": null,
+      "uav_displacement_xyz_m": null,
+      "uav_progress_along_target_direction_m": null,
+      "selections": [],
+      "selection_counts": null,
+      "target_destroyed": true,
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "map_config_restored": true,
+      "sensor_config_restored": true,
+      "files": {
+        "api_probe.json": {
+          "bytes": 101361,
+          "sha256": "bd0ae76935521da05e79ce2b730d21806be2c4b7ec4d97e2347e978848de3f51"
+        },
+        "client_stderr.txt": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "client_stdout.txt": {
+          "bytes": 921,
+          "sha256": "d53125689d0f63529599a5e071eb71a0ac7262a4464a5c02c69696ab6a98fa69"
+        },
+        "current_follow.json": {
+          "bytes": 93407,
+          "sha256": "aaeff2038e33548d7cc33fd06f9ad8842ef6744fb94f18db0d291688d55128fe"
+        },
+        "last_runtime_snapshot.json": {
+          "bytes": 786,
+          "sha256": "9aaac8c4f129dcfb972c1c462acb9019300880dbb3058abc16201c41d9d8d45b"
+        },
+        "map_config.json": {
+          "bytes": 546,
+          "sha256": "98e5ec0f5b0597b780e6f2524ddc024c0ea10171cab35b52146f33bfdee67f2f"
+        },
+        "map_config_before.ini": {
+          "bytes": 15138,
+          "sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64"
+        },
+        "owner.json": {
+          "bytes": 855,
+          "sha256": "687823bed6e0771fcda9d64b9c4d323a0464ee7a78c71af53c85587b45b0300b"
+        },
+        "preflight.json": {
+          "bytes": 249,
+          "sha256": "7b8f3ae08b71011a9d7b80bc3f73f912a6e2015e287fbe281f1ad4db4a5662af"
+        },
+        "registered_static_geometry.json": {
+          "bytes": 1104442,
+          "sha256": "08f41b2401656deb5cb3b42c3b174cacc634610eecee51257945b6f6c1a29cd5"
+        },
+        "run_request.json": {
+          "bytes": 366,
+          "sha256": "6bc918c5a47c58db577aa349a5d7f0f2f37e70e575aa6426ea267305e4484bda"
+        },
+        "smoke_result.json": {
+          "bytes": 4128,
+          "sha256": "a902dd4eb0554f24f5a77166c8d3c45e88eac55168955aa5d4c025b94d2b08ac"
+        }
+      }
+    },
+    {
+      "run": "town02_current_follow03_20261031",
+      "original_directory": "D:/JevUavRuns/20261031_d6_probe01/runs/town02_current_follow03_20261031",
+      "status": "FOLLOW_ABORTED",
+      "phase": "bounded_follow",
+      "error": "GROUNDED_NOT_READY_AFTER_SCENARIO_PLACEMENT",
+      "owner_status": "FAILED",
+      "model": {
+        "model_sha256": "b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189",
+        "input_mode": "causal_visible",
+        "artifact_sha256": {
+          "d5_residual.npz": "b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189",
+          "calibration.json": "fa6b59e42df90ce15e39a1ea83652ff223a7e8c4517a15d1471c5f4d44d27d00",
+          "protocol.json": "dd8ca2293f586000ab8fa71f4d7d4725fd9696a50d881bafa5e567bcf6428130"
+        },
+        "interval_gate": "ORIGINAL_UNCHANGED",
+        "resolved_training_horizon_s": 0.9999999776482582,
+        "execution_candidate_horizon_s": 1.0,
+        "horizon_agreement_tolerance_s": 1e-06
+      },
+      "method": "mock_jev",
+      "real_jev_calls": 0,
+      "initialization_status": "NOT_RUN",
+      "initialization_stop": null,
+      "frame_count": 1,
+      "prefix_receipts": 0,
+      "prefix_submissions": 0,
+      "acknowledged_prefixes": 0,
+      "unconfirmed_submissions": 0,
+      "stop_verdict": "NOT_EVALUATED",
+      "metrics_scope": "PARTIAL_ABORTED_TRAJECTORY_NOT_EFFECT_BENCHMARK",
+      "partial_metrics": null,
+      "uav_displacement_xyz_m": null,
+      "uav_progress_along_target_direction_m": null,
+      "selections": [],
+      "selection_counts": {
+        "requests": 0,
+        "accepted": 0,
+        "stale": 0,
+        "timeouts": 0,
+        "fallbacks": 0,
+        "rejected": 0
+      },
+      "target_destroyed": true,
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "map_config_restored": true,
+      "sensor_config_restored": true,
+      "files": {
+        "api_probe.json": {
+          "bytes": 194249,
+          "sha256": "1454d12c43f75fe864559bf5a9635afd54260dff5d47813d720a766b361eb935"
+        },
+        "client_stderr.txt": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "client_stdout.txt": {
+          "bytes": 953,
+          "sha256": "4c68e00f73d1ea3080a7e89348b5f0cff58a8491167ef8d89489bb6f95e6203c"
+        },
+        "current_follow.json": {
+          "bytes": 179753,
+          "sha256": "5c18155e915d86a74f6b6dd9bb339c9b3204d8789b3f9fe6b3a358417b654e53"
+        },
+        "last_runtime_snapshot.json": {
+          "bytes": 786,
+          "sha256": "3829bd6fdec1b3faf0fab97d932517ebcb809ece354c3caf470d3f52ebe1c3bf"
+        },
+        "map_config.json": {
+          "bytes": 546,
+          "sha256": "7ea5411e387a9caf603272c4595381634560c05ad55866dca1060fe594d7ce86"
+        },
+        "map_config_before.ini": {
+          "bytes": 15138,
+          "sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64"
+        },
+        "owner.json": {
+          "bytes": 856,
+          "sha256": "c0345176cf2800efb31d2fcdff05325f32f2ecb5d06a1c0f7069c62e073176a9"
+        },
+        "preflight.json": {
+          "bytes": 249,
+          "sha256": "14d47020e3810835d7b62b0b4cf3854d714fed5ae669c7231cfe3af904232195"
+        },
+        "registered_static_geometry.json": {
+          "bytes": 1104447,
+          "sha256": "320a6d50615b289d9822f96ae0ad455419264488ac009d65d2a39126efc66a88"
+        },
+        "run_request.json": {
+          "bytes": 366,
+          "sha256": "1a1ab8dff09746ec9cf455e121b84ba33abfd357890b2850991bb80948dac70a"
+        },
+        "smoke_result.json": {
+          "bytes": 4130,
+          "sha256": "a1814567b88d9bb748ba6f1b64a85d7c8e9f107c34b19a6fdc36dd148fb65643"
+        }
+      }
+    },
+    {
+      "run": "town02_current_follow04_20261031",
+      "original_directory": "D:/JevUavRuns/20261031_d6_probe01/runs/town02_current_follow04_20261031",
+      "status": "FOLLOW_ABORTED",
+      "phase": "neutral_initialization",
+      "error": "INITIALIZATION_STOP_TIMEOUT",
+      "owner_status": "FAILED",
+      "model": {
+        "model_sha256": "b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189",
+        "input_mode": "causal_visible",
+        "artifact_sha256": {
+          "d5_residual.npz": "b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189",
+          "calibration.json": "fa6b59e42df90ce15e39a1ea83652ff223a7e8c4517a15d1471c5f4d44d27d00",
+          "protocol.json": "dd8ca2293f586000ab8fa71f4d7d4725fd9696a50d881bafa5e567bcf6428130"
+        },
+        "interval_gate": "ORIGINAL_UNCHANGED",
+        "resolved_training_horizon_s": 0.9999999776482582,
+        "execution_candidate_horizon_s": 1.0,
+        "horizon_agreement_tolerance_s": 1e-06
+      },
+      "method": "mock_jev",
+      "real_jev_calls": 0,
+      "initialization_status": "INITIALIZING",
+      "initialization_stop": "STOP_TIMEOUT",
+      "frame_count": 0,
+      "prefix_receipts": 0,
+      "prefix_submissions": 0,
+      "acknowledged_prefixes": 0,
+      "unconfirmed_submissions": 0,
+      "stop_verdict": null,
+      "metrics_scope": "PARTIAL_ABORTED_TRAJECTORY_NOT_EFFECT_BENCHMARK",
+      "partial_metrics": null,
+      "uav_displacement_xyz_m": null,
+      "uav_progress_along_target_direction_m": null,
+      "selections": [],
+      "selection_counts": null,
+      "target_destroyed": true,
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "map_config_restored": true,
+      "sensor_config_restored": true,
+      "files": {
+        "api_probe.json": {
+          "bytes": 1123356,
+          "sha256": "14a201c6eedb96530e9a7a11dae0e9110cd009061250be8f22292452bda68160"
+        },
+        "client_stderr.txt": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "client_stdout.txt": {
+          "bytes": 934,
+          "sha256": "9abb0f76a92d9837b09eaba621ed789ce9cfb1a9a5fe364cec0287dad44fae07"
+        },
+        "current_follow.json": {
+          "bytes": 1047114,
+          "sha256": "cb0e67cdf3abb1318cdb7975d106b130df45ba3d19d5a534960335b3af82be49"
+        },
+        "last_runtime_snapshot.json": {
+          "bytes": 786,
+          "sha256": "4130295ffc3a60390200c4b94b2fd89f6604bf4b0dab1fac26c0bf84031d134a"
+        },
+        "map_config.json": {
+          "bytes": 546,
+          "sha256": "62fe175532307670b5385a736beb62747970bef8d80458e80598bbe0617525c2"
+        },
+        "map_config_before.ini": {
+          "bytes": 15138,
+          "sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64"
+        },
+        "owner.json": {
+          "bytes": 856,
+          "sha256": "6db79a90ee319ed0af2e17a7f5b9d8dc2baf331453068636ac0c7ad7e9380286"
+        },
+        "preflight.json": {
+          "bytes": 249,
+          "sha256": "8325429690fadfbf5ac428a9567623d2a33f9aa9f23a061c453cafac4ec724ed"
+        },
+        "registered_static_geometry.json": {
+          "bytes": 1104454,
+          "sha256": "5600231d2e1211dc98c8fa3e7a26815235bacb096a70477c3296e79fb36ad128"
+        },
+        "run_request.json": {
+          "bytes": 365,
+          "sha256": "a7c3c1d0c3605dabfebea6cb41b1facd92281f014e8365ebecbdf9218d939ed4"
+        },
+        "smoke_result.json": {
+          "bytes": 4129,
+          "sha256": "5622d6f15a6c546ac89bd7f3ecf193024a7dd4ec7ab9d5e605b544e334b88058"
+        }
+      }
+    },
+    {
+      "run": "town02_current_follow05_20261031",
+      "original_directory": "D:/JevUavRuns/20261031_d6_probe01/runs/town02_current_follow05_20261031",
+      "status": "FOLLOW_ABORTED",
+      "phase": "neutral_initialization",
+      "error": "INITIALIZATION_STOP_TIMEOUT",
+      "owner_status": "FAILED",
+      "model": {
+        "model_sha256": "b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189",
+        "input_mode": "causal_visible",
+        "artifact_sha256": {
+          "d5_residual.npz": "b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189",
+          "calibration.json": "fa6b59e42df90ce15e39a1ea83652ff223a7e8c4517a15d1471c5f4d44d27d00",
+          "protocol.json": "dd8ca2293f586000ab8fa71f4d7d4725fd9696a50d881bafa5e567bcf6428130"
+        },
+        "interval_gate": "ORIGINAL_UNCHANGED",
+        "resolved_training_horizon_s": 0.9999999776482582,
+        "execution_candidate_horizon_s": 1.0,
+        "horizon_agreement_tolerance_s": 1e-06
+      },
+      "method": "mock_jev",
+      "real_jev_calls": 0,
+      "initialization_status": "INITIALIZING",
+      "initialization_stop": "STOP_TIMEOUT",
+      "frame_count": 0,
+      "prefix_receipts": 0,
+      "prefix_submissions": 0,
+      "acknowledged_prefixes": 0,
+      "unconfirmed_submissions": 0,
+      "stop_verdict": null,
+      "metrics_scope": "PARTIAL_ABORTED_TRAJECTORY_NOT_EFFECT_BENCHMARK",
+      "partial_metrics": null,
+      "uav_displacement_xyz_m": null,
+      "uav_progress_along_target_direction_m": null,
+      "selections": [],
+      "selection_counts": null,
+      "target_destroyed": true,
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "map_config_restored": true,
+      "sensor_config_restored": true,
+      "files": {
+        "api_probe.json": {
+          "bytes": 1679283,
+          "sha256": "3fc78c03ffd90901bd50328c1b28be3596d9d80f5fdf0269909dae1c16d3fa7c"
+        },
+        "client_stderr.txt": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "client_stdout.txt": {
+          "bytes": 934,
+          "sha256": "9abb0f76a92d9837b09eaba621ed789ce9cfb1a9a5fe364cec0287dad44fae07"
+        },
+        "current_follow.json": {
+          "bytes": 1565887,
+          "sha256": "37fbd4f24d869189c7c089cbdfcaacb5aeeb9055430e90935e05425872655bfd"
+        },
+        "last_runtime_snapshot.json": {
+          "bytes": 785,
+          "sha256": "e91fd32644a8e8a16211fd0361ddd88e6f785c144ad6b482fd93eb37eee05a07"
+        },
+        "map_config.json": {
+          "bytes": 546,
+          "sha256": "b79e533425fda8aec119b66328003b632c9893a622e605ac37f16a7c2d5eda87"
+        },
+        "map_config_before.ini": {
+          "bytes": 15138,
+          "sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64"
+        },
+        "owner.json": {
+          "bytes": 855,
+          "sha256": "1fa543960b1df370fb6043228a0a566f72a91b12bc9942adc1ef534f974c3ced"
+        },
+        "preflight.json": {
+          "bytes": 248,
+          "sha256": "d2a454b3362298e1c1804a63a4707fb2a7087d866515b28e60ec32632ea89ff6"
+        },
+        "registered_static_geometry.json": {
+          "bytes": 1104432,
+          "sha256": "6ddae2f07ed50d95e3f73330308493ecdd02f07f4921e0c59275612eb9773075"
+        },
+        "run_request.json": {
+          "bytes": 366,
+          "sha256": "c9cc9ec9d0d72f48464505b8dbafd0b41c4411dd5c11b33dfaf23cf2508a985a"
+        },
+        "smoke_result.json": {
+          "bytes": 4128,
+          "sha256": "9759d75340d45407b007217b363beb728d598931cc8c82803d91eadf3ac64d36"
+        }
+      }
+    },
+    {
+      "run": "town02_current_follow06_20261031",
+      "original_directory": "D:/JevUavRuns/20261031_d6_probe01/runs/town02_current_follow06_20261031",
+      "status": "FOLLOW_ABORTED",
+      "phase": "bounded_follow",
+      "error": "CURRENT_INPUT_REVOKED_DURING_RPC",
+      "owner_status": "FAILED",
+      "model": {
+        "model_sha256": "b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189",
+        "input_mode": "causal_visible",
+        "artifact_sha256": {
+          "d5_residual.npz": "b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189",
+          "calibration.json": "fa6b59e42df90ce15e39a1ea83652ff223a7e8c4517a15d1471c5f4d44d27d00",
+          "protocol.json": "dd8ca2293f586000ab8fa71f4d7d4725fd9696a50d881bafa5e567bcf6428130"
+        },
+        "interval_gate": "ORIGINAL_UNCHANGED",
+        "resolved_training_horizon_s": 0.9999999776482582,
+        "execution_candidate_horizon_s": 1.0,
+        "horizon_agreement_tolerance_s": 1e-06
+      },
+      "method": "mock_jev",
+      "real_jev_calls": 0,
+      "initialization_status": "AIRBORNE_READY",
+      "initialization_stop": "TELEMETRY_SETTLED",
+      "frame_count": 18,
+      "prefix_receipts": 5,
+      "prefix_submissions": 6,
+      "acknowledged_prefixes": 5,
+      "unconfirmed_submissions": 1,
+      "stop_verdict": "NOT_EVALUATED",
+      "metrics_scope": "PARTIAL_ABORTED_TRAJECTORY_NOT_EFFECT_BENCHMARK",
+      "partial_metrics": {
+        "sample_count": 18,
+        "span_s": 1.0520538999699056,
+        "visible_count": 18,
+        "visible_fraction": 1.0,
+        "desired_range_m": 20.0,
+        "range_rmse_m": 0.055467231290897236,
+        "center_error": {
+          "min": 0.01503828582310454,
+          "median": 0.02012247852296608,
+          "p95_nearest_rank": 0.03389647173060043,
+          "max": 0.03389647173060043
+        },
+        "uav_path_m": 0.08514710823732893,
+        "target_visible_path_m": 0.15792846679991854,
+        "new_collision_samples": 0,
+        "motion_observed": false,
+        "learned_gain": "NOT_EVALUATED",
+        "stable_reacquisition": "NOT_EVALUATED",
+        "identity_crossing": "NOT_AUDITED"
+      },
+      "uav_displacement_xyz_m": [
+        -0.03995513916015625,
+        0.0,
+        -0.0720968246459961
+      ],
+      "uav_progress_along_target_direction_m": -1.2768836634991588e-07,
+      "selections": [
+        {
+          "request_id": 1,
+          "action_id": "orbit_left",
+          "selector_fallback": true,
+          "candidate_ids": [
+            "hold_center",
+            "follow_predictive",
+            "orbit_left",
+            "orbit_right",
+            "climb",
+            "scan_reacquire"
+          ],
+          "interval_full_fallback": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "request_id": 2,
+          "action_id": "orbit_right",
+          "selector_fallback": true,
+          "candidate_ids": [
+            "hold_center",
+            "follow_predictive",
+            "orbit_left",
+            "orbit_right",
+            "climb",
+            "scan_reacquire"
+          ],
+          "interval_full_fallback": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        }
+      ],
+      "selection_counts": {
+        "requests": 2,
+        "accepted": 1,
+        "stale": 0,
+        "timeouts": 0,
+        "fallbacks": 1,
+        "rejected": 0
+      },
+      "target_destroyed": true,
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "map_config_restored": true,
+      "sensor_config_restored": true,
+      "files": {
+        "api_probe.json": {
+          "bytes": 5369693,
+          "sha256": "ef3f2c4554f58e9aab7ce012cebb8953727b72cb71b88332fefe083e98ecbc10"
+        },
+        "client_stderr.txt": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "client_stdout.txt": {
+          "bytes": 942,
+          "sha256": "647ae090f1d8ffdedb8187c8cd3e28eee6a4b9af898bec265bf7aa8b72df6c6a"
+        },
+        "current_follow.json": {
+          "bytes": 5004885,
+          "sha256": "fe69f0e20707663ce13282e07f033d5e858f158ba3439cb588525f57960385cb"
+        },
+        "last_runtime_snapshot.json": {
+          "bytes": 786,
+          "sha256": "421e5308294e5b860cca69cd550413ca610f12aa3890a9d7b7e8d4f0d1904e3c"
+        },
+        "map_config.json": {
+          "bytes": 546,
+          "sha256": "273324e150e3d78bfa43b9666be2bca82642925d7686957b1d2817de3d6f0a1c"
+        },
+        "map_config_before.ini": {
+          "bytes": 15138,
+          "sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64"
+        },
+        "owner.json": {
+          "bytes": 856,
+          "sha256": "47278431192712f4bea89917d3c9e1d416d2babe111a765b2077db0d0d3e1508"
+        },
+        "preflight.json": {
+          "bytes": 249,
+          "sha256": "402b944fb8f6267ad52f484d93fa68d0220ae3d3a7956d84297ac68308fc715f"
+        },
+        "registered_static_geometry.json": {
+          "bytes": 1104447,
+          "sha256": "666f66b47fae225197cda7f5d6426288199601a61393288f0d6d32dd22ec8bea"
+        },
+        "run_request.json": {
+          "bytes": 366,
+          "sha256": "55c5abe3bb500fca95a78fa3ac32e7bccdb63e1942bb9342957004cc30ab9e9c"
+        },
+        "smoke_result.json": {
+          "bytes": 4129,
+          "sha256": "728624f7b22fad836f191a5cb7f65d1bef3d120ca1ee085b848f96018593722f"
+        }
+      }
+    },
+    {
+      "run": "town02_current_follow07_20261031",
+      "original_directory": "D:/JevUavRuns/20261031_d6_probe01/runs/town02_current_follow07_20261031",
+      "status": "FOLLOW_ABORTED",
+      "phase": "bounded_follow",
+      "error": "TRANSPORT_NOT_ACKNOWLEDGED",
+      "owner_status": "FAILED",
+      "model": {
+        "model_sha256": "b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189",
+        "input_mode": "causal_visible",
+        "artifact_sha256": {
+          "d5_residual.npz": "b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189",
+          "calibration.json": "fa6b59e42df90ce15e39a1ea83652ff223a7e8c4517a15d1471c5f4d44d27d00",
+          "protocol.json": "dd8ca2293f586000ab8fa71f4d7d4725fd9696a50d881bafa5e567bcf6428130"
+        },
+        "interval_gate": "ORIGINAL_UNCHANGED",
+        "resolved_training_horizon_s": 0.9999999776482582,
+        "execution_candidate_horizon_s": 1.0,
+        "horizon_agreement_tolerance_s": 1e-06
+      },
+      "method": "mock_jev",
+      "real_jev_calls": 0,
+      "initialization_status": "AIRBORNE_READY",
+      "initialization_stop": "TELEMETRY_SETTLED",
+      "frame_count": 20,
+      "prefix_receipts": 7,
+      "prefix_submissions": 7,
+      "acknowledged_prefixes": 6,
+      "unconfirmed_submissions": 1,
+      "stop_verdict": "NOT_EVALUATED",
+      "metrics_scope": "PARTIAL_ABORTED_TRAJECTORY_NOT_EFFECT_BENCHMARK",
+      "partial_metrics": {
+        "sample_count": 20,
+        "span_s": 1.1786147998645902,
+        "visible_count": 20,
+        "visible_fraction": 1.0,
+        "desired_range_m": 20.0,
+        "range_rmse_m": 0.05449156313460188,
+        "center_error": {
+          "min": 0.014943182082082644,
+          "median": 0.021587908765957387,
+          "p95_nearest_rank": 0.03297919046747961,
+          "max": 0.03317708458436188
+        },
+        "uav_path_m": 0.10277705320313023,
+        "target_visible_path_m": 0.17425537109681355,
+        "new_collision_samples": 0,
+        "motion_observed": false,
+        "learned_gain": "NOT_EVALUATED",
+        "stable_reacquisition": "NOT_EVALUATED",
+        "identity_crossing": "NOT_AUDITED"
+      },
+      "uav_displacement_xyz_m": [
+        -0.050201416015625,
+        0.0,
+        -0.08657360076904297
+      ],
+      "uav_progress_along_target_direction_m": -1.6043334935696897e-07,
+      "selections": [
+        {
+          "request_id": 1,
+          "action_id": "orbit_left",
+          "selector_fallback": true,
+          "candidate_ids": [
+            "hold_center",
+            "follow_predictive",
+            "orbit_left",
+            "orbit_right",
+            "climb",
+            "scan_reacquire"
+          ],
+          "interval_full_fallback": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "request_id": 2,
+          "action_id": "orbit_right",
+          "selector_fallback": true,
+          "candidate_ids": [
+            "hold_center",
+            "follow_predictive",
+            "orbit_left",
+            "orbit_right",
+            "climb",
+            "scan_reacquire"
+          ],
+          "interval_full_fallback": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        }
+      ],
+      "selection_counts": {
+        "requests": 2,
+        "accepted": 2,
+        "stale": 0,
+        "timeouts": 0,
+        "fallbacks": 2,
+        "rejected": 0
+      },
+      "target_destroyed": true,
+      "protected_unchanged": true,
+      "cleanup_confirmed": true,
+      "map_config_restored": true,
+      "sensor_config_restored": true,
+      "files": {
+        "api_probe.json": {
+          "bytes": 5569931,
+          "sha256": "4ebc8d5a201e05a712986c0925e87e82e16d89057280d82cac57a13df0c0de38"
+        },
+        "client_stderr.txt": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "client_stdout.txt": {
+          "bytes": 936,
+          "sha256": "68bee4a60b9bc4aa4e17abdebea3dc8e4c9bf952c369fefdb4f594cb665a25d7"
+        },
+        "current_follow.json": {
+          "bytes": 5191313,
+          "sha256": "f8ce19609fe03dc1ad31f789bab41ceb6b219f8bb0e4f9e47a71565f88da0db3"
+        },
+        "last_runtime_snapshot.json": {
+          "bytes": 782,
+          "sha256": "b483fab21ba185aadd13dc9da835d367a6c84143f13bc3bd062ef44c684fa71e"
+        },
+        "map_config.json": {
+          "bytes": 546,
+          "sha256": "1b3e9f8f6250c1af241b984cf26b2a89ca65488d6239ee97998c1974e6f8c8c0"
+        },
+        "map_config_before.ini": {
+          "bytes": 15138,
+          "sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64"
+        },
+        "owner.json": {
+          "bytes": 856,
+          "sha256": "fcb2c1458607d6f2deefb27501a2a65086c30fb952794b4f48ed2eb5693d3c2a"
+        },
+        "preflight.json": {
+          "bytes": 247,
+          "sha256": "c10ce4dd4bff44b340db8ccc80f37de55f26523c6ced2314ad5bc5fe0d4c8b1a"
+        },
+        "registered_static_geometry.json": {
+          "bytes": 1104466,
+          "sha256": "45c56fe4964a8a59b258334b670fc39823521842491e4560291d546d3314eb5b"
+        },
+        "run_request.json": {
+          "bytes": 366,
+          "sha256": "9496ade5ca619ca00ccb882c9380ccc6e42fcb402000855711d13931586aa8cb"
+        },
+        "smoke_result.json": {
+          "bytes": 4127,
+          "sha256": "0fbb520ed8937b798504d74a8d3062779ed0306f36b918503679555aee074258"
+        }
+      }
+    }
+  ],
+  "real_jev_gain": "NOT_EVALUATED",
+  "learned_gain": "NOT_EVALUATED",
+  "source_hdf_reads": 0,
+  "training_runs": 0,
+  "new_pass_episodes": 0,
+  "original_d1_d6_acceptance": "PARTIAL",
+  "town03_final_test_pass": 0
+}

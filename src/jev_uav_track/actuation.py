@@ -102,6 +102,8 @@ class ActuationReceipt:
     completed_s: float | None = None
     owner_termination_required: bool = False
     stop_status: str = "NOT_VERIFIED"
+    prefix_failure_kind: str | None = None
+    prefix_error_type: str | None = None
 
 
 @dataclass
@@ -242,10 +244,16 @@ class BoundedActuator:
         command = replace(tick.command, duration_s=remaining)
         receipt = replace(receipt, command=command, prefix_sent_s=now)
         acknowledged = canceled = neutral = False
+        failure_kind = error_type = None
         try:
-            acknowledged = self._port.send(command) is True
-        except Exception:
-            pass  # Unknown outcome; never replay. Still attempt neutral.
+            response = self._port.send(command)
+            acknowledged = response is True
+            if not acknowledged:
+                failure_kind = "RETURNED_FALSE" if response is False else "NON_BOOLEAN_RESPONSE"
+        except Exception as exc:
+            # Keep a diagnostic category, never potentially sensitive SDK text.
+            # The outcome remains unknown; no retry and neutral still runs.
+            failure_kind, error_type = "EXCEPTION", type(exc).__name__
         finally:
             try:
                 self._port.cancel()
@@ -264,7 +272,8 @@ class BoundedActuator:
             prefix_acknowledged=acknowledged, cancel_returned=canceled,
             neutral_acknowledged=neutral,
             neutral_completed_s=completed if valid_clock and neutral else None,
-            completed_s=completed if valid_clock else None, owner_termination_required=failed)
+            completed_s=completed if valid_clock else None, owner_termination_required=failed,
+            prefix_failure_kind=failure_kind, prefix_error_type=error_type)
 
     def poll(self):
         now = self._now()
