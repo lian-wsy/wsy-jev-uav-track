@@ -40,6 +40,8 @@ class FakeEpisode:
             uav=UAVState(
                 position_m=(0.0, 0.0, 0.0),
                 minimum_obstacle_margin_m=5.0,
+                battery_capacity_wh=20.0,
+                energy_source="SIMULATED_RESOURCE",
             ),
             constraints=constraints,
             environment={"target_actor_id": 7},

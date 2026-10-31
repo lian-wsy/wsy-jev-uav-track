@@ -12,7 +12,7 @@ def test_replay_command_expires_before_next_decision():
     from jev_uav_track.closed_loop import _advance_uav
     command = SimpleNamespace(command_mps=(2, 0, 0), duration_s=1, yaw_rate_dps=10,
                               outcome=SimpleNamespace(energy_cost_wh=1))
-    uav = _advance_uav(UAVState(), command, 3)
+    uav = _advance_uav(UAVState(battery_capacity_wh=20., energy_source="SIMULATED_RESOURCE"), command, 3)
     assert uav.position_m == (2, 0, 0)
     assert uav.velocity_mps == (0, 0, 0)
     assert uav.yaw_deg == 10

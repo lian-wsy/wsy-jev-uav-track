@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Iterable, List, Tuple
 
 from .models import CandidateAction, MissionConstraints, UAVState
+from .energy import finite_number, remaining_battery_percent
 
 
 def safety_reasons(action: CandidateAction, uav: UAVState, constraints: MissionConstraints) -> Tuple[str, ...]:
@@ -18,7 +19,13 @@ def safety_reasons(action: CandidateAction, uav: UAVState, constraints: MissionC
         reasons.append("obstacle_margin")
     if action.duration_s > constraints.maximum_action_duration_s:
         reasons.append("action_duration")
-    if uav.battery_percent - outcome.energy_cost_wh < constraints.reserve_battery_percent:
+    capacity = getattr(uav, "battery_capacity_wh", None)
+    if (not finite_number(capacity) or capacity <= 0
+            or getattr(uav, "energy_source", "UNKNOWN") not in ("MEASURED", "SIMULATED_RESOURCE")):
+        reasons.append("energy_unavailable")
+    elif not finite_number(outcome.energy_cost_wh) or outcome.energy_cost_wh < 0:
+        reasons.append("energy_invalid")
+    elif remaining_battery_percent(uav.battery_percent, outcome.energy_cost_wh, capacity) <= constraints.reserve_battery_percent:
         reasons.append("battery_reserve")
     return tuple(reasons)
 

@@ -19,7 +19,11 @@ def evidence():
 
 
 def test_recorded_live_inputs_reproduce_beliefs_rollouts_and_safety_rejections():
-    result = verifier().verify(evidence(), strict_text=False)
+    source = evidence()
+    before = copy.deepcopy(source)
+    result = verifier().verify(source, strict_text=False)
+    assert source == before
+    assert result['legacy_energy_schema_projections'] == 16
     assert result['verified_frames'] == 16
     assert result['visible_frames'] == 12
     assert result['missing_frames'] == 4
@@ -33,7 +37,7 @@ def test_recorded_live_inputs_reproduce_beliefs_rollouts_and_safety_rejections()
         assert result['status'] == 'PASS'
 
 
-@pytest.mark.parametrize('mutation', ['missing_recovery', 'hidden_truth', 'state', 'candidate', 'cleanup', 'queries', 'small_error', 'nan', 'actor_id'])
+@pytest.mark.parametrize('mutation', ['missing_recovery', 'hidden_truth', 'state', 'candidate', 'cleanup', 'queries', 'small_error', 'nan', 'actor_id', 'energy'])
 def test_replay_does_not_accept_partial_sequence_or_tampered_results(mutation):
     data = copy.deepcopy(evidence())
     probe = data['api_probe']['contract']['belief_contract']
@@ -53,6 +57,9 @@ def test_replay_does_not_accept_partial_sequence_or_tampered_results(mutation):
         probe['frames'][1]['candidates'][0]['outcome']['range_error_m'] = float('nan')
     elif mutation == 'actor_id':
         probe['frames'][0]['state']['environment']['target_actor_id'] += 1e-11
+    elif mutation == 'energy':
+        probe['frames'][0]['state']['uav']['energy_source'] = 'MEASURED'
+        probe['frames'][0]['state']['uav']['battery_capacity_wh'] = 20.
     else:
         probe['target_pose_queries'] += 1
     with pytest.raises(ValueError):

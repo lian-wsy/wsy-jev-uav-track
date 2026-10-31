@@ -13,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from jev_uav_track.async_control import AsyncDecisionCoordinator, BoundedControlLoop
 from jev_uav_track.frames import CarlaAirAlignment
+from jev_uav_track.energy import SimulatedEnergyBudget, SimulatedEnergyConfig
 from jev_uav_track.jev_client import MockJevClient, UtilityRankingClient
 from jev_uav_track.mock_simulator import BOUNDED_PRIMITIVES, DeterministicMockSession
 from jev_uav_track.pipeline import JevTrackPipeline
@@ -60,7 +61,7 @@ class SyntheticDelayedExecutor:
             future.set_result(fn())
 
 
-def run_case(method, scenario, seed, ticks):
+def run_case(method, scenario, seed, ticks, energy_config):
     clock = SyntheticClock()
     scheduler = SyntheticDelayedExecutor(clock, {"normal": .05, "delayed": .15, "timeout": .25}[scenario])
     client = MockJevClient() if method == "mock_jev" else UtilityRankingClient()
@@ -73,7 +74,9 @@ def run_case(method, scenario, seed, ticks):
         return result
 
     coordinator = AsyncDecisionCoordinator(select, clock=clock, executor=scheduler)
-    loop = BoundedControlLoop(pipeline, coordinator, alignment=CarlaAirAlignment((0., 0., 0.)), clock=clock)
+    energy = SimulatedEnergyBudget(energy_config, start_s=clock.now)
+    loop = BoundedControlLoop(pipeline, coordinator, alignment=CarlaAirAlignment((0., 0., 0.)), clock=clock,
+                              simulated_energy=energy, execution_domain="synthetic_simulation")
     session = DeterministicMockSession()
     observation = session.reset(seed=seed, scenario=scenario)
     initial = observation
@@ -94,6 +97,7 @@ def run_case(method, scenario, seed, ticks):
             commands.append(result.command)
             observation = session.step(result.command)
             observed_after_step.append(observation)
+        final_energy = energy.snapshot(observation.safety.timestamp_s)
         reset = session.reset(seed=seed, scenario=scenario)
         repeated_trace = [session.step(command) for command in commands]
         # Full deterministic replay under identical seed and exact emitted actions.
@@ -105,7 +109,7 @@ def run_case(method, scenario, seed, ticks):
                 "counts": {**coordinator.counters, "commands": loop.command_count},
                 "in_flight_at_close": coordinator.in_flight,
                 "reset_reproducible": reproducible, "requests": requests, "responses": responses,
-                "trace": trace, "final_observation": asdict(observation)}
+                "trace": trace, "final_observation": asdict(observation), "final_energy": asdict(final_energy)}
     finally:
         coordinator.close()
 
@@ -115,22 +119,31 @@ def main(argv=None):
     parser.add_argument("--output-dir", required=True, type=Path, help="Fresh exclusive directory; existing paths are rejected")
     parser.add_argument("--seed", type=int, default=17)
     parser.add_argument("--ticks", type=int, default=45)
+    parser.add_argument("--energy-capacity-wh", required=True, type=float)
+    parser.add_argument("--energy-initial-percent", required=True, type=float)
+    parser.add_argument("--energy-power-w", required=True, type=float)
     args = parser.parse_args(argv)
     if not 21 <= args.ticks <= 10000:
         parser.error("TICKS_OUT_OF_RANGE")
+    try:
+        energy_config = SimulatedEnergyConfig(args.energy_capacity_wh, args.energy_initial_percent, args.energy_power_w)
+    except ValueError:
+        parser.error("ENERGY_CONFIG_INVALID")
     try:
         args.output_dir.mkdir(parents=False, exist_ok=False)
     except OSError:
         print("OUTPUT_NOT_FRESH", file=sys.stderr)
         return 2
     try:
-        runs = [run_case(method, scenario, args.seed, args.ticks)
+        runs = [run_case(method, scenario, args.seed, args.ticks, energy_config)
                 for method in ("utility", "mock_jev") for scenario in ("normal", "delayed", "timeout")]
         report = {"evidence_class": "SYNTHETIC_NOT_CARLA", "timing_model": "SYNTHETIC_CONTROLLED_EXECUTOR",
+                  "energy_contract": "explicit_resource_v1", "energy_config": asdict(energy_config),
                   "live_control": "NOT_EVALUATED", "d1_data": "NOT_EVALUATED",
                   "tracking_improvement": "NOT_EVALUATED", "learned_winner_promoted": False,
                   "reset_reproducible": all(run["reset_reproducible"] for run in runs), "runs": runs,
                   "limits": ["SYNTHETIC_KINEMATICS", "SYNTHETIC_SAFETY", "SYNTHETIC_SELECTOR_TIMING",
+                             "UNCALIBRATED_SIMULATED_ENERGY_NOT_BATTERY_TELEMETRY",
                              "NO_PHYSICAL_STOPPING_PROOF", "NO_LIVE_OR_JEV_GAIN_CLAIM"]}
         encoded = json.dumps(report, indent=2, sort_keys=True, allow_nan=False) + "\n"
         with (args.output_dir / "report.json").open("x", encoding="utf-8", newline="\n") as handle:

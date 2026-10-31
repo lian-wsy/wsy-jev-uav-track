@@ -1,0 +1,580 @@
+{
+  "schema": "d6_explicit_energy_smoke_v1",
+  "code_base_sha": "12e8b6f6a63ff7abfd6fe12e70ec5efd6023d9d3",
+  "code_state": "UNCOMMITTED_VERIFIED_SOURCE_HASHES",
+  "evidence_class": "SYNTHETIC_NOT_CARLA",
+  "energy_config": {
+    "capacity_wh": 20,
+    "initial_percent": 90,
+    "model_id": "constant_time_resource_v1",
+    "power_w": 120,
+    "source": "SIMULATED_RESOURCE"
+  },
+  "reports": [
+    {
+      "path": "artifacts/d6_energy_20261031_verified_py314/report.json",
+      "bytes": 1519117,
+      "sha256": "20c4d118d6a96c572323304768e3c1dce1aa414e63e4af9d5afc6d89e0b822f7"
+    },
+    {
+      "path": "artifacts/d6_energy_20261031_verified_py310/report.json",
+      "bytes": 1519119,
+      "sha256": "cb465b3a0b65213ec073202b011fdf6a09f2947363a17fe5ab9ffacf0283ee41"
+    }
+  ],
+  "source_fingerprints": [
+    {
+      "path": "scripts/check_live_belief_evidence.py",
+      "bytes": 8103,
+      "sha256": "ef49e6ef40550791c85b13cc76dde37f09fa50c5a28d6a4fe388f2e7caacb296"
+    },
+    {
+      "path": "scripts/run_closed_loop_batch.py",
+      "bytes": 7034,
+      "sha256": "beb4599084a7713df3eff0f072c74319da53ca581e2a86de955b73da56b20bc3"
+    },
+    {
+      "path": "scripts/run_closed_loop_replay.py",
+      "bytes": 5429,
+      "sha256": "76ca53523225115c59728d03aa719297258961649126f064256bf208c5a53e4f"
+    },
+    {
+      "path": "scripts/run_d6_mock_smoke.py",
+      "bytes": 7684,
+      "sha256": "5fdc497db1416698d07dd575ad918d69c2dae1f59479bab25cf06ee6a36d3e06"
+    },
+    {
+      "path": "scripts/smoke_decision_dataset.py",
+      "bytes": 2655,
+      "sha256": "f4e9fb344cb12a195c7fa274d1247ee2b94f6113546bd48dba97d5e8630df6e0"
+    },
+    {
+      "path": "src/jev_uav_track/async_control.py",
+      "bytes": 23940,
+      "sha256": "e47fc5a4c5750cf1525663d830287a42f00afcf5710646cd2be1f57c360a2f0d"
+    },
+    {
+      "path": "src/jev_uav_track/closed_loop.py",
+      "bytes": 37846,
+      "sha256": "ef950f07faf738aefaee919ba69c4e0a58c701159ed53364c91f0dc8d2355e6b"
+    },
+    {
+      "path": "src/jev_uav_track/demo.py",
+      "bytes": 3857,
+      "sha256": "370a478b1c3dcfcc9567a2cba075f26d0ceaf72c5b43ee4914529ab6d21a1b89"
+    },
+    {
+      "path": "src/jev_uav_track/energy.py",
+      "bytes": 3642,
+      "sha256": "7b401b9a4839e069e509e1f13ba4bf876cf6e444fbe1c3dbbc5e8806035b2cec"
+    },
+    {
+      "path": "src/jev_uav_track/live_belief.py",
+      "bytes": 5786,
+      "sha256": "85350f3e13ee328f11232aaf926ba9ff17b2baf855948fbbcf98dee841ee1f29"
+    },
+    {
+      "path": "src/jev_uav_track/mock_simulator.py",
+      "bytes": 4297,
+      "sha256": "c6840051a8a6976072e8208d6e757fb02612b7884626476e16bbfb98e421784c"
+    },
+    {
+      "path": "src/jev_uav_track/models.py",
+      "bytes": 7877,
+      "sha256": "6f0d984e14b4ab49a4279aec0fea0a6aa6efe625af7500fdd8befe4015ab24b5"
+    },
+    {
+      "path": "src/jev_uav_track/safety.py",
+      "bytes": 1925,
+      "sha256": "dc740ddf74a97c61c8c1ca3d7b4e3174b221eee4d49f92f2673d89eeda5ffda9"
+    },
+    {
+      "path": "tests/test_async_control.py",
+      "bytes": 19062,
+      "sha256": "3243b4ccc4aad2675925b08ec60966401b11aac6bc085c8026baf4d7c4cbdfdb"
+    },
+    {
+      "path": "tests/test_causal_belief.py",
+      "bytes": 4221,
+      "sha256": "a4a49981f1f7bd8c2787421ef1dd1a722531962c1e7210ada0f25d355f751921"
+    },
+    {
+      "path": "tests/test_closed_loop.py",
+      "bytes": 6512,
+      "sha256": "09a1f4bbcadd8d6126048f91109e19e6166ea4ca7941c3ac0fa73b821e3a4efc"
+    },
+    {
+      "path": "tests/test_core.py",
+      "bytes": 5237,
+      "sha256": "03771ebf5d3cbc80008d71a0ffe6fa5123e175e45191f53d3ffd9d36b3a43128"
+    },
+    {
+      "path": "tests/test_d6_mock_smoke.py",
+      "bytes": 5554,
+      "sha256": "30427c59193c51f03a094c01e4fb69f098f2dd4576abc68fd98d89c58a551f02"
+    },
+    {
+      "path": "tests/test_energy.py",
+      "bytes": 7280,
+      "sha256": "d8ab479fbb5b528e3ce1127bcc5dcbbf827259ec3b1f844419dd1523a4bcaaf6"
+    },
+    {
+      "path": "tests/test_energy_control.py",
+      "bytes": 9657,
+      "sha256": "447e7545080bd843911f2fd12b078c4319cce0573222220d49beef7febb45923"
+    },
+    {
+      "path": "tests/test_jev_request_budget.py",
+      "bytes": 11722,
+      "sha256": "6a39d36019a24e91fc2d82e7c8ec4cbf0ec6127b4f7594c19d2b53a5792e3ab7"
+    },
+    {
+      "path": "tests/test_live_belief.py",
+      "bytes": 4424,
+      "sha256": "59378b49ea7c4f13a386701b0c2de62c1ba91dba82bd76210a5f9a131ad458ed"
+    },
+    {
+      "path": "tests/test_live_belief_evidence.py",
+      "bytes": 3348,
+      "sha256": "26c875df292d32b656372f3d878d9447b8fa7a6b4575c22e5336b47d3a8d4f66"
+    },
+    {
+      "path": "tests/test_optional_data.py",
+      "bytes": 15299,
+      "sha256": "9809c80def0b5de658cba2be66a726623dd06329e9589a413784cf4c341dc287"
+    }
+  ],
+  "runs": [
+    {
+      "method": "utility",
+      "scenario": "normal",
+      "counts": {
+        "accepted": 3,
+        "commands": 42,
+        "fallbacks": 0,
+        "rejected": 0,
+        "requests": 3,
+        "stale": 0,
+        "timeouts": 0
+      },
+      "final_energy": {
+        "battery_percent": 89.625,
+        "capacity_wh": 20,
+        "initial_percent": 90,
+        "model_id": "constant_time_resource_v1",
+        "power_w": 120,
+        "remaining_wh": 17.925,
+        "source": "SIMULATED_RESOURCE",
+        "timestamp_s": 3.25
+      },
+      "reset_reproducible": true,
+      "in_flight_at_close": false,
+      "selected_action_ids": [
+        "orbit_left",
+        "orbit_left",
+        "orbit_left"
+      ]
+    },
+    {
+      "method": "utility",
+      "scenario": "delayed",
+      "counts": {
+        "accepted": 3,
+        "commands": 36,
+        "fallbacks": 0,
+        "rejected": 0,
+        "requests": 3,
+        "stale": 0,
+        "timeouts": 0
+      },
+      "final_energy": {
+        "battery_percent": 89.625,
+        "capacity_wh": 20,
+        "initial_percent": 90,
+        "model_id": "constant_time_resource_v1",
+        "power_w": 120,
+        "remaining_wh": 17.925,
+        "source": "SIMULATED_RESOURCE",
+        "timestamp_s": 3.25
+      },
+      "reset_reproducible": true,
+      "in_flight_at_close": false,
+      "selected_action_ids": [
+        "orbit_left",
+        "orbit_left",
+        "orbit_left"
+      ]
+    },
+    {
+      "method": "utility",
+      "scenario": "timeout",
+      "counts": {
+        "accepted": 0,
+        "commands": 0,
+        "fallbacks": 0,
+        "rejected": 0,
+        "requests": 3,
+        "stale": 2,
+        "timeouts": 3
+      },
+      "final_energy": {
+        "battery_percent": 89.625,
+        "capacity_wh": 20,
+        "initial_percent": 90,
+        "model_id": "constant_time_resource_v1",
+        "power_w": 120,
+        "remaining_wh": 17.925,
+        "source": "SIMULATED_RESOURCE",
+        "timestamp_s": 3.25
+      },
+      "reset_reproducible": true,
+      "in_flight_at_close": true,
+      "selected_action_ids": [
+        "orbit_left",
+        "orbit_left"
+      ]
+    },
+    {
+      "method": "mock_jev",
+      "scenario": "normal",
+      "counts": {
+        "accepted": 3,
+        "commands": 42,
+        "fallbacks": 3,
+        "rejected": 0,
+        "requests": 3,
+        "stale": 0,
+        "timeouts": 0
+      },
+      "final_energy": {
+        "battery_percent": 89.625,
+        "capacity_wh": 20,
+        "initial_percent": 90,
+        "model_id": "constant_time_resource_v1",
+        "power_w": 120,
+        "remaining_wh": 17.925,
+        "source": "SIMULATED_RESOURCE",
+        "timestamp_s": 3.25
+      },
+      "reset_reproducible": true,
+      "in_flight_at_close": false,
+      "selected_action_ids": [
+        "orbit_left",
+        "orbit_left",
+        "orbit_left"
+      ]
+    },
+    {
+      "method": "mock_jev",
+      "scenario": "delayed",
+      "counts": {
+        "accepted": 3,
+        "commands": 36,
+        "fallbacks": 3,
+        "rejected": 0,
+        "requests": 3,
+        "stale": 0,
+        "timeouts": 0
+      },
+      "final_energy": {
+        "battery_percent": 89.625,
+        "capacity_wh": 20,
+        "initial_percent": 90,
+        "model_id": "constant_time_resource_v1",
+        "power_w": 120,
+        "remaining_wh": 17.925,
+        "source": "SIMULATED_RESOURCE",
+        "timestamp_s": 3.25
+      },
+      "reset_reproducible": true,
+      "in_flight_at_close": false,
+      "selected_action_ids": [
+        "orbit_left",
+        "orbit_left",
+        "orbit_left"
+      ]
+    },
+    {
+      "method": "mock_jev",
+      "scenario": "timeout",
+      "counts": {
+        "accepted": 0,
+        "commands": 0,
+        "fallbacks": 0,
+        "rejected": 0,
+        "requests": 3,
+        "stale": 2,
+        "timeouts": 3
+      },
+      "final_energy": {
+        "battery_percent": 89.625,
+        "capacity_wh": 20,
+        "initial_percent": 90,
+        "model_id": "constant_time_resource_v1",
+        "power_w": 120,
+        "remaining_wh": 17.925,
+        "source": "SIMULATED_RESOURCE",
+        "timestamp_s": 3.25
+      },
+      "reset_reproducible": true,
+      "in_flight_at_close": true,
+      "selected_action_ids": [
+        "orbit_left",
+        "orbit_left"
+      ]
+    }
+  ],
+  "cross_python": {
+    "primary": "3.14.7",
+    "secondary": "3.10.21",
+    "byte_equal": false,
+    "counts_equal": true,
+    "commands_equal": true,
+    "float_difference_count": 23,
+    "max_absolute_difference": 3.552713678800501e-15,
+    "float_differences": [
+      {
+        "path": "/runs/0/requests/1/candidates/4/outcome/covariance_trace",
+        "primary": 0.9336758992225088,
+        "secondary": 0.9336758992225087,
+        "absolute_difference": 1.1102230246251565e-16
+      },
+      {
+        "path": "/runs/0/requests/1/candidates/4/outcome/range_error_m",
+        "primary": 2.1820160372135042,
+        "secondary": 2.1820160372135007,
+        "absolute_difference": 3.552713678800501e-15
+      },
+      {
+        "path": "/runs/3/requests/1/candidates/4/outcome/covariance_trace",
+        "primary": 0.9336758992225088,
+        "secondary": 0.9336758992225087,
+        "absolute_difference": 1.1102230246251565e-16
+      },
+      {
+        "path": "/runs/3/requests/1/candidates/4/outcome/range_error_m",
+        "primary": 2.1820160372135042,
+        "secondary": 2.1820160372135007,
+        "absolute_difference": 3.552713678800501e-15
+      },
+      {
+        "path": "/runs/3/responses/0/result/decision/probabilities/climb",
+        "primary": 0.11666725077389527,
+        "secondary": 0.11666725077389525,
+        "absolute_difference": 1.3877787807814457e-17
+      },
+      {
+        "path": "/runs/3/responses/0/result/decision/probabilities/follow_predictive",
+        "primary": 0.12962520511676376,
+        "secondary": 0.12962520511676373,
+        "absolute_difference": 2.7755575615628914e-17
+      },
+      {
+        "path": "/runs/3/responses/0/result/decision/probabilities/hold_center",
+        "primary": 0.12270515041133122,
+        "secondary": 0.1227051504113312,
+        "absolute_difference": 1.3877787807814457e-17
+      },
+      {
+        "path": "/runs/3/responses/0/result/decision/probabilities/scan_reacquire",
+        "primary": 0.12050381096019236,
+        "secondary": 0.12050381096019235,
+        "absolute_difference": 1.3877787807814457e-17
+      },
+      {
+        "path": "/runs/4/responses/0/result/decision/probabilities/climb",
+        "primary": 0.11666725077389527,
+        "secondary": 0.11666725077389525,
+        "absolute_difference": 1.3877787807814457e-17
+      },
+      {
+        "path": "/runs/4/responses/0/result/decision/probabilities/follow_predictive",
+        "primary": 0.12962520511676376,
+        "secondary": 0.12962520511676373,
+        "absolute_difference": 2.7755575615628914e-17
+      },
+      {
+        "path": "/runs/4/responses/0/result/decision/probabilities/hold_center",
+        "primary": 0.12270515041133122,
+        "secondary": 0.1227051504113312,
+        "absolute_difference": 1.3877787807814457e-17
+      },
+      {
+        "path": "/runs/4/responses/0/result/decision/probabilities/scan_reacquire",
+        "primary": 0.12050381096019236,
+        "secondary": 0.12050381096019235,
+        "absolute_difference": 1.3877787807814457e-17
+      },
+      {
+        "path": "/runs/4/responses/2/result/decision/confidence",
+        "primary": 0.2431981567979422,
+        "secondary": 0.24319815679794227,
+        "absolute_difference": 5.551115123125783e-17
+      },
+      {
+        "path": "/runs/4/responses/2/result/decision/probabilities/climb",
+        "primary": 0.1277698122531547,
+        "secondary": 0.12776981225315473,
+        "absolute_difference": 2.7755575615628914e-17
+      },
+      {
+        "path": "/runs/4/responses/2/result/decision/probabilities/follow_predictive",
+        "primary": 0.1403080298523816,
+        "secondary": 0.14030802985238164,
+        "absolute_difference": 2.7755575615628914e-17
+      },
+      {
+        "path": "/runs/4/responses/2/result/decision/probabilities/hold_center",
+        "primary": 0.1339593994077658,
+        "secondary": 0.13395939940776583,
+        "absolute_difference": 2.7755575615628914e-17
+      },
+      {
+        "path": "/runs/4/responses/2/result/decision/probabilities/orbit_left",
+        "primary": 0.2431981567979422,
+        "secondary": 0.24319815679794227,
+        "absolute_difference": 5.551115123125783e-17
+      },
+      {
+        "path": "/runs/4/responses/2/result/decision/probabilities/orbit_right",
+        "primary": 0.24056911942544454,
+        "secondary": 0.24056911942544457,
+        "absolute_difference": 2.7755575615628914e-17
+      },
+      {
+        "path": "/runs/4/responses/2/result/decision/probabilities/scan_reacquire",
+        "primary": 0.11419548226331105,
+        "secondary": 0.11419548226331108,
+        "absolute_difference": 2.7755575615628914e-17
+      },
+      {
+        "path": "/runs/5/responses/0/result/decision/probabilities/climb",
+        "primary": 0.11666725077389527,
+        "secondary": 0.11666725077389525,
+        "absolute_difference": 1.3877787807814457e-17
+      },
+      {
+        "path": "/runs/5/responses/0/result/decision/probabilities/follow_predictive",
+        "primary": 0.12962520511676376,
+        "secondary": 0.12962520511676373,
+        "absolute_difference": 2.7755575615628914e-17
+      },
+      {
+        "path": "/runs/5/responses/0/result/decision/probabilities/hold_center",
+        "primary": 0.12270515041133122,
+        "secondary": 0.1227051504113312,
+        "absolute_difference": 1.3877787807814457e-17
+      },
+      {
+        "path": "/runs/5/responses/0/result/decision/probabilities/scan_reacquire",
+        "primary": 0.12050381096019236,
+        "secondary": 0.12050381096019235,
+        "absolute_difference": 1.3877787807814457e-17
+      }
+    ]
+  },
+  "legacy_replay": {
+    "artifact": {
+      "path": "artifacts/d6_energy_legacy_replay_20261031.json",
+      "bytes": 900,
+      "sha256": "c9d5bd1abf91f055c75b54be4754ce3c8c9972a2c6004d13df8daf0a0a9bdea9"
+    },
+    "result": {
+      "status": "PASS",
+      "kind": "OFFLINE_REPRODUCTION_OF_LIVE_SHADOW_INPUTS",
+      "python_version": "3.10.21 | packaged by conda-forge | (main, Aug 21 2026, 22:38:44) [MSC v.1944 64 bit (AMD64)]",
+      "strict_text": true,
+      "text_differences": [],
+      "float_abs_tolerance": 1e-12,
+      "float_relative_tolerance": 1e-12,
+      "verified_frames": 16,
+      "visible_frames": 12,
+      "missing_frames": 4,
+      "legacy_energy_schema_projections": 16,
+      "verified_candidate_predictions": 128,
+      "verified_safety_rejections": 32,
+      "mean_capture_ms": 34.704824996879324,
+      "max_capture_ms": 77.04750006087124,
+      "observed_capture_hz": 5.020007742873706,
+      "not_tracking_evaluation": true,
+      "no_policy_actions_executed": true,
+      "evidence_sha256": "ccab9258aa97abbeb877c299705b0423952933c03e3f3bdaeeb3a7262fe59906",
+      "verifier_sha256": "ef49e6ef40550791c85b13cc76dde37f09fa50c5a28d6a4fe388f2e7caacb296"
+    }
+  },
+  "not_performed": {
+    "live_simulator_launches": 0,
+    "real_jev_requests": 0,
+    "new_pass_episodes": 0,
+    "training_runs": 0
+  },
+  "remaining_gaps": [
+    "native geometry/collision and freshness integration",
+    "live dispatch/stop acknowledgement",
+    "Town03 PASS episodes"
+  ],
+  "failed_verification_attempts": [
+    {
+      "command": "carlaAir/python.exe -m pytest",
+      "cause": "pytest unavailable; environment not changed"
+    },
+    {
+      "command": "initial carlaAir legacy verifier invocation",
+      "cause": "missing PYTHONPATH; rerun with src passed"
+    }
+  ],
+  "pre_review_reports": [
+    {
+      "path": "artifacts/d6_energy_20261031_py314/report.json",
+      "bytes": 1519117,
+      "sha256": "20c4d118d6a96c572323304768e3c1dce1aa414e63e4af9d5afc6d89e0b822f7"
+    },
+    {
+      "path": "artifacts/d6_energy_20261031_py310/report.json",
+      "bytes": 1519119,
+      "sha256": "cb465b3a0b65213ec073202b011fdf6a09f2947363a17fe5ab9ffacf0283ee41"
+    }
+  ],
+  "pre_review_smoke_bytes_equal_to_final": [
+    true,
+    true
+  ],
+  "tests": {
+    "python314": {
+      "passed": 562,
+      "skipped": 1,
+      "duration_s": 14.85
+    },
+    "targeted_energy_control": {
+      "passed": 119
+    },
+    "python310_pytest": "NOT_RUN_PYTEST_UNAVAILABLE",
+    "compileall_both": "PASS"
+  },
+  "review": {
+    "initial": "TWO_IMPORTANT_FINDINGS_REPRODUCED",
+    "regressions_failed_before_fix": 12,
+    "fixes": [
+      "clock checked after energy/safety callbacks; fixed energy deadline evaluated at dispatch",
+      "positive power/rate and positive duration costs reject underflow to zero",
+      "persist final observed clock floor and fault across reset; actual dispatch time controls cadence"
+    ],
+    "final": "NO_REMAINING_IMPORTANT_FINDINGS_IN_BOUNDED_REVIEW"
+  },
+  "intermediate_reports": [
+    {
+      "path": "artifacts/d6_energy_20261031_final_py314/report.json",
+      "bytes": 1519117,
+      "sha256": "20c4d118d6a96c572323304768e3c1dce1aa414e63e4af9d5afc6d89e0b822f7"
+    },
+    {
+      "path": "artifacts/d6_energy_20261031_final_py310/report.json",
+      "bytes": 1519119,
+      "sha256": "cb465b3a0b65213ec073202b011fdf6a09f2947363a17fe5ab9ffacf0283ee41"
+    }
+  ],
+  "previous_smoke_bytes_equal_to_verified": [
+    true,
+    true
+  ]
+}

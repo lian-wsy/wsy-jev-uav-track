@@ -27,7 +27,7 @@ def main():
         'stratum': 'visible', 'split': 'development_train'}]}
     writer = DecisionDatasetWriter(args.output, protocol)
     state = TrackingState(TargetBelief(position_m=(20, 0, 5), timestamp_s=10),
-                          UAVState(position_m=(0, 0, 5)))
+                          UAVState(position_m=(0, 0, 5), battery_capacity_wh=20., energy_source='SIMULATED_RESOURCE'))
     actions = KinematicRolloutModel().generate(DEFAULT_PRIMITIVES, state)
     writer.begin_decision('d01', 'synthetic01', state, actions, observation_time_s=10,
         history_times_s=[9, 9.5, 10], decision_time_s=10.02, clock_domain='synthetic_clock',

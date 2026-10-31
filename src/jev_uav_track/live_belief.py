@@ -47,7 +47,7 @@ class LiveBeliefAdapter:
 
     def update(self, window: CaptureWindow, *, now_s, vehicle_local_ned,
                velocity_local_ned, yaw_deg, measurement_world, target_actor_id,
-               image_center_error, minimum_clearance_m=None, battery_percent=None):
+               image_center_error, minimum_clearance_m=None, battery_percent=None, battery_capacity_wh=None):
         # Rejected timing revokes the gate's old authorization immediately.
         self.gate.accept(window, now_s=now_s)
         position = self.alignment.vehicle_to_carla(vehicle_local_ned)
@@ -73,7 +73,9 @@ class LiveBeliefAdapter:
         elif target_actor_id is not None or image_center_error is not None:
             raise ValueError('Hidden observations cannot carry current identity or image measurements')
         uav = UAVState(position_m=position, velocity_mps=(vx, vy, -vz), yaw_deg=yaw_deg,
-                       minimum_obstacle_margin_m=clearance, battery_percent=battery)
+                       minimum_obstacle_margin_m=clearance, battery_percent=battery,
+                       battery_capacity_wh=battery_capacity_wh,
+                       energy_source="MEASURED" if battery_percent is not None else "UNKNOWN")
         # Commit estimator/history only after the entire state passes validation.
         estimator = replace(self.estimator)
         target = estimator.update(timestamp_s=window.image_s, measurement=measurement_world,

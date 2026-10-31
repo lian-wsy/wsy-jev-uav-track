@@ -203,7 +203,8 @@ def test_environment_wiring_and_success_accounting(tmp_path, monkeypatch):
     ("compare_jev", ["--max-frames", "3", "--stride", "1"]),
     # Synthetic budget test only: allow zero-margin proxy candidates so this
     # exercises exhausted API budget, not the missing-clearance safety gate.
-    ("run_closed_loop_replay", ["--max-decisions", "3", "--stride", "1", "--minimum-obstacle-margin-m", "0"]),
+    ("run_closed_loop_replay", ["--max-decisions", "3", "--stride", "1", "--minimum-obstacle-margin-m", "0",
+                              "--simulated-battery-capacity-wh", "20"]),
 ])
 def test_cli_budget_fallback_is_not_reported_as_complete_real_jev(tmp_path, monkeypatch, script, options):
     import importlib.util
@@ -222,6 +223,14 @@ def test_cli_budget_fallback_is_not_reported_as_complete_real_jev(tmp_path, monk
     spec = importlib.util.spec_from_file_location(script, source)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
+    # This test isolates exhausted API budget, not missing HDF safety telemetry.
+    # Inject an explicit synthetic resource into this temporary fixture only.
+    from dataclasses import replace
+    original_state = module.HDF5Episode.tracking_state
+    def synthetic_resource(self, *args, **kwargs):
+        state = original_state(self, *args, **kwargs)
+        return replace(state, uav=replace(state.uav, battery_capacity_wh=20., energy_source="SIMULATED_RESOURCE"))
+    monkeypatch.setattr(module.HDF5Episode, "tracking_state", synthetic_resource)
     monkeypatch.chdir(tmp_path)
     monkeypatch.setattr("sys.argv", [script, "--episode", str(episode), "--output", str(output), *options])
     module.main()

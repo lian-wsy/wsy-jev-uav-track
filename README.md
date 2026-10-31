@@ -4,6 +4,8 @@
 
 当前仓库用于算法验证和接口设计，`KinematicRolloutModel` 是透明的常速度近似，不是经过验证的飞行动力学模型，不能直接用于真实飞行。
 
+2026-10-31：D6已修复percent/Wh单位错误，按用户授权接入仅仿真的显式能耗预算（`SIMULATED_RESOURCE`），未知容量不再默认放行。562项回归与两Python六组Mock smoke通过；仍缺真实几何/碰撞与执行停止证据，D1–D6未整体完成。参数、复现命令及兼容边界见[能耗修复报告](docs/experiments/d6_energy_budget_20261031.md)。旧示例/报告应按原提交解释，新HDF代理回放需显式`--simulated-battery-capacity-wh`，不能把合成容量当实测电池。
+
 2026-10-28：本机独立 CARLA/AirSim 副本已完成真实 API、静态地标配准、限速上升、四轴和约 19.87 Hz 客户端命令刷新诊断；标准起飞失败和双时钟偏差均保留。尚不是目标跟踪闭环或性能提升证据，见 [完整联验报告](docs/experiments/isolated_carla_smoke_20261028.md)。
 
 ## 结构

@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
+from .energy import finite_number
+
 Vec3 = Tuple[float, float, float]
 
 
@@ -58,6 +60,8 @@ class UAVState:
     minimum_obstacle_margin_m: float = 10.0
     gps_health: float = 1.0
     communication_health: float = 1.0
+    battery_capacity_wh: float | None = None
+    energy_source: str = "UNKNOWN"
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "position_m", _vec3(self.position_m))
@@ -70,6 +74,12 @@ class UAVState:
             raise ValueError("communication_health is outside its valid range")
         if self.minimum_obstacle_margin_m < 0:
             raise ValueError("minimum_obstacle_margin_m cannot be negative")
+        if self.battery_capacity_wh is not None and (
+            not finite_number(self.battery_capacity_wh) or self.battery_capacity_wh <= 0
+        ):
+            raise ValueError("battery_capacity_wh must be finite and positive when supplied")
+        if self.energy_source not in ("UNKNOWN", "MEASURED", "SIMULATED_RESOURCE"):
+            raise ValueError("Invalid energy_source")
 
 
 @dataclass(frozen=True)

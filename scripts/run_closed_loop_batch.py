@@ -29,6 +29,8 @@ def main() -> None:
     parser.add_argument("--desired-range-m", type=float, default=20.0)
     parser.add_argument("--minimum-obstacle-margin-m", type=float, default=3.0)
     parser.add_argument("--fov-half-angle-deg", type=float, default=75.0)
+    parser.add_argument("--simulated-battery-capacity-wh", type=float,
+                        help="Explicit synthetic resource capacity; not measured battery. Required for HDF replay.")
     parser.add_argument("--near-miss-margin-m", type=float, default=0.5)
     parser.add_argument(
         "--near-miss-collision-probability-fraction",
@@ -107,6 +109,7 @@ def main() -> None:
         desired_range_m=args.desired_range_m,
         minimum_obstacle_margin_m=args.minimum_obstacle_margin_m,
         fov_half_angle_deg=args.fov_half_angle_deg,
+        simulated_battery_capacity_wh=args.simulated_battery_capacity_wh,
         near_miss_margin_m=args.near_miss_margin_m,
         near_miss_collision_probability_fraction=args.near_miss_collision_probability_fraction,
         max_learned_feature_zscore=args.max_learned_feature_zscore,

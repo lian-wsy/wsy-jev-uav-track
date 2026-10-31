@@ -47,7 +47,7 @@ class DeterministicMockSession:
         self._position = (rng.uniform(-1, 1), rng.uniform(-1, 1), 3.)
         self._target = (20. + rng.uniform(-2, 2), rng.uniform(-2, 2), 3.)
         self._velocity = (.1 + rng.uniform(0, .1), rng.uniform(-.05, .05), 0.)
-        self._yaw, self._battery = 0., 90.
+        self._yaw = 0.
         self._last_velocity = (0., 0., 0.)
         return self.observe()
 
@@ -59,12 +59,12 @@ class DeterministicMockSession:
             TargetBelief(position_m=self._target, velocity_mps=self._velocity, range_m=distance,
                          image_center_error=center, visibility_probability=.9, timestamp_s=now),
             UAVState(position_m=self._position, velocity_mps=self._last_velocity, yaw_deg=self._yaw,
-                     battery_percent=self._battery, minimum_obstacle_margin_m=10.),
+                     battery_percent=0., minimum_obstacle_margin_m=10.),
             environment={"evidence_class": self.evidence_class})
         capture = CaptureWindow(now - .01, now, now - .01, now - .005, now,
                                 now - .01, now, self.index * 2, self.index * 2 + 1)
         return SyntheticObservation(self.evidence_class, self.seed, self.scenario, self.index,
-                                    state, capture, MeasuredSafety(now, True, self._battery, 10., False))
+                                    state, capture, MeasuredSafety(now, True, None, 10., False))
 
     def step(self, command: AirSimWorldVelocityCommand | None):
         if command is not None:
@@ -78,7 +78,6 @@ class DeterministicMockSession:
             velocity = (vx, vy, -down)
             self._position = tuple(p + v * command.duration_s for p, v in zip(self._position, velocity))
             self._yaw += command.yaw_rate_dps * command.duration_s
-            self._battery -= .001 * command.duration_s
             self._last_velocity = velocity
         else:
             # Synthetic zero-velocity hold between bounded prefixes is a model

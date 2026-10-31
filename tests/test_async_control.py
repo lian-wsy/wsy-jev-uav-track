@@ -43,7 +43,8 @@ class ControlledExecutor:
 
 
 def state(**updates):
-    value = TrackingState(TargetBelief(position_m=(20, 0, 3)), UAVState(position_m=(0, 0, 3)),
+    value = TrackingState(TargetBelief(position_m=(20, 0, 3)), UAVState(position_m=(0, 0, 3),
+                          battery_capacity_wh=20., energy_source="MEASURED"),
                           environment={"nested": {"values": [1, 2]}})
     return replace(value, **updates)
 
@@ -65,7 +66,8 @@ def setup_loop():
         lambda request: pipe.selector.select(request.state, request.candidates),
         clock=clock, executor=executor)
     loop = BoundedControlLoop(pipe, coordinator, alignment=CarlaAirAlignment((4, 5, 6)), clock=clock)
-    return clock, executor, coordinator, loop, MeasuredSafety(1., True, 90., 10., False)
+    return clock, executor, coordinator, loop, MeasuredSafety(1., True, 90., 10., False,
+                                                            battery_capacity_wh=20., energy_source="MEASURED")
 
 
 def tick(loop, clock, measured, **updates):
@@ -84,7 +86,7 @@ def test_real_blocked_selector_ticks_and_close_are_nonblocking_with_one_worker()
 
     coordinator = AsyncDecisionCoordinator(blocked, clock=clock)
     loop = BoundedControlLoop(pipe, coordinator, alignment=CarlaAirAlignment((0, 0, 0)), clock=clock)
-    measured = MeasuredSafety(1., True, 90., 10., False)
+    measured = MeasuredSafety(1., True, 90., 10., False, battery_capacity_wh=20., energy_source="MEASURED")
     try:
         tick(loop, clock, measured)
         assert entered.wait(.5)

@@ -17,6 +17,7 @@ from dataclasses import dataclass, replace
 from typing import Any, Dict, Iterable, Mapping, Sequence
 
 from .history import attach_history, build_target_belief_history
+from .energy import remaining_battery_percent
 from .causal_belief import CausalTargetEstimator
 from .jev_client import JevClient, MockJevClient
 from .learned_rollout import LearnedOutcomeRolloutModel
@@ -44,6 +45,7 @@ class ClosedLoopReplayConfig:
     near_miss_margin_m: float = 0.5
     near_miss_collision_probability_fraction: float = 0.5
     initial_battery_percent: float = 100.0
+    simulated_battery_capacity_wh: float | None = None
     enable_safety_gate: bool = True
     use_short_history: bool = True
     use_identity_confidence: bool = True
@@ -71,6 +73,8 @@ class ClosedLoopReplayConfig:
             raise ValueError("near_miss_collision_probability_fraction must be in [0, 1]")
         if not 0.0 <= self.initial_battery_percent <= 100.0:
             raise ValueError("initial_battery_percent must be in [0, 100]")
+        if self.simulated_battery_capacity_wh is not None:
+            remaining_battery_percent(self.initial_battery_percent, 0., self.simulated_battery_capacity_wh)
         if (
             self.max_learned_feature_zscore is not None
             and self.max_learned_feature_zscore <= 0.0
@@ -294,13 +298,9 @@ def _advance_uav(uav: UAVState, action: Any, dt_s: float) -> UAVState:
         float(uav.position_m[axis]) + float(action.command_mps[axis]) * executed_s
         for axis in range(3)
     )
-    battery = max(
-        0.0,
-        uav.battery_percent
-        - float(action.outcome.energy_cost_wh)
-        * executed_s
-        / max(float(action.duration_s), 1e-6),
-    )
+    battery = remaining_battery_percent(
+        uav.battery_percent, float(action.outcome.energy_cost_wh) * executed_s / action.duration_s,
+        uav.battery_capacity_wh)
     yaw = (float(uav.yaw_deg) + float(action.yaw_rate_dps) * executed_s + 180.0) % 360.0 - 180.0
     return replace(
         uav,
@@ -348,11 +348,18 @@ def run_closed_loop_replay(
         maximum_collision_probability=cfg.maximum_collision_probability,
     )
     first = episode.tracking_state(indices[0], constraints=constraints)
+    capacity = cfg.simulated_battery_capacity_wh
+    if capacity is None and first.uav.energy_source == "SIMULATED_RESOURCE":
+        capacity = first.uav.battery_capacity_wh
+    if capacity is None:
+        raise ValueError("SIMULATED_CAPACITY_REQUIRED: replay needs an explicit synthetic capacity in Wh")
     # Own recorded camera orientation only; never align to hidden target truth.
     sim_uav = replace(
         first.uav,
         yaw_deg=first.uav.yaw_deg,
         battery_percent=cfg.initial_battery_percent,
+        battery_capacity_wh=capacity,
+        energy_source="SIMULATED_RESOURCE",
         # Do not replace a causal initial state with the full-episode minimum.
         # HDF adapters without timestamped clearance fail closed at zero.
         minimum_obstacle_margin_m=first.uav.minimum_obstacle_margin_m,
@@ -594,6 +601,8 @@ def run_closed_loop_replay(
         },
         "model_name": model_name,
         "config": cfg.__dict__,
+        "energy_contract": {"source": "SIMULATED_RESOURCE", "capacity_wh": capacity,
+                            "model_id": "legacy_action_heuristic_no_idle"},
         "metrics": metrics,
         "choice_counts": dict(Counter(record["choice"] for record in records)),
         "records": records,

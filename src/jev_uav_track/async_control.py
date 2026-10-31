@@ -7,7 +7,7 @@ new command was issued; it is not evidence of physical braking or safe hover.
 from __future__ import annotations
 
 from concurrent.futures import Future
-from dataclasses import dataclass, fields, is_dataclass, replace
+from dataclasses import asdict, dataclass, fields, is_dataclass, replace
 import math
 import threading
 import time
@@ -15,6 +15,7 @@ from types import MappingProxyType
 from typing import Callable, Mapping, Sequence
 
 from .frames import CarlaAirAlignment
+from .energy import EnergySnapshot, SimulatedEnergyBudget, finite_number
 from .live_observation import CaptureWindow, TemporalObservationGate
 from .models import CandidateAction, CandidateOutcome, JevDecision, SelectionResult, TrackingState
 from .pipeline import JevTrackPipeline
@@ -55,6 +56,7 @@ def _candidate_code(action):
             or not isinstance(action.outcome, CandidateOutcome) or type(action.outcome.feasible) is not bool
             or any(type(getattr(action.outcome, field.name)) not in (int, float)
                    for field in fields(action.outcome) if field.name != "feasible")
+            or action.outcome.energy_cost_wh < 0
             or not isinstance(action.metadata, Mapping) or action.duration_s != 1.
             or action.metadata.get("command_frame") != "world_z_up"):
         return "INVALID_CANDIDATE"
@@ -311,11 +313,18 @@ class AsyncDecisionCoordinator:
 
 @dataclass(frozen=True)
 class MeasuredSafety:
+    """Current geometry and optional native energy. Unknown stays unknown.
+
+    A simulated allowance is injected separately into the loop, never marked
+    valid/measured here. Native SOC requires capacity and MEASURED provenance.
+    """
     timestamp_s: float
     valid: bool
     battery_percent: float | None
     clearance_m: float | None
     collision: bool | None
+    battery_capacity_wh: float | None = None
+    energy_source: str = "UNKNOWN"
 
 
 @dataclass(frozen=True)
@@ -327,10 +336,11 @@ class ControlTick:
     command: AirSimWorldVelocityCommand | None = None
     request_id: int | None = None
     action_id: str | None = None
+    energy: EnergySnapshot | None = None
 
 
 class BoundedControlLoop:
-    """Recheck fresh measured safety and compile only <=50 ms prefixes.
+    """Recheck fresh geometry and explicit energy; compile <=50 ms prefixes.
 
     The returned command is a dispatch request. No physical execute/hover/stop
     claim is made by this simulator-neutral module.
@@ -340,9 +350,22 @@ class BoundedControlLoop:
     candidate_horizon_s = 1.
 
     def __init__(self, pipeline: JevTrackPipeline, coordinator: AsyncDecisionCoordinator, *,
-                 alignment: CarlaAirAlignment, clock=time.perf_counter):
+                 alignment: CarlaAirAlignment, clock=time.perf_counter,
+                 simulated_energy: SimulatedEnergyBudget | None = None,
+                 execution_domain: str | None = None):
+        if simulated_energy is not None and (
+            not isinstance(simulated_energy, SimulatedEnergyBudget)
+            or execution_domain not in ("synthetic_simulation", "isolated_simulation")
+        ):
+            raise ValueError("SIMULATION_ONLY_ENERGY_REQUIRES_EXPLICIT_DOMAIN")
         self.pipeline, self.coordinator = pipeline, coordinator
         self.alignment, self.clock = alignment, clock
+        self._simulated_energy = simulated_energy
+        self._energy_snapshot = None
+        # Time monotonicity belongs to the run, not an advice generation.
+        # Retain final dispatch-clock reads across controller resets too.
+        self._clock_floor_s = None
+        self._clock_fault = False
         self._gate = TemporalObservationGate()
         self._last_tick_s = None
         self.command_count = 0
@@ -350,10 +373,21 @@ class BoundedControlLoop:
     def _no_command(self, now, code, *, revoke=True):
         if revoke:
             self.coordinator.revoke(code)
-        return ControlTick(now, self.coordinator.generation, "NO_COMMAND", code)
+        return ControlTick(now, self.coordinator.generation, "NO_COMMAND", code, energy=self._energy_snapshot)
 
     def tick(self, state: TrackingState, capture: CaptureWindow, safety: MeasuredSafety):
         now = self.clock()
+        if (self._clock_fault or not math.isfinite(now)
+                or (self._clock_floor_s is not None and now < self._clock_floor_s)):
+            self._clock_fault = True
+            return self._no_command(now, "ENERGY_BUDGET_INVALID" if self._simulated_energy else "INVALID_CLOCK")
+        self._clock_floor_s = now
+        if self._simulated_energy is not None:
+            self._energy_snapshot = None
+            try:
+                self._energy_snapshot = self._simulated_energy.snapshot(now)
+            except ValueError:
+                return self._no_command(now, "ENERGY_BUDGET_INVALID")
         if not math.isfinite(now) or (self._last_tick_s is not None and now < self._last_tick_s):
             return self._no_command(now, "INVALID_CLOCK")
         too_soon = self._last_tick_s is not None and now < self._last_tick_s + .05 - 1e-9
@@ -365,10 +399,10 @@ class BoundedControlLoop:
         except (TypeError, ValueError, AttributeError):
             return self._no_command(now, "OBSERVATION_INVALID")
         if not isinstance(safety, MeasuredSafety) or safety.valid is not True or any(
-                value is None for value in (safety.timestamp_s, safety.battery_percent, safety.clearance_m, safety.collision)):
+                value is None for value in (safety.timestamp_s, safety.clearance_m, safety.collision)):
             return self._no_command(now, "SAFETY_UNMEASURED")
         if type(safety.collision) is not bool or any(type(value) not in (int, float) for value in (
-                safety.timestamp_s, safety.battery_percent, safety.clearance_m)):
+                safety.timestamp_s, safety.clearance_m)):
             return self._no_command(now, "SAFETY_INVALID")
         if not _finite(safety):
             return self._no_command(now, "SAFETY_NONFINITE")
@@ -379,14 +413,34 @@ class BoundedControlLoop:
             return self._no_command(now, "COLLISION")
         if not _finite(state):
             return self._no_command(now, "STATE_NONFINITE")
-        if not 0 <= safety.battery_percent <= 100 or safety.battery_percent <= state.constraints.reserve_battery_percent:
+        if self._simulated_energy is not None:
+            if (safety.battery_percent is not None or safety.battery_capacity_wh is not None
+                    or safety.energy_source != "UNKNOWN"):
+                return self._no_command(now, "ENERGY_SOURCE_CONFLICT")
+            battery = self._energy_snapshot.battery_percent
+            capacity = self._energy_snapshot.capacity_wh
+            source = self._energy_snapshot.source
+        else:
+            if safety.battery_percent is None:
+                return self._no_command(now, "SAFETY_UNMEASURED")
+            if type(safety.battery_percent) not in (int, float):
+                return self._no_command(now, "SAFETY_INVALID")
+            if (safety.energy_source != "MEASURED" or not finite_number(safety.battery_capacity_wh)
+                    or safety.battery_capacity_wh <= 0):
+                return self._no_command(now, "ENERGY_UNAVAILABLE")
+            battery, capacity, source = safety.battery_percent, safety.battery_capacity_wh, safety.energy_source
+        if not 0 <= battery <= 100 or battery <= state.constraints.reserve_battery_percent:
             return self._no_command(now, "BATTERY_RESERVE")
         if safety.clearance_m < state.constraints.minimum_obstacle_margin_m:
             return self._no_command(now, "CLEARANCE")
         if too_soon:
             return self._no_command(now, "TICK_TOO_SOON", revoke=False)
-        current = replace(state, uav=replace(state.uav, battery_percent=safety.battery_percent,
-                                            minimum_obstacle_margin_m=safety.clearance_m))
+        environment = dict(state.environment)
+        if self._energy_snapshot is not None:
+            environment["energy_budget"] = asdict(self._energy_snapshot)
+        current = replace(state, uav=replace(state.uav, battery_percent=battery,
+                                            battery_capacity_wh=capacity, energy_source=source,
+                                            minimum_obstacle_margin_m=safety.clearance_m), environment=environment)
         try:
             candidates = self.pipeline.generate_candidates(current)
         except Exception:
@@ -394,6 +448,12 @@ class BoundedControlLoop:
         for candidate in candidates:
             if code := _candidate_code(candidate):
                 return self._no_command(now, code)
+        if self._simulated_energy is not None:
+            candidates = [replace(candidate, outcome=replace(candidate.outcome,
+                energy_cost_wh=self._simulated_energy.forecast_wh(candidate.duration_s)), metadata={
+                    **candidate.metadata, "energy_source": "SIMULATED_RESOURCE",
+                    "energy_model": self._simulated_energy.config.model_id,
+                    "legacy_rollout_energy_wh": candidate.outcome.energy_cost_wh}) for candidate in candidates]
         if advice is None:
             code = self.coordinator.last_code
             self.coordinator.submit(current, candidates, capture_start_s=capture.wall_start_s)
@@ -408,18 +468,45 @@ class BoundedControlLoop:
             return self._no_command(now, "CURRENT_ACTION_UNSAFE")
 
         def bound_at_dispatch(command):
-            # This runs after compilation, revalidation and the temporal gate's
-            # own clock read. Tick-start time cannot authorize a later prefix.
-            dispatch_now = self.clock()
-            if not math.isfinite(dispatch_now) or dispatch_now < now:
+            # Finish callbacks/checks BEFORE the final clock. Even an energy
+            # snapshot or safety function can take time. The remaining constant-
+            # power allowance becomes a deadline, so the final check needs no
+            # further budget/safety callbacks that could reopen this race.
+            checked_s = self.clock()
+            if not math.isfinite(checked_s) or checked_s < now:
+                self._clock_fault = True
                 return None, "INVALID_CLOCK"
+            self._clock_floor_s = checked_s
+            energy_deadline = None
+            if self._simulated_energy is not None:
+                try:
+                    self._energy_snapshot = self._simulated_energy.snapshot(checked_s)
+                except ValueError:
+                    return None, "ENERGY_BUDGET_INVALID"
+                dispatch_uav = replace(current.uav, battery_percent=self._energy_snapshot.battery_percent)
+                if safety_reasons(selected, dispatch_uav, current.constraints):
+                    return None, "CURRENT_ACTION_UNSAFE"
+                snapshot = self._energy_snapshot
+                reserve_wh = current.constraints.reserve_battery_percent / 100. * snapshot.capacity_wh
+                spare_wh = snapshot.remaining_wh - reserve_wh - selected.outcome.energy_cost_wh
+                energy_deadline = snapshot.timestamp_s + spare_wh / (snapshot.power_w / 3600.)
+                if not math.isfinite(energy_deadline):
+                    return None, "ENERGY_BUDGET_INVALID"
+            dispatch_now = self.clock()
+            if not math.isfinite(dispatch_now) or dispatch_now < checked_s:
+                self._clock_fault = True
+                return None, "INVALID_CLOCK"
+            self._clock_floor_s = dispatch_now
             if dispatch_now >= advice.valid_until_s:
                 return None, "ACTION_EXPIRED"
             capture_remaining = capture.wall_start_s + self._gate.decision_ttl_s - dispatch_now
             if dispatch_now < capture.wall_end_s or capture_remaining <= 0:
                 return None, "DISPATCH_REJECTED"
+            if energy_deadline is not None and dispatch_now >= energy_deadline:
+                return None, "CURRENT_ACTION_UNSAFE"
             remaining = min(command.duration_s, .05, advice.valid_until_s - dispatch_now,
                             capture_remaining)
+            self._last_tick_s = dispatch_now
             return replace(command, duration_s=remaining), "BOUNDED_PREFIX"
 
         try:
@@ -432,7 +519,7 @@ class BoundedControlLoop:
             return self._no_command(now, code)
         self.command_count += 1
         return ControlTick(now, self.coordinator.generation, "COMMAND_PREFIX", "BOUNDED_PREFIX",
-                           emitted, advice.request_id, advice.action.id)
+                           emitted, advice.request_id, advice.action.id, self._energy_snapshot)
 
     def reset(self):
         self.coordinator.reset()

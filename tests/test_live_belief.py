@@ -50,7 +50,7 @@ def test_unknown_live_safety_measurements_do_not_inherit_safe_defaults():
 
 
 def test_real_pipeline_can_consume_valid_adapter_fixture_without_bypassing_safety():
-    state = update(adapter(), minimum_clearance_m=10, battery_percent=100)
+    state = update(adapter(), minimum_clearance_m=10, battery_percent=100, battery_capacity_wh=20.)
     for client in (MockJevClient(), UtilityRankingClient()):
         result = JevTrackPipeline(client).step(state)
         assert result.action.id == 'hold_center'

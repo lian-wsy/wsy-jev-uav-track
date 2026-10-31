@@ -61,6 +61,7 @@ def verify(evidence, *, strict_text=True):
     adapter = LiveBeliefAdapter(bridge)
     pipelines = {'mock': JevTrackPipeline(MockJevClient()), 'utility': JevTrackPipeline(UtilityRankingClient())}
     count = 0
+    legacy_energy_schema_projections = 0
     text_differences = []
     for index, row in enumerate(frames):
         visible = not 4 <= index < 8
@@ -74,6 +75,12 @@ def verify(evidence, *, strict_text=True):
             target_actor_id=probe['spawn']['actor_id'] if visible else None,
             image_center_error=row['image_center_error'])
         actual_state, expected_state = state.to_dict(), dict(row['state'])
+        # Read-only schema projection: pre-energy-contract files had neither
+        # field. Absence means UNKNOWN/None, never measured or synthetic energy.
+        # Do not rewrite evidence, discard supplied fields, or relax comparisons.
+        if not ({'energy_source', 'battery_capacity_wh'} & expected_state['uav'].keys()):
+            expected_state['uav'] = {**expected_state['uav'], 'energy_source': 'UNKNOWN', 'battery_capacity_wh': None}
+            legacy_energy_schema_projections += 1
         actual_text, expected_text = actual_state.pop('history_summary'), expected_state.pop('history_summary')
         if actual_text != expected_text:
             text_differences.append({'frame': index, 'actual': actual_text, 'recorded': expected_text})
@@ -99,6 +106,7 @@ def verify(evidence, *, strict_text=True):
             'text_differences': text_differences,
             'float_abs_tolerance': 1e-12, 'float_relative_tolerance': 1e-12,
             'verified_frames': len(frames), 'visible_frames': 12, 'missing_frames': 4,
+            'legacy_energy_schema_projections': legacy_energy_schema_projections,
             'verified_candidate_predictions': count, 'verified_safety_rejections': 2 * len(frames),
             'mean_capture_ms': statistics.mean(durations) * 1000, 'max_capture_ms': max(durations) * 1000,
             'observed_capture_hz': 15 / (frames[-1]['window']['wall_start_s'] - frames[0]['window']['wall_start_s']),

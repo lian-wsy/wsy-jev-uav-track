@@ -25,6 +25,8 @@ def make_state(**uav_changes: object) -> TrackingState:
     uav_values = {
         "position_m": (0.0, 0.0, 0.0),
         "minimum_obstacle_margin_m": 12.0,
+        "battery_capacity_wh": 20.0,
+        "energy_source": "SIMULATED_RESOURCE",
     }
     uav_values.update(uav_changes)
     uav = UAVState(

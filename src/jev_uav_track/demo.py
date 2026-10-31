@@ -6,6 +6,7 @@ import math
 from dataclasses import replace
 
 from .jev_client import MockJevClient
+from .energy import remaining_battery_percent
 from .models import MissionConstraints, TargetBelief, TrackingState, UAVState
 from .pipeline import JevTrackPipeline
 
@@ -31,6 +32,8 @@ def make_demo_state() -> TrackingState:
             position_m=(0.0, 0.0, 0.0),
             velocity_mps=(0.0, 0.0, 0.0),
             battery_percent=96.0,
+            battery_capacity_wh=20.0,
+            energy_source="SIMULATED_RESOURCE",
             minimum_obstacle_margin_m=12.0,
         ),
         constraints=MissionConstraints(
@@ -51,7 +54,7 @@ def run_demo(iterations: int = 6) -> None:
     pipeline = JevTrackPipeline(MockJevClient())
     previous_action_id: str | None = None
 
-    print("Jev-Track offline demonstration")
+    print("Jev-Track offline demonstration: SIMULATED_RESOURCE, example capacity=20Wh; heuristic action cost only")
     for step in range(iterations):
         result = pipeline.step(state, previous_action_id=previous_action_id)
         action = result.action
@@ -86,7 +89,8 @@ def run_demo(iterations: int = 6) -> None:
                 state.uav,
                 position_m=terminal.position_m,
                 velocity_mps=terminal.velocity_mps,
-                battery_percent=max(0.0, state.uav.battery_percent - action.outcome.energy_cost_wh),
+                battery_percent=remaining_battery_percent(state.uav.battery_percent,
+                    action.outcome.energy_cost_wh, state.uav.battery_capacity_wh),
             ),
         )
         previous_action_id = action.id

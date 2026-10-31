@@ -149,8 +149,11 @@ def test_hdf5_adapter_and_training_round_trip(tmp_path) -> None:
         outcome_model=loaded,
     )
     json.dumps(report)
-    assert report["metrics"]["evaluated_frames"] == 4
-    assert report["records"][0]["history_length"] == 1
+    # HDF has no energy measurement/capacity. A successful training round-trip
+    # must not silently make its evaluation candidates safe.
+    assert report["metrics"]["evaluated_frames"] == 0
+    assert report["metrics"]["skipped_frames"] == 4
+    assert report["blocked_records"][0]["history_length"] == 1
 
     module_report = evaluate_episode(
         episode,
