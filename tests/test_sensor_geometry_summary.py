@@ -101,3 +101,14 @@ def test_cli_preserves_input_and_refuses_existing_output(tmp_path, monkeypatch):
     first = output.read_bytes()
     with pytest.raises(FileExistsError): runner.main()
     assert output.read_bytes() == first and source.read_bytes() == original
+
+
+@pytest.mark.parametrize('field,value', [('geometry_schema_version', True), ('rpc_count', 5.),
+                                       ('clearance_m', 'REMOVE')])
+def test_receipt_requires_exact_types_and_explicit_unknown_clearance(field, value):
+    api = api_fixture()
+    if value == 'REMOVE':
+        api['safety_probe'].pop(field)
+    else:
+        api['safety_probe'][field] = value
+    with pytest.raises(ValueError): summarize(api)

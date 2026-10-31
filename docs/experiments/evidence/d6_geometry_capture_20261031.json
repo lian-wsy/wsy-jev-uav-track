@@ -1,0 +1,1223 @@
+{
+  "kind": "D6_BOUNDED_RAW_GEOMETRY_AND_OFFLINE_ANALYSIS",
+  "date_shanghai": "2026-10-31",
+  "independently_recomputed_same_run_preview_minima_m": [10.426503286562557, 23.94884932914336, 25.13723074001831, 22.32794030955515, 16.73451481314554, 16.72679165514941],
+  "runtime_commit": "dbc09027411df5d14c829e427db46241fc7faf4e",
+  "run_root": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_geometry03_20261031",
+  "status": "SAFETY_DIAGNOSTIC_COMPLETED",
+  "claim_limits": [
+    "NO_ARM_MOTION_RESET_IMAGES_JEV_TRAINING",
+    "NO_PASS_EPISODES",
+    "NOT_CONTROL_READY",
+    "STATIC_MOUNT_CONSISTENCY_NOT_FULL_CALIBRATION",
+    "NEAREST_RETURN_NOT_CLEARANCE",
+    "INITIAL_CONTACT_OBJECT_IDENTIFIED_ONLY_IN_THIS_RUN"
+  ],
+  "raw_artifacts": [
+    {
+      "name": "api_probe.json",
+      "sha256": "98d2b526b65606c59c6dca171c009a95de47f6b25ee6c4121c90782fa806c582",
+      "bytes": 279364
+    },
+    {
+      "name": "client_stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "client_stdout.txt",
+      "sha256": "220235b943de55391e59d0150488c8fb79033a5172329d68d1b6b8f7f9792a60",
+      "bytes": 1681
+    },
+    {
+      "name": "last_runtime_snapshot.json",
+      "sha256": "d46caa8a673f19279058aad9adcc16982442ed4a4445bbc1239262221faf694d",
+      "bytes": 786
+    },
+    {
+      "name": "map_config_before.ini",
+      "sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+      "bytes": 15138
+    },
+    {
+      "name": "map_config.json",
+      "sha256": "9e75ac80d4a81f82c3377fa366e2bb11656e4ba4fe959efabaf8498a360dff47",
+      "bytes": 540
+    },
+    {
+      "name": "owner.json",
+      "sha256": "1850e4183aecc94b122243686fa317780958282ec2293bf1c3daee18dc8356fe",
+      "bytes": 844
+    },
+    {
+      "name": "preflight.json",
+      "sha256": "6c7a044542227bfb92124651749f06dd2e5721fe8a471538ceaad357478d33d1",
+      "bytes": 249
+    },
+    {
+      "name": "run_request.json",
+      "sha256": "f45143b3792a79c5d418901d241081b51a19f6255cda0d1125aca442f6806492",
+      "bytes": 369
+    },
+    {
+      "name": "sensor_config_applied.json",
+      "sha256": "6abb9338bd1bda8a6c0ca096331bbc762e0606af522736c151bea24091afdbec",
+      "bytes": 1610
+    },
+    {
+      "name": "sensor_config_prepared.json",
+      "sha256": "fc7997a5bee7ccf3327d287232741b93ae72fe48538580d236f8e756dc2c2028",
+      "bytes": 1613
+    },
+    {
+      "name": "sensor_config_restored.json",
+      "sha256": "6a354f1d796545bd75cf9279d5c31cf802163f771d234e077115176cff7ce3b8",
+      "bytes": 1885
+    },
+    {
+      "name": "sensor_settings_before_0.json",
+      "sha256": "67cd1ed7eab1a67b24586ce45a63364bc68a69d37e9e49eadb1ee04006ef2f1c",
+      "bytes": 847
+    },
+    {
+      "name": "sensor_settings_before_1.json",
+      "sha256": "67cd1ed7eab1a67b24586ce45a63364bc68a69d37e9e49eadb1ee04006ef2f1c",
+      "bytes": 847
+    },
+    {
+      "name": "sensor_settings_before_2.json",
+      "sha256": "67cd1ed7eab1a67b24586ce45a63364bc68a69d37e9e49eadb1ee04006ef2f1c",
+      "bytes": 847
+    },
+    {
+      "name": "smoke_result.json",
+      "sha256": "f121878aa37eac72a8663419d362b00d1f37d7cd0989ef2b01b6517d5927fd73",
+      "bytes": 301787
+    }
+  ],
+  "runtime_sources": [
+    {
+      "path": "scripts/probe_isolated_carla.py",
+      "sha256": "5036f33428814304fbcd8500342091468bbe077f3a975ab6ecbb73d5fdda00af"
+    },
+    {
+      "path": "scripts/probe_carla_apis.py",
+      "sha256": "f7f3e3054207a2c92dc0ab39b5e179352b1611e430aa968f367aad2d3efb8ef8"
+    },
+    {
+      "path": "src/jev_uav_track/isolated_runtime.py",
+      "sha256": "9e6c2873d671299d246c601144eab3c9f51a9a6dc8c77cbd1a47a919577e9027"
+    },
+    {
+      "path": "src/jev_uav_track/sensor_probe.py",
+      "sha256": "89af4773b21c415c567183385eadc12055a1d87bf36a50aff1dab475c0ad9e26"
+    },
+    {
+      "path": "src/jev_uav_track/sensor_configuration.py",
+      "sha256": "4214bd0795e1dc43ce48ac1c871fa1328129ec97c040faf6108e482e1157f021"
+    }
+  ],
+  "runtime": {
+    "free_memory_kib_postflight": 4506524,
+    "cleanup_confirmed": true,
+    "owner_pid": 65596,
+    "owned_handles_stopped": true,
+    "sensor_config_restored": true,
+    "owner_duration_s": 28.056556701660156,
+    "free_memory_kib_last_saved": 2473152,
+    "map_config_restored": true,
+    "ports": {
+      "carla_rpc": 3200,
+      "carla_streaming": 3201,
+      "carla_secondary": 3202,
+      "airsim_rpc": 42461
+    },
+    "last_snapshot_is_not_continuous_minimum": true,
+    "protected_unchanged": true,
+    "free_memory_kib_preflight": 4395672
+  },
+  "raw_summary": {
+    "distance_statuses": [
+      "VALID_FIELDS",
+      "SATURATED_RANGE",
+      "VALID_FIELDS",
+      "VALID_FIELDS",
+      "SATURATED_RANGE",
+      "SATURATED_RANGE"
+    ],
+    "collision_to_first_state_numeric_s": 3.087065856,
+    "distance_values_m": [
+      39.731719970703125,
+      40.17656707763672,
+      39.89789962768555,
+      39.88880920410156,
+      40.02818298339844,
+      40.19327926635742
+    ],
+    "collision_event_timestamp_ns": "1793442065290211328",
+    "last_state_timestamp_ns": "1793442068926288896",
+    "rtt_ms": {
+      "nearest_rank_p50": 0.5139000713825226,
+      "nearest_rank_p95": 2.572799799963832,
+      "min": 0.2039000391960144,
+      "max": 2.6883999817073345
+    },
+    "first_state_timestamp_ns": "1793442068377277184",
+    "transport_status_counts": [
+      {
+        "Name": "RECEIVED",
+        "Count": 30
+      }
+    ],
+    "rpc_count": 30
+  },
+  "geometry_summary_artifacts": [
+    {
+      "sha256": "5140d0e8b0f3ab78502177dca48afccf199b4782b643bfed1160bef362667d2b",
+      "bytes": 28420,
+      "path": "artifacts/d6_geometry_capture_20261031_summary.json"
+    },
+    {
+      "sha256": "5140d0e8b0f3ab78502177dca48afccf199b4782b643bfed1160bef362667d2b",
+      "bytes": 28420,
+      "path": "artifacts/d6_geometry_capture_20261031_py310_summary.json"
+    }
+  ],
+  "geometry_summary": {
+    "evidence_class": "OFFLINE_ANALYSIS_OF_RAW_DIAGNOSTIC",
+    "frame_alignment_status": "NOT_CALIBRATED",
+    "control_ready": false,
+    "clearance_m": null,
+    "mount_hypothesis": "SensorLocalFrame to vehicle-inertial NED, identity rotation, offset (0,0,-0.5)m",
+    "timing_limit": "Same query round is not simultaneous; no clock interpolation or calibration",
+    "coverage_limit": "Returned hits only; nearest return is not environmental clearance",
+    "expected_pitch_bands_deg": [
+      10.0,
+      -3.333333333333334,
+      -16.666666666666668,
+      -30.0
+    ],
+    "samples": [
+      {
+        "index": 0,
+        "state_before": {
+          "timestamp_ns": 1793442068377277184,
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "position_ned_m": [
+            0.03139648213982582,
+            -0.0032031249720603228,
+            6.69262170791626
+          ],
+          "speed_mps": 0.0,
+          "landed_state": 0,
+          "orientation_xyzw": [
+            0.0,
+            0.0,
+            -0.05060986056923866,
+            0.9987183809280396
+          ],
+          "velocity_mps": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "state_after": {
+          "timestamp_ns": 1793442068386277376,
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "position_ned_m": [
+            0.03139648213982582,
+            -0.0032031249720603228,
+            6.69262170791626
+          ],
+          "speed_mps": 0.0,
+          "landed_state": 0,
+          "orientation_xyzw": [
+            0.0,
+            0.0,
+            -0.05060986056923866,
+            0.9987183809280396
+          ],
+          "velocity_mps": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "host_round_duration_s": 0.00680950004607439,
+        "collision": {
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "contact_geometry": {
+            "normal": {
+              "x_val": 3.707821605303252E-09,
+              "y_val": 1.718291287033935E-09,
+              "z_val": -1.0
+            },
+            "impact_point": {
+              "x_val": 0.38847655057907104,
+              "y_val": 0.21031250059604645,
+              "z_val": 6.894651889801025
+            },
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0032031249720603228,
+              "z_val": 6.69262170791626
+            },
+            "object_name": "Road_Road_Town02_135",
+            "object_id": 1
+          },
+          "has_collided": true,
+          "time_stamp": 1793442065290211328,
+          "penetration_depth": 0.0
+        },
+        "distance": {
+          "payload_status": "VALID_FIELDS",
+          "payload": {
+            "time_stamp": 1793442068362276864,
+            "distance": 39.731719970703125,
+            "min_distance": 0.20000000298023224,
+            "max_distance": 40.0,
+            "relative_pose": {
+              "position": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.5
+              },
+              "orientation": {
+                "w_val": 0.9999998807907104,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            }
+          }
+        },
+        "lidar": {
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "point_count": 393,
+          "point_cloud_sha256": "f6b3295f404747b6189339a094eaadab3ddc98135985ce4cd678e8ce06e6a03c",
+          "nearest_return_m_not_clearance": 1.1956613264711076,
+          "farthest_return_m": 39.00708830786128,
+          "elevation_deg_min": -30.000209533138204,
+          "elevation_deg_max": 10.000019417542292,
+          "expected_pitch_band_hit_counts": [
+            87,
+            102,
+            102,
+            102
+          ],
+          "points_outside_pitch_bands": 0,
+          "max_pitch_band_error_deg": 0.00041124674292447594,
+          "sensor_timestamp_ns": 1793442068293275392,
+          "sensor_pose": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0032031249720603228,
+              "z_val": 6.19262170791626
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": 0.0,
+              "z_val": -0.05060986429452896
+            }
+          },
+          "numeric_age_to_before_state_ns": 84001792,
+          "numeric_age_to_after_state_ns": 93001984,
+          "mount_comparison_before": {
+            "expected_position_ned_m": [
+              0.03139648213982582,
+              -0.0032031249720603228,
+              6.19262170791626
+            ],
+            "position_error_m": 0.0,
+            "orientation_error_deg": 0.0
+          },
+          "mount_comparison_after": {
+            "expected_position_ned_m": [
+              0.03139648213982582,
+              -0.0032031249720603228,
+              6.19262170791626
+            ],
+            "position_error_m": 0.0,
+            "orientation_error_deg": 0.0
+          }
+        }
+      },
+      {
+        "index": 1,
+        "state_before": {
+          "timestamp_ns": 1793442068485279488,
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "position_ned_m": [
+            0.03139648213982582,
+            -0.0032031249720603228,
+            6.69262170791626
+          ],
+          "speed_mps": 0.0,
+          "landed_state": 0,
+          "orientation_xyzw": [
+            0.0,
+            0.0,
+            -0.05060986056923866,
+            0.9987183809280396
+          ],
+          "velocity_mps": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "state_after": {
+          "timestamp_ns": 1793442068491279616,
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "position_ned_m": [
+            0.03139648213982582,
+            -0.0032031249720603228,
+            6.69262170791626
+          ],
+          "speed_mps": 0.0,
+          "landed_state": 0,
+          "orientation_xyzw": [
+            0.0,
+            0.0,
+            -0.05060986056923866,
+            0.9987183809280396
+          ],
+          "velocity_mps": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "host_round_duration_s": 0.005356200039386749,
+        "collision": {
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "contact_geometry": {
+            "normal": {
+              "x_val": 3.707821605303252E-09,
+              "y_val": 1.718291287033935E-09,
+              "z_val": -1.0
+            },
+            "impact_point": {
+              "x_val": 0.38847655057907104,
+              "y_val": 0.21031250059604645,
+              "z_val": 6.894651889801025
+            },
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0032031249720603228,
+              "z_val": 6.69262170791626
+            },
+            "object_name": "Road_Road_Town02_135",
+            "object_id": 1
+          },
+          "has_collided": false,
+          "time_stamp": 1793442065290211328,
+          "penetration_depth": 0.0
+        },
+        "distance": {
+          "payload_status": "SATURATED_RANGE",
+          "payload": {
+            "time_stamp": 1793442068488279552,
+            "distance": 40.17656707763672,
+            "min_distance": 0.20000000298023224,
+            "max_distance": 40.0,
+            "relative_pose": {
+              "position": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.5
+              },
+              "orientation": {
+                "w_val": 0.9999998807907104,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            }
+          }
+        },
+        "lidar": {
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "point_count": 393,
+          "point_cloud_sha256": "9a15058c3d1c10c0eeaeb067338c719902b996d7f43c659a1141410147a31d7e",
+          "nearest_return_m_not_clearance": 1.195662301191901,
+          "farthest_return_m": 39.00603505245488,
+          "elevation_deg_min": -30.000200427359598,
+          "elevation_deg_max": 10.000022584927601,
+          "expected_pitch_band_hit_counts": [
+            87,
+            102,
+            102,
+            102
+          ],
+          "points_outside_pitch_bands": 0,
+          "max_pitch_band_error_deg": 0.0004347249276115406,
+          "sensor_timestamp_ns": 1793442068395277568,
+          "sensor_pose": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0032031249720603228,
+              "z_val": 6.19262170791626
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": 0.0,
+              "z_val": -0.05060986429452896
+            }
+          },
+          "numeric_age_to_before_state_ns": 90001920,
+          "numeric_age_to_after_state_ns": 96002048,
+          "mount_comparison_before": {
+            "expected_position_ned_m": [
+              0.03139648213982582,
+              -0.0032031249720603228,
+              6.19262170791626
+            ],
+            "position_error_m": 0.0,
+            "orientation_error_deg": 0.0
+          },
+          "mount_comparison_after": {
+            "expected_position_ned_m": [
+              0.03139648213982582,
+              -0.0032031249720603228,
+              6.19262170791626
+            ],
+            "position_error_m": 0.0,
+            "orientation_error_deg": 0.0
+          }
+        }
+      },
+      {
+        "index": 2,
+        "state_before": {
+          "timestamp_ns": 1793442068593281792,
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "position_ned_m": [
+            0.03139648213982582,
+            -0.0032031249720603228,
+            6.69262170791626
+          ],
+          "speed_mps": 0.0,
+          "landed_state": 0,
+          "orientation_xyzw": [
+            0.0,
+            0.0,
+            -0.05060986056923866,
+            0.9987183809280396
+          ],
+          "velocity_mps": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "state_after": {
+          "timestamp_ns": 1793442068596281856,
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "position_ned_m": [
+            0.03139648213982582,
+            -0.0032031249720603228,
+            6.69262170791626
+          ],
+          "speed_mps": 0.0,
+          "landed_state": 0,
+          "orientation_xyzw": [
+            0.0,
+            0.0,
+            -0.05060986056923866,
+            0.9987183809280396
+          ],
+          "velocity_mps": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "host_round_duration_s": 0.005421000067144632,
+        "collision": {
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "contact_geometry": {
+            "normal": {
+              "x_val": 3.707821605303252E-09,
+              "y_val": 1.718291287033935E-09,
+              "z_val": -1.0
+            },
+            "impact_point": {
+              "x_val": 0.38847655057907104,
+              "y_val": 0.21031250059604645,
+              "z_val": 6.894651889801025
+            },
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0032031249720603228,
+              "z_val": 6.69262170791626
+            },
+            "object_name": "Road_Road_Town02_135",
+            "object_id": 1
+          },
+          "has_collided": false,
+          "time_stamp": 1793442065290211328,
+          "penetration_depth": 0.0
+        },
+        "distance": {
+          "payload_status": "VALID_FIELDS",
+          "payload": {
+            "time_stamp": 1793442068593281792,
+            "distance": 39.89789962768555,
+            "min_distance": 0.20000000298023224,
+            "max_distance": 40.0,
+            "relative_pose": {
+              "position": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.5
+              },
+              "orientation": {
+                "w_val": 0.9999998807907104,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            }
+          }
+        },
+        "lidar": {
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "point_count": 393,
+          "point_cloud_sha256": "8b744883d0eadf69f8f499cd98bf6012311fd1914b2c382447bd9f3609c1a60f",
+          "nearest_return_m_not_clearance": 1.1956610571476238,
+          "farthest_return_m": 39.00497716153531,
+          "elevation_deg_min": -30.000171800641628,
+          "elevation_deg_max": 10.000025316592348,
+          "expected_pitch_band_hit_counts": [
+            87,
+            102,
+            102,
+            102
+          ],
+          "points_outside_pitch_bands": 0,
+          "max_pitch_band_error_deg": 0.00046544540596116235,
+          "sensor_timestamp_ns": 1793442068497279744,
+          "sensor_pose": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0032031249720603228,
+              "z_val": 6.19262170791626
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": 0.0,
+              "z_val": -0.05060986429452896
+            }
+          },
+          "numeric_age_to_before_state_ns": 96002048,
+          "numeric_age_to_after_state_ns": 99002112,
+          "mount_comparison_before": {
+            "expected_position_ned_m": [
+              0.03139648213982582,
+              -0.0032031249720603228,
+              6.19262170791626
+            ],
+            "position_error_m": 0.0,
+            "orientation_error_deg": 0.0
+          },
+          "mount_comparison_after": {
+            "expected_position_ned_m": [
+              0.03139648213982582,
+              -0.0032031249720603228,
+              6.19262170791626
+            ],
+            "position_error_m": 0.0,
+            "orientation_error_deg": 0.0
+          }
+        }
+      },
+      {
+        "index": 3,
+        "state_before": {
+          "timestamp_ns": 1793442068704284160,
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "position_ned_m": [
+            0.03139648213982582,
+            -0.0032031249720603228,
+            6.69262170791626
+          ],
+          "speed_mps": 0.0,
+          "landed_state": 0,
+          "orientation_xyzw": [
+            0.0,
+            0.0,
+            -0.05060986056923866,
+            0.9987183809280396
+          ],
+          "velocity_mps": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "state_after": {
+          "timestamp_ns": 1793442068707284224,
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "position_ned_m": [
+            0.03139648213982582,
+            -0.0032031249720603228,
+            6.69262170791626
+          ],
+          "speed_mps": 0.0,
+          "landed_state": 0,
+          "orientation_xyzw": [
+            0.0,
+            0.0,
+            -0.05060986056923866,
+            0.9987183809280396
+          ],
+          "velocity_mps": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "host_round_duration_s": 0.005801399936899543,
+        "collision": {
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "contact_geometry": {
+            "normal": {
+              "x_val": 3.707821605303252E-09,
+              "y_val": 1.718291287033935E-09,
+              "z_val": -1.0
+            },
+            "impact_point": {
+              "x_val": 0.38847655057907104,
+              "y_val": 0.21031250059604645,
+              "z_val": 6.894651889801025
+            },
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0032031249720603228,
+              "z_val": 6.69262170791626
+            },
+            "object_name": "Road_Road_Town02_135",
+            "object_id": 1
+          },
+          "has_collided": false,
+          "time_stamp": 1793442065290211328,
+          "penetration_depth": 0.0
+        },
+        "distance": {
+          "payload_status": "VALID_FIELDS",
+          "payload": {
+            "time_stamp": 1793442068698284032,
+            "distance": 39.88880920410156,
+            "min_distance": 0.20000000298023224,
+            "max_distance": 40.0,
+            "relative_pose": {
+              "position": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.5
+              },
+              "orientation": {
+                "w_val": 0.9999998807907104,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            }
+          }
+        },
+        "lidar": {
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "point_count": 392,
+          "point_cloud_sha256": "5c99cfd2780683910bf74c963d3465e127429c516e13ac14c67fe43ae426a381",
+          "nearest_return_m_not_clearance": 1.1956604671714919,
+          "farthest_return_m": 39.00287751211748,
+          "elevation_deg_min": -30.000172611569653,
+          "elevation_deg_max": 10.000019920986567,
+          "expected_pitch_band_hit_counts": [
+            86,
+            102,
+            102,
+            102
+          ],
+          "points_outside_pitch_bands": 0,
+          "max_pitch_band_error_deg": 0.00038725851083398766,
+          "sensor_timestamp_ns": 1793442068701284096,
+          "sensor_pose": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0032031249720603228,
+              "z_val": 6.19262170791626
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": 0.0,
+              "z_val": -0.05060986429452896
+            }
+          },
+          "numeric_age_to_before_state_ns": 3000064,
+          "numeric_age_to_after_state_ns": 6000128,
+          "mount_comparison_before": {
+            "expected_position_ned_m": [
+              0.03139648213982582,
+              -0.0032031249720603228,
+              6.19262170791626
+            ],
+            "position_error_m": 0.0,
+            "orientation_error_deg": 0.0
+          },
+          "mount_comparison_after": {
+            "expected_position_ned_m": [
+              0.03139648213982582,
+              -0.0032031249720603228,
+              6.19262170791626
+            ],
+            "position_error_m": 0.0,
+            "orientation_error_deg": 0.0
+          }
+        }
+      },
+      {
+        "index": 4,
+        "state_before": {
+          "timestamp_ns": 1793442068812286464,
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "position_ned_m": [
+            0.03139648213982582,
+            -0.0032031249720603228,
+            6.69262170791626
+          ],
+          "speed_mps": 0.0,
+          "landed_state": 0,
+          "orientation_xyzw": [
+            0.0,
+            0.0,
+            -0.05060986056923866,
+            0.9987183809280396
+          ],
+          "velocity_mps": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "state_after": {
+          "timestamp_ns": 1793442068818286592,
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "position_ned_m": [
+            0.03139648213982582,
+            -0.0032031249720603228,
+            6.69262170791626
+          ],
+          "speed_mps": 0.0,
+          "landed_state": 0,
+          "orientation_xyzw": [
+            0.0,
+            0.0,
+            -0.05060986056923866,
+            0.9987183809280396
+          ],
+          "velocity_mps": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "host_round_duration_s": 0.005365499993786216,
+        "collision": {
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "contact_geometry": {
+            "normal": {
+              "x_val": 3.707821605303252E-09,
+              "y_val": 1.718291287033935E-09,
+              "z_val": -1.0
+            },
+            "impact_point": {
+              "x_val": 0.38847655057907104,
+              "y_val": 0.21031250059604645,
+              "z_val": 6.894651889801025
+            },
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0032031249720603228,
+              "z_val": 6.69262170791626
+            },
+            "object_name": "Road_Road_Town02_135",
+            "object_id": 1
+          },
+          "has_collided": false,
+          "time_stamp": 1793442065290211328,
+          "penetration_depth": 0.0
+        },
+        "distance": {
+          "payload_status": "SATURATED_RANGE",
+          "payload": {
+            "time_stamp": 1793442068803286272,
+            "distance": 40.02818298339844,
+            "min_distance": 0.20000000298023224,
+            "max_distance": 40.0,
+            "relative_pose": {
+              "position": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.5
+              },
+              "orientation": {
+                "w_val": 0.9999998807907104,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            }
+          }
+        },
+        "lidar": {
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "point_count": 391,
+          "point_cloud_sha256": "0951d8087ceae2da5632aff24d1cf7235fbe732227f4586bfad7374c3978e7f1",
+          "nearest_return_m_not_clearance": 1.1956615404349935,
+          "farthest_return_m": 39.001825880936565,
+          "elevation_deg_min": -30.00022132518697,
+          "elevation_deg_max": 10.000020603974269,
+          "expected_pitch_band_hit_counts": [
+            85,
+            102,
+            102,
+            102
+          ],
+          "points_outside_pitch_bands": 0,
+          "max_pitch_band_error_deg": 0.0004304214275236973,
+          "sensor_timestamp_ns": 1793442068803286272,
+          "sensor_pose": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0032031249720603228,
+              "z_val": 6.19262170791626
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": 0.0,
+              "z_val": -0.05060986429452896
+            }
+          },
+          "numeric_age_to_before_state_ns": 9000192,
+          "numeric_age_to_after_state_ns": 15000320,
+          "mount_comparison_before": {
+            "expected_position_ned_m": [
+              0.03139648213982582,
+              -0.0032031249720603228,
+              6.19262170791626
+            ],
+            "position_error_m": 0.0,
+            "orientation_error_deg": 0.0
+          },
+          "mount_comparison_after": {
+            "expected_position_ned_m": [
+              0.03139648213982582,
+              -0.0032031249720603228,
+              6.19262170791626
+            ],
+            "position_error_m": 0.0,
+            "orientation_error_deg": 0.0
+          }
+        }
+      },
+      {
+        "index": 5,
+        "state_before": {
+          "timestamp_ns": 1793442068920288768,
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "position_ned_m": [
+            0.03139648213982582,
+            -0.0032031249720603228,
+            6.69262170791626
+          ],
+          "speed_mps": 0.0,
+          "landed_state": 0,
+          "orientation_xyzw": [
+            0.0,
+            0.0,
+            -0.05060986056923866,
+            0.9987183809280396
+          ],
+          "velocity_mps": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "state_after": {
+          "timestamp_ns": 1793442068926288896,
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "position_ned_m": [
+            0.03139648213982582,
+            -0.0032031249720603228,
+            6.69262170791626
+          ],
+          "speed_mps": 0.0,
+          "landed_state": 0,
+          "orientation_xyzw": [
+            0.0,
+            0.0,
+            -0.05060986056923866,
+            0.9987183809280396
+          ],
+          "velocity_mps": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "host_round_duration_s": 0.005400899797677994,
+        "collision": {
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "contact_geometry": {
+            "normal": {
+              "x_val": 3.707821605303252E-09,
+              "y_val": 1.718291287033935E-09,
+              "z_val": -1.0
+            },
+            "impact_point": {
+              "x_val": 0.38847655057907104,
+              "y_val": 0.21031250059604645,
+              "z_val": 6.894651889801025
+            },
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0032031249720603228,
+              "z_val": 6.69262170791626
+            },
+            "object_name": "Road_Road_Town02_135",
+            "object_id": 1
+          },
+          "has_collided": false,
+          "time_stamp": 1793442065290211328,
+          "penetration_depth": 0.0
+        },
+        "distance": {
+          "payload_status": "SATURATED_RANGE",
+          "payload": {
+            "time_stamp": 1793442068908288512,
+            "distance": 40.19327926635742,
+            "min_distance": 0.20000000298023224,
+            "max_distance": 40.0,
+            "relative_pose": {
+              "position": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.5
+              },
+              "orientation": {
+                "w_val": 0.9999998807907104,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            }
+          }
+        },
+        "lidar": {
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "point_count": 392,
+          "point_cloud_sha256": "22f91f72501bbb2954867c856aa62a9fe7d30f62536260f04473cb4fe88e082e",
+          "nearest_return_m_not_clearance": 1.1956625575652018,
+          "farthest_return_m": 39.000779457517304,
+          "elevation_deg_min": -30.000180577703603,
+          "elevation_deg_max": 10.000023021475391,
+          "expected_pitch_band_hit_counts": [
+            86,
+            102,
+            102,
+            102
+          ],
+          "points_outside_pitch_bands": 0,
+          "max_pitch_band_error_deg": 0.0004630475177727078,
+          "sensor_timestamp_ns": 1793442068905288448,
+          "sensor_pose": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0032031249720603228,
+              "z_val": 6.19262170791626
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": 0.0,
+              "z_val": -0.05060986429452896
+            }
+          },
+          "numeric_age_to_before_state_ns": 15000320,
+          "numeric_age_to_after_state_ns": 21000448,
+          "mount_comparison_before": {
+            "expected_position_ned_m": [
+              0.03139648213982582,
+              -0.0032031249720603228,
+              6.19262170791626
+            ],
+            "position_error_m": 0.0,
+            "orientation_error_deg": 0.0
+          },
+          "mount_comparison_after": {
+            "expected_position_ned_m": [
+              0.03139648213982582,
+              -0.0032031249720603228,
+              6.19262170791626
+            ],
+            "position_error_m": 0.0,
+            "orientation_error_deg": 0.0
+          }
+        }
+      }
+    ],
+    "rpc_count": 30,
+    "completed_samples": 6,
+    "geometry_status_counts": {
+      "VALID_FIELDS_NOT_CALIBRATED": 24,
+      "NOT_APPLICABLE": 6
+    },
+    "input": {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_geometry03_20261031\\api_probe.json",
+      "bytes": 279364,
+      "sha256": "98d2b526b65606c59c6dca171c009a95de47f6b25ee6c4121c90782fa806c582"
+    },
+    "recipe_sha256": "c77687e826565ac24501aaae8d9b50dbe9f071986fad53cfba645feb9a779e39"
+  },
+  "post_run_fresh_check": {
+    "owned_listeners": [],
+    "owned_pid_present": false,
+    "protected_files": [
+      {
+        "sha256": "8e96e9fb4d695eb6d21f9d7b9da4fcbd583312b45e63cc20b7b222d4d8a22f90",
+        "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\CarSimConfig.ini",
+        "unchanged": true
+      },
+      {
+        "sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+        "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultEngine.ini",
+        "unchanged": true
+      },
+      {
+        "sha256": "94427ca09cb488081350225a7d3c5b0e22843ae17cb61cb1ebd4af39ad695df0",
+        "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultGame.ini",
+        "unchanged": true
+      },
+      {
+        "sha256": "2168f96d659f41a33b4fbb5bfc3143a1437bc6059b0d018d532f74a4c2e71691",
+        "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultGameUserSettings.ini",
+        "unchanged": true
+      },
+      {
+        "sha256": "1ed4e4714a4476b2e2bb15e59afef2fea5413487aa13dfc86114205adb55dec4",
+        "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultInput.ini",
+        "unchanged": true
+      },
+      {
+        "sha256": "06fef2edfee12b05f55b914ca8fa8e490e1b708ab8869f20136874ba2897f606",
+        "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultScalability.ini",
+        "unchanged": true
+      },
+      {
+        "sha256": "91745741cf40de17e1ec47a8a922db851fcdf4403df86b237f3ef03682719f45",
+        "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\OptionalModules.ini",
+        "unchanged": true
+      },
+      {
+        "sha256": "de89442d0093ffb47f7d05a3859206698145f15b2ff99b675e8149a858c8f048",
+        "path": "C:\\Users\\20748\\Documents\\AirSim\\settings.json",
+        "unchanged": true
+      }
+    ],
+    "settings": [
+      {
+        "matches_original": true,
+        "sha256": "67cd1ed7eab1a67b24586ce45a63364bc68a69d37e9e49eadb1ee04006ef2f1c",
+        "path": "D:\\JevUavRuns\\20261031_d6_probe01\\settings.json"
+      },
+      {
+        "matches_original": true,
+        "sha256": "67cd1ed7eab1a67b24586ce45a63364bc68a69d37e9e49eadb1ee04006ef2f1c",
+        "path": "D:\\JevUavRuns\\20261031_d6_probe01\\package\\settings.json"
+      },
+      {
+        "matches_original": true,
+        "sha256": "67cd1ed7eab1a67b24586ce45a63364bc68a69d37e9e49eadb1ee04006ef2f1c",
+        "path": "D:\\JevUavRuns\\20261031_d6_probe01\\package\\CarlaUE4\\Binaries\\Win64\\settings.json"
+      }
+    ],
+    "checked_at_utc": "2026-10-31T10:23:56.7842243Z"
+  },
+  "scope": {
+    "api_key_access": false,
+    "new_training": false,
+    "real_flight": false,
+    "D6": "PARTIAL",
+    "D1_D6": "PARTIAL",
+    "D1_Town03_PASS": 0
+  }
+}

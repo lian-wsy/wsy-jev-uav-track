@@ -40,11 +40,14 @@ def summarize(api):
     report = api['safety_probe']
     if (api.get('kind') != 'LIVE_OWNED_SAFETY_SENSOR_DIAGNOSTIC'
             or api.get('map', '').split('/')[-1] != 'Town02' or api.get('settings_match') is not True
-            or report.get('capture_geometry') is not True or report.get('geometry_schema_version') != 1
-            or report.get('control_ready') is not False or report.get('clearance_m') is not None
+            or report.get('capture_geometry') is not True or type(report.get('geometry_schema_version')) is not int
+            or report['geometry_schema_version'] != 1
+            or report.get('control_ready') is not False or 'clearance_m' not in report
+            or report['clearance_m'] is not None
             or report.get('status') != 'DIAGNOSTIC_COMPLETED'):
         raise ValueError('Need completed owned Town02 no-motion raw geometry receipt')
     if (type(report.get('completed_samples')) is not int or not 1 <= report['completed_samples'] <= 6
+            or type(report.get('rpc_count')) is not int
             or len(report['queries']) != report['rpc_count'] or report['rpc_count'] > 30):
         raise ValueError('Invalid diagnostic count')
     # Reject nonfinite JSON rather than introducing permissive summary values.
