@@ -3,11 +3,39 @@ from __future__ import annotations
 
 import json
 import time
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 BINARY = Path('CarlaUE4/Binaries/Win64/CarlaUE4-Win64-Shipping.exe')
-PORTS = (3100, 3101, 3102, 42451)
 PROBE_MAPS = ('Town02', 'Town03')
+
+
+@dataclass(frozen=True)
+class RuntimePorts:
+    carla_rpc: int = 3100
+    carla_streaming: int = 3101
+    carla_secondary: int = 3102
+    airsim_rpc: int = 42451
+
+    def __post_init__(self):
+        values = tuple(asdict(self).values())
+        if any(type(value) is not int or not 1024 <= value <= 65535 for value in values):
+            raise ValueError('Runtime ports must be integers in 1024..65535')
+        if len(set(values)) != 4:
+            raise ValueError('Runtime ports must be distinct')
+
+
+DEFAULT_PORTS = RuntimePorts()
+PORTS = tuple(asdict(DEFAULT_PORTS).values())
+
+
+def add_port_arguments(parser):
+    for name, value in asdict(DEFAULT_PORTS).items():
+        parser.add_argument('--' + name.replace('_', '-') + '-port', type=int, default=value)
+
+
+def ports_from_arguments(args):
+    return RuntimePorts(**{name: getattr(args, name + '_port') for name in asdict(DEFAULT_PORTS)})
 
 
 def validate_probe_map(map_name: str, profile: str = 'api') -> None:
@@ -71,11 +99,11 @@ def validate_roots(source: Path, task: Path) -> None:
         raise ValueError('Task runtime and source package must have disjoint roots')
 
 
-def write_settings(task: Path) -> Path:
+def write_settings(task: Path, *, ports: RuntimePorts = DEFAULT_PORTS) -> Path:
     task = task.resolve()
     settings = {
         'SettingsVersion': 1.2, 'SimMode': 'Multirotor', 'ClockType': 'SteppableClock',
-        'ClockSpeed': 1.0, 'LocalHostIp': '127.0.0.1', 'ApiServerPort': 42451,
+        'ClockSpeed': 1.0, 'LocalHostIp': '127.0.0.1', 'ApiServerPort': ports.airsim_rpc,
         'ViewMode': 'NoDisplay', 'EnableRpc': True,
         'Recording': {'Enabled': False, 'Folder': str(task / 'recordings')},
         'Vehicles': {'JevDrone': {'VehicleType': 'SimpleFlight', 'AutoCreate': True,
@@ -95,7 +123,8 @@ def write_settings(task: Path) -> Path:
     return path
 
 
-def launch_arguments(task: Path, output: Path | None = None, *, map_name: str = 'Town02') -> list[str]:
+def launch_arguments(task: Path, output: Path | None = None, *, map_name: str = 'Town02',
+                     ports: RuntimePorts = DEFAULT_PORTS) -> list[str]:
     validate_probe_map(map_name)
     task = task.resolve()
     output = output.resolve() if output is not None else task
@@ -107,8 +136,8 @@ def launch_arguments(task: Path, output: Path | None = None, *, map_name: str = 
     return [str(task / 'package' / BINARY), 'CarlaUE4', f'/Game/Carla/Maps/{map_name}',
             '-windowed', '-ResX=640', '-ResY=360', '-quality-level=Low',
             '-nosound', '-unattended', '-NoCrashDialog', '-nocrashreports',
-            '-carla-rpc-port=3100', '-carla-streaming-port=3101',
-            '-carla-secondary-port=3102', '-TexturePoolSize=1024',
+            f'-carla-rpc-port={ports.carla_rpc}', f'-carla-streaming-port={ports.carla_streaming}',
+            f'-carla-secondary-port={ports.carla_secondary}', '-TexturePoolSize=1024',
             '-SaveToUserDir', f'-UserDir={output / "user"}',
             f'-abslog={output / "logs/CarlaUE4.log"}',
             '--settings', str(task / 'settings.json')]

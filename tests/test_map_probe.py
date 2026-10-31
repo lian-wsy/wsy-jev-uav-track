@@ -28,7 +28,7 @@ def test_launcher_rejects_unapproved_map_or_extra_url_options(tmp_path, map_name
         launch_arguments(tmp_path, map_name=map_name)
 
 
-def load_client_probe(monkeypatch, world_name, settings):
+def load_client_probe(monkeypatch, world_name, settings, *, carla_port=3100, airsim_port=42451):
     """Strict fake RPC surface: any motion/reset/image call raises AttributeError."""
     counts = {'connections': 0, 'observations': 0}
     world = SimpleNamespace(
@@ -36,7 +36,7 @@ def load_client_probe(monkeypatch, world_name, settings):
         get_snapshot=lambda: SimpleNamespace(frame=1, timestamp=SimpleNamespace(elapsed_seconds=1.0)))
 
     def carla_client(ip, port):
-        assert (ip, port) == ('127.0.0.1', 3100)
+        assert (ip, port) == ('127.0.0.1', carla_port)
         counts['connections'] += 1
         return SimpleNamespace(set_timeout=lambda _: None, get_world=lambda: world,
                                get_server_version=lambda: 'fake', get_client_version=lambda: 'fake')
@@ -48,7 +48,7 @@ def load_client_probe(monkeypatch, world_name, settings):
             kinematics_estimated=SimpleNamespace(position=(0, 0, 0)))
 
     def air_client(*, ip, port, timeout_value):
-        assert (ip, port, timeout_value) == ('127.0.0.1', 42451, 5)
+        assert (ip, port, timeout_value) == ('127.0.0.1', airsim_port, 5)
         counts['connections'] += 1
         return SimpleNamespace(ping=lambda: True, getSettingsString=lambda: json.dumps(settings),
             getMultirotorState=state, getServerVersion=lambda: 1, listVehicles=lambda: ['JevDrone'])
@@ -124,7 +124,7 @@ def test_low_memory_keeps_map_request_evidence_without_starting_process(tmp_path
                                                    'binary_sha256': launcher.sha(binary)}))
     (task / 'protected_before.json').write_text('{}')
     monkeypatch.setattr(launcher, 'protected_files', lambda _: {})
-    monkeypatch.setattr(launcher, 'snapshot', lambda: {
+    monkeypatch.setattr(launcher, 'snapshot', lambda **kwargs: {
         'processes': [], 'listeners': [], 'free_memory_kib': 4 * 1024**2 - 1})
 
     def forbidden_launch(*args, **kwargs):

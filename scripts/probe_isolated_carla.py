@@ -8,14 +8,17 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import shutil
 import subprocess
 import time
+from dataclasses import asdict
 
 from jev_uav_track.isolated_runtime import (BINARY, validate_roots, write_settings, launch_arguments,
-    validate_probe_map, require_loaded_map, PROBE_MAPS)
+    validate_probe_map, require_loaded_map, PROBE_MAPS, RuntimePorts, DEFAULT_PORTS,
+    add_port_arguments, ports_from_arguments)
 from jev_uav_track.windows_job import OwnedJob
 
 
@@ -38,14 +41,17 @@ def ps_json(command):
     return json.loads(result.stdout) if result.stdout.strip() else None
 
 
-def snapshot():
+def snapshot(*, ports=DEFAULT_PORTS):
+    watched = ','.join(str(port) for port in sorted({2000, 2001, 2002, 3100, 3101, 3102,
+                                                   41451, 42451, *asdict(ports).values()}))
     result = ps_json("$p=@(Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'Carla|UE4|Unreal|python' } | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath); "
-                   "$n=@(Get-NetTCPConnection -State Listen | Where-Object { $_.LocalPort -in @(2000,2001,2002,3100,3101,3102,41451,42451) } | Select-Object LocalPort,OwningProcess); "
+                   "$n=@(Get-NetTCPConnection -State Listen | Where-Object { $_.LocalPort -in @(" + watched + ") } | Select-Object LocalPort,OwningProcess); "
                    "$m=(Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory; "
                    "@{processes=$p;listeners=$n;free_memory_kib=$m} | ConvertTo-Json -Compress -Depth 5")
     if (not isinstance(result, dict) or not isinstance(result.get('processes'), list)
             or not isinstance(result.get('listeners'), list)
-            or not isinstance(result.get('free_memory_kib'), (int, float))
+            or type(result.get('free_memory_kib')) not in (int, float)
+            or not math.isfinite(result['free_memory_kib'])
             or result['free_memory_kib'] <= 0):
         raise ValueError('Invalid preflight snapshot; refusing to infer idle state')
     return result
@@ -58,7 +64,7 @@ def protected_files(source):
     return {str(p): sha(p) for p in paths if not p.is_dir()}
 
 
-def prepare(source, task):
+def prepare(source, task, *, ports=DEFAULT_PORTS):
     validate_roots(source, task)
     if not (source / BINARY).is_file():
         raise ValueError('Source Shipping executable missing')
@@ -79,35 +85,45 @@ def prepare(source, task):
     source_hash, copy_hash = sha(source / BINARY), sha(task / 'package' / BINARY)
     if source_hash != copy_hash:
         raise ValueError('Copied executable hash differs from source')
-    write_settings(task)
+    write_settings(task, ports=ports)
     for folder in ('logs', 'user', 'temp', 'appdata', 'localappdata', 'recordings'):
         (task / folder).mkdir()
     save(task / 'prepared.json', {'source': str(source), 'task': str(task),
                                  'binary_sha256': copy_hash, 'copy_exit_code': result.returncode,
-                                 'created_at': time.time(), 'kind': 'D2_DEVELOPMENT_PROBE'})
+                                 'created_at': time.time(), 'kind': 'D2_DEVELOPMENT_PROBE',
+                                 'ports': asdict(ports)})
     print(json.dumps({'prepared': str(task), 'binary_sha256': copy_hash}), flush=True)
 
 
-def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='Town02'):
+def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='Town02', *, ports=DEFAULT_PORTS):
     validate_probe_map(map_name, profile)
     validate_roots(source, task)
     import re
     if not re.fullmatch(r'[A-Za-z0-9_-]{1,60}', run_name):
         raise ValueError('Invalid run name')
+    prepared = json.loads((task / 'prepared.json').read_text())
+    if 'ports' not in prepared:
+        frozen_ports = DEFAULT_PORTS
+    else:
+        values = prepared['ports']
+        if not isinstance(values, dict) or set(values) != set(asdict(DEFAULT_PORTS)):
+            raise ValueError('Invalid prepared ports receipt')
+        frozen_ports = RuntimePorts(**values)
+    if frozen_ports != ports:
+        raise ValueError('Prepared ports mismatch; legacy receipts permit only original defaults')
     output = task / 'runs' / run_name
     output.mkdir(parents=True, exist_ok=False)
     for folder in ('logs', 'user', 'temp', 'appdata', 'localappdata'):
         (output / folder).mkdir()
     save(output / 'run_request.json', {'requested_map': map_name, 'profile': profile,
          'kind': 'API_INFRASTRUCTURE_ONLY' if profile == 'api' else 'DEVELOPMENT_CONTRACT',
-         'created_at': time.time(), 'not_final_test': True})
-    prepared = json.loads((task / 'prepared.json').read_text())
+         'created_at': time.time(), 'not_final_test': True, 'ports': asdict(ports)})
     if Path(prepared['source']) != source or prepared['binary_sha256'] != sha(task / 'package' / BINARY):
         raise ValueError('Prepared source/executable mismatch')
     before = protected_files(source)
     if before != json.loads((task / 'protected_before.json').read_text()):
         raise ValueError('Protected configuration changed since preparation; audit before reuse')
-    preflight = snapshot()
+    preflight = snapshot(ports=ports)
     save(output / 'preflight.json', preflight)
     external = [p for p in preflight['processes'] if p['ProcessId'] != os.getpid()]
     if external or preflight['listeners']:
@@ -122,7 +138,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
     for name, folder in [('TEMP', 'temp'), ('TMP', 'temp'), ('APPDATA', 'appdata'),
                          ('LOCALAPPDATA', 'localappdata'), ('UE-LocalDataCachePath', 'localappdata/ddc')]:
         env[name] = str(output / folder)
-    args = launch_arguments(task, output, map_name=map_name)
+    args = launch_arguments(task, output, map_name=map_name, ports=ports)
     startup = subprocess.STARTUPINFO()
     startup.dwFlags |= subprocess.STARTF_USESHOWWINDOW
     startup.wShowWindow = 0
@@ -130,7 +146,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
     client_process = None
     job = OwnedJob()
     result = {'status': 'FAILED', 'started_at': time.time(), 'client_probe': None,
-              'requested_map': map_name, 'not_final_test': True,
+              'requested_map': map_name, 'not_final_test': True, 'ports': asdict(ports),
               'profile': profile, 'bootstrap': bootstrap, 'client_python': str(client_python),
               'probe_sha256': sha(Path(__file__)),
               'api_probe_sha256': sha(Path(__file__).with_name('probe_carla_apis.py')),
@@ -154,12 +170,12 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
         while time.monotonic() < deadline:
             if process.poll() is not None:
                 raise RuntimeError(f'Owned process exited with {process.returncode}')
-            observed = snapshot()
+            observed = snapshot(ports=ports)
             save(output / 'last_runtime_snapshot.json', observed)
             if observed['free_memory_kib'] < 768 * 1024:
                 raise RuntimeError('Physical memory reserve below 768 MiB; stopping own probe')
             owned_ports = {x['LocalPort'] for x in observed['listeners'] if x['OwningProcess'] == process.pid}
-            if {3100, 42451}.issubset(owned_ports):
+            if {ports.carla_rpc, ports.airsim_rpc}.issubset(owned_ports):
                 ready = True
                 break
             time.sleep(2)
@@ -170,14 +186,35 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
                                  '--output', str(output / 'api_probe.json'), '--profile', profile,
                                  '--bootstrap', bootstrap,
                                  '--expected-map', map_name,
-                                 '--expected-settings', str(task / 'settings.json')],
+                                 '--expected-settings', str(task / 'settings.json'),
+                                 *[argument for name, value in asdict(ports).items()
+                                   for argument in ('--' + name.replace('_', '-') + '-port', str(value))]],
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=env,
                                 creationflags=subprocess.CREATE_NO_WINDOW)
         job.assign(client_process)
-        stdout, stderr = client_process.communicate(timeout=90)
+        client_deadline = time.monotonic() + 90
+        while True:
+            observed = snapshot(ports=ports)
+            save(output / 'last_runtime_snapshot.json', observed)
+            if observed['free_memory_kib'] < 768 * 1024:
+                raise RuntimeError('Physical memory reserve below 768 MiB; stopping own probe')
+            if process.poll() is not None:
+                raise RuntimeError(f'Owned process exited with {process.returncode}')
+            remaining = client_deadline - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError('API probe did not finish within 90 s')
+            try:
+                stdout, stderr = client_process.communicate(timeout=min(2, remaining))
+                break
+            except subprocess.TimeoutExpired:
+                continue
         result['client_exit_code'] = client_process.returncode
         (output / 'client_stdout.txt').write_text(stdout, encoding='utf-8')
         (output / 'client_stderr.txt').write_text(stderr, encoding='utf-8')
+        observed = snapshot(ports=ports)
+        save(output / 'last_runtime_snapshot.json', observed)
+        if observed['free_memory_kib'] < 768 * 1024:
+            raise RuntimeError('Physical memory reserve below 768 MiB; stopping own probe')
         if client_process.returncode:
             raise RuntimeError('API probe failed; inspect task-local client logs')
         result['client_probe'] = json.loads((output / 'api_probe.json').read_text())
@@ -193,6 +230,14 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
             if client_process.poll() is None:
                 client_process.terminate()
             client_process.wait(timeout=15)
+            result['client_exit_code'] = client_process.returncode
+            if not (output / 'client_stdout.txt').exists():
+                try:
+                    stdout, stderr = client_process.communicate(timeout=5)
+                    (output / 'client_stdout.txt').write_text(stdout, encoding='utf-8')
+                    (output / 'client_stderr.txt').write_text(stderr, encoding='utf-8')
+                except Exception as exc:
+                    result['client_log_error'] = f'{type(exc).__name__}: {exc}'
         if process is not None:
             # Popen retains the original Windows process handle: no PID/name reuse.
             if process.poll() is None:
@@ -200,7 +245,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
             process.wait(timeout=15)
             result['owned_process_exit_code'] = process.returncode
         result['protected_unchanged'] = before == protected_files(source)
-        result['postflight'] = snapshot()
+        result['postflight'] = snapshot(ports=ports)
         result['cleanup_confirmed'] = (not result['postflight']['listeners']
             and not any(p['ProcessId'] == process.pid for p in result['postflight']['processes'])
             if process is not None else True)
@@ -223,13 +268,16 @@ if __name__ == '__main__':
     parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief'], default='api')
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
     parser.add_argument('--map', choices=PROBE_MAPS, default='Town02', dest='map_name')
+    add_port_arguments(parser)
     args = parser.parse_args()
+    ports = ports_from_arguments(args)
     if os.name != 'nt':
         raise SystemExit('Windows only')
     source, task = args.source.resolve(), args.task.resolve()
     if args.mode == 'prepare':
-        prepare(source, task)
+        prepare(source, task, ports=ports)
     else:
         if not args.client_python or not args.client_python.is_file():
             raise SystemExit('--client-python must be an existing CARLA/AirSim Python runtime')
-        smoke(source, task, args.client_python, args.run_name, args.profile, args.bootstrap, args.map_name)
+        smoke(source, task, args.client_python, args.run_name, args.profile, args.bootstrap, args.map_name,
+              ports=ports)

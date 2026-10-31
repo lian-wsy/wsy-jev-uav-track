@@ -6,17 +6,19 @@ import threading
 import math
 import sys
 from pathlib import Path
+from dataclasses import asdict
 
 # The simulator's Python 3.10 client need not have this project installed.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 from jev_uav_track.isolated_runtime import (require_rpc_success, command_cadence,
-    validate_probe_map, require_loaded_map, PROBE_MAPS)
+    validate_probe_map, require_loaded_map, PROBE_MAPS, DEFAULT_PORTS,
+    add_port_arguments, ports_from_arguments)
 
 import carla
 import airsim
 
 
-def measured_command(air, velocity, yaw_rate=0, observation=None):
+def measured_command(air, velocity, yaw_rate=0, observation=None, *, ports=DEFAULT_PORTS):
     """Measure actual RPC completion and immediately issue explicit braking."""
     if observation is None:
         observation = {}
@@ -25,7 +27,7 @@ def measured_command(air, velocity, yaw_rate=0, observation=None):
 
     def observe():
         try:
-            reader = airsim.MultirotorClient(ip='127.0.0.1', port=42451, timeout_value=5)
+            reader = airsim.MultirotorClient(ip='127.0.0.1', port=ports.airsim_rpc, timeout_value=5)
             ready.set()
             while not stop.is_set():
                 start = time.monotonic()
@@ -100,7 +102,8 @@ in simListSceneObjects but return NaN in simGetObjectPose. Do not use them.
             'mapping_pass': max(spread) < 0.01 and min(span) > 1.0}
 
 
-def contract_probe(world, air, output, result, bootstrap, observation_contract=False, belief_contract=False):
+def contract_probe(world, air, output, result, bootstrap, observation_contract=False, belief_contract=False,
+                   *, ports=DEFAULT_PORTS):
     def sample():
         state = air.getMultirotorState(vehicle_name='JevDrone')
         snap = world.get_snapshot()
@@ -189,7 +192,7 @@ def contract_probe(world, air, output, result, bootstrap, observation_contract=F
         result['collision_before'] = air.simGetCollisionInfo(vehicle_name='JevDrone').time_stamp
         result['phase'] = 'velocity_command'
         # One bounded world-NED x command, sampled by a separate RPC client.
-        reader = airsim.MultirotorClient(ip='127.0.0.1', port=42451, timeout_value=5)
+        reader = airsim.MultirotorClient(ip='127.0.0.1', port=ports.airsim_rpc, timeout_value=5)
         start = time.monotonic()
         future = air.moveByVelocityAsync(0.5, 0, 0, 1.0,
                   drivetrain=airsim.DrivetrainType.MaxDegreeOfFreedom,
@@ -219,7 +222,7 @@ def contract_probe(world, air, output, result, bootstrap, observation_contract=F
                                    ((0, 0, -0.3), 0), ((0, 0, 0), 15)]:
             observation = {}
             result['axis_commands'].append(observation)
-            measured_command(air, velocity, yaw_rate, observation)
+            measured_command(air, velocity, yaw_rate, observation, ports=ports)
         result['phase'] = 'command_refresh'
         result['command_refresh'] = {'before': sample()}
         command_cadence(
@@ -276,16 +279,16 @@ def contract_probe(world, air, output, result, bootstrap, observation_contract=F
     return result
 
 
-def main(output, profile, expected_settings, bootstrap, expected_map='Town02'):
+def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *, ports=DEFAULT_PORTS):
     validate_probe_map(expected_map, profile)
-    client = carla.Client('127.0.0.1', 3100)
+    client = carla.Client('127.0.0.1', ports.carla_rpc)
     client.set_timeout(5)
-    air = airsim.MultirotorClient(ip='127.0.0.1', port=42451, timeout_value=5)
+    air = airsim.MultirotorClient(ip='127.0.0.1', port=ports.airsim_rpc, timeout_value=5)
     if not air.ping():
         raise RuntimeError('AirSim ping failed')
     settings = json.loads(air.getSettingsString())
     expected = json.loads(expected_settings.read_text())
-    if settings != expected or expected.get('ApiServerPort') != 42451 or list(expected.get('Vehicles', {})) != ['JevDrone']:
+    if settings != expected or expected.get('ApiServerPort') != ports.airsim_rpc or list(expected.get('Vehicles', {})) != ['JevDrone']:
         raise RuntimeError('Loaded AirSim settings are not task-owned settings')
     world = client.get_world()
     actual_map = world.get_map().name
@@ -304,14 +307,14 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02'):
               'carla_client': client.get_client_version(), 'map': actual_map,
               'requested_map': expected_map, 'map_match': True,
               'airsim_server': air.getServerVersion(), 'vehicles': air.listVehicles(),
-              'settings_match': True, 'samples': samples,
+              'settings_match': True, 'samples': samples, 'ports': asdict(ports),
               'note': 'No arm, reset, motion, RGB capture or target tracking in this probe.'}
     if profile in ('contract', 'observation', 'belief'):
         result['contract'] = {}
         result['note'] = 'Owned development physics probe; may arm/move/capture. Not a tracking comparison.'
         try:
             contract_probe(world, air, output, result['contract'], bootstrap,
-                           profile in ('observation', 'belief'), profile == 'belief')
+                           profile in ('observation', 'belief'), profile == 'belief', ports=ports)
         except Exception as exc:
             result['contract_error'] = f'{type(exc).__name__}: {exc}'
             output.write_text(json.dumps(result, indent=2), encoding='utf-8')
@@ -327,5 +330,7 @@ if __name__ == '__main__':
     parser.add_argument('--expected-settings', type=Path, required=True)
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
     parser.add_argument('--expected-map', choices=PROBE_MAPS, default='Town02')
+    add_port_arguments(parser)
     args = parser.parse_args()
-    main(args.output, args.profile, args.expected_settings, args.bootstrap, args.expected_map)
+    main(args.output, args.profile, args.expected_settings, args.bootstrap, args.expected_map,
+         ports=ports_from_arguments(args))
