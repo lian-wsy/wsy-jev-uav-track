@@ -25,9 +25,9 @@
 - [x] Add failing transaction tests, observe RED (24 missing-feature failures), implement, observe GREEN (24 passed); add 3 supplemental fault/ownership checks (27 passed).
 - [x] Add failing named-RPC and launcher lifecycle tests, observe RED (18 failures / 30 existing passes), implement, observe GREEN (127 focused passed before the 3 supplemental checks).
 - [x] Full tests: 641 passed / 1 skipped (17.73s); compile and CLI help on both interpreters passed; independent safety reviewer approved the single preflight-gated no-motion run (39 focused tests independently passed).
-- [ ] One preflight-gated live run (or retain a blocked receipt without launch).
-- [ ] Recheck exact settings and protected-file hashes / process exit / own listeners; preserve raw evidence and document limitations.
-- [ ] Commit and push verified changes to existing feature branch, no merge, no whole-goal completion claim.
+- [x] One preflight-gated live run: `town02_sensors02_20261031`, 30/30 measurement RPC responses, distance6/6, Lidar6/6 nonempty; no movement commands. Code `42436d5`.
+- [x] Exact restoration of all three settings, 8 protected-file hashes, map restore, owned process exit and empty own listeners confirmed; 16 raw artifacts retained. Geometry/near-range/initial-collision limits reported in `docs/experiments/d6_configured_sensors_20261031.md`.
+- [x] Runtime code `42436d5` committed/pushed and remote SHA verified; outcome report independently approved for publication to the same feature branch. Preserve the clone/branch, no merge and no whole-goal completion claim.
 
 ## Transaction contract
 

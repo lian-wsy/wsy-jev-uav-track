@@ -2,6 +2,8 @@
 
 更新时间：2026-10-31
 
+**10/31最新传感器接通：** 经用户再次明确批准，独立Town02临时配置三份settings，单次无运动指令诊断取得distance6/6及Lidar6/6非空返回，30次测量RPC无错误，高精度计时实测非0；配置精确恢复、8份保护文件及退出清理通过。初始碰撞及近量程读数保留；不认证clearance/控制ready。641测试通过/1跳过，见[配置与实测报告](experiments/d6_configured_sensors_20261031.md)。D6仍PARTIAL，不增加D7任务。下条默认名称探针为此前的独立历史运行。
+
 **10/31安全探针现场：** 用户批准的一次独立Town02无运动检查完成，碰撞接口可读且保留初始事件；距离/Lidar均返回RPC_ERROR，无有效clearance。配置/进程清理核验通过，未发动作。粗粒度RTT限制及离线计时修正完整记录，D6仍PARTIAL；见[报告](experiments/d6_live_sensor_probe_20261031.md)。
 
 **10/31 D6能耗续修：** 用户已批准仅隔离仿真使用显式`SIMULATED_RESOURCE`预算；已修percent/Wh单位、缺容量/来源拒绝、等待耗能及reset不补电，并跑两Python六组Mock smoke。复查补齐检查耗时/下溢边界，全套562 passed/1 skipped；真实间距/碰撞与transport/停止仍未验证，D6及整体保持PARTIAL。见[修复报告](experiments/d6_energy_budget_20261031.md)。[原根因审计](experiments/d6_safety_readiness_20261031.md)保留为修复前证据，不覆写。
