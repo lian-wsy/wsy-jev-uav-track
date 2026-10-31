@@ -92,6 +92,6 @@ $env:PYTHONPATH=(Resolve-Path -LiteralPath 'src').Path
 python docs/experiments/reproduce_current_follow_20261031.py --runs D:/JevUavRuns/20261031_d6_probe01/runs --output artifacts/current_follow_recheck_new.json
 ```
 
-输出需为不存在的新文件，不能覆盖原始run或已有证据。机器证据SHA `faabdaec3d5854053469df70cddf2375bb32266c1c107e318611e4ffc0e0ce4b`。
+输出需为不存在的新文件，不能覆盖原始run或已有证据。本机生成证据（Windows CRLF）SHA `faabdaec3d5854053469df70cddf2375bb32266c1c107e318611e4ffc0e0ce4b`；Git规范化LF后的blob SHA `1d8463a70f8811e7e85aeaf63fa65c633a126478327c46e9f5cfdc51694a70af`。两者仅换行不同，结构数据相同；原始run文件指纹不受Git换行处理影响。
 
 最终软件回归977 passed/1 skipped（32.47s），两Python编译通过；Python3.10逐字段重算七次摘要及所有原文件SHA与发布证据相同，并以原始纳秒遥测重放06/07的启动`StopVerifier`通过。这些只证明软件/证据一致性，不替代未完成的10s跟随和最终停止。
