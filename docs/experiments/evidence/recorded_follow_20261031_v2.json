@@ -1,0 +1,638 @@
+{
+  "schema_version": 1,
+  "evidence_class": "READ_ONLY_RETROSPECTIVE_VIDEO_RUN_REANALYSIS",
+  "run_root": "D:\\JevUavRuns\\20261028_d2_probe01\\runs",
+  "selection": "all seven continuous and turning attempts listed before recomputation; retrospective, not preregistered",
+  "runs": [
+    {
+      "run": "continuous01_20261030",
+      "status": "METRICS_RECOMPUTED",
+      "files": [
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\continuous01_20261030\\smoke_result.json",
+          "bytes": 19390326,
+          "mtime_ns": 1793354135090786400,
+          "sha256": "a80eef2da5a3b1815540ed709151d926f01f7e38ef801d7ed5fe2f9a342172dd"
+        },
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\continuous01_20261030\\tracking_result.json",
+          "bytes": 17075155,
+          "mtime_ns": 1793354131126466000,
+          "sha256": "1c801c5b948cd1e89c5c229f989236bd27aad59a3aa1e5532970c834c7d58a2d"
+        },
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\continuous01_20261030\\continuous_prefixes.json",
+          "bytes": 6981044,
+          "mtime_ns": 1793354130486425600,
+          "sha256": "dd135ccb5ac0976d50a5de3a20ce3d8a8ff86a4d8a6a114dec0804afbfa7f40f"
+        },
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\continuous01_20261030\\continuous_advice.json",
+          "bytes": 14161,
+          "mtime_ns": 1793354130496630100,
+          "sha256": "abcbc9311229c4138857b04fef966568e9b4febcd79ef123069d23598565a606"
+        }
+      ],
+      "metrics": {
+        "scenario": "straight",
+        "seed": 2026103001,
+        "model_sha256": "a4fbeb5590d3d9e154f793ee2a702ae49a44c89dff4997e712fd17ebeb451000",
+        "controller": "d5-residual-pessimistic-tracking-envelope-v1",
+        "evidence_class": "RETROSPECTIVE_RECORDED_LIVE_VISIBLE_ORACLE",
+        "run_completed": true,
+        "planned_duration_s": 30.0,
+        "camera_wall_span_s": 30.015666600083932,
+        "observation_coverage_of_planned_duration": 1.0,
+        "frames": 327,
+        "visible_frames": 327,
+        "visible_fraction_sampled": 1.0,
+        "rejected_observations": 0,
+        "observation_gaps_over_250ms": 0,
+        "maximum_observation_gap_s": 0.13336510001681745,
+        "visible_center_error": {
+          "min": 0.14354056670727863,
+          "median": 0.14888894355643698,
+          "p95_nearest_rank": 0.15159997162944563,
+          "max": 0.178172738946023
+        },
+        "visible_range_m": {
+          "min": 19.504399246401345,
+          "median": 19.995291729969416,
+          "p95_nearest_rank": 20.006986576440625,
+          "max": 20.011164367554354
+        },
+        "visible_horizontal_center_offset_px": {
+          "min": -0.22735595703125,
+          "median": 4.422515869140625,
+          "p95_nearest_rank": 6.9215087890625,
+          "max": 7.2135009765625
+        },
+        "visible_vertical_center_offset_px": {
+          "min": 73.06904602050781,
+          "median": 75.74678039550781,
+          "p95_nearest_rank": 77.16433715820312,
+          "max": 90.71067810058594
+        },
+        "visible_range_error_from_20m_rmse": 0.09333363794088792,
+        "uav_net_displacement_m": 4.15458230721858,
+        "uav_horizontal_path_m": 4.3082371198454785,
+        "loss_events": 0,
+        "loss_events_censored": 0,
+        "loss_events_returned_to_first_visible": 0,
+        "longest_observed_loss_to_first_visible_s": null,
+        "longest_censored_loss_lower_bound_s": null,
+        "longest_bracketed_loss_interval_s": null,
+        "new_collision_events": 0,
+        "minimum_recorded_clearance_m": 4.639884098505132,
+        "acknowledged_prefixes": 325,
+        "recorded_prefixes": 325,
+        "real_jev_prefixes": 183,
+        "real_jev_prefix_fraction": 0.563076923076923,
+        "real_jev_requests_reported": 12,
+        "response_records": 12,
+        "jev_latency_ms": {
+          "min": 1621.1097999475896,
+          "median": 1691.0781500628218,
+          "p95_nearest_rank": 2043.3904000092298,
+          "max": 2043.3904000092298
+        },
+        "capture_latency_ms": {
+          "min": 70.52089995704591,
+          "median": 80.34440013580024,
+          "p95_nearest_rank": 100.28319992125034,
+          "max": 116.9069001916796
+        },
+        "dispatch_input_age_ms": {
+          "min": 78.01249995827675,
+          "median": 118.4211999643594,
+          "p95_nearest_rank": 137.16459996066988,
+          "max": 143.5054000467062
+        },
+        "command_speed_mps": {
+          "min": 0.041318945040930984,
+          "median": 0.149871894916727,
+          "p95_nearest_rank": 0.18156467416120714,
+          "max": 0.22600899040033895
+        },
+        "command_requested_union_s": 26.580295187188312,
+        "prefixes_over_current_d6_50ms": 325,
+        "prefixes_over_current_d6_03mps": 0,
+        "fixed_window_reacquisition": "NOT_EVALUATED_NO_INDEPENDENT_EVENT_REFERENCE",
+        "identity_crossing": "NOT_AUDITED",
+        "training_admission": "NOT_AUDITED",
+        "fair_comparison_eligible": false,
+        "learned_or_jev_gain_established": false,
+        "limitations": [
+          "Sample-visible fraction is not duration-normalized success, especially after early termination.",
+          "First-visible return is not the frozen 10s/0.5s stable reacquisition metric.",
+          "Acknowledged requested intervals are not proof of continuous physical execution.",
+          "Recorded geometry and collision events are not a new safety certification.",
+          "Archived controller/model/limits differ from current D6 and cannot be silently deployed."
+        ]
+      },
+      "training_admission": "NOT_AUDITED",
+      "owner_status": "API_SMOKE_COMPLETED",
+      "cleanup_confirmed": true,
+      "protected_unchanged": true,
+      "recorded_phase": "completed",
+      "recorded_kind": "CONTINUOUS_NATIVE_HD_D5_REAL_JEV",
+      "recorded_frames": 327,
+      "source_snapshot_status": "MATCHED",
+      "source_snapshot_files_matched": 66,
+      "source_snapshot_mismatches": []
+    },
+    {
+      "run": "continuous_fast01_20261030",
+      "status": "METRICS_RECOMPUTED",
+      "files": [
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\continuous_fast01_20261030\\smoke_result.json",
+          "bytes": 23423522,
+          "mtime_ns": 1793355028650373900,
+          "sha256": "4cf378f09db43df70e862f3e1c8dd9a6f5cf203bbaf2e3f193930a1d995c3102"
+        },
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\continuous_fast01_20261030\\tracking_result.json",
+          "bytes": 20629636,
+          "mtime_ns": 1793355022904782500,
+          "sha256": "a746dfdba5ffb53d865bfc3f5646db6de8e5a42e3ac0b99046ef146a37477d36"
+        },
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\continuous_fast01_20261030\\continuous_prefixes.json",
+          "bytes": 8431599,
+          "mtime_ns": 1793355022093204100,
+          "sha256": "7aaefab69e41d37466105a6a0c208fb2386b56177dced418388887b529b964e9"
+        },
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\continuous_fast01_20261030\\continuous_advice.json",
+          "bytes": 4719,
+          "mtime_ns": 1793355022098353000,
+          "sha256": "bc0667d192cf3f5836e567549372f25d55ad50e7764e4ecc03f0c40a8dfea9c8"
+        }
+      ],
+      "metrics": {
+        "scenario": "straight",
+        "seed": 2026103001,
+        "model_sha256": "a4fbeb5590d3d9e154f793ee2a702ae49a44c89dff4997e712fd17ebeb451000",
+        "controller": "d5-residual-pessimistic-tracking-envelope-v1",
+        "evidence_class": "RETROSPECTIVE_RECORDED_LIVE_VISIBLE_ORACLE",
+        "run_completed": true,
+        "planned_duration_s": 40.0,
+        "camera_wall_span_s": 40.01456589996815,
+        "observation_coverage_of_planned_duration": 1.0,
+        "frames": 395,
+        "visible_frames": 394,
+        "visible_fraction_sampled": 0.9974683544303797,
+        "rejected_observations": 0,
+        "observation_gaps_over_250ms": 0,
+        "maximum_observation_gap_s": 0.15022490010596812,
+        "visible_center_error": {
+          "min": 0.0034194282772202957,
+          "median": 0.2061295395972521,
+          "p95_nearest_rank": 0.2299091402622341,
+          "max": 0.27106669395294053
+        },
+        "visible_range_m": {
+          "min": 19.97732772486477,
+          "median": 20.03652142293197,
+          "p95_nearest_rank": 20.907455676698778,
+          "max": 21.05164010050958
+        },
+        "visible_horizontal_center_offset_px": {
+          "min": -22.859130859375,
+          "median": 1.7797393798828125,
+          "p95_nearest_rank": 22.93646240234375,
+          "max": 26.439788818359375
+        },
+        "visible_vertical_center_offset_px": {
+          "min": -10.451385498046875,
+          "median": 104.74649047851562,
+          "p95_nearest_rank": 117.04867553710938,
+          "max": 137.6690216064453
+        },
+        "visible_range_error_from_20m_rmse": 0.31546857162179465,
+        "uav_net_displacement_m": 33.53029640300791,
+        "uav_horizontal_path_m": 33.75761229837697,
+        "loss_events": 1,
+        "loss_events_censored": 0,
+        "loss_events_returned_to_first_visible": 1,
+        "longest_observed_loss_to_first_visible_s": 0.10845060017891228,
+        "longest_censored_loss_lower_bound_s": null,
+        "longest_bracketed_loss_interval_s": 0.20819680020213127,
+        "new_collision_events": 0,
+        "minimum_recorded_clearance_m": 6.712465102765016,
+        "acknowledged_prefixes": 392,
+        "recorded_prefixes": 392,
+        "real_jev_prefixes": 84,
+        "real_jev_prefix_fraction": 0.21428571428571427,
+        "real_jev_requests_reported": 4,
+        "response_records": 4,
+        "jev_latency_ms": {
+          "min": 1611.9363000616431,
+          "median": 1635.1087500806898,
+          "p95_nearest_rank": 1657.9984000418335,
+          "max": 1657.9984000418335
+        },
+        "capture_latency_ms": {
+          "min": 71.20749983005226,
+          "median": 92.64679998159409,
+          "p95_nearest_rank": 111.22900014743209,
+          "max": 142.96790002845228
+        },
+        "dispatch_input_age_ms": {
+          "min": 79.28040018305182,
+          "median": 108.5224999114871,
+          "p95_nearest_rank": 142.43560004979372,
+          "max": 185.87690009735525
+        },
+        "command_speed_mps": {
+          "min": 0.7217118428487165,
+          "median": 0.888458963529609,
+          "p95_nearest_rank": 1.1999999999999997,
+          "max": 1.1999999999999997
+        },
+        "command_requested_union_s": 33.919715290889144,
+        "prefixes_over_current_d6_50ms": 373,
+        "prefixes_over_current_d6_03mps": 392,
+        "fixed_window_reacquisition": "NOT_EVALUATED_NO_INDEPENDENT_EVENT_REFERENCE",
+        "identity_crossing": "NOT_AUDITED",
+        "training_admission": "NOT_AUDITED",
+        "fair_comparison_eligible": false,
+        "learned_or_jev_gain_established": false,
+        "limitations": [
+          "Sample-visible fraction is not duration-normalized success, especially after early termination.",
+          "First-visible return is not the frozen 10s/0.5s stable reacquisition metric.",
+          "Acknowledged requested intervals are not proof of continuous physical execution.",
+          "Recorded geometry and collision events are not a new safety certification.",
+          "Archived controller/model/limits differ from current D6 and cannot be silently deployed."
+        ]
+      },
+      "training_admission": "NOT_AUDITED",
+      "owner_status": "API_SMOKE_COMPLETED",
+      "cleanup_confirmed": true,
+      "protected_unchanged": true,
+      "recorded_phase": "completed",
+      "recorded_kind": "CONTINUOUS_NATIVE_HD_D5_REAL_JEV",
+      "recorded_frames": 395,
+      "source_snapshot_status": "MATCHED",
+      "source_snapshot_files_matched": 66,
+      "source_snapshot_mismatches": []
+    },
+    {
+      "run": "turning_left01_20261030",
+      "status": "NO_TERMINAL_RECEIPT",
+      "files": [
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\turning_left01_20261030\\preflight.json",
+          "bytes": 421,
+          "mtime_ns": 1793356522594054800,
+          "sha256": "5b132f3254ea184bc92974b0ac1b9ccd68b3a5cc8d05fc1bfc84c1dd79c8fc33"
+        }
+      ],
+      "metrics": null,
+      "training_admission": "NOT_AUDITED"
+    },
+    {
+      "run": "turning_left02_20261030",
+      "status": "NO_EVALUABLE_FOLLOW_TRAJECTORY",
+      "files": [
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\turning_left02_20261030\\smoke_result.json",
+          "bytes": 2473,
+          "mtime_ns": 1793356620399593300,
+          "sha256": "20d58e37feaef35d4dafbb9651a8812395e8ec4a17981dc4f56510499f33a6c1"
+        },
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\turning_left02_20261030\\tracking_result.json",
+          "bytes": 17752,
+          "mtime_ns": 1793356616907334500,
+          "sha256": "0f201275d82a180955384877981697a7380dd7e6cce99cc142ccfb97fee22be3"
+        }
+      ],
+      "metrics": null,
+      "training_admission": "NOT_AUDITED",
+      "owner_status": "FAILED",
+      "cleanup_confirmed": true,
+      "protected_unchanged": true,
+      "recorded_phase": "scene_geometry_and_origin",
+      "recorded_kind": "LIVE_TOWN02_LATEST_MODEL_REAL_JEV_ATTEMPT",
+      "recorded_frames": 0,
+      "source_snapshot_status": "MATCHED",
+      "source_snapshot_files_matched": 68,
+      "source_snapshot_mismatches": [],
+      "metric_error_type": "ValueError"
+    },
+    {
+      "run": "turning_left03_20261030",
+      "status": "NO_EVALUABLE_FOLLOW_TRAJECTORY",
+      "files": [
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\turning_left03_20261030\\smoke_result.json",
+          "bytes": 2473,
+          "mtime_ns": 1793356724672908400,
+          "sha256": "296f2229c9b27a12ab576bc0bec0b346299854ac4782f8cd4dd152b6c1f67c76"
+        },
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\turning_left03_20261030\\tracking_result.json",
+          "bytes": 19429,
+          "mtime_ns": 1793356721808773700,
+          "sha256": "1cd6f455b5d6fe7cb713c42949f9161df54b80ec6f26df1e2c62ebd412a5d63d"
+        }
+      ],
+      "metrics": null,
+      "training_admission": "NOT_AUDITED",
+      "owner_status": "FAILED",
+      "cleanup_confirmed": true,
+      "protected_unchanged": true,
+      "recorded_phase": "scene_geometry_and_origin",
+      "recorded_kind": "LIVE_TOWN02_LATEST_MODEL_REAL_JEV_ATTEMPT",
+      "recorded_frames": 0,
+      "source_snapshot_status": "MATCHED",
+      "source_snapshot_files_matched": 68,
+      "source_snapshot_mismatches": [],
+      "metric_error_type": "ValueError"
+    },
+    {
+      "run": "turning_left04_20261030",
+      "status": "METRICS_RECOMPUTED",
+      "files": [
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\turning_left04_20261030\\smoke_result.json",
+          "bytes": 25176649,
+          "mtime_ns": 1793356868987421900,
+          "sha256": "4260a3443ba95b2ee417ba17d61636091600bc5fdf8463d453368dd89aa94b99"
+        },
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\turning_left04_20261030\\tracking_result.json",
+          "bytes": 22173804,
+          "mtime_ns": 1793356864240233600,
+          "sha256": "35123292d76d008e9c3091f30b9652b78a423d33bc05356ecfc0b7ffc54e2ad0"
+        },
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\turning_left04_20261030\\continuous_prefixes.json",
+          "bytes": 8934929,
+          "mtime_ns": 1793356863031778700,
+          "sha256": "01e026a688a7784128102feafdcee36124c0c25b759663777a5df55dfbf1b8cb"
+        },
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\turning_left04_20261030\\continuous_advice.json",
+          "bytes": 4710,
+          "mtime_ns": 1793356863045300000,
+          "sha256": "f806428ddc9770b9c0199d84e726450b8c97eee8c6c6df99b79af36706818839"
+        }
+      ],
+      "metrics": {
+        "scenario": "left",
+        "seed": 2026103001,
+        "model_sha256": "a4fbeb5590d3d9e154f793ee2a702ae49a44c89dff4997e712fd17ebeb451000",
+        "controller": "d5-residual-pessimistic-tracking-envelope-v1",
+        "evidence_class": "RETROSPECTIVE_RECORDED_LIVE_VISIBLE_ORACLE",
+        "run_completed": true,
+        "planned_duration_s": 40.0,
+        "camera_wall_span_s": 40.016477699857205,
+        "observation_coverage_of_planned_duration": 1.0,
+        "frames": 424,
+        "visible_frames": 417,
+        "visible_fraction_sampled": 0.9834905660377359,
+        "rejected_observations": 0,
+        "observation_gaps_over_250ms": 0,
+        "maximum_observation_gap_s": 0.1342624998651445,
+        "visible_center_error": {
+          "min": 0.13384691634649604,
+          "median": 0.23041574862596767,
+          "p95_nearest_rank": 0.25266273374903936,
+          "max": 0.274865031609961
+        },
+        "visible_range_m": {
+          "min": 19.670963295001155,
+          "median": 19.77195623408627,
+          "p95_nearest_rank": 20.116130008361456,
+          "max": 20.1672231336468
+        },
+        "visible_horizontal_center_offset_px": {
+          "min": -25.413482666015625,
+          "median": -6.1737060546875,
+          "p95_nearest_rank": 10.480377197265625,
+          "max": 18.668670654296875
+        },
+        "visible_vertical_center_offset_px": {
+          "min": 67.95375061035156,
+          "median": 117.22084045410156,
+          "p95_nearest_rank": 128.46893310546875,
+          "max": 139.88601684570312
+        },
+        "visible_range_error_from_20m_rmse": 0.20550910181796886,
+        "uav_net_displacement_m": 22.281125993185668,
+        "uav_horizontal_path_m": 28.78459702778912,
+        "loss_events": 7,
+        "loss_events_censored": 0,
+        "loss_events_returned_to_first_visible": 7,
+        "longest_observed_loss_to_first_visible_s": 0.09994470002129674,
+        "longest_censored_loss_lower_bound_s": null,
+        "longest_bracketed_loss_interval_s": 0.19882709998637438,
+        "new_collision_events": 0,
+        "minimum_recorded_clearance_m": 8.379020928090862,
+        "acknowledged_prefixes": 415,
+        "recorded_prefixes": 415,
+        "real_jev_prefixes": 121,
+        "real_jev_prefix_fraction": 0.29156626506024097,
+        "real_jev_requests_reported": 4,
+        "response_records": 4,
+        "jev_latency_ms": {
+          "min": 1583.0699999351054,
+          "median": 1610.1180500118062,
+          "p95_nearest_rank": 1667.48660011217,
+          "max": 1667.48660011217
+        },
+        "capture_latency_ms": {
+          "min": 71.11299992538989,
+          "median": 82.29129994288087,
+          "p95_nearest_rank": 103.62179996445775,
+          "max": 129.19260002672672
+        },
+        "dispatch_input_age_ms": {
+          "min": 77.95030018314719,
+          "median": 115.72690005414188,
+          "p95_nearest_rank": 137.68450007773936,
+          "max": 187.88770004175603
+        },
+        "command_speed_mps": {
+          "min": 0.30571520155615334,
+          "median": 0.7661272048603565,
+          "p95_nearest_rank": 0.9591840328719033,
+          "max": 1.0328945400005243
+        },
+        "command_requested_union_s": 34.662558687618,
+        "prefixes_over_current_d6_50ms": 410,
+        "prefixes_over_current_d6_03mps": 415,
+        "fixed_window_reacquisition": "NOT_EVALUATED_NO_INDEPENDENT_EVENT_REFERENCE",
+        "identity_crossing": "NOT_AUDITED",
+        "training_admission": "NOT_AUDITED",
+        "fair_comparison_eligible": false,
+        "learned_or_jev_gain_established": false,
+        "limitations": [
+          "Sample-visible fraction is not duration-normalized success, especially after early termination.",
+          "First-visible return is not the frozen 10s/0.5s stable reacquisition metric.",
+          "Acknowledged requested intervals are not proof of continuous physical execution.",
+          "Recorded geometry and collision events are not a new safety certification.",
+          "Archived controller/model/limits differ from current D6 and cannot be silently deployed."
+        ]
+      },
+      "training_admission": "NOT_AUDITED",
+      "owner_status": "API_SMOKE_COMPLETED",
+      "cleanup_confirmed": true,
+      "protected_unchanged": true,
+      "recorded_phase": "completed",
+      "recorded_kind": "CONTINUOUS_NATIVE_HD_D5_REAL_JEV",
+      "recorded_frames": 424,
+      "source_snapshot_status": "MATCHED",
+      "source_snapshot_files_matched": 69,
+      "source_snapshot_mismatches": []
+    },
+    {
+      "run": "turning_complex01_20261030",
+      "status": "METRICS_RECOMPUTED",
+      "files": [
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\turning_complex01_20261030\\smoke_result.json",
+          "bytes": 22562050,
+          "mtime_ns": 1793356951483296400,
+          "sha256": "910a56645d27ed49133aba5898bf6948c46ceac18d93b84980dc0a2494f7a464"
+        },
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\turning_complex01_20261030\\tracking_result.json",
+          "bytes": 19869238,
+          "mtime_ns": 1793356947202481000,
+          "sha256": "bea004abf50141522776638352e6c519ea9cdb99a811e2516e81bc02989a36ea"
+        },
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\turning_complex01_20261030\\continuous_prefixes.json",
+          "bytes": 8001441,
+          "mtime_ns": 1793356946450703600,
+          "sha256": "75bc8f6f9232b5eb4d6104ffedbbe5066f4475a91af35336103c2e9f70485c3a"
+        },
+        {
+          "path": "D:\\JevUavRuns\\20261028_d2_probe01\\runs\\turning_complex01_20261030\\continuous_advice.json",
+          "bytes": 4709,
+          "mtime_ns": 1793356946456708900,
+          "sha256": "1fc7dec63f315a865b6e7e4092c100ecc6101f622332385fcc90dc0857ddb29a"
+        }
+      ],
+      "metrics": {
+        "scenario": "right_complex",
+        "seed": 2026103001,
+        "model_sha256": "a4fbeb5590d3d9e154f793ee2a702ae49a44c89dff4997e712fd17ebeb451000",
+        "controller": "d5-residual-pessimistic-tracking-envelope-v1",
+        "evidence_class": "RETROSPECTIVE_RECORDED_LIVE_VISIBLE_ORACLE",
+        "run_completed": true,
+        "planned_duration_s": 40.0,
+        "camera_wall_span_s": 40.03514690021984,
+        "observation_coverage_of_planned_duration": 1.0,
+        "frames": 380,
+        "visible_frames": 374,
+        "visible_fraction_sampled": 0.9842105263157894,
+        "rejected_observations": 0,
+        "observation_gaps_over_250ms": 0,
+        "maximum_observation_gap_s": 0.15146129997447133,
+        "visible_center_error": {
+          "min": 0.13616484313433325,
+          "median": 0.24122712401175145,
+          "p95_nearest_rank": 0.3183778424497121,
+          "max": 0.3365555738198936
+        },
+        "visible_range_m": {
+          "min": 19.56914281502392,
+          "median": 19.813631533047687,
+          "p95_nearest_rank": 20.12299717221335,
+          "max": 20.159396475677838
+        },
+        "visible_horizontal_center_offset_px": {
+          "min": -20.63323974609375,
+          "median": 9.194915771484375,
+          "p95_nearest_rank": 33.0443115234375,
+          "max": 40.092010498046875
+        },
+        "visible_vertical_center_offset_px": {
+          "min": 69.22360229492188,
+          "median": 122.68060302734375,
+          "p95_nearest_rank": 161.48526000976562,
+          "max": 171.32916259765625
+        },
+        "visible_range_error_from_20m_rmse": 0.21475247132763464,
+        "uav_net_displacement_m": 21.48229217086827,
+        "uav_horizontal_path_m": 28.60174273768957,
+        "loss_events": 6,
+        "loss_events_censored": 0,
+        "loss_events_returned_to_first_visible": 6,
+        "longest_observed_loss_to_first_visible_s": 0.11825769999995828,
+        "longest_censored_loss_lower_bound_s": null,
+        "longest_bracketed_loss_interval_s": 0.21729600010439754,
+        "new_collision_events": 0,
+        "minimum_recorded_clearance_m": 9.109691651490037,
+        "acknowledged_prefixes": 372,
+        "recorded_prefixes": 372,
+        "real_jev_prefixes": 108,
+        "real_jev_prefix_fraction": 0.2903225806451613,
+        "real_jev_requests_reported": 4,
+        "response_records": 4,
+        "jev_latency_ms": {
+          "min": 1601.3933001086116,
+          "median": 1609.4224998960271,
+          "p95_nearest_rank": 1615.415700012818,
+          "max": 1615.415700012818
+        },
+        "capture_latency_ms": {
+          "min": 72.2119000274688,
+          "median": 95.84490000270307,
+          "p95_nearest_rank": 107.82410018146038,
+          "max": 124.78439998812973
+        },
+        "dispatch_input_age_ms": {
+          "min": 88.65689998492599,
+          "median": 106.30025004502386,
+          "p95_nearest_rank": 130.5612998548895,
+          "max": 173.33210003562272
+        },
+        "command_speed_mps": {
+          "min": 0.1281694971743126,
+          "median": 0.8921963066555909,
+          "p95_nearest_rank": 1.1999999999999995,
+          "max": 1.1999999999999997
+        },
+        "command_requested_union_s": 33.44459528801963,
+        "prefixes_over_current_d6_50ms": 357,
+        "prefixes_over_current_d6_03mps": 317,
+        "fixed_window_reacquisition": "NOT_EVALUATED_NO_INDEPENDENT_EVENT_REFERENCE",
+        "identity_crossing": "NOT_AUDITED",
+        "training_admission": "NOT_AUDITED",
+        "fair_comparison_eligible": false,
+        "learned_or_jev_gain_established": false,
+        "limitations": [
+          "Sample-visible fraction is not duration-normalized success, especially after early termination.",
+          "First-visible return is not the frozen 10s/0.5s stable reacquisition metric.",
+          "Acknowledged requested intervals are not proof of continuous physical execution.",
+          "Recorded geometry and collision events are not a new safety certification.",
+          "Archived controller/model/limits differ from current D6 and cannot be silently deployed."
+        ]
+      },
+      "training_admission": "NOT_AUDITED",
+      "owner_status": "API_SMOKE_COMPLETED",
+      "cleanup_confirmed": true,
+      "protected_unchanged": true,
+      "recorded_phase": "completed",
+      "recorded_kind": "CONTINUOUS_NATIVE_HD_D5_REAL_JEV",
+      "recorded_frames": 380,
+      "source_snapshot_status": "MATCHED",
+      "source_snapshot_files_matched": 69,
+      "source_snapshot_mismatches": []
+    }
+  ],
+  "new_simulator_launches": 0,
+  "new_jev_calls": 0,
+  "new_training_runs": 0,
+  "new_PASS_episodes": 0,
+  "paired_baseline_comparison": "NOT_AVAILABLE",
+  "current_d6_controller_verified_by_these_runs": false,
+  "recipe_sha256": "e59026650ac072e74e2ba825a4d6fb515b59ce8715e2e26559ebbdc80dfce5cc",
+  "metrics_source_sha256": "c5019aff3a4a8a064fca85e196852ba3e2c9b1e1fa34520ef469be50bc087ca6"
+}
