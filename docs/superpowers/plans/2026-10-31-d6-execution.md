@@ -74,4 +74,8 @@ assert "-carla-secondary-port=3202" in args
 - [x] If conditions hold, prepare one independent copy and run one Town03 API-only smoke, retaining actual map, settings, versions, resources, original failures, protected hashes and cleanup evidence. If blocked record one bounded failure and continue offline. No collection or fake same-snapshot labels.
 - [x] Run D6 mock smoke, check deterministic outputs and all counters. Real unavailable paths stay NOT_EVALUATED/PARTIAL.
 - [x] Update original-scope D1–D6 requirement/evidence matrix, daily report, roadmap/sprint current-scope banner. Reuse D3/D4/D5 results, preserve negative results and Town03 PASS=0 unless actual complete data audit proves otherwise.
-- [ ] Run targeted/final regression, compileall and git diff --check; independent review; push verified commits to feature branch only, no merge to main. Keep goal unfinished while any original criterion lacks evidence.
+- [x] Run targeted/final regression, compileall and git diff --check; independent review; push verified commits to feature branch only, no merge to main. Keep goal unfinished while any original criterion lacks evidence.
+
+## Slice completion receipt
+
+2026-10-31: 481 passed / 1 skipped; compileall and diff checks exit 0. Independent full-slice review of `a0e9476..ab82dd9` approved publication with no blocking findings. Feature branch was pushed and its remote ref verified as `ab82dd9a5a4f44c7588f4d14cebdc700cff45a8c` before this receipt. No main merge or workspace deletion. Task execution checklist completion does not mean original D1–D6 acceptance: Town03 PASS and difficult-scene/live gaps remain PARTIAL, as recorded in the acceptance report.
