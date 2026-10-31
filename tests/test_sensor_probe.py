@@ -225,3 +225,18 @@ def test_sample_budget_is_bounded_before_rpc(count):
     with pytest.raises(ValueError):
         run_rpc(rpc, count)
     assert rpc.calls == []
+
+
+def test_default_diagnostic_clock_preserves_subtick_rtt_and_records_its_resolution(monkeypatch):
+    module = importlib.import_module('jev_uav_track.sensor_probe')
+    clock = Clock()
+    rpc = SensorRpc(clock)
+    # A 2ms RPC must not disappear into Windows Python3.10's 15.625ms tick clock.
+    monkeypatch.setattr(module.time, 'perf_counter', clock)
+    report = probe()(rpc, sleep=clock.sleep, sample_count=1)
+    row = report['queries'][0]
+    assert row['wall_start_s'] == 0.0
+    assert row['elapsed_s'] == .002
+    assert report['host_clock']['source'] == 'time.perf_counter'
+    assert report['host_clock']['monotonic'] is True
+    assert report['host_clock']['resolution_s'] > 0

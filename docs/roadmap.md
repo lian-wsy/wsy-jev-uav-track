@@ -2,6 +2,8 @@
 
 更新时间：2026-10-31
 
+**10/31安全探针现场：** 用户批准的一次独立Town02无运动检查完成，碰撞接口可读且保留初始事件；距离/Lidar均返回RPC_ERROR，无有效clearance。配置/进程清理核验通过，未发动作。粗粒度RTT限制及离线计时修正完整记录，D6仍PARTIAL；见[报告](experiments/d6_live_sensor_probe_20261031.md)。
+
 **10/31 D6能耗续修：** 用户已批准仅隔离仿真使用显式`SIMULATED_RESOURCE`预算；已修percent/Wh单位、缺容量/来源拒绝、等待耗能及reset不补电，并跑两Python六组Mock smoke。复查补齐检查耗时/下溢边界，全套562 passed/1 skipped；真实间距/碰撞与transport/停止仍未验证，D6及整体保持PARTIAL。见[修复报告](experiments/d6_energy_budget_20261031.md)。[原根因审计](experiments/d6_safety_readiness_20261031.md)保留为修复前证据，不覆写。
 
 **10/31 D5诊断闭合：** 冻结原D5模型和区间，5个既有development_stress经完整只读PASS/SHA核验；1475有效帧含遮挡10、出框15。困难区间失覆盖、1475记录/11800候选全部回退，raw距离RMSE0.925513m劣于透明0.403856m。原D5诊断交付COMPLETED_WITH_LIMITATIONS，非收益/独立验证通过；不调参、不重训。见[压力报告](experiments/d5_frozen_stress_20261031.md)。

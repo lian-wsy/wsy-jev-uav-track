@@ -103,7 +103,7 @@ def _project(method, raw):
     return result
 
 
-def probe_safety_inputs(rpc_call, *, clock=time.monotonic, sleep=time.sleep, sample_count=6):
+def probe_safety_inputs(rpc_call, *, clock=None, sleep=time.sleep, sample_count=6):
     """At most six samples / 30 RPCs / 8s soft budget. Never authorize control.
 
     Each RPC is made once. A transport error disables that optional sensor;
@@ -112,6 +112,15 @@ def probe_safety_inputs(rpc_call, *, clock=time.monotonic, sleep=time.sleep, sam
     """
     if type(sample_count) is not int or not 1 <= sample_count <= 6:
         raise ValueError('sample_count must be an integer in 1..6')
+    host_clock = {'source': 'INJECTED_NOT_CALIBRATED', 'resolution_s': None}
+    if clock is None:
+        # Python3.10/Windows monotonic() uses a coarse GetTickCount64 clock.
+        # perf_counter stays monotonic and resolves sub-tick RPC intervals.
+        clock = time.perf_counter
+        info = time.get_clock_info('perf_counter')
+        host_clock = {'source': 'time.perf_counter', 'implementation': info.implementation,
+                      'resolution_s': info.resolution, 'monotonic': info.monotonic,
+                      'adjustable': info.adjustable}
     report = {'kind': 'SAFETY_SENSOR_DIAGNOSTIC_NO_MOTION', 'status': 'DIAGNOSTIC_COMPLETED',
               'sample_count_requested': sample_count, 'completed_samples': 0,
               'rpc_count': 0, 'queries': [], 'samples': [], 'abort_reason': None,
@@ -120,7 +129,7 @@ def probe_safety_inputs(rpc_call, *, clock=time.monotonic, sleep=time.sleep, sam
               'source_clock_domain': 'AIRSIM_REPORTED_NS_NOT_CALIBRATED',
               'collision_read_semantics': 'MAY_CONSUME_EVENT_FLAG_LOCAL_SEMANTICS_UNVERIFIED',
               'measurement_readiness': 'NOT_CERTIFIED',
-              'budget_s': 8., 'rpc_timeout_required_s': 1.}
+              'host_clock': host_clock, 'budget_s': 8., 'rpc_timeout_required_s': 1.}
     floor = None
     last_state = None
     last_sensor = {}
