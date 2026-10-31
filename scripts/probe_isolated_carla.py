@@ -244,11 +244,20 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
                 process.terminate()
             process.wait(timeout=15)
             result['owned_process_exit_code'] = process.returncode
-        result['protected_unchanged'] = before == protected_files(source)
-        result['postflight'] = snapshot(ports=ports)
-        result['cleanup_confirmed'] = (not result['postflight']['listeners']
-            and not any(p['ProcessId'] == process.pid for p in result['postflight']['processes'])
-            if process is not None else True)
+        # Audit reads can fail for the same reason as the runtime monitor.
+        # Keep each verdict fail-closed and preserve the original probe error.
+        result.update(protected_unchanged=False, postflight=None, cleanup_confirmed=False)
+        try:
+            result['protected_unchanged'] = before == protected_files(source)
+        except Exception as exc:
+            result['protected_audit_error'] = f'{type(exc).__name__}: {exc}'
+        try:
+            result['postflight'] = snapshot(ports=ports)
+            result['cleanup_confirmed'] = (not result['postflight']['listeners']
+                and not any(p['ProcessId'] == process.pid for p in result['postflight']['processes'])
+                if process is not None else True)
+        except Exception as exc:
+            result['postflight_error'] = f'{type(exc).__name__}: {exc}'
         if not result['cleanup_confirmed'] or not result['protected_unchanged']:
             result['status'] = 'AUDIT_FAILED'
         result['ended_at'] = time.time()

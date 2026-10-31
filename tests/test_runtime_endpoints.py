@@ -244,6 +244,69 @@ def test_unknown_memory_cannot_pass_snapshot_validation(monkeypatch, memory):
         launcher.snapshot(ports=ports())
 
 
+@pytest.mark.parametrize('stage,protected_failure', [
+    ('startup', False), ('startup', True), ('client', False), ('client', True), ('protected', True)])
+def test_failed_runtime_and_postflight_queries_preserve_failure_receipt(tmp_path, monkeypatch,
+                                                                      stage, protected_failure):
+    source, task = owned_receipt(tmp_path, {'carla_rpc': 3200, 'carla_streaming': 3201,
+        'carla_secondary': 3202, 'airsim_rpc': 42461})
+    processes, closed = [], []
+    class Process:
+        def __init__(self, command, **kwargs):
+            self.pid, self.returncode, self.command = 9000 + len(processes), None, command
+            processes.append(self)
+        def poll(self): return self.returncode
+        def terminate(self): self.returncode = -1
+        def wait(self, **kwargs): return self.returncode
+        def communicate(self, **kwargs):
+            if self.returncode is None:
+                self.returncode = 0
+                Path(self.command[self.command.index('--output') + 1]).write_text(json.dumps({
+                    'map': 'Town02', 'map_match': True, 'requested_map': 'Town02'}))
+            return 'retained stdout', 'retained stderr'
+    class Job:
+        def assign(self, process): pass
+        def close(self):
+            closed.append(True)
+            for process in processes:
+                if process.poll() is None:
+                    process.terminate()
+    monkeypatch.setattr(launcher.subprocess, 'Popen', Process)
+    monkeypatch.setattr(launcher, 'OwnedJob', Job)
+    query_calls, protected_calls = [], []
+    def query(command):
+        query_calls.append(command)
+        if ((stage == 'startup' and len(query_calls) >= 2)
+                or (stage == 'client' and len(query_calls) >= 3)):
+            raise RuntimeError('persistent synthetic CIM failure')
+        listeners = ([{'LocalPort': port, 'OwningProcess': 9000} for port in (3200, 42461)]
+                     if len(query_calls) == 2 else [])
+        return {'processes': [], 'listeners': listeners, 'free_memory_kib': 5 * 1024**2}
+    def protected(_):
+        protected_calls.append(True)
+        if protected_failure and len(protected_calls) > 1:
+            raise OSError('synthetic protected-file audit failure')
+        return {}
+    monkeypatch.setattr(launcher, 'ps_json', query)
+    monkeypatch.setattr(launcher, 'protected_files', protected)
+    with pytest.raises(SystemExit):
+        launcher.smoke(source, task, Path(sys.executable), 'audit', 'api', 'takeoff', ports=ports())
+    result = json.loads((task / 'runs/audit/smoke_result.json').read_text())
+    assert result['status'] == 'AUDIT_FAILED'
+    assert result['protected_unchanged'] is (not protected_failure)
+    assert result['cleanup_confirmed'] is (stage == 'protected')
+    assert result['ended_at'] >= result['started_at']
+    assert closed == [True] and all(process.poll() is not None for process in processes)
+    if stage != 'protected':
+        assert 'persistent synthetic CIM failure' in result['error']
+        assert 'persistent synthetic CIM failure' in result['postflight_error']
+        assert result['postflight'] is None
+    if protected_failure:
+        assert 'synthetic protected-file audit failure' in result['protected_audit_error']
+    if stage == 'client':
+        assert (task / 'runs/audit/client_stdout.txt').read_text() == 'retained stdout'
+
+
 def test_client_cli_parses_all_four_explicit_endpoints(tmp_path, monkeypatch):
     settings = {'ApiServerPort': 42461, 'Vehicles': {'JevDrone': {}}}
     settings_path = tmp_path / 'settings.json'
