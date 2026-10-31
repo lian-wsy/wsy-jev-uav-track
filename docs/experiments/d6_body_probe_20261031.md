@@ -44,7 +44,7 @@ python scripts/probe_isolated_carla.py smoke --source 'D:/CarlaAir/CarlaAir-v0.1
 
 20:01:39结束核验：相关进程/监听均空，8份保护配置SHA与准备快照一致；记录该次退出核验的可用内存4,307,076KiB，不据此连续重新启动。没有关闭其他应用、修改共享资源或联系其他聊天。完整原始请求/预检查、6运行模块SHA、保护哈希及结束核验见[机器证据](evidence/d6_body_probe_20261031.json)。
 
-## 验收变化与下一步
+## 第一次预检查后的验收变化（历史检查点）
 
 本轮完成的是**可运行的同窗口机体诊断及严格原始回执验证**，并修复审查实际复现的时钟/类型/数值溢出缺陷；现场机体结果仍`NOT_RUN_RESOURCE_GATE`，不能用879项测试替代。
 
@@ -68,3 +68,38 @@ Windows `GetProcessMemoryInfo`的单次新进程样本：
 导入后工作集样本差6,508,544 bytes，约6.21MiB；只是单次样本，不保证每次节省相同值，更不能据此推定已满足全机资源门槛。原命令与两个完整测量输出见[机器记录](evidence/d6_runtime_imports_20261031.json)。新的启动仍必须现场重新检查4GiB和所有权；不关闭其他应用或减去启动器内存来“修正”系统读数。
 
 主代理最终884 passed/1 skipped（23.68s）、两解释器compileall和3.10实际轻量导入/API身份检查通过。独立复核14项通过，核对原48个公开对象及顺序、冷启动star导入/子模块/dir/pickle/未知名称语义、包入口SHA回执；审查进程已退出。裸包导入不再提前生成偶然的子模块属性，这是按需加载的有意变化，显式子模块导入兼容。
+
+## 后续现场：6个静态窗口一致，目录未提供机体几何
+
+冻结代码`0a8fee8b4c5f20697f926ccb1c0fd10db50c7350`后，新的独立运行`town02_body02_20261031`完成，拥有者和客户端均退出0，状态`BODY_DIAGNOSTIC_COMPLETED`。首次资源拒绝及以上旧检查点全部保留。这次是实际Town02诊断，不是Mock、Town03测试或飞行实验。
+
+实际命令先断言导入来自本聊天独立clone；下列运行目录已存在，复现须更换新目录，且必须重新通过原资源/所有权检查。
+
+```powershell
+$env:PYTHONPATH=(Resolve-Path -LiteralPath 'src').Path
+& 'C:/Users/20748/miniconda3/python.exe' -c "import importlib.util; from pathlib import Path; p=Path(importlib.util.find_spec('jev_uav_track').origin).resolve(); assert p == Path('D:/JevUavRuns/repos/jev-outcome-dataset-20261030/src/jev_uav_track/__init__.py').resolve(); print('Owned source path verified')"
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+& 'C:/Users/20748/miniconda3/python.exe' scripts/probe_isolated_carla.py smoke --source 'D:/CarlaAir/CarlaAir-v0.1.7-Windows11-x86_64/WindowsNoEditor' --task 'D:/JevUavRuns/20261031_d6_probe01' --client-python 'C:/Users/20748/miniconda3/envs/carlaAir/python.exe' --run-name town02_body02_20261031 --profile body --map Town02 --carla-rpc-port 3200 --carla-streaming-port 3201 --carla-secondary-port 3202 --airsim-rpc-port 42461
+```
+
+正式启动前4,233,196KiB通过原4GiB门槛；最后运行快照2,428,632KiB通过768MiB门槛，但该快照不是持续内存最小值。独立Shipping PID67352，四个监听均归该PID；任务内地图配置恢复、源/用户8份保护配置SHA未变，拥有者确认停止，无清理错误。20:27:03追加OS核验相关进程/监听均空，可用内存4,561,644KiB。运行总长16.1893s，诊断采样0.653249s；没有关闭其他应用或占用视频任务。
+
+| 项目 | 原始结果 | 可支持的结论 |
+|---|---|---|
+| 同窗口测量 | 31个身份/测量RPC、6轮、每窗口9.536–18.356ms；连接/版本/settings调用另计 | 这6个短窗口内可比较静态位姿 |
+| 物理state vs vehicle-local pose | 最大位置差0m；最大姿态差约0.000001708°；12份state线/角速度均0 | 6/6为`STATIC_POSE_CONSISTENT_NOT_CALIBRATION`，本次没有复现静态错位 |
+| local vs object-global | 平移差均为[0,0,2.8046514987945557]m，姿态差0° | 本次静态观测偏移；不认证动态标定、不写入跨实例常数 |
+| CARLA登记目录 | 共3067条，精确JevDrone匹配0条；AirSim名称查询唯一返回JevDrone | 目录路径未提供自身几何，不能解释为无人机不存在、体积为零或已知完整碰撞包围体 |
+| 接触 | 首轮true，后5轮false；全部保留同一原始事件时间戳1793449489522775552、道路对象`Road_Road_Town02_135`、penetration 0 | 有初始道路接触；不能从后续消费后的false宣称零碰撞或有效间距 |
+
+物理/vehicle-local位置为[0.03139648213982582,-0.0031835937406867743,6.69262170791626]m；object-global的z为3.887970209121704m。接触法向接近[0,0,-1]，事件接触点[0.38847655057907104,0.2103320211172104,6.894651889801025]m。接触事件早于本轮取样，单个点/法向/零penetration不能推出整个机体外形或可忽略的合法支撑面。全部source时间戳按整数原样保存，没有经过JavaScript浮点JSON往返。
+
+启动命令前曾尝试较轻的cmd包装：一次找不到python（9009）；一次PYTHONPATH引用未生效，误解析共享editable包并在`RuntimePorts`导入处失败；另一次只读`-c`引用诊断出现SyntaxError。三者都在启动/配置/RPC前终止，未写共享文件、不算物理试验。随后停止尝试cmd包装，使用上面已验证的PowerShell和明确解释器/包来源。完整失败类别随证据保留。拥有者通用回执中`bootstrap=takeoff`是未使用的默认参数；body分支在contract/bootstrap之前独立返回，原始31调用均无takeoff或其他运动。
+
+10份原文件大小/SHA、完整API回执、拥有者/资源/保护配置、比较统计和结束核验见[现场机器证据](evidence/d6_body_probe_live_20261031.json)。主代理用Python3.14和原3.10客户端分别重新验证原始回执，且API与拥有者内嵌副本按类型严格相等；冻结运行代码SHA一致。
+
+**当前结论：** 静态物理/渲染错位假设本次未复现；没有因此排除动态错位或证实native ground-clamp为根因。下一关键路径是取得有依据的自身碰撞边界、地面启动/支撑接触契约和受限动作/停止实测；不重复同一目录查询或静态采样，不凭渲染box猜测碰撞外形。D6仍PARTIAL，Town03独立PASS=0，`control_ready=false`、`clearance_m=null`、body `NOT_CERTIFIED`。本次无飞行命令、取图、Jev、HDF读取、训练、actor创建或新PASS episode。
+
+现场后主代理再次完整回归**884 passed, 1 skipped（24.16s）**；59项针对性测试通过（1.54s）。Python3.14.7/3.10.21分别复算完整body回执，核对10原文件、8保护配置、22运行模块、任务地图恢复及整数纳秒时间戳；两解释器compileall和diff检查通过。测试证明实现回归与证据可复核，不替代上述未验证的飞行能力。
+
+独立只读复核批准发布：10原文件、完整回执类型严格一致、6轮比较/统计、8保护配置和任务地图恢复、22运行SHA及冻结Git源码（允许文本CRLF/LF规范化）均通过，没有阻断发现。该审查未重跑现场或全套测试；OS结束快照、命令包装失败和测试运行仍是主代理记录，不冒称独立重复试验。

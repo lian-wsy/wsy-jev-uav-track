@@ -1,0 +1,2566 @@
+{
+  "schema_version": 1,
+  "evidence_class": "LIVE_OWNED_STATIC_BODY_DIAGNOSTIC_NOT_FLIGHT",
+  "date": "2026-10-31",
+  "timezone": "Asia/Shanghai",
+  "execution_repo_head": "0a8fee8b4c5f20697f926ccb1c0fd10db50c7350",
+  "run_root": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031",
+  "preceding_attempt": {
+    "name": "town02_body01_20261031",
+    "status": "PREFLIGHT_MEMORY_REJECTED_PRESERVED",
+    "evidence": "d6_body_probe_20261031.json"
+  },
+  "current_attempt": {
+    "name": "town02_body02_20261031",
+    "status": "BODY_DIAGNOSTIC_COMPLETED",
+    "exit_code": 0,
+    "simulator_launches": 1,
+    "body_inventory_and_measurement_rpcs": 31,
+    "carla_catalog_queries": 1,
+    "base_connection_version_settings_calls": "SEPARATE_NOT_INCLUDED_IN_31_BODY_RPCS",
+    "samples": 6,
+    "images": 0,
+    "actor_creations": 0,
+    "flight_commands": 0,
+    "jev_requests": 0,
+    "source_hdf_reads": 0,
+    "training_runs": 0,
+    "new_pass_episodes": 0,
+    "owner_elapsed_s": 16.189289808273315,
+    "probe_elapsed_s": 0.6532486998476088
+  },
+  "comparison_summary": {
+    "statuses": [
+      "STATIC_POSE_CONSISTENT_NOT_CALIBRATION",
+      "STATIC_POSE_CONSISTENT_NOT_CALIBRATION",
+      "STATIC_POSE_CONSISTENT_NOT_CALIBRATION",
+      "STATIC_POSE_CONSISTENT_NOT_CALIBRATION",
+      "STATIC_POSE_CONSISTENT_NOT_CALIBRATION",
+      "STATIC_POSE_CONSISTENT_NOT_CALIBRATION"
+    ],
+    "maximum_local_position_error_m": 0.0,
+    "maximum_local_orientation_error_deg": 1.7075472925031877e-06,
+    "global_local_orientation_error_deg": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "local_minus_global_m": [
+      [
+        0.0,
+        0.0,
+        2.8046514987945557
+      ],
+      [
+        0.0,
+        0.0,
+        2.8046514987945557
+      ],
+      [
+        0.0,
+        0.0,
+        2.8046514987945557
+      ],
+      [
+        0.0,
+        0.0,
+        2.8046514987945557
+      ],
+      [
+        0.0,
+        0.0,
+        2.8046514987945557
+      ],
+      [
+        0.0,
+        0.0,
+        2.8046514987945557
+      ]
+    ],
+    "acquisition_elapsed_s": [
+      0.01752129988744855,
+      0.009535999968647957,
+      0.017716699978336692,
+      0.009561700047925115,
+      0.018356499960646033,
+      0.010467899963259697
+    ],
+    "source_state_timestamp_brackets_ns": [
+      [
+        1793449493122852352,
+        1793449493140852736
+      ],
+      [
+        1793449493248855040,
+        1793449493254855168
+      ],
+      [
+        1793449493371857664,
+        1793449493389858048
+      ],
+      [
+        1793449493494860288,
+        1793449493503860480
+      ],
+      [
+        1793449493620862976,
+        1793449493638863360
+      ],
+      [
+        1793449493743865600,
+        1793449493752865792
+      ]
+    ],
+    "collision_flags": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "collision_timestamp_ns": [
+      1793449489522775552,
+      1793449489522775552,
+      1793449489522775552,
+      1793449489522775552,
+      1793449489522775552,
+      1793449489522775552
+    ],
+    "collision_object_names": [
+      "Road_Road_Town02_135",
+      "Road_Road_Town02_135",
+      "Road_Road_Town02_135",
+      "Road_Road_Town02_135",
+      "Road_Road_Town02_135",
+      "Road_Road_Town02_135"
+    ],
+    "catalog": {
+      "status": "CATALOG_READ_NOT_COLLISION_CERTIFIED",
+      "matching_objects": [],
+      "temporal_semantics": "REGISTRATION_CATALOG_NOT_CURRENT_POSE",
+      "queried_count": 3067
+    }
+  },
+  "resources": {
+    "startup_gate_kib": 4194304,
+    "runtime_gate_kib": 786432,
+    "preflight": {
+      "free_memory_kib": 4233196,
+      "processes": [
+        {
+          "ProcessId": 37216,
+          "ParentProcessId": 25264,
+          "Name": "python.exe",
+          "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+        }
+      ],
+      "listeners": []
+    },
+    "last_runtime_snapshot": {
+      "free_memory_kib": 2428632,
+      "processes": [
+        {
+          "ProcessId": 37216,
+          "ParentProcessId": 25264,
+          "Name": "python.exe",
+          "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+        },
+        {
+          "ProcessId": 67352,
+          "ParentProcessId": 37216,
+          "Name": "CarlaUE4-Win64-Shipping.exe",
+          "ExecutablePath": "D:\\JevUavRuns\\20261031_d6_probe01\\package\\CarlaUE4\\Binaries\\Win64\\CarlaUE4-Win64-Shipping.exe"
+        }
+      ],
+      "listeners": [
+        {
+          "LocalPort": 42461,
+          "OwningProcess": 67352
+        },
+        {
+          "LocalPort": 3202,
+          "OwningProcess": 67352
+        },
+        {
+          "LocalPort": 3201,
+          "OwningProcess": 67352
+        },
+        {
+          "LocalPort": 3200,
+          "OwningProcess": 67352
+        }
+      ]
+    },
+    "last_snapshot_is_not_continuous_minimum": true,
+    "postflight": {
+      "free_memory_kib": 4429264,
+      "processes": [
+        {
+          "ProcessId": 37216,
+          "ParentProcessId": 25264,
+          "Name": "python.exe",
+          "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+        }
+      ],
+      "listeners": []
+    }
+  },
+  "request": {
+    "requested_map": "Town02",
+    "profile": "body",
+    "kind": "OWN_BODY_DIAGNOSTIC_NO_MOTION",
+    "created_at": 1793449479.5956657,
+    "not_final_test": true,
+    "ports": {
+      "carla_rpc": 3200,
+      "carla_streaming": 3201,
+      "carla_secondary": 3202,
+      "airsim_rpc": 42461
+    },
+    "configure_diagnostic_sensors": false,
+    "capture_geometry": false
+  },
+  "owner": {
+    "pid": 67352,
+    "started_at": 1793449482.406964,
+    "executable": "D:\\JevUavRuns\\20261031_d6_probe01\\package\\CarlaUE4\\Binaries\\Win64\\CarlaUE4-Win64-Shipping.exe",
+    "arguments": [
+      "CarlaUE4",
+      "/Game/Carla/Maps/Town02",
+      "-windowed",
+      "-ResX=640",
+      "-ResY=360",
+      "-quality-level=Low",
+      "-nosound",
+      "-unattended",
+      "-NoCrashDialog",
+      "-nocrashreports",
+      "-carla-rpc-port=3200",
+      "-carla-streaming-port=3201",
+      "-carla-secondary-port=3202",
+      "-TexturePoolSize=1024",
+      "-SaveToUserDir",
+      "-UserDir=D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031\\user",
+      "-abslog=D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031\\logs\\CarlaUE4.log",
+      "--settings",
+      "D:\\JevUavRuns\\20261031_d6_probe01\\settings.json"
+    ]
+  },
+  "owner_receipt_without_duplicated_api": {
+    "status": "BODY_DIAGNOSTIC_COMPLETED",
+    "started_at": 1793449482.406964,
+    "requested_map": "Town02",
+    "not_final_test": true,
+    "ports": {
+      "carla_rpc": 3200,
+      "carla_streaming": 3201,
+      "carla_secondary": 3202,
+      "airsim_rpc": 42461
+    },
+    "profile": "body",
+    "bootstrap": "takeoff",
+    "client_python": "C:\\Users\\20748\\miniconda3\\envs\\carlaAir\\python.exe",
+    "configure_diagnostic_sensors": false,
+    "capture_geometry": false,
+    "probe_sha256": "11c46878d604d368be945f43b8bf58eb4514b4578a98f26e5f81d3a84d79722d",
+    "package_init_sha256": "30415154dbb9eb344a7d503ea7ff5d51939dfa924e479f57ac16387c0a527617",
+    "api_probe_sha256": "ee1ab4b78bdfb89098415bf27b283d73f4687491d8523e7018d8342e06bb21db",
+    "runtime_module_sha256": "efe10dc13be2559413f932efb86b365967269ea9650808e18f6a22a3edbb5957",
+    "sensor_probe_sha256": "89af4773b21c415c567183385eadc12055a1d87bf36a50aff1dab475c0ad9e26",
+    "obstacle_probe_sha256": "96ce10e00534c566b6538bbe301ea7c0e7d1e461b11fcbf7ed3167979cfea550",
+    "body_probe_sha256": "347aae0a0e227eb2a245711a1654b865a5d8be7d9a82ae32193eda88779ad39a",
+    "sensor_configuration_sha256": "4214bd0795e1dc43ce48ac1c871fa1328129ec97c040faf6108e482e1157f021",
+    "observation_probe_sha256": "822a8adae05ff09877df3bf68f671e24db94dbf329d23df0acf1568ab9d08e5a",
+    "observation_gate_sha256": "c2e288d95736d43d665c16b59caf86c693162bdf9004b62e5bc67c9d6d085bff",
+    "frames_module_sha256": "28bd4bcea80870f1dfd05b743e8ab4ce1d5c07817ed3a6e08d3712c4ece9089a",
+    "belief_probe_sha256": "ad42d9f6184bc21ab941b31573d77aa44f6125c5e63bcb680044921913e3ec35",
+    "belief_modules_sha256": {
+      "live_belief.py": "85350f3e13ee328f11232aaf926ba9ff17b2baf855948fbbcf98dee841ee1f29",
+      "causal_belief.py": "cec6db2d74b4dd182bb8ccb334d30367f5687a7650869edf206ea24e4adc45c1",
+      "history.py": "72b1684a57fb869cc844e557cac7b26ca10149c5438cd9ae3b3e2612396b1778",
+      "pipeline.py": "0b2a7358d8252cdb4ad78e2c91546838549fda3d5550ff978d5844f05342cad6",
+      "rollout.py": "6a2758a3fb1f358564bc620c2353020ba5e1e7306677c9a3b2b09ef7cd654026",
+      "selector.py": "185893651a8fa294607b9acd0c8908d4379a81c3f9f5792e97c174a38ab7e907",
+      "safety.py": "dc740ddf74a97c61c8c1ca3d7b4e3174b221eee4d49f92f2673d89eeda5ffda9",
+      "jev_client.py": "38726c84fa0ee0622bc158f945008dea3b751d785c7d36604706240fbc6b85a4",
+      "models.py": "6f0d984e14b4ab49a4279aec0fea0a6aa6efe625af7500fdd8befe4015ab24b5",
+      "primitives.py": "53f3e7448c2762c2a7818ca4547f8aeba92b03846c0a7cb46dbe6c39360caeb2"
+    },
+    "binary_sha256": "e39091f72c148db0c6821d4dcbbbba55d768fe67e3320707c4007d2db784b0d7",
+    "client_exit_code": 0,
+    "cleanup_errors": {},
+    "owned_process_exit_code": 0,
+    "owned_handles_stopped": true,
+    "sensor_config_restored": true,
+    "map_config_restored": true,
+    "map_configuration": {
+      "requested_map": "Town02",
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\package\\CarlaUE4\\Config\\DefaultEngine.ini",
+      "applied": true,
+      "restored": true,
+      "before_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+      "configured_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+      "backup": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031\\map_config_before.ini",
+      "restored_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64"
+    },
+    "protected_unchanged": true,
+    "postflight": {
+      "free_memory_kib": 4429264,
+      "processes": [
+        {
+          "ProcessId": 37216,
+          "ParentProcessId": 25264,
+          "Name": "python.exe",
+          "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+        }
+      ],
+      "listeners": []
+    },
+    "cleanup_confirmed": true,
+    "ended_at": 1793449498.5962539
+  },
+  "bootstrap_metadata_note": "The generic owner receipt retains bootstrap=takeoff. The body profile exits through its dedicated read-only path before contract/bootstrap; this value is not an issued takeoff command.",
+  "map_configuration": {
+    "requested_map": "Town02",
+    "path": "D:\\JevUavRuns\\20261031_d6_probe01\\package\\CarlaUE4\\Config\\DefaultEngine.ini",
+    "applied": true,
+    "restored": true,
+    "before_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+    "configured_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+    "backup": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031\\map_config_before.ini",
+    "restored_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64"
+  },
+  "protected_files": [
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\CarSimConfig.ini",
+      "expected_sha256": "8e96e9fb4d695eb6d21f9d7b9da4fcbd583312b45e63cc20b7b222d4d8a22f90",
+      "actual_sha256": "8e96e9fb4d695eb6d21f9d7b9da4fcbd583312b45e63cc20b7b222d4d8a22f90",
+      "matches": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultEngine.ini",
+      "expected_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+      "actual_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+      "matches": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultGame.ini",
+      "expected_sha256": "94427ca09cb488081350225a7d3c5b0e22843ae17cb61cb1ebd4af39ad695df0",
+      "actual_sha256": "94427ca09cb488081350225a7d3c5b0e22843ae17cb61cb1ebd4af39ad695df0",
+      "matches": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultGameUserSettings.ini",
+      "expected_sha256": "2168f96d659f41a33b4fbb5bfc3143a1437bc6059b0d018d532f74a4c2e71691",
+      "actual_sha256": "2168f96d659f41a33b4fbb5bfc3143a1437bc6059b0d018d532f74a4c2e71691",
+      "matches": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultInput.ini",
+      "expected_sha256": "1ed4e4714a4476b2e2bb15e59afef2fea5413487aa13dfc86114205adb55dec4",
+      "actual_sha256": "1ed4e4714a4476b2e2bb15e59afef2fea5413487aa13dfc86114205adb55dec4",
+      "matches": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultScalability.ini",
+      "expected_sha256": "06fef2edfee12b05f55b914ca8fa8e490e1b708ab8869f20136874ba2897f606",
+      "actual_sha256": "06fef2edfee12b05f55b914ca8fa8e490e1b708ab8869f20136874ba2897f606",
+      "matches": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\OptionalModules.ini",
+      "expected_sha256": "91745741cf40de17e1ec47a8a922db851fcdf4403df86b237f3ef03682719f45",
+      "actual_sha256": "91745741cf40de17e1ec47a8a922db851fcdf4403df86b237f3ef03682719f45",
+      "matches": true
+    },
+    {
+      "path": "C:\\Users\\20748\\Documents\\AirSim\\settings.json",
+      "expected_sha256": "de89442d0093ffb47f7d05a3859206698145f15b2ff99b675e8149a858c8f048",
+      "actual_sha256": "de89442d0093ffb47f7d05a3859206698145f15b2ff99b675e8149a858c8f048",
+      "matches": true
+    }
+  ],
+  "postcheck": {
+    "time": "2026-10-31T20:27:03.8943326+08:00",
+    "free_memory_kib": 4561644,
+    "processes": [],
+    "listeners": []
+  },
+  "code_sha256": [
+    {
+      "receipt_field": "package_init_sha256",
+      "path": "src/jev_uav_track/__init__.py",
+      "sha256": "30415154dbb9eb344a7d503ea7ff5d51939dfa924e479f57ac16387c0a527617"
+    },
+    {
+      "receipt_field": "probe_sha256",
+      "path": "scripts/probe_isolated_carla.py",
+      "sha256": "11c46878d604d368be945f43b8bf58eb4514b4578a98f26e5f81d3a84d79722d"
+    },
+    {
+      "receipt_field": "api_probe_sha256",
+      "path": "scripts/probe_carla_apis.py",
+      "sha256": "ee1ab4b78bdfb89098415bf27b283d73f4687491d8523e7018d8342e06bb21db"
+    },
+    {
+      "receipt_field": "runtime_module_sha256",
+      "path": "src/jev_uav_track/isolated_runtime.py",
+      "sha256": "efe10dc13be2559413f932efb86b365967269ea9650808e18f6a22a3edbb5957"
+    },
+    {
+      "receipt_field": "sensor_probe_sha256",
+      "path": "src/jev_uav_track/sensor_probe.py",
+      "sha256": "89af4773b21c415c567183385eadc12055a1d87bf36a50aff1dab475c0ad9e26"
+    },
+    {
+      "receipt_field": "obstacle_probe_sha256",
+      "path": "src/jev_uav_track/obstacle_probe.py",
+      "sha256": "96ce10e00534c566b6538bbe301ea7c0e7d1e461b11fcbf7ed3167979cfea550"
+    },
+    {
+      "receipt_field": "body_probe_sha256",
+      "path": "src/jev_uav_track/body_probe.py",
+      "sha256": "347aae0a0e227eb2a245711a1654b865a5d8be7d9a82ae32193eda88779ad39a"
+    },
+    {
+      "receipt_field": "sensor_configuration_sha256",
+      "path": "src/jev_uav_track/sensor_configuration.py",
+      "sha256": "4214bd0795e1dc43ce48ac1c871fa1328129ec97c040faf6108e482e1157f021"
+    },
+    {
+      "receipt_field": "observation_probe_sha256",
+      "path": "scripts/probe_observation_contract.py",
+      "sha256": "822a8adae05ff09877df3bf68f671e24db94dbf329d23df0acf1568ab9d08e5a"
+    },
+    {
+      "receipt_field": "observation_gate_sha256",
+      "path": "src/jev_uav_track/live_observation.py",
+      "sha256": "c2e288d95736d43d665c16b59caf86c693162bdf9004b62e5bc67c9d6d085bff"
+    },
+    {
+      "receipt_field": "frames_module_sha256",
+      "path": "src/jev_uav_track/frames.py",
+      "sha256": "28bd4bcea80870f1dfd05b743e8ab4ce1d5c07817ed3a6e08d3712c4ece9089a"
+    },
+    {
+      "receipt_field": "belief_probe_sha256",
+      "path": "scripts/probe_belief_contract.py",
+      "sha256": "ad42d9f6184bc21ab941b31573d77aa44f6125c5e63bcb680044921913e3ec35"
+    },
+    {
+      "receipt_field": "belief_modules_sha256.live_belief.py",
+      "path": "src/jev_uav_track/live_belief.py",
+      "sha256": "85350f3e13ee328f11232aaf926ba9ff17b2baf855948fbbcf98dee841ee1f29"
+    },
+    {
+      "receipt_field": "belief_modules_sha256.causal_belief.py",
+      "path": "src/jev_uav_track/causal_belief.py",
+      "sha256": "cec6db2d74b4dd182bb8ccb334d30367f5687a7650869edf206ea24e4adc45c1"
+    },
+    {
+      "receipt_field": "belief_modules_sha256.history.py",
+      "path": "src/jev_uav_track/history.py",
+      "sha256": "72b1684a57fb869cc844e557cac7b26ca10149c5438cd9ae3b3e2612396b1778"
+    },
+    {
+      "receipt_field": "belief_modules_sha256.pipeline.py",
+      "path": "src/jev_uav_track/pipeline.py",
+      "sha256": "0b2a7358d8252cdb4ad78e2c91546838549fda3d5550ff978d5844f05342cad6"
+    },
+    {
+      "receipt_field": "belief_modules_sha256.rollout.py",
+      "path": "src/jev_uav_track/rollout.py",
+      "sha256": "6a2758a3fb1f358564bc620c2353020ba5e1e7306677c9a3b2b09ef7cd654026"
+    },
+    {
+      "receipt_field": "belief_modules_sha256.selector.py",
+      "path": "src/jev_uav_track/selector.py",
+      "sha256": "185893651a8fa294607b9acd0c8908d4379a81c3f9f5792e97c174a38ab7e907"
+    },
+    {
+      "receipt_field": "belief_modules_sha256.safety.py",
+      "path": "src/jev_uav_track/safety.py",
+      "sha256": "dc740ddf74a97c61c8c1ca3d7b4e3174b221eee4d49f92f2673d89eeda5ffda9"
+    },
+    {
+      "receipt_field": "belief_modules_sha256.jev_client.py",
+      "path": "src/jev_uav_track/jev_client.py",
+      "sha256": "38726c84fa0ee0622bc158f945008dea3b751d785c7d36604706240fbc6b85a4"
+    },
+    {
+      "receipt_field": "belief_modules_sha256.models.py",
+      "path": "src/jev_uav_track/models.py",
+      "sha256": "6f0d984e14b4ab49a4279aec0fea0a6aa6efe625af7500fdd8befe4015ab24b5"
+    },
+    {
+      "receipt_field": "belief_modules_sha256.primitives.py",
+      "path": "src/jev_uav_track/primitives.py",
+      "sha256": "53f3e7448c2762c2a7818ca4547f8aeba92b03846c0a7cb46dbe6c39360caeb2"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031\\api_probe.json",
+      "bytes": 61901,
+      "sha256": "1ba51348512cb4871aa809ad9d336bea415efeeff0d0d3b68763ae4f08d9dd2c"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031\\client_stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031\\client_stdout.txt",
+      "bytes": 983,
+      "sha256": "7c1bff8b2050dd5c353f5202c136391cae9292482be8e848af7984f980684056"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031\\last_runtime_snapshot.json",
+      "bytes": 786,
+      "sha256": "57d139c3c0c4b8da9cfef5936935d861d523af390788c9bc1feaa1fc0d890680"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031\\map_config_before.ini",
+      "bytes": 15138,
+      "sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031\\map_config.json",
+      "bytes": 536,
+      "sha256": "cdbec3d734458a8837bd2a73f24aa16844d39216f6f1f7ce73639914c8e04445"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031\\owner.json",
+      "bytes": 835,
+      "sha256": "251e0e2b3fac12a0766f36115cc6b9bb6ff5fac6ffc687d45b39409b5a77a7fd"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031\\preflight.json",
+      "bytes": 249,
+      "sha256": "c0517c815af47500ba13f5be83163f02eab347c7b426fd90aa9ea253928de7c4"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031\\run_request.json",
+      "bytes": 364,
+      "sha256": "71ab2c12625c2cb5a6e94fc49c2fdb5affac393a0fb1ed7109445412c22ddb4a"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body02_20261031\\smoke_result.json",
+      "bytes": 69578,
+      "sha256": "594454f63fdeca3c597c3f31ddbcf1cc0c594cfcd626459dc9244476549c25ee"
+    }
+  ],
+  "api_receipt": {
+    "kind": "LIVE_OWNED_BODY_DIAGNOSTIC",
+    "carla_server": "7a7fdb3-dirty",
+    "python_version": "3.10.21 | packaged by conda-forge | (main, Aug 21 2026, 22:38:44) [MSC v.1944 64 bit (AMD64)]",
+    "rpc_success_checked": true,
+    "carla_client": "7a7fdb3-dirty",
+    "map": "Carla/Maps/Town02",
+    "requested_map": "Town02",
+    "map_match": true,
+    "airsim_server": 1,
+    "vehicles": [
+      "JevDrone"
+    ],
+    "settings_match": true,
+    "samples": [],
+    "ports": {
+      "carla_rpc": 3200,
+      "carla_streaming": 3201,
+      "carla_secondary": 3202,
+      "airsim_rpc": 42461
+    },
+    "note": "Read-only catalog and raw own-body poses/contact; no arm/motion/reset/images/scene writes. Static pose agreement and registration geometry do not certify a collision envelope.",
+    "body_probe": {
+      "kind": "OWN_BODY_DIAGNOSTIC_NO_MOTION",
+      "schema_version": 1,
+      "status": "DIAGNOSTIC_COMPLETED",
+      "control_ready": false,
+      "clearance_m": null,
+      "body_envelope_status": "NOT_CERTIFIED",
+      "samples": [
+        {
+          "index": 0,
+          "state_before": {
+            "rpc": "getMultirotorState",
+            "wall_start_s": 1469933.9998898,
+            "wall_end_s": 1469934.0007308,
+            "transport_status": "RETURNED",
+            "payload": {
+              "timestamp": 1793449493122852352
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "kinematics_estimated": {
+                "position": {
+                  "x_val": 0.03139648213982582,
+                  "y_val": -0.0031835937406867743,
+                  "z_val": 6.69262170791626
+                },
+                "orientation": {
+                  "w_val": 0.9987183809280396,
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": -0.05060986056923866
+                },
+                "linear_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                },
+                "angular_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                }
+              },
+              "landed_state": 0
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "object_pose": {
+            "rpc": "simGetObjectPose",
+            "wall_start_s": 1469934.0008076,
+            "wall_end_s": 1469934.0160269,
+            "transport_status": "RETURNED",
+            "payload": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 3.887970209121704
+              },
+              "orientation": {
+                "w_val": 0.9987185001373291,
+                "x_val": 0.0,
+                "y_val": -0.0,
+                "z_val": -0.05060988664627075
+              }
+            }
+          },
+          "vehicle_pose": {
+            "rpc": "simGetVehiclePose",
+            "wall_start_s": 1469934.0160679,
+            "wall_end_s": 1469934.0164521,
+            "transport_status": "RETURNED",
+            "payload": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987185001373291,
+                "x_val": 0.0,
+                "y_val": -0.0,
+                "z_val": -0.05060988664627075
+              }
+            }
+          },
+          "collision": {
+            "rpc": "simGetCollisionInfo",
+            "wall_start_s": 1469934.0164625,
+            "wall_end_s": 1469934.0168635,
+            "transport_status": "RETURNED",
+            "payload": {
+              "has_collided": true,
+              "time_stamp": 1793449489522775552,
+              "penetration_depth": 0.0
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "normal": {
+                "x_val": 1.863462451012765e-08,
+                "y_val": -2.61206878349185e-09,
+                "z_val": -1.0
+              },
+              "impact_point": {
+                "x_val": 0.38847655057907104,
+                "y_val": 0.2103320211172104,
+                "z_val": 6.894651889801025
+              },
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "object_name": "Road_Road_Town02_135",
+              "object_id": 1
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "state_after": {
+            "rpc": "getMultirotorState",
+            "wall_start_s": 1469934.0170333,
+            "wall_end_s": 1469934.0174111,
+            "transport_status": "RETURNED",
+            "payload": {
+              "timestamp": 1793449493140852736
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "kinematics_estimated": {
+                "position": {
+                  "x_val": 0.03139648213982582,
+                  "y_val": -0.0031835937406867743,
+                  "z_val": 6.69262170791626
+                },
+                "orientation": {
+                  "w_val": 0.9987183809280396,
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": -0.05060986056923866
+                },
+                "linear_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                },
+                "angular_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                }
+              },
+              "landed_state": 0
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "comparison": {
+            "maximum_local_position_error_m": 0.0,
+            "maximum_local_orientation_error_deg": 1.7075472925031877e-06,
+            "global_local_orientation_error_deg": 0.0,
+            "local_minus_global_m": [
+              0.0,
+              0.0,
+              2.8046514987945557
+            ],
+            "acquisition_elapsed_s": 0.01752129988744855,
+            "status": "STATIC_POSE_CONSISTENT_NOT_CALIBRATION"
+          }
+        },
+        {
+          "index": 1,
+          "state_before": {
+            "rpc": "getMultirotorState",
+            "wall_start_s": 1469934.1251756,
+            "wall_end_s": 1469934.1261086,
+            "transport_status": "RETURNED",
+            "payload": {
+              "timestamp": 1793449493248855040
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "kinematics_estimated": {
+                "position": {
+                  "x_val": 0.03139648213982582,
+                  "y_val": -0.0031835937406867743,
+                  "z_val": 6.69262170791626
+                },
+                "orientation": {
+                  "w_val": 0.9987183809280396,
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": -0.05060986056923866
+                },
+                "linear_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                },
+                "angular_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                }
+              },
+              "landed_state": 0
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "object_pose": {
+            "rpc": "simGetObjectPose",
+            "wall_start_s": 1469934.1261882,
+            "wall_end_s": 1469934.1326394,
+            "transport_status": "RETURNED",
+            "payload": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 3.887970209121704
+              },
+              "orientation": {
+                "w_val": 0.9987185001373291,
+                "x_val": 0.0,
+                "y_val": -0.0,
+                "z_val": -0.05060988664627075
+              }
+            }
+          },
+          "vehicle_pose": {
+            "rpc": "simGetVehiclePose",
+            "wall_start_s": 1469934.1326678,
+            "wall_end_s": 1469934.133468,
+            "transport_status": "RETURNED",
+            "payload": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987185001373291,
+                "x_val": 0.0,
+                "y_val": -0.0,
+                "z_val": -0.05060988664627075
+              }
+            }
+          },
+          "collision": {
+            "rpc": "simGetCollisionInfo",
+            "wall_start_s": 1469934.1335103,
+            "wall_end_s": 1469934.1338872,
+            "transport_status": "RETURNED",
+            "payload": {
+              "has_collided": false,
+              "time_stamp": 1793449489522775552,
+              "penetration_depth": 0.0
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "normal": {
+                "x_val": 1.863462451012765e-08,
+                "y_val": -2.61206878349185e-09,
+                "z_val": -1.0
+              },
+              "impact_point": {
+                "x_val": 0.38847655057907104,
+                "y_val": 0.2103320211172104,
+                "z_val": 6.894651889801025
+              },
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "object_name": "Road_Road_Town02_135",
+              "object_id": 1
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "state_after": {
+            "rpc": "getMultirotorState",
+            "wall_start_s": 1469934.1339684,
+            "wall_end_s": 1469934.1347116,
+            "transport_status": "RETURNED",
+            "payload": {
+              "timestamp": 1793449493254855168
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "kinematics_estimated": {
+                "position": {
+                  "x_val": 0.03139648213982582,
+                  "y_val": -0.0031835937406867743,
+                  "z_val": 6.69262170791626
+                },
+                "orientation": {
+                  "w_val": 0.9987183809280396,
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": -0.05060986056923866
+                },
+                "linear_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                },
+                "angular_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                }
+              },
+              "landed_state": 0
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "comparison": {
+            "maximum_local_position_error_m": 0.0,
+            "maximum_local_orientation_error_deg": 1.7075472925031877e-06,
+            "global_local_orientation_error_deg": 0.0,
+            "local_minus_global_m": [
+              0.0,
+              0.0,
+              2.8046514987945557
+            ],
+            "acquisition_elapsed_s": 0.009535999968647957,
+            "status": "STATIC_POSE_CONSISTENT_NOT_CALIBRATION"
+          }
+        },
+        {
+          "index": 2,
+          "state_before": {
+            "rpc": "getMultirotorState",
+            "wall_start_s": 1469934.249878,
+            "wall_end_s": 1469934.2506045,
+            "transport_status": "RETURNED",
+            "payload": {
+              "timestamp": 1793449493371857664
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "kinematics_estimated": {
+                "position": {
+                  "x_val": 0.03139648213982582,
+                  "y_val": -0.0031835937406867743,
+                  "z_val": 6.69262170791626
+                },
+                "orientation": {
+                  "w_val": 0.9987183809280396,
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": -0.05060986056923866
+                },
+                "linear_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                },
+                "angular_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                }
+              },
+              "landed_state": 0
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "object_pose": {
+            "rpc": "simGetObjectPose",
+            "wall_start_s": 1469934.2506737,
+            "wall_end_s": 1469934.2661096,
+            "transport_status": "RETURNED",
+            "payload": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 3.887970209121704
+              },
+              "orientation": {
+                "w_val": 0.9987185001373291,
+                "x_val": 0.0,
+                "y_val": -0.0,
+                "z_val": -0.05060988664627075
+              }
+            }
+          },
+          "vehicle_pose": {
+            "rpc": "simGetVehiclePose",
+            "wall_start_s": 1469934.2661548,
+            "wall_end_s": 1469934.2666393,
+            "transport_status": "RETURNED",
+            "payload": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987185001373291,
+                "x_val": 0.0,
+                "y_val": -0.0,
+                "z_val": -0.05060988664627075
+              }
+            }
+          },
+          "collision": {
+            "rpc": "simGetCollisionInfo",
+            "wall_start_s": 1469934.2666614,
+            "wall_end_s": 1469934.2670186,
+            "transport_status": "RETURNED",
+            "payload": {
+              "has_collided": false,
+              "time_stamp": 1793449489522775552,
+              "penetration_depth": 0.0
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "normal": {
+                "x_val": 1.863462451012765e-08,
+                "y_val": -2.61206878349185e-09,
+                "z_val": -1.0
+              },
+              "impact_point": {
+                "x_val": 0.38847655057907104,
+                "y_val": 0.2103320211172104,
+                "z_val": 6.894651889801025
+              },
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "object_name": "Road_Road_Town02_135",
+              "object_id": 1
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "state_after": {
+            "rpc": "getMultirotorState",
+            "wall_start_s": 1469934.2670938,
+            "wall_end_s": 1469934.2675947,
+            "transport_status": "RETURNED",
+            "payload": {
+              "timestamp": 1793449493389858048
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "kinematics_estimated": {
+                "position": {
+                  "x_val": 0.03139648213982582,
+                  "y_val": -0.0031835937406867743,
+                  "z_val": 6.69262170791626
+                },
+                "orientation": {
+                  "w_val": 0.9987183809280396,
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": -0.05060986056923866
+                },
+                "linear_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                },
+                "angular_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                }
+              },
+              "landed_state": 0
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "comparison": {
+            "maximum_local_position_error_m": 0.0,
+            "maximum_local_orientation_error_deg": 1.7075472925031877e-06,
+            "global_local_orientation_error_deg": 0.0,
+            "local_minus_global_m": [
+              0.0,
+              0.0,
+              2.8046514987945557
+            ],
+            "acquisition_elapsed_s": 0.017716699978336692,
+            "status": "STATIC_POSE_CONSISTENT_NOT_CALIBRATION"
+          }
+        },
+        {
+          "index": 3,
+          "state_before": {
+            "rpc": "getMultirotorState",
+            "wall_start_s": 1469934.3740029,
+            "wall_end_s": 1469934.375148,
+            "transport_status": "RETURNED",
+            "payload": {
+              "timestamp": 1793449493494860288
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "kinematics_estimated": {
+                "position": {
+                  "x_val": 0.03139648213982582,
+                  "y_val": -0.0031835937406867743,
+                  "z_val": 6.69262170791626
+                },
+                "orientation": {
+                  "w_val": 0.9987183809280396,
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": -0.05060986056923866
+                },
+                "linear_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                },
+                "angular_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                }
+              },
+              "landed_state": 0
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "object_pose": {
+            "rpc": "simGetObjectPose",
+            "wall_start_s": 1469934.3752108,
+            "wall_end_s": 1469934.3823711,
+            "transport_status": "RETURNED",
+            "payload": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 3.887970209121704
+              },
+              "orientation": {
+                "w_val": 0.9987185001373291,
+                "x_val": 0.0,
+                "y_val": -0.0,
+                "z_val": -0.05060988664627075
+              }
+            }
+          },
+          "vehicle_pose": {
+            "rpc": "simGetVehiclePose",
+            "wall_start_s": 1469934.3823998,
+            "wall_end_s": 1469934.3827241,
+            "transport_status": "RETURNED",
+            "payload": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987185001373291,
+                "x_val": 0.0,
+                "y_val": -0.0,
+                "z_val": -0.05060988664627075
+              }
+            }
+          },
+          "collision": {
+            "rpc": "simGetCollisionInfo",
+            "wall_start_s": 1469934.3827431,
+            "wall_end_s": 1469934.3831483,
+            "transport_status": "RETURNED",
+            "payload": {
+              "has_collided": false,
+              "time_stamp": 1793449489522775552,
+              "penetration_depth": 0.0
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "normal": {
+                "x_val": 1.863462451012765e-08,
+                "y_val": -2.61206878349185e-09,
+                "z_val": -1.0
+              },
+              "impact_point": {
+                "x_val": 0.38847655057907104,
+                "y_val": 0.2103320211172104,
+                "z_val": 6.894651889801025
+              },
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "object_name": "Road_Road_Town02_135",
+              "object_id": 1
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "state_after": {
+            "rpc": "getMultirotorState",
+            "wall_start_s": 1469934.3832054,
+            "wall_end_s": 1469934.3835646,
+            "transport_status": "RETURNED",
+            "payload": {
+              "timestamp": 1793449493503860480
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "kinematics_estimated": {
+                "position": {
+                  "x_val": 0.03139648213982582,
+                  "y_val": -0.0031835937406867743,
+                  "z_val": 6.69262170791626
+                },
+                "orientation": {
+                  "w_val": 0.9987183809280396,
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": -0.05060986056923866
+                },
+                "linear_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                },
+                "angular_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                }
+              },
+              "landed_state": 0
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "comparison": {
+            "maximum_local_position_error_m": 0.0,
+            "maximum_local_orientation_error_deg": 1.7075472925031877e-06,
+            "global_local_orientation_error_deg": 0.0,
+            "local_minus_global_m": [
+              0.0,
+              0.0,
+              2.8046514987945557
+            ],
+            "acquisition_elapsed_s": 0.009561700047925115,
+            "status": "STATIC_POSE_CONSISTENT_NOT_CALIBRATION"
+          }
+        },
+        {
+          "index": 4,
+          "state_before": {
+            "rpc": "getMultirotorState",
+            "wall_start_s": 1469934.4985865,
+            "wall_end_s": 1469934.4994687,
+            "transport_status": "RETURNED",
+            "payload": {
+              "timestamp": 1793449493620862976
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "kinematics_estimated": {
+                "position": {
+                  "x_val": 0.03139648213982582,
+                  "y_val": -0.0031835937406867743,
+                  "z_val": 6.69262170791626
+                },
+                "orientation": {
+                  "w_val": 0.9987183809280396,
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": -0.05060986056923866
+                },
+                "linear_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                },
+                "angular_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                }
+              },
+              "landed_state": 0
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "object_pose": {
+            "rpc": "simGetObjectPose",
+            "wall_start_s": 1469934.4995345,
+            "wall_end_s": 1469934.5156641,
+            "transport_status": "RETURNED",
+            "payload": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 3.887970209121704
+              },
+              "orientation": {
+                "w_val": 0.9987185001373291,
+                "x_val": 0.0,
+                "y_val": -0.0,
+                "z_val": -0.05060988664627075
+              }
+            }
+          },
+          "vehicle_pose": {
+            "rpc": "simGetVehiclePose",
+            "wall_start_s": 1469934.5156836,
+            "wall_end_s": 1469934.5162355,
+            "transport_status": "RETURNED",
+            "payload": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987185001373291,
+                "x_val": 0.0,
+                "y_val": -0.0,
+                "z_val": -0.05060988664627075
+              }
+            }
+          },
+          "collision": {
+            "rpc": "simGetCollisionInfo",
+            "wall_start_s": 1469934.5162652,
+            "wall_end_s": 1469934.516534,
+            "transport_status": "RETURNED",
+            "payload": {
+              "has_collided": false,
+              "time_stamp": 1793449489522775552,
+              "penetration_depth": 0.0
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "normal": {
+                "x_val": 1.863462451012765e-08,
+                "y_val": -2.61206878349185e-09,
+                "z_val": -1.0
+              },
+              "impact_point": {
+                "x_val": 0.38847655057907104,
+                "y_val": 0.2103320211172104,
+                "z_val": 6.894651889801025
+              },
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "object_name": "Road_Road_Town02_135",
+              "object_id": 1
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "state_after": {
+            "rpc": "getMultirotorState",
+            "wall_start_s": 1469934.5165844,
+            "wall_end_s": 1469934.516943,
+            "transport_status": "RETURNED",
+            "payload": {
+              "timestamp": 1793449493638863360
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "kinematics_estimated": {
+                "position": {
+                  "x_val": 0.03139648213982582,
+                  "y_val": -0.0031835937406867743,
+                  "z_val": 6.69262170791626
+                },
+                "orientation": {
+                  "w_val": 0.9987183809280396,
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": -0.05060986056923866
+                },
+                "linear_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                },
+                "angular_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                }
+              },
+              "landed_state": 0
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "comparison": {
+            "maximum_local_position_error_m": 0.0,
+            "maximum_local_orientation_error_deg": 1.7075472925031877e-06,
+            "global_local_orientation_error_deg": 0.0,
+            "local_minus_global_m": [
+              0.0,
+              0.0,
+              2.8046514987945557
+            ],
+            "acquisition_elapsed_s": 0.018356499960646033,
+            "status": "STATIC_POSE_CONSISTENT_NOT_CALIBRATION"
+          }
+        },
+        {
+          "index": 5,
+          "state_before": {
+            "rpc": "getMultirotorState",
+            "wall_start_s": 1469934.6228681,
+            "wall_end_s": 1469934.623764,
+            "transport_status": "RETURNED",
+            "payload": {
+              "timestamp": 1793449493743865600
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "kinematics_estimated": {
+                "position": {
+                  "x_val": 0.03139648213982582,
+                  "y_val": -0.0031835937406867743,
+                  "z_val": 6.69262170791626
+                },
+                "orientation": {
+                  "w_val": 0.9987183809280396,
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": -0.05060986056923866
+                },
+                "linear_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                },
+                "angular_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                }
+              },
+              "landed_state": 0
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "object_pose": {
+            "rpc": "simGetObjectPose",
+            "wall_start_s": 1469934.6238261,
+            "wall_end_s": 1469934.6323689,
+            "transport_status": "RETURNED",
+            "payload": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 3.887970209121704
+              },
+              "orientation": {
+                "w_val": 0.9987185001373291,
+                "x_val": 0.0,
+                "y_val": -0.0,
+                "z_val": -0.05060988664627075
+              }
+            }
+          },
+          "vehicle_pose": {
+            "rpc": "simGetVehiclePose",
+            "wall_start_s": 1469934.6323974,
+            "wall_end_s": 1469934.6327061,
+            "transport_status": "RETURNED",
+            "payload": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987185001373291,
+                "x_val": 0.0,
+                "y_val": -0.0,
+                "z_val": -0.05060988664627075
+              }
+            }
+          },
+          "collision": {
+            "rpc": "simGetCollisionInfo",
+            "wall_start_s": 1469934.6327153,
+            "wall_end_s": 1469934.6329296,
+            "transport_status": "RETURNED",
+            "payload": {
+              "has_collided": false,
+              "time_stamp": 1793449489522775552,
+              "penetration_depth": 0.0
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "normal": {
+                "x_val": 1.863462451012765e-08,
+                "y_val": -2.61206878349185e-09,
+                "z_val": -1.0
+              },
+              "impact_point": {
+                "x_val": 0.38847655057907104,
+                "y_val": 0.2103320211172104,
+                "z_val": 6.894651889801025
+              },
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "object_name": "Road_Road_Town02_135",
+              "object_id": 1
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "state_after": {
+            "rpc": "getMultirotorState",
+            "wall_start_s": 1469934.632977,
+            "wall_end_s": 1469934.633336,
+            "transport_status": "RETURNED",
+            "payload": {
+              "timestamp": 1793449493752865792
+            },
+            "payload_status": "VALID_FIELDS",
+            "missing_fields": [],
+            "geometry": {
+              "kinematics_estimated": {
+                "position": {
+                  "x_val": 0.03139648213982582,
+                  "y_val": -0.0031835937406867743,
+                  "z_val": 6.69262170791626
+                },
+                "orientation": {
+                  "w_val": 0.9987183809280396,
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": -0.05060986056923866
+                },
+                "linear_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                },
+                "angular_velocity": {
+                  "x_val": 0.0,
+                  "y_val": 0.0,
+                  "z_val": 0.0
+                }
+              },
+              "landed_state": 0
+            },
+            "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+            "geometry_missing_fields": []
+          },
+          "comparison": {
+            "maximum_local_position_error_m": 0.0,
+            "maximum_local_orientation_error_deg": 1.7075472925031877e-06,
+            "global_local_orientation_error_deg": 0.0,
+            "local_minus_global_m": [
+              0.0,
+              0.0,
+              2.8046514987945557
+            ],
+            "acquisition_elapsed_s": 0.010467899963259697,
+            "status": "STATIC_POSE_CONSISTENT_NOT_CALIBRATION"
+          }
+        }
+      ],
+      "queries": [
+        {
+          "rpc": "simListSceneObjects",
+          "wall_start_s": 1469933.9891476,
+          "wall_end_s": 1469933.9998848,
+          "transport_status": "RETURNED",
+          "payload": [
+            "JevDrone"
+          ]
+        },
+        {
+          "rpc": "getMultirotorState",
+          "wall_start_s": 1469933.9998898,
+          "wall_end_s": 1469934.0007308,
+          "transport_status": "RETURNED",
+          "payload": {
+            "timestamp": 1793449493122852352
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "kinematics_estimated": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987183809280396,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.05060986056923866
+              },
+              "linear_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              },
+              "angular_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            },
+            "landed_state": 0
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "simGetObjectPose",
+          "wall_start_s": 1469934.0008076,
+          "wall_end_s": 1469934.0160269,
+          "transport_status": "RETURNED",
+          "payload": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 3.887970209121704
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": -0.0,
+              "z_val": -0.05060988664627075
+            }
+          }
+        },
+        {
+          "rpc": "simGetVehiclePose",
+          "wall_start_s": 1469934.0160679,
+          "wall_end_s": 1469934.0164521,
+          "transport_status": "RETURNED",
+          "payload": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 6.69262170791626
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": -0.0,
+              "z_val": -0.05060988664627075
+            }
+          }
+        },
+        {
+          "rpc": "simGetCollisionInfo",
+          "wall_start_s": 1469934.0164625,
+          "wall_end_s": 1469934.0168635,
+          "transport_status": "RETURNED",
+          "payload": {
+            "has_collided": true,
+            "time_stamp": 1793449489522775552,
+            "penetration_depth": 0.0
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "normal": {
+              "x_val": 1.863462451012765e-08,
+              "y_val": -2.61206878349185e-09,
+              "z_val": -1.0
+            },
+            "impact_point": {
+              "x_val": 0.38847655057907104,
+              "y_val": 0.2103320211172104,
+              "z_val": 6.894651889801025
+            },
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 6.69262170791626
+            },
+            "object_name": "Road_Road_Town02_135",
+            "object_id": 1
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "getMultirotorState",
+          "wall_start_s": 1469934.0170333,
+          "wall_end_s": 1469934.0174111,
+          "transport_status": "RETURNED",
+          "payload": {
+            "timestamp": 1793449493140852736
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "kinematics_estimated": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987183809280396,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.05060986056923866
+              },
+              "linear_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              },
+              "angular_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            },
+            "landed_state": 0
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "getMultirotorState",
+          "wall_start_s": 1469934.1251756,
+          "wall_end_s": 1469934.1261086,
+          "transport_status": "RETURNED",
+          "payload": {
+            "timestamp": 1793449493248855040
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "kinematics_estimated": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987183809280396,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.05060986056923866
+              },
+              "linear_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              },
+              "angular_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            },
+            "landed_state": 0
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "simGetObjectPose",
+          "wall_start_s": 1469934.1261882,
+          "wall_end_s": 1469934.1326394,
+          "transport_status": "RETURNED",
+          "payload": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 3.887970209121704
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": -0.0,
+              "z_val": -0.05060988664627075
+            }
+          }
+        },
+        {
+          "rpc": "simGetVehiclePose",
+          "wall_start_s": 1469934.1326678,
+          "wall_end_s": 1469934.133468,
+          "transport_status": "RETURNED",
+          "payload": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 6.69262170791626
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": -0.0,
+              "z_val": -0.05060988664627075
+            }
+          }
+        },
+        {
+          "rpc": "simGetCollisionInfo",
+          "wall_start_s": 1469934.1335103,
+          "wall_end_s": 1469934.1338872,
+          "transport_status": "RETURNED",
+          "payload": {
+            "has_collided": false,
+            "time_stamp": 1793449489522775552,
+            "penetration_depth": 0.0
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "normal": {
+              "x_val": 1.863462451012765e-08,
+              "y_val": -2.61206878349185e-09,
+              "z_val": -1.0
+            },
+            "impact_point": {
+              "x_val": 0.38847655057907104,
+              "y_val": 0.2103320211172104,
+              "z_val": 6.894651889801025
+            },
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 6.69262170791626
+            },
+            "object_name": "Road_Road_Town02_135",
+            "object_id": 1
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "getMultirotorState",
+          "wall_start_s": 1469934.1339684,
+          "wall_end_s": 1469934.1347116,
+          "transport_status": "RETURNED",
+          "payload": {
+            "timestamp": 1793449493254855168
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "kinematics_estimated": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987183809280396,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.05060986056923866
+              },
+              "linear_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              },
+              "angular_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            },
+            "landed_state": 0
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "getMultirotorState",
+          "wall_start_s": 1469934.249878,
+          "wall_end_s": 1469934.2506045,
+          "transport_status": "RETURNED",
+          "payload": {
+            "timestamp": 1793449493371857664
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "kinematics_estimated": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987183809280396,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.05060986056923866
+              },
+              "linear_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              },
+              "angular_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            },
+            "landed_state": 0
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "simGetObjectPose",
+          "wall_start_s": 1469934.2506737,
+          "wall_end_s": 1469934.2661096,
+          "transport_status": "RETURNED",
+          "payload": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 3.887970209121704
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": -0.0,
+              "z_val": -0.05060988664627075
+            }
+          }
+        },
+        {
+          "rpc": "simGetVehiclePose",
+          "wall_start_s": 1469934.2661548,
+          "wall_end_s": 1469934.2666393,
+          "transport_status": "RETURNED",
+          "payload": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 6.69262170791626
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": -0.0,
+              "z_val": -0.05060988664627075
+            }
+          }
+        },
+        {
+          "rpc": "simGetCollisionInfo",
+          "wall_start_s": 1469934.2666614,
+          "wall_end_s": 1469934.2670186,
+          "transport_status": "RETURNED",
+          "payload": {
+            "has_collided": false,
+            "time_stamp": 1793449489522775552,
+            "penetration_depth": 0.0
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "normal": {
+              "x_val": 1.863462451012765e-08,
+              "y_val": -2.61206878349185e-09,
+              "z_val": -1.0
+            },
+            "impact_point": {
+              "x_val": 0.38847655057907104,
+              "y_val": 0.2103320211172104,
+              "z_val": 6.894651889801025
+            },
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 6.69262170791626
+            },
+            "object_name": "Road_Road_Town02_135",
+            "object_id": 1
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "getMultirotorState",
+          "wall_start_s": 1469934.2670938,
+          "wall_end_s": 1469934.2675947,
+          "transport_status": "RETURNED",
+          "payload": {
+            "timestamp": 1793449493389858048
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "kinematics_estimated": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987183809280396,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.05060986056923866
+              },
+              "linear_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              },
+              "angular_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            },
+            "landed_state": 0
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "getMultirotorState",
+          "wall_start_s": 1469934.3740029,
+          "wall_end_s": 1469934.375148,
+          "transport_status": "RETURNED",
+          "payload": {
+            "timestamp": 1793449493494860288
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "kinematics_estimated": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987183809280396,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.05060986056923866
+              },
+              "linear_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              },
+              "angular_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            },
+            "landed_state": 0
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "simGetObjectPose",
+          "wall_start_s": 1469934.3752108,
+          "wall_end_s": 1469934.3823711,
+          "transport_status": "RETURNED",
+          "payload": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 3.887970209121704
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": -0.0,
+              "z_val": -0.05060988664627075
+            }
+          }
+        },
+        {
+          "rpc": "simGetVehiclePose",
+          "wall_start_s": 1469934.3823998,
+          "wall_end_s": 1469934.3827241,
+          "transport_status": "RETURNED",
+          "payload": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 6.69262170791626
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": -0.0,
+              "z_val": -0.05060988664627075
+            }
+          }
+        },
+        {
+          "rpc": "simGetCollisionInfo",
+          "wall_start_s": 1469934.3827431,
+          "wall_end_s": 1469934.3831483,
+          "transport_status": "RETURNED",
+          "payload": {
+            "has_collided": false,
+            "time_stamp": 1793449489522775552,
+            "penetration_depth": 0.0
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "normal": {
+              "x_val": 1.863462451012765e-08,
+              "y_val": -2.61206878349185e-09,
+              "z_val": -1.0
+            },
+            "impact_point": {
+              "x_val": 0.38847655057907104,
+              "y_val": 0.2103320211172104,
+              "z_val": 6.894651889801025
+            },
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 6.69262170791626
+            },
+            "object_name": "Road_Road_Town02_135",
+            "object_id": 1
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "getMultirotorState",
+          "wall_start_s": 1469934.3832054,
+          "wall_end_s": 1469934.3835646,
+          "transport_status": "RETURNED",
+          "payload": {
+            "timestamp": 1793449493503860480
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "kinematics_estimated": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987183809280396,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.05060986056923866
+              },
+              "linear_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              },
+              "angular_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            },
+            "landed_state": 0
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "getMultirotorState",
+          "wall_start_s": 1469934.4985865,
+          "wall_end_s": 1469934.4994687,
+          "transport_status": "RETURNED",
+          "payload": {
+            "timestamp": 1793449493620862976
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "kinematics_estimated": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987183809280396,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.05060986056923866
+              },
+              "linear_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              },
+              "angular_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            },
+            "landed_state": 0
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "simGetObjectPose",
+          "wall_start_s": 1469934.4995345,
+          "wall_end_s": 1469934.5156641,
+          "transport_status": "RETURNED",
+          "payload": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 3.887970209121704
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": -0.0,
+              "z_val": -0.05060988664627075
+            }
+          }
+        },
+        {
+          "rpc": "simGetVehiclePose",
+          "wall_start_s": 1469934.5156836,
+          "wall_end_s": 1469934.5162355,
+          "transport_status": "RETURNED",
+          "payload": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 6.69262170791626
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": -0.0,
+              "z_val": -0.05060988664627075
+            }
+          }
+        },
+        {
+          "rpc": "simGetCollisionInfo",
+          "wall_start_s": 1469934.5162652,
+          "wall_end_s": 1469934.516534,
+          "transport_status": "RETURNED",
+          "payload": {
+            "has_collided": false,
+            "time_stamp": 1793449489522775552,
+            "penetration_depth": 0.0
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "normal": {
+              "x_val": 1.863462451012765e-08,
+              "y_val": -2.61206878349185e-09,
+              "z_val": -1.0
+            },
+            "impact_point": {
+              "x_val": 0.38847655057907104,
+              "y_val": 0.2103320211172104,
+              "z_val": 6.894651889801025
+            },
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 6.69262170791626
+            },
+            "object_name": "Road_Road_Town02_135",
+            "object_id": 1
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "getMultirotorState",
+          "wall_start_s": 1469934.5165844,
+          "wall_end_s": 1469934.516943,
+          "transport_status": "RETURNED",
+          "payload": {
+            "timestamp": 1793449493638863360
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "kinematics_estimated": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987183809280396,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.05060986056923866
+              },
+              "linear_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              },
+              "angular_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            },
+            "landed_state": 0
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "getMultirotorState",
+          "wall_start_s": 1469934.6228681,
+          "wall_end_s": 1469934.623764,
+          "transport_status": "RETURNED",
+          "payload": {
+            "timestamp": 1793449493743865600
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "kinematics_estimated": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987183809280396,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.05060986056923866
+              },
+              "linear_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              },
+              "angular_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            },
+            "landed_state": 0
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "simGetObjectPose",
+          "wall_start_s": 1469934.6238261,
+          "wall_end_s": 1469934.6323689,
+          "transport_status": "RETURNED",
+          "payload": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 3.887970209121704
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": -0.0,
+              "z_val": -0.05060988664627075
+            }
+          }
+        },
+        {
+          "rpc": "simGetVehiclePose",
+          "wall_start_s": 1469934.6323974,
+          "wall_end_s": 1469934.6327061,
+          "transport_status": "RETURNED",
+          "payload": {
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 6.69262170791626
+            },
+            "orientation": {
+              "w_val": 0.9987185001373291,
+              "x_val": 0.0,
+              "y_val": -0.0,
+              "z_val": -0.05060988664627075
+            }
+          }
+        },
+        {
+          "rpc": "simGetCollisionInfo",
+          "wall_start_s": 1469934.6327153,
+          "wall_end_s": 1469934.6329296,
+          "transport_status": "RETURNED",
+          "payload": {
+            "has_collided": false,
+            "time_stamp": 1793449489522775552,
+            "penetration_depth": 0.0
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "normal": {
+              "x_val": 1.863462451012765e-08,
+              "y_val": -2.61206878349185e-09,
+              "z_val": -1.0
+            },
+            "impact_point": {
+              "x_val": 0.38847655057907104,
+              "y_val": 0.2103320211172104,
+              "z_val": 6.894651889801025
+            },
+            "position": {
+              "x_val": 0.03139648213982582,
+              "y_val": -0.0031835937406867743,
+              "z_val": 6.69262170791626
+            },
+            "object_name": "Road_Road_Town02_135",
+            "object_id": 1
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        },
+        {
+          "rpc": "getMultirotorState",
+          "wall_start_s": 1469934.632977,
+          "wall_end_s": 1469934.633336,
+          "transport_status": "RETURNED",
+          "payload": {
+            "timestamp": 1793449493752865792
+          },
+          "payload_status": "VALID_FIELDS",
+          "missing_fields": [],
+          "geometry": {
+            "kinematics_estimated": {
+              "position": {
+                "x_val": 0.03139648213982582,
+                "y_val": -0.0031835937406867743,
+                "z_val": 6.69262170791626
+              },
+              "orientation": {
+                "w_val": 0.9987183809280396,
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": -0.05060986056923866
+              },
+              "linear_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              },
+              "angular_velocity": {
+                "x_val": 0.0,
+                "y_val": 0.0,
+                "z_val": 0.0
+              }
+            },
+            "landed_state": 0
+          },
+          "geometry_status": "VALID_FIELDS_NOT_CALIBRATED",
+          "geometry_missing_fields": []
+        }
+      ],
+      "catalog": {
+        "status": "CATALOG_READ_NOT_COLLISION_CERTIFIED",
+        "matching_objects": [],
+        "temporal_semantics": "REGISTRATION_CATALOG_NOT_CURRENT_POSE",
+        "queried_count": 3067
+      },
+      "elapsed_s": 0.6532486998476088
+    }
+  },
+  "wrapper_failures_before_formal_run": [
+    {
+      "wrapper": "cmd.exe default python",
+      "status": "COMMAND_NOT_FOUND",
+      "exit_code": 9009,
+      "before_script_entry": true,
+      "simulator_launches": 0
+    },
+    {
+      "wrapper": "cmd.exe explicit interpreter and quoted PYTHONPATH assignment",
+      "status": "IMPORT_ERROR_RUNTIMEPORTS_FROM_UNINTENDED_SHARED_EDITABLE_PACKAGE",
+      "before_smoke_entry": true,
+      "simulator_launches": 0,
+      "shared_files_written": false
+    },
+    {
+      "wrapper": "cmd.exe read-only python -c quoting check",
+      "status": "SYNTAX_ERROR_LITERAL_QUOTE",
+      "before_script_entry": true,
+      "simulator_launches": 0
+    }
+  ],
+  "verification": {
+    "body_receipt_recomputed": "PASS",
+    "raw_api_matches_owner_copy_type_strict": true,
+    "runtime_code_matches_frozen_commit": true,
+    "protected_hashes_unchanged": true,
+    "prelaunch_full_suite": {
+      "passed": 884,
+      "skipped": 1,
+      "seconds": 23.68
+    },
+    "prelaunch_focused": 59,
+    "independent_import_review_tests": 14,
+    "python314_compile": "PASS",
+    "python310_compile": "PASS",
+    "python310_import_and_export_identity": "PASS",
+    "postrun_python314_and_python310_raw_receipt_replay": "PASS",
+    "postrun_full_suite": {
+      "passed": 884,
+      "skipped": 1,
+      "seconds": 24.16
+    },
+    "postrun_focused": {
+      "passed": 59,
+      "seconds": 1.54
+    },
+    "postrun_original_files_verified": 10,
+    "postrun_protected_files_verified": 8,
+    "postrun_runtime_code_files_verified": 22,
+    "postrun_integer_ns_exact_in_both_pythons": true,
+    "independent_evidence_review": "APPROVED_NO_BLOCKING_FINDINGS",
+    "independent_evidence_review_scope": "Exact 10 artifacts; type-strict raw API/evidence/owner equality; six comparisons and summaries; eight protected configurations and owned map restoration; 22 runtime hashes and normalized frozen source; documentation boundaries. No live calls or full-suite rerun. OS postcheck, wrapper history and test runs remain primary-recorded."
+  },
+  "limitations": [
+    "Static pose consistency does not prove dynamic origin calibration or rule out dynamic physical/render divergence.",
+    "The registration catalog did not return the own UAV; this is not evidence of zero body size or complete collision coverage.",
+    "The first road-contact flag is true and the same event timestamp persists; later false flags are not zero-collision or clearance proof.",
+    "No own-body collision envelope, support-contact exception, ground-startup corridor or physical braking is certified.",
+    "No flight, tracking, RGB/identity performance, learned benefit or independent PASS episode was evaluated."
+  ],
+  "acceptance": {
+    "D6": "PARTIAL",
+    "control_ready": false,
+    "clearance_m": null,
+    "body_envelope_status": "NOT_CERTIFIED",
+    "D1_Town03_independent_PASS": 0
+  }
+}
