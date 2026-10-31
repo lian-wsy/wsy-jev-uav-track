@@ -11,6 +11,22 @@ from test_map_probe import load_client_probe
 from test_runtime_endpoints import ports
 
 
+def test_movement_client_uses_supported_coarse_timeout_without_extending_transaction_watchdog():
+    from jev_uav_track.actuation import BoundedActuator
+    runner=importlib.import_module('scripts.probe_current_follow')
+    factory=getattr(runner,'owned_movement_port',None)
+    assert callable(factory), 'Owned movement client timeout adapter missing'
+    sdk=NS(MultirotorClient=lambda **kwargs:NS(options=kwargs))
+    port=factory(sdk,ports())
+    assert port.client.options=={'ip':'127.0.0.1','port':42461,'timeout_value':1}
+    assert BoundedActuator.transaction_timeout_s==.2
+    assert port.vehicle_name=='JevDrone'
+    from jev_uav_track.isolated_runtime import RuntimePorts
+    def forbidden(**kwargs): raise AssertionError('Protected endpoint must not construct a client')
+    with pytest.raises(ValueError,match='owned endpoint'):
+        factory(NS(MultirotorClient=forbidden),RuntimePorts())
+
+
 def test_follow_rejects_town03_before_files_connections_or_owned_launch(tmp_path, monkeypatch):
     client, counts = load_client_probe(monkeypatch, 'Town03', {})
     with pytest.raises(ValueError, match='API-only'):

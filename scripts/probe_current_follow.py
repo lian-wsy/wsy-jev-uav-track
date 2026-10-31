@@ -21,6 +21,21 @@ ROOT = Path(__file__).resolve().parents[1]
 SEED = 2026103101
 
 
+def owned_movement_port(airsim_sdk, ports):
+    """Create on the actuator worker; never borrow a shared/default endpoint.
+
+    This SDK checks Future timeouts on a global ONE-SECOND timer: .2 can
+    expire a newly created request at its very first tick. Use the minimum
+    supported integral backstop. The real transaction deadline remains .2 s
+    in BoundedActuator; expiration still requires owned-process termination.
+    This SDK parameter is not a control lease or a physical-stop guarantee.
+    """
+    from jev_uav_track.actuation import AirSimMovementPort
+    validate_follow_endpoint(ports)
+    client=airsim_sdk.MultirotorClient(ip='127.0.0.1',port=ports.airsim_rpc,timeout_value=1)
+    return AirSimMovementPort(client,airsim_sdk,vehicle_name='JevDrone')
+
+
 def save(path, data):
     with path.open('x', encoding='utf-8') as handle:
         json.dump(data, handle, indent=2, allow_nan=False)
@@ -35,7 +50,8 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
         perception='CURRENT_VISIBLE_SIMULATOR_ANNOTATION_NOT_RGB_DETECTOR',
         geometry_scope='REGISTERED_SCENE_POINT_DISTANCE_NOT_CERTIFIED_BODY_CLEARANCE',
         limits={'speed_mps':.3, 'yaw_rate_dps':15., 'prefix_s':.05, 'reply_ttl_s':.2,
-                'capture_max_s':.15, 'point_distance_reserve_m':2., 'minimum_remaining_margin_m':3.5},
+                'capture_max_s':.15, 'point_distance_reserve_m':2., 'minimum_remaining_margin_m':3.5,
+                'sdk_coarse_timeout_s':1, 'transaction_watchdog_s':.2},
         training_admission='NOT_AUDITED_NOT_TRAINING_DATA', body_clearance_certified=False,
         full_d6_acceptance=False, learned_gain_claimed=False)
     actor = None
@@ -48,7 +64,7 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
         # Import native helpers only after model and own-endpoint checks.
         from probe_carla_apis import coordinate_probe
         from probe_observation_contract import origin_sample, image_response
-        from jev_uav_track.actuation import AirSimMovementPort, FlightTelemetry
+        from jev_uav_track.actuation import FlightTelemetry
         from jev_uav_track.async_control import MeasuredSafety
         from jev_uav_track.frames import CarlaAirAlignment, AirSimOriginBridge
         from jev_uav_track.isolated_runtime import require_loaded_map
@@ -282,8 +298,7 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
 
         def movement_port():
             # Client and event loop are created on the actuator's sole worker.
-            client=airsim_sdk.MultirotorClient(ip='127.0.0.1',port=ports.airsim_rpc,timeout_value=.2)
-            return AirSimMovementPort(client,airsim_sdk,vehicle_name='JevDrone')
+            return owned_movement_port(airsim_sdk,ports)
 
         result['phase']='neutral_initialization'
         result['neutral_initialization']={'geometry_trace':[]}
