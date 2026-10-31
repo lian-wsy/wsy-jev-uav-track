@@ -412,3 +412,59 @@ def test_malformed_candidate_from_rollout_is_no_command(field, value):
     result = tick(loop, clock, measured)
     assert result.command is None
     assert result.reason_code == "INVALID_CANDIDATE"
+
+
+@pytest.mark.parametrize("stage", ["revalidation", "compilation", "gate_clock", "boundary_clock"])
+@pytest.mark.parametrize("start,finished,remaining", [(1.999, 2.019, None), (1.95, 1.98, .02)])
+def test_action_deadline_is_checked_at_final_dispatch_boundary(monkeypatch, stage, start, finished, remaining):
+    from jev_uav_track import async_control
+    clock, executor, coordinator, loop, measured = setup_loop()
+    tick(loop, clock, measured)
+    clock.now = 1.05
+    executor.complete()
+    assert tick(loop, clock, measured).command
+    # The accepted action belongs to the original request at 1.0, so its
+    # deadline is exactly 2.0 even though this tick has a fresh capture.
+    clock.now = start
+    if stage == "revalidation":
+        generate = loop.pipeline.generate_candidates
+
+        def slow_generate(current):
+            candidates = generate(current)
+            clock.now = finished
+            return candidates
+
+        monkeypatch.setattr(loop.pipeline, "generate_candidates", slow_generate)
+    elif stage == "compilation":
+        compile_candidate = async_control.compile_carlaair_candidate
+
+        def slow_compile(action, alignment):
+            command = compile_candidate(action, alignment)
+            clock.now = finished
+            return command
+
+        monkeypatch.setattr(async_control, "compile_carlaair_candidate", slow_compile)
+    else:
+        reads = 0
+        cost_at_read = 2 if stage == "gate_clock" else 3
+
+        def dispatch_clock():
+            nonlocal reads
+            reads += 1
+            if reads >= cost_at_read:
+                clock.now = finished
+            return clock.now
+
+        # Read 1: tick start; read 2: TemporalObservationGate; read 3:
+        # the final command callback. The coordinator keeps its own same-domain
+        # clock, so these costs target the actual dispatch boundary only.
+        loop.clock = dispatch_clock
+    result = loop.tick(state(), packet(start), replace(measured, timestamp_s=start))
+    if remaining is None:
+        assert result.command is None
+        assert result.reason_code == "ACTION_EXPIRED"
+        assert loop.command_count == 1
+    else:
+        assert result.command is not None
+        assert result.command.duration_s == pytest.approx(remaining)
+        assert finished + result.command.duration_s <= 2.0

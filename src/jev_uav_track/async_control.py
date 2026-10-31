@@ -406,12 +406,30 @@ class BoundedControlLoop:
             return self._no_command(now, "CANDIDATE_MISMATCH")
         if safety_reasons(selected, current.uav, current.constraints):
             return self._no_command(now, "CURRENT_ACTION_UNSAFE")
+
+        def bound_at_dispatch(command):
+            # This runs after compilation, revalidation and the temporal gate's
+            # own clock read. Tick-start time cannot authorize a later prefix.
+            dispatch_now = self.clock()
+            if not math.isfinite(dispatch_now) or dispatch_now < now:
+                return None, "INVALID_CLOCK"
+            if dispatch_now >= advice.valid_until_s:
+                return None, "ACTION_EXPIRED"
+            capture_remaining = capture.wall_start_s + self._gate.decision_ttl_s - dispatch_now
+            if dispatch_now < capture.wall_end_s or capture_remaining <= 0:
+                return None, "DISPATCH_REJECTED"
+            remaining = min(command.duration_s, .05, advice.valid_until_s - dispatch_now,
+                            capture_remaining)
+            return replace(command, duration_s=remaining), "BOUNDED_PREFIX"
+
         try:
             compiled = compile_carlaair_candidate(advice.action, self.alignment)
-            prefix = replace(compiled, duration_s=min(.05, advice.valid_until_s - now))
-            emitted = self._gate.dispatch(capture, prefix, lambda command: command, clock=self.clock)
+            prefix = replace(compiled, duration_s=.05)
+            emitted, code = self._gate.dispatch(capture, prefix, bound_at_dispatch, clock=self.clock)
         except (TypeError, ValueError):
             return self._no_command(now, "DISPATCH_REJECTED")
+        if emitted is None:
+            return self._no_command(now, code)
         self.command_count += 1
         return ControlTick(now, self.coordinator.generation, "COMMAND_PREFIX", "BOUNDED_PREFIX",
                            emitted, advice.request_id, advice.action.id)
