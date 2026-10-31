@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-31",
+  "timezone": "Asia/Shanghai",
+  "evidence_class": "SYNTHETIC_NOT_CARLA",
+  "source_commit": "9f20a1d5c620f82bd9478053ff8735ee565c250c",
+  "base_commit": "b16e47c4d52ad7d2663a90a2036d4d836d8a9218",
+  "scope": "D6 transactional actuation and stopping telemetry preparation",
+  "d1_d6_acceptance": "PARTIAL",
+  "live_motion": "NOT_EVALUATED",
+  "physical_braking": "NOT_EVALUATED",
+  "sustained_20hz": "NOT_EVALUATED",
+  "final_town03_pass_episodes": 0,
+  "live_launches_this_slice": 0,
+  "real_jev_requests_this_slice": 0,
+  "training_runs_this_slice": 0,
+  "methods": ["utility", "mock_jev"],
+  "seed": 17,
+  "cases_per_interpreter": 14,
+  "chosen_action_all_cases": "orbit_left",
+  "utility_fallbacks_per_case": 0,
+  "mock_fallbacks_per_case": 1,
+  "matrix_per_method": [
+    {"scenario": "airborne", "calls": 3, "receipt": "PREFIX_AND_NEUTRAL_ACKNOWLEDGED", "owner_termination_required": false, "stop": "TELEMETRY_SETTLED", "synthetic_elapsed_s": 0.1},
+    {"scenario": "grounded", "calls": 0, "submit": "GROUNDED_NOT_READY", "receipt": null, "stop": "NOT_EVALUATED"},
+    {"scenario": "expired_before_send", "calls": 0, "receipt": "EXPIRED_BEFORE_SEND", "owner_termination_required": false, "stop": "NOT_EVALUATED", "synthetic_elapsed_s": 0.19},
+    {"scenario": "rpc_rejected", "calls": 3, "receipt": "TRANSACTION_UNCERTAIN", "owner_termination_required": true, "stop": "NOT_EVALUATED", "synthetic_elapsed_s": 0.1},
+    {"scenario": "rpc_overrun", "calls": 3, "receipt": "PREFIX_AND_NEUTRAL_ACKNOWLEDGED", "owner_termination_required": true, "stop": "NOT_EVALUATED", "synthetic_elapsed_s": 0.35},
+    {"scenario": "watchdog_before_send", "calls": 0, "receipt": "REVOKED_BEFORE_SEND", "owner_termination_required": true, "stop": "NOT_EVALUATED", "synthetic_elapsed_s": 0.25},
+    {"scenario": "unsettled_after_neutral", "calls": 3, "receipt": "PREFIX_AND_NEUTRAL_ACKNOWLEDGED", "owner_termination_required": false, "stop": "STILL_MOVING", "synthetic_elapsed_s": 0.1}
+  ],
+  "elapsed_summary_note": "Rounded human-facing synthetic times; exact floats retained in raw receipts. No live latency claim.",
+  "cross_python": {
+    "byte_identical": false,
+    "different_numeric_fields": 28,
+    "different_nonnumeric_fields": 0,
+    "max_abs_difference": 2.7755575615628914e-17,
+    "difference_scope": "runs[7..13].replies[0].decision.probabilities.{climb,follow_predictive,hold_center,scan_reacquire}",
+    "action_commands_receipts_and_verdicts_identical": true
+  },
+  "verification": {
+    "full_passed": 763,
+    "full_skipped": 1,
+    "full_seconds": 22.89,
+    "targeted_passed": 152,
+    "independent_review_targeted_passed": 152,
+    "compile_python314_exit": 0,
+    "compile_python310_exit": 0,
+    "diff_check_exit": 0,
+    "full_pytest_python310": "NOT_RUN",
+    "review": "No unresolved Critical or Important issues; offline transactional scope only"
+  },
+  "corrected_findings": [
+    "Transport previously lacked original observation/action/energy deadline",
+    "Worker clock rewind below supervisor observation could revive an expired lease",
+    "Completion during poll could be spuriously treated as a future timestamp",
+    "Revocation/factory failure completion was incorrectly reported as submission time"
+  ],
+  "artifacts": [
+    {"path": "artifacts/d6_actuation_20261031/report.json", "phase": "before_clock_review_fix", "bytes": 383240, "sha256": "2cf1f650b5f66c2e4be7b4bc6a5a06f6e8c3a41f34d6b88e815eecaba8a08726"},
+    {"path": "artifacts/d6_actuation_20261031_py310/report.json", "phase": "before_clock_review_fix", "bytes": 383233, "sha256": "69b9448b09cb8414979ac8a346ba88d0cde100ad77f9888cce4976c3b9181e62"},
+    {"path": "artifacts/d6_actuation_20261031_final/report.json", "phase": "final_python314", "bytes": 383238, "sha256": "cbcb65522f0570399ca3936f15220602c1d3f347e43776fcc079f7d474dc0005"},
+    {"path": "artifacts/d6_actuation_20261031_py310_final/report.json", "phase": "final_python310", "bytes": 383231, "sha256": "4e0a95664dd2f53e01c41206f63a0a684eae5d1fa43fb5b6ac737f2f238f0cd8"}
+  ],
+  "working_file_bytes": [
+    {"path": "src/jev_uav_track/actuation.py", "bytes": 16518, "sha256": "8e7a1f00a127ac0536da53f8cfbe89b08795b3dc942cc249bfab5ffba702f0e1"},
+    {"path": "src/jev_uav_track/async_control.py", "bytes": 24499, "sha256": "715f6d89dbe20ff735ff4549ea3bbf1d9e55db827b2bdf90bf14cb581c3bd020"},
+    {"path": "scripts/run_d6_actuation_smoke.py", "bytes": 7994, "sha256": "12994616310d5d92ee96fa3a12c7ed8533f2ce9d6351453e63b509df88b2f6d5"}
+  ]
+}
