@@ -1,0 +1,164 @@
+{
+  "schema": "jev_uav_track.d6_runtime_preflight.v1",
+  "evidence_kind": "REAL_OS_PREFLIGHT_NO_SIMULATOR",
+  "runtime_root": "D:/JevUavRuns/20261031_d6_probe01",
+  "source_commit": "ac1f05748b825a771986ba18258176f4e89979b6",
+  "status": "BLOCKED_EXTERNAL_PYTHON_PRESENT",
+  "attempts": 2,
+  "protected_source_check": {"protected_unchanged":true,"protected_file_count":8},
+  "simulator_launches": 0,
+  "live_api_calls": 0,
+  "real_jev_calls": 0,
+  "town03_pass_episodes": 0,
+  "copied_town03_umap_sha256": "68ffea3a284901587100b1ff15a34d5e90a9246c16276c8820e5a58e86d7047c",
+  "source_town03_umap_sha256": "68ffea3a284901587100b1ff15a34d5e90a9246c16276c8820e5a58e86d7047c",
+  "owner_files_present": [
+    false,
+    false
+  ],
+  "receipts": [
+    {
+      "relative_path": "prepared.json",
+      "sha256": "c5512c6f76da19ee20bbe65093ebe21b989dbbb3a553e91b64270c720f6da3c7",
+      "content": {
+        "source": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor",
+        "task": "D:\\JevUavRuns\\20261031_d6_probe01",
+        "binary_sha256": "e39091f72c148db0c6821d4dcbbbba55d768fe67e3320707c4007d2db784b0d7",
+        "copy_exit_code": 1,
+        "created_at": 1793418547.513703,
+        "kind": "D2_DEVELOPMENT_PROBE",
+        "ports": {
+          "carla_rpc": 3200,
+          "carla_streaming": 3201,
+          "carla_secondary": 3202,
+          "airsim_rpc": 42461
+        }
+      }
+    },
+    {
+      "relative_path": "owner_scope.json",
+      "sha256": "a7368d0c26ad0fc48a3165f5fa25e28352b7707a23d8284ec6ff6d3839d4ef2c",
+      "content": {
+        "schema": "jev_uav_track.owned_runtime_scope.v1",
+        "owner_thread_id": "01a15db0-00af-76f0-8353-141eec7de894",
+        "authorization": "User requested original D1-D6 acceptance starting 2026-10-31 09:30 Asia/Shanghai; independent instance only with proven isolation.",
+        "runtime_root": "D:/JevUavRuns/20261031_d6_probe01",
+        "source_root": "D:/CarlaAir/CarlaAir-v0.1.7-Windows11-x86_64/WindowsNoEditor",
+        "source_is_read_only": true,
+        "ports": {
+          "carla_rpc": 3200,
+          "carla_streaming": 3201,
+          "carla_secondary": 3202,
+          "airsim_rpc": 42461
+        },
+        "reserved_external_runtime": "D:/JevUavRuns/20261028_d2_probe01",
+        "reserved_external_ports": [
+          3100,
+          3101,
+          3102,
+          42451
+        ],
+        "first_probe": "Town03 API-only; no arm/reset/motion/images/strategy evaluation",
+        "minimum_startup_free_memory_gib": 4,
+        "minimum_runtime_free_memory_mib": 768,
+        "actual_process_ownership": "Not granted by this record: every live launch must pass physical preflight and retain exact process handles plus observed port ownership.",
+        "no_other_chat_coordination": true,
+        "no_real_flight": true,
+        "not_pass_episode_evidence": true
+      }
+    },
+    {
+      "relative_path": "protected_before.json",
+      "sha256": "e699d027f35c14b72c311159db9cbc02eccd7a2508dd7d058ba3d1aef1751fb3",
+      "content": {
+        "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\CarSimConfig.ini": "8e96e9fb4d695eb6d21f9d7b9da4fcbd583312b45e63cc20b7b222d4d8a22f90",
+        "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultEngine.ini": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+        "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultGame.ini": "94427ca09cb488081350225a7d3c5b0e22843ae17cb61cb1ebd4af39ad695df0",
+        "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultGameUserSettings.ini": "2168f96d659f41a33b4fbb5bfc3143a1437bc6059b0d018d532f74a4c2e71691",
+        "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultInput.ini": "1ed4e4714a4476b2e2bb15e59afef2fea5413487aa13dfc86114205adb55dec4",
+        "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultScalability.ini": "06fef2edfee12b05f55b914ca8fa8e490e1b708ab8869f20136874ba2897f606",
+        "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\OptionalModules.ini": "91745741cf40de17e1ec47a8a922db851fcdf4403df86b237f3ef03682719f45",
+        "C:\\Users\\20748\\Documents\\AirSim\\settings.json": "de89442d0093ffb47f7d05a3859206698145f15b2ff99b675e8149a858c8f048"
+      }
+    },
+    {
+      "relative_path": "runs/town03_api01_20261031/run_request.json",
+      "sha256": "3201cb681a76d8087ba201c91baa23b9392fc552f0053d56936164374ea006ca",
+      "content": {
+        "requested_map": "Town03",
+        "profile": "api",
+        "kind": "API_INFRASTRUCTURE_ONLY",
+        "created_at": 1793418763.0492969,
+        "not_final_test": true,
+        "ports": {
+          "carla_rpc": 3200,
+          "carla_streaming": 3201,
+          "carla_secondary": 3202,
+          "airsim_rpc": 42461
+        }
+      }
+    },
+    {
+      "relative_path": "runs/town03_api01_20261031/preflight.json",
+      "sha256": "4e2c772cd3222b500fd4aa6beb5e33cd24aaa64abd18567d70aa180b05b7ee27",
+      "content": {
+        "free_memory_kib": 6884432,
+        "processes": [
+          {
+            "ProcessId": 60044,
+            "ParentProcessId": 75932,
+            "Name": "python.exe",
+            "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+          },
+          {
+            "ProcessId": 75480,
+            "ParentProcessId": 45112,
+            "Name": "python.exe",
+            "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+          }
+        ],
+        "listeners": []
+      }
+    },
+    {
+      "relative_path": "runs/town03_api02_20261031/run_request.json",
+      "sha256": "08f64d305abd2ebd118770be1fc1401ec2e9b76da0c6462789c126e7e83af0ad",
+      "content": {
+        "requested_map": "Town03",
+        "profile": "api",
+        "kind": "API_INFRASTRUCTURE_ONLY",
+        "created_at": 1793418854.2848034,
+        "not_final_test": true,
+        "ports": {
+          "carla_rpc": 3200,
+          "carla_streaming": 3201,
+          "carla_secondary": 3202,
+          "airsim_rpc": 42461
+        }
+      }
+    },
+    {
+      "relative_path": "runs/town03_api02_20261031/preflight.json",
+      "sha256": "311b2db6a3d7c314497aabd486e3d8d3a0428ec29fa03d743834f0633bcf037e",
+      "content": {
+        "free_memory_kib": 5935188,
+        "processes": [
+          {
+            "ProcessId": 69496,
+            "ParentProcessId": 44648,
+            "Name": "python.exe",
+            "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+          },
+          {
+            "ProcessId": 52180,
+            "ParentProcessId": 60408,
+            "Name": "python.exe",
+            "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+          }
+        ],
+        "listeners": []
+      }
+    }
+  ],
+  "limitation": "Preflight rejected before process creation. Source and copy hashes plus own scope are preparation evidence, not loaded-map or PASS-episode evidence. Extra Python ownership was not inferred from executable name; no process was stopped."
+}

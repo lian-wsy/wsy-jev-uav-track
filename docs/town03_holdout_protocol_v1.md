@@ -28,7 +28,7 @@
 | D5 residual区间校准、回退分析 | 可以继续用现有train/validation，不依赖Town03或真实Jev |
 | D6/D7仿真执行链 | 资源充足后在本任务独立开发实例推进，不借用采集实例 |
 | Town03正式测试 | 方法/场景/预算冻结、独立运行及PASS审核满足后执行，不提前用它调试策略 |
-| 真实Jev | 仍受环境key、完整历史attempt对账和8/32准备期门控限制；不阻塞Mock/utility离线工作 |
+| 真实Jev | 后续用户已取消历史attempt对账作为新授权调用前提；历史仍UNKNOWN。只读核验唯一pilot账本的适用scope及额度，key仅取进程环境，不新建/重置账本或挪用视频任务额度；不阻塞Mock/utility离线工作 |
 
 后续续作已为启动器补充 `--map Town02|Town03`，默认Town02不变；Town03仅允许API-only检查，客户端与launcher双重核对实际地图，禁止在此运行开发动作探测。首次Town03请求被原4GiB内存门槛拒绝，未启动，见[启动预检查](experiments/town03_api_preflight_20261029.md)。代码就绪不等于地图已加载或测试数据已接纳。
 

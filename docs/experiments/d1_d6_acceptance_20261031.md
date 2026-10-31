@@ -1,0 +1,89 @@
+# D1–D6 原条款验收：2026-10-31
+
+本轮按用户指定的北京时间09:30之后开始。只在独立clone `D:/JevUavRuns/repos/jev-outcome-dataset-20261030` 工作，保留功能分支，不覆盖共享checkout，不联系视频聊天。以下判定以原冲刺条款为准，不新增D7的完整闭环矩阵作为D6门槛，也不因日期或测试数自动通过。
+
+## 已有证据复查
+
+本轮只读核对公开开发manifest：39条、39个独立seed、39个不同内容SHA，28 train / 6 validation / 5 development_stress；`final_test_available=false`。这些是清单元数据检查，源HDF完整PASS/SHA检查复用10/28、10/30及10/31原实验记录，不声称本轮重新读取全部原数据。
+
+本机产物仍存在，重算三个模型SHA与原记录一致：
+
+- 28集因果residual：`a3542d8e3f2730f8c0a597fa83b3c9fc225c50e147aa047c7b56f5f0fd01b560`。
+- 18fit因果D5 residual：`b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189`。
+- 18fit RFF64研究模型：`4dbd6366dc77087a15c756b93545f9f6a5b05accfe87d6b1f9fb9498424fcdbe`。
+
+不重新训练，不修改旧权重，不把validation中17.86%的记录动作预测改善当成Jev、真实视觉或闭环收益，也不自动部署该模型。
+
+## 原要求与证据对应
+
+| 日程 / 条款 | 证据和判定 | 剩余边界 |
+|---|---|---|
+| D1 假设、相关工作、指标 | 内容复查：`related_work_matrix.md`、`metrics_protocol_v1.md`及原sprint，已有明确假设、模块归因、公平控制、固定10s事件窗/0.5s恢复与失败处理 | 来源对照不是SOTA复现或论文新颖性证明 |
+| D1 30–60集、场景/seed划分、来源/PASS/SHA | 39集开发清单与历史全量源核验支持开发划分；独立seed/内容SHA无重复 | **PARTIAL：Town03独立final-test PASS=0**，开发集不改名为final test；地图接口检查不能替代episode审核 |
+| D2 版本/资源/接口/隔离 | 已有10/28 Town02有界现场证据；本轮独立副本/冻结端口/客户端传播与运行中资源门控完成 | **当前现场准备PARTIAL**：两次预检查均发现额外Python进程而拒绝，真实启动0；旧实例归视频任务，不复用其所有权 |
+| D2 调用/时间/费用规划及小规模smoke | `jev_budget_20261028.md`保存当时估算与局限；`d2_real_jev_smoke_review_20261030.md`核验2条真实回复 | 历史attempt仍UNKNOWN，不再作为新授权前提；不推断当前余额，不新建账本；本轮真实请求0 |
+| D3 坐标/yaw/时钟/控制/动作 | 已有静态地标、GLOBAL与vehicle-local NED桥接、观测时限、约20Hz确认RPC及失败记录；`live_origin_20261028.md`等 | 实例相关原点必须重标定；双时钟不是硬锁步，不能沿用固定偏移常数到新实例 |
+| D3 约1s时域与重训 | `d3_causal_training_20261030.md`：5帧约0.999999978s，28/6三模型真实PASS源重训与加载验证 | 记录动作监督是预测校准，不是反事实控制效果 |
+| D3 未来/隐藏真值隔离 | live 16帧因果重放与新causal_visible训练/评估/D5回归；仅历史可见位置估速度，未来真值仅作为标签 | 旧oracle模型不升级认证；当前可见标注oracle并非RGB检测器，真实困难输入覆盖不足 |
+| D4 同时域三模型与支持域 | 因果重训28/6、2688/576样本，transparent/absolute/residual与候选覆盖完整报告 | 逐集3改善/3退化；不将本条“实验完成”解释成learned模型有效 |
+| D5 区间/覆盖/宽度/回退及分层 | `d5_causal_calibration_20261030.md`：18fit/10calibration/6validation，距离宽7.438893m、覆盖100%、记录动作/候选全回退；三分层中可见576 | **PARTIAL：遮挡/出框0，NOT_EVALUATED**；现有区间模型等价透明基线，没有learned收益。10/31修正比例实验不改写此负结果 |
+| D6 异步回路、重置、延迟/超时、共享控制 | 新增有界异步协调器、确定性Mock、真实selector回路与6组smoke；单工作槽、reset代际、当前测量复核和50ms前缀都有回归 | **PARTIAL**：Mock回归与live准备分开；新实例API预检查拒绝，实际运输层/物理停止未验证。D7完整矩阵不在本轮范围 |
+
+## 当前总判定
+
+**PARTIAL，不宣称D1–D6全部通过。** 独立Town03 PASS数据、真实困难验证覆盖仍是实质缺口。后续工作应补真正的数据与执行证据，不能通过降低安全门槛、伪造同快照时间戳、重复训练已有模型或换测试集来消除缺口。
+
+## 本轮独立运行准备及未启动证据
+
+新增不可变的运行端口配置，贯穿settings、Shipping启动参数、预检查/就绪端口、API及所有遥测客户端，并冻结进prepared.json。端口回执不一致在进程/RPC前拒绝，历史默认仅用于旧实验复现。运行中仍要求768MiB余量；现已覆盖客户端等待/返回时的检查。独立审查发现“CIM查询持续失败会使最终失败回执丢失”，补5个先失败的回归后修复；查询失败/保护文件审核失败均保存AUDIT_FAILED，不能声称清理或设置检查通过。
+
+本轮端口与地图/运行门控针对性测试54项通过，改动在`be497cb`及`ac1f057`；真实调用前独立审查批准。新运行目录为`D:/JevUavRuns/20261031_d6_probe01`，完整复制而非软/硬链接共享发行包；独立端口3200/3201/3202/42461，原视频目录与3100/3101/3102/42451不占用。复制后D盘剩约55.92GiB，准备回执和所有输出保留在该目录。
+
+Shipping程序SHA `e39091f72c148db0c6821d4dcbbbba55d768fe67e3320707c4007d2db784b0d7`；源和副本Town03.umap SHA均为`68ffea3a284901587100b1ff15a34d5e90a9246c16276c8820e5a58e86d7047c`。8个受保护源配置/用户AirSim配置的哈希在复制及预检查前后未变。客户端Python3.10.21可以import CARLA/AirSim；导入不等于服务连接成功。
+
+| 尝试 | 可用内存KiB | 预检查 | 实际启动/观测/动作 |
+|---|---:|---|---|
+| town03_api01_20261031 | 6884432 | 2个Python进程，包含启动器自身；监听0；额外进程归属未确认，启动前拒绝 | 0 / 0 / 0 |
+| town03_api02_20261031 | 5935188 | 2个Python进程，包含启动器自身；监听0；额外进程归属未确认，启动前拒绝 | 0 / 0 / 0 |
+
+第一次失败后，一次只读复查显示相关进程/监听均空且可用RAM5.887GiB，故做第二次有界预检查；第二次仍发现额外Python后，不再重试或放宽门控。两个run_request/preflight均保留且没有owner.json，命令均退出1。未关闭/停止/修改任何外部进程，未联系其他聊天。复制期间曾出现3.148GiB余量，随后自然恢复；**两次最终预检查的拒绝原因是额外进程，不是内存不足**。
+
+机器证据及原文件SHA见[evidence/d6_runtime_preflight_20261031.json](evidence/d6_runtime_preflight_20261031.json)。这是实际OS预检查，不是Mock；但没有加载任何地图，因此Town03仍NOT_VERIFIED，新增PASS episode=0，真实Jev请求0。
+
+本节不作为D6现场执行或D1数据通过证明。
+
+## D6离线执行证据
+
+新增 `async_control.py`、`mock_simulator.py` 和 `scripts/run_d6_mock_smoke.py`。单一daemon工作线程不会因超时/reset自动被替换，不等待挂起线程退出；旧generation回复不能授权新episode。请求/候选深拷贝冻结，返回动作参数必须与可信候选一致。没有有效电量/障碍间距/碰撞状态，不发新命令；不把NO_COMMAND叫作物理停止或安全悬停。
+
+命令前缀不超过50ms，速度不超过0.3m/s，yaw rate不超过15deg/s；1s高层节拍与候选时域相同，所有方法共享控制器。200ms回复/观测过期不能通过新帧洗白；已及时采纳的动作仍受原1s寿命约束。独立审查复现“复查跨过动作期限却仍发命令”的边界缺陷，8个RED用例后修复：在gate最终分发回调读取时钟，重新拒绝过期并计算剩余时长上限。提交`64389f8`通过独立复审；初次单测全绿未被用来掩盖该缺陷。
+
+主代理在Python3.14.7和原CARLA客户端Python3.10.21分别执行：
+
+```powershell
+python scripts/run_d6_mock_smoke.py --output-dir artifacts/d6_mock_20261031_final --seed 17 --ticks 45
+& 'C:/Users/20748/miniconda3/envs/carlaAir/python.exe' scripts/run_d6_mock_smoke.py --output-dir artifacts/d6_mock_20261031_py310_final --seed 17 --ticks 45
+```
+
+均退出0，six-case结果如下。延迟50/150/250ms是受控调度，不是实测API/工作线程延迟；另有真实Event阻塞工作线程测试验证控制不等待该线程。
+
+| 方法 | 受控情形 | 请求 | 接纳 | 完成的过期回复 | 超时 | 置信度回退 | 发出前缀 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| utility | normal | 3 | 3 | 0 | 0 | 0 | 42 |
+| utility | delayed | 3 | 3 | 0 | 0 | 0 | 36 |
+| utility | timeout | 3 | 0 | 2 | 3 | 0 | 0 |
+| Mock Jev | normal | 3 | 3 | 0 | 0 | 3 | 42 |
+| Mock Jev | delayed | 3 | 3 | 0 | 0 | 3 | 36 |
+| Mock Jev | timeout | 3 | 0 | 2 | 3 | 0 | 0 |
+
+超时组第三次请求在第45tick结束时尚未返回，保留 `in_flight_at_close=true`，所以超时3与已完成过期2不矛盾。Mock Jev正常/延迟的所有接纳结果实际上都是原置信度门控回退，未调低阈值；这是回退流程证据，不是Jev选择更优的证据。
+
+每个解释器内的固定seed重置及同动作完整轨迹重放均一致。两解释器计数、所选ID及全部命令轨迹完全相同，但原始JSON并非字节相同：11个末位浮点差异，最大绝对差 `3.552713678800501e-15`。不修改原文件、不用近似相等冒充旧严格重放认证。两份原始JSON各约1.34MB，含全部请求、候选、回复、观测与tick，留在artifacts；可提交的摘要/原SHA/差异见 [机器证据](evidence/d6_mock_smoke_20261031.json)。
+
+最终代码针对性58项通过；主代理在修复后完整运行 `python -m pytest -q`：**481 passed, 1 skipped in 12.99s**；`python -m compileall -q src scripts tests`与`git diff --check`退出0。Git仅报告文本LF/CRLF自动规范化提示，无空白错误。同解释器修复前/后smoke原JSON字节相同，原始初版产物仍保留。
+
+证据类型为 `SYNTHETIC_NOT_CARLA` / `SYNTHETIC_CONTROLLED_EXECUTOR`。本轮模拟器启动、真实Jev调用、新增PASS episode、训练与权重替换均为0。**D6 Mock及异步回归子项PASS；独立live准备已落盘但现场预检查BLOCKED**，整体不冒称实测闭环。真正现场执行仍需实例所有权、测量与transport验证。
+
+## 文献建议与后续最小项
+
+用户追加文献已完成逐页阅读和重点arXiv来源核验，见 [文献到模型优化建议](jev_literature_model_options_20261031.md)。优先顺序是概率来源硬化/本任务校准、因果事件记忆、维持异步高层与新鲜本地控制，再在有实际动作后果后研究轻量偏好头。新增方案不是已完成训练，不改冻结模型/测试协议，不扩大为D7矩阵。

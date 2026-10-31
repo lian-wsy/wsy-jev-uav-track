@@ -1,0 +1,278 @@
+{
+  "schema_version": 1,
+  "code_commit": "64389f805ee1160432cac88a43914b29511462c9",
+  "evidence_class": "SYNTHETIC_NOT_CARLA",
+  "timing_model": "SYNTHETIC_CONTROLLED_EXECUTOR",
+  "reset_reproducible": true,
+  "live_control": "NOT_EVALUATED",
+  "d1_data": "NOT_EVALUATED",
+  "tracking_improvement": "NOT_EVALUATED",
+  "learned_winner_promoted": false,
+  "python_default": "Python 3.14.7",
+  "python_client": "Python 3.10.21",
+  "raw_reports": [
+    {
+      "path": "artifacts/d6_mock_20261031_final/report.json",
+      "sha256": "584dd37193e26a696308cd632b433a2b276632f1f8cf4fb5a011e6ced49eb1d9"
+    },
+    {
+      "path": "artifacts/d6_mock_20261031_py310_final/report.json",
+      "sha256": "260f1a45b53dcda0c4dc8dcb70b571fb6478985498aebbce3bae36bcb2c8ad64"
+    }
+  ],
+  "cross_python_byte_identical": false,
+  "runs": [
+    {
+      "method": "utility",
+      "scenario": "normal",
+      "seed": 17,
+      "client_class": "UtilityRankingClient",
+      "controller": "BoundedControlLoop",
+      "candidate_horizon_s": 1,
+      "high_level_period_s": 1,
+      "low_level_period_s": 0.05,
+      "counts": {
+        "accepted": 3,
+        "commands": 42,
+        "fallbacks": 0,
+        "rejected": 0,
+        "requests": 3,
+        "stale": 0,
+        "timeouts": 0
+      },
+      "in_flight_at_close": false,
+      "reset_reproducible": true,
+      "raw_ticks": 45,
+      "raw_requests": 3,
+      "raw_responses": 3
+    },
+    {
+      "method": "utility",
+      "scenario": "delayed",
+      "seed": 17,
+      "client_class": "UtilityRankingClient",
+      "controller": "BoundedControlLoop",
+      "candidate_horizon_s": 1,
+      "high_level_period_s": 1,
+      "low_level_period_s": 0.05,
+      "counts": {
+        "accepted": 3,
+        "commands": 36,
+        "fallbacks": 0,
+        "rejected": 0,
+        "requests": 3,
+        "stale": 0,
+        "timeouts": 0
+      },
+      "in_flight_at_close": false,
+      "reset_reproducible": true,
+      "raw_ticks": 45,
+      "raw_requests": 3,
+      "raw_responses": 3
+    },
+    {
+      "method": "utility",
+      "scenario": "timeout",
+      "seed": 17,
+      "client_class": "UtilityRankingClient",
+      "controller": "BoundedControlLoop",
+      "candidate_horizon_s": 1,
+      "high_level_period_s": 1,
+      "low_level_period_s": 0.05,
+      "counts": {
+        "accepted": 0,
+        "commands": 0,
+        "fallbacks": 0,
+        "rejected": 0,
+        "requests": 3,
+        "stale": 2,
+        "timeouts": 3
+      },
+      "in_flight_at_close": true,
+      "reset_reproducible": true,
+      "raw_ticks": 45,
+      "raw_requests": 3,
+      "raw_responses": 2
+    },
+    {
+      "method": "mock_jev",
+      "scenario": "normal",
+      "seed": 17,
+      "client_class": "MockJevClient",
+      "controller": "BoundedControlLoop",
+      "candidate_horizon_s": 1,
+      "high_level_period_s": 1,
+      "low_level_period_s": 0.05,
+      "counts": {
+        "accepted": 3,
+        "commands": 42,
+        "fallbacks": 3,
+        "rejected": 0,
+        "requests": 3,
+        "stale": 0,
+        "timeouts": 0
+      },
+      "in_flight_at_close": false,
+      "reset_reproducible": true,
+      "raw_ticks": 45,
+      "raw_requests": 3,
+      "raw_responses": 3
+    },
+    {
+      "method": "mock_jev",
+      "scenario": "delayed",
+      "seed": 17,
+      "client_class": "MockJevClient",
+      "controller": "BoundedControlLoop",
+      "candidate_horizon_s": 1,
+      "high_level_period_s": 1,
+      "low_level_period_s": 0.05,
+      "counts": {
+        "accepted": 3,
+        "commands": 36,
+        "fallbacks": 3,
+        "rejected": 0,
+        "requests": 3,
+        "stale": 0,
+        "timeouts": 0
+      },
+      "in_flight_at_close": false,
+      "reset_reproducible": true,
+      "raw_ticks": 45,
+      "raw_requests": 3,
+      "raw_responses": 3
+    },
+    {
+      "method": "mock_jev",
+      "scenario": "timeout",
+      "seed": 17,
+      "client_class": "MockJevClient",
+      "controller": "BoundedControlLoop",
+      "candidate_horizon_s": 1,
+      "high_level_period_s": 1,
+      "low_level_period_s": 0.05,
+      "counts": {
+        "accepted": 0,
+        "commands": 0,
+        "fallbacks": 0,
+        "rejected": 0,
+        "requests": 3,
+        "stale": 2,
+        "timeouts": 3
+      },
+      "in_flight_at_close": true,
+      "reset_reproducible": true,
+      "raw_ticks": 45,
+      "raw_requests": 3,
+      "raw_responses": 2
+    }
+  ],
+  "limits": [
+    "SYNTHETIC_KINEMATICS",
+    "SYNTHETIC_SAFETY",
+    "SYNTHETIC_SELECTOR_TIMING",
+    "NO_PHYSICAL_STOPPING_PROOF",
+    "NO_LIVE_OR_JEV_GAIN_CLAIM"
+  ],
+  "cross_python_comparison": {
+    "python310_reset_reproducible": true,
+    "all_run_counts_equal": true,
+    "all_command_traces_equal": true,
+    "all_selected_ids_equal": true,
+    "numeric_differences": [
+      {
+        "path": "$.runs[0].requests[1].candidates[4].outcome.covariance_trace",
+        "left": 0.9336758992225088,
+        "right": 0.9336758992225087,
+        "absolute_difference": 1.1102230246251565e-16
+      },
+      {
+        "path": "$.runs[0].requests[1].candidates[4].outcome.range_error_m",
+        "left": 2.1820160372135042,
+        "right": 2.1820160372135007,
+        "absolute_difference": 3.552713678800501e-15
+      },
+      {
+        "path": "$.runs[3].requests[1].candidates[4].outcome.covariance_trace",
+        "left": 0.9336758992225088,
+        "right": 0.9336758992225087,
+        "absolute_difference": 1.1102230246251565e-16
+      },
+      {
+        "path": "$.runs[3].requests[1].candidates[4].outcome.range_error_m",
+        "left": 2.1820160372135042,
+        "right": 2.1820160372135007,
+        "absolute_difference": 3.552713678800501e-15
+      },
+      {
+        "path": "$.runs[5].responses[1].result.decision.confidence",
+        "left": 0.24816542741929415,
+        "right": 0.2481654274192941,
+        "absolute_difference": 5.551115123125783e-17
+      },
+      {
+        "path": "$.runs[5].responses[1].result.decision.probabilities.climb",
+        "left": 0.12410374859923147,
+        "right": 0.12410374859923144,
+        "absolute_difference": 2.7755575615628914e-17
+      },
+      {
+        "path": "$.runs[5].responses[1].result.decision.probabilities.follow_predictive",
+        "left": 0.13713916733691586,
+        "right": 0.13713916733691583,
+        "absolute_difference": 2.7755575615628914e-17
+      },
+      {
+        "path": "$.runs[5].responses[1].result.decision.probabilities.hold_center",
+        "left": 0.13036765048565419,
+        "right": 0.13036765048565416,
+        "absolute_difference": 2.7755575615628914e-17
+      },
+      {
+        "path": "$.runs[5].responses[1].result.decision.probabilities.orbit_left",
+        "left": 0.24816542741929415,
+        "right": 0.2481654274192941,
+        "absolute_difference": 5.551115123125783e-17
+      },
+      {
+        "path": "$.runs[5].responses[1].result.decision.probabilities.orbit_right",
+        "left": 0.24385776086964084,
+        "right": 0.24385776086964078,
+        "absolute_difference": 5.551115123125783e-17
+      },
+      {
+        "path": "$.runs[5].responses[1].result.decision.probabilities.scan_reacquire",
+        "left": 0.11636624528926358,
+        "right": 0.11636624528926355,
+        "absolute_difference": 2.7755575615628914e-17
+      }
+    ],
+    "numeric_difference_count": 11,
+    "max_numeric_absolute_difference": 3.552713678800501e-15,
+    "non_numeric_difference_count": 0
+  },
+  "reproduction_commands": [
+    "python scripts/run_d6_mock_smoke.py --output-dir artifacts/d6_mock_20261031_final --seed 17 --ticks 45",
+    "& 'C:/Users/20748/miniconda3/envs/carlaAir/python.exe' scripts/run_d6_mock_smoke.py --output-dir artifacts/d6_mock_20261031_py310_final --seed 17 --ticks 45"
+  ],
+  "final_verification": {
+    "full_suite": "481 passed, 1 skipped in 12.99s",
+    "focused_async_and_smoke": "58 passed in 1.98s",
+    "dispatch_deadline_regression": "8 failed before fix, 8 passed after fix",
+    "compileall_exit_code": 0,
+    "diff_check_exit_code": 0,
+    "task_review": "approved after dispatch-time deadline fix",
+    "pre_fix_reports_retained": [
+      "artifacts/d6_mock_20261031_01/report.json",
+      "artifacts/d6_mock_20261031_py310_01/report.json"
+    ],
+    "pre_fix_and_final_reports_identical_within_each_python": true
+  },
+  "notes": [
+    "The controlled Future scheduler is not a measured asynchronous worker or network latency benchmark.",
+    "Mock Jev accepted normal/delayed results all used the existing confidence fallback; no Jev-choice advantage is claimed.",
+    "In timeout cases the final expired request is still pending at close; completed stale=2 and timeouts=3 are different event counts.",
+    "Different runtimes preserve identical selected IDs/commands/counters here but raw files are NOT byte-identical; both raw originals retained.",
+    "No real API request, source HDF access, retraining, simulator launch or motion occurred in these synthetic runs."
+  ]
+}
