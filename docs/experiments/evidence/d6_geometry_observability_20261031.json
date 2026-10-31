@@ -1,0 +1,51 @@
+{
+  "schema": "d6_geometry_observability_offline_v1",
+  "code_commit": "508983bedf722f8da76ed869de3bac1238eb4920",
+  "evidence_class": "OFFLINE_REANALYSIS_OF_LIVE_PREVIEW_PLUS_CONDITIONAL_ANALYTIC_COUNTEREXAMPLE",
+  "input": {
+    "path": "D:/JevUavRuns/20261031_d6_probe01/runs/town02_sensors02_20261031/api_probe.json",
+    "bytes": 28821,
+    "sha256": "9f6406b210b6d36f4d0b1cb5e6bde571f247cdc83d3e2ea1c7b264614093f6a0"
+  },
+  "observed_preview": {
+    "point_count": 24,
+    "elevation_up_min_deg": 9.99999769922696,
+    "elevation_up_max_deg": 10.000016016579815,
+    "within_frame_adjacent_azimuth_gap_count": 18,
+    "within_frame_adjacent_azimuth_gap_min_deg": 3.600004036402087,
+    "within_frame_adjacent_azimuth_gap_max_deg": 3.6001181082940263,
+    "range_min_m": 6.960994831582717,
+    "range_max_m": 26.588949830014997,
+    "interpretation": "CONSISTENT_WITH_TOP_CHANNEL_ONLY_NOT_FULL_CLOUD_OR_FREE_SPACE"
+  },
+  "retention_limits": {
+    "state_projected_fields": ["timestamp"],
+    "collision_projected_fields": ["has_collided", "time_stamp", "penetration_depth"],
+    "full_point_cloud_retained": false,
+    "body_pose_velocity_retained": false,
+    "collision_object_contact_geometry_retained": false,
+    "expected_ue_log_present": false,
+    "initial_collision_cause": "NOT_DIAGNOSED"
+  },
+  "upstream_reference": {
+    "commit": "1ca93f6f77e4e8a39b2b241c1fe2764da4d7dd41",
+    "paths": ["Unreal/Plugins/AirSim/Source/UnrealSensors/UnrealLidarSensor.cpp", "AirLib/include/sensors/lidar/LidarSimple.hpp"],
+    "local_server_binary_equivalence": "NOT_VERIFIED"
+  },
+  "conditional_ideal_ray_counterexample": {
+    "kind": "ANALYTIC_NOT_LIVE_OBSTACLE_TEST",
+    "configured_pitch_bands_deg": [10.0, -3.333333333333334, -16.666666666666668, -30.0],
+    "nominal_horizontal_spacing_deg": 3.6,
+    "sphere_center_sensor_ned_m": [3.9980262414629264, 0.12564303631251317, 0.0],
+    "sphere_radius_m": 0.05,
+    "sphere_nearest_surface_m": 3.95,
+    "minimum_perpendicular_to_any_lidar_band_m": 0.23257931564190337,
+    "perpendicular_to_forward_distance_ray_m": 0.12564303631251317,
+    "all_ideal_rays_miss": true,
+    "does_not_claim_actual_obstacle_or_observed_miss": true
+  },
+  "activity_this_turn": {"simulator_starts": 0, "live_sensor_rpc": 0, "motion_commands": 0, "training": 0, "hdf_reads": 0, "jev_requests": 0, "new_pass_episodes": 0, "production_code_changes": 0},
+  "verification": {"all_numeric_summaries_recomputed": true, "raw_input_sha_verified": true, "compileall_passed": true, "pytest_passed": 641, "pytest_skipped": 1, "pytest_elapsed_s": 18.16},
+  "d6_acceptance": "PARTIAL",
+  "town03_pass_episodes": 0
+}
