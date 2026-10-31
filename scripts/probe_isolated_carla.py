@@ -23,6 +23,7 @@ from jev_uav_track.windows_job import OwnedJob
 from jev_uav_track.sensor_configuration import (OwnedSensorConfiguration, validate_sensor_opt_in,
                                                 DISTANCE_NAME, LIDAR_NAME)
 from jev_uav_track.obstacle_probe import require_sweep_receipt
+from jev_uav_track.body_probe import require_body_receipt
 
 
 def save(path, obj):
@@ -123,6 +124,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
     save(output / 'run_request.json', {'requested_map': map_name, 'profile': profile,
          'kind': ('API_INFRASTRUCTURE_ONLY' if profile == 'api' else
                   'SAFETY_SENSOR_DIAGNOSTIC_NO_MOTION' if profile == 'safety' else
+                  'OWN_BODY_DIAGNOSTIC_NO_MOTION' if profile == 'body' else
                   'OBSTACLE_SWEEP_FIXTURE_NO_FLIGHT' if profile == 'sweep' else 'DEVELOPMENT_CONTRACT'),
          'created_at': time.time(), 'not_final_test': True, 'ports': asdict(ports),
          'configure_diagnostic_sensors': configure_diagnostic_sensors, 'capture_geometry': capture_geometry})
@@ -165,6 +167,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
               'runtime_module_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/isolated_runtime.py'),
               'sensor_probe_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/sensor_probe.py'),
               'obstacle_probe_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/obstacle_probe.py'),
+              'body_probe_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/body_probe.py'),
               'sensor_configuration_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/sensor_configuration.py'),
               'observation_probe_sha256': sha(Path(__file__).with_name('probe_observation_contract.py')),
               'observation_gate_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/live_observation.py'),
@@ -266,7 +269,13 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
                     or result['client_probe'].get('settings_match') is not True):
                 raise ValueError('Invalid owned sweep fixture receipt')
             require_sweep_receipt(result['client_probe'].get('sweep_probe'))
+        if profile == 'body':
+            if (result['client_probe'].get('kind') != 'LIVE_OWNED_BODY_DIAGNOSTIC'
+                    or result['client_probe'].get('settings_match') is not True):
+                raise ValueError('Invalid owned body diagnostic receipt')
+            require_body_receipt(result['client_probe'].get('body_probe'))
         result['status'] = ('SAFETY_DIAGNOSTIC_COMPLETED' if profile == 'safety' else
+                            'BODY_DIAGNOSTIC_COMPLETED' if profile == 'body' else
                             'SWEEP_FIXTURE_COMPLETED' if profile == 'sweep' else 'API_SMOKE_COMPLETED')
     except Exception as exc:
         result['error'] = f'{type(exc).__name__}: {exc}'
@@ -342,7 +351,8 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
         result['ended_at'] = time.time()
         save(output / 'smoke_result.json', result)
     print(json.dumps({k: v for k, v in result.items() if k != 'client_probe'}, indent=2), flush=True)
-    if result['status'] not in ('API_SMOKE_COMPLETED', 'SAFETY_DIAGNOSTIC_COMPLETED', 'SWEEP_FIXTURE_COMPLETED') or not result['protected_unchanged']:
+    if result['status'] not in ('API_SMOKE_COMPLETED', 'SAFETY_DIAGNOSTIC_COMPLETED',
+                               'SWEEP_FIXTURE_COMPLETED', 'BODY_DIAGNOSTIC_COMPLETED') or not result['protected_unchanged']:
         raise SystemExit(1)
 
 
@@ -353,7 +363,7 @@ if __name__ == '__main__':
     parser.add_argument('--task', type=Path, required=True)
     parser.add_argument('--client-python', type=Path)
     parser.add_argument('--run-name', default='smoke01')
-    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief', 'safety', 'sweep'], default='api')
+    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief', 'safety', 'sweep', 'body'], default='api')
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
     parser.add_argument('--map', choices=PROBE_MAPS, default='Town02', dest='map_name')
     parser.add_argument('--configure-diagnostic-sensors', action='store_true',

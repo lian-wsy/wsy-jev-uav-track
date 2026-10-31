@@ -290,7 +290,7 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
     client = carla.Client('127.0.0.1', ports.carla_rpc)
     client.set_timeout(5)
     air = airsim.MultirotorClient(ip='127.0.0.1', port=ports.airsim_rpc,
-                                  timeout_value=1 if profile == 'safety' else 5)
+                                  timeout_value=1 if profile in ('safety', 'body') else 5)
     if not air.ping():
         raise RuntimeError('AirSim ping failed')
     settings = json.loads(air.getSettingsString())
@@ -300,7 +300,7 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
     actual_map = world.get_map().name
     require_loaded_map(actual_map, expected_map)
     samples = []
-    for _ in range(0 if profile in ('safety', 'sweep') else 12):
+    for _ in range(0 if profile in ('safety', 'sweep', 'body') else 12):
         wall = time.monotonic()
         snap = world.get_snapshot()
         state = air.getMultirotorState(vehicle_name='JevDrone')
@@ -330,6 +330,12 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
         result['note'] = ('Owned static props and obstacle sensors only; no UAV arm/motion/reset/images. '
                           'Fixture responses do not certify UAV clearance or control readiness.')
         result['sweep_probe'] = probe_obstacle_sweep(world, carla)
+    if profile == 'body':
+        from jev_uav_track.body_probe import probe_own_body
+        result['kind'] = 'LIVE_OWNED_BODY_DIAGNOSTIC'
+        result['note'] = ('Read-only catalog and raw own-body poses/contact; no arm/motion/reset/images/scene writes. '
+                          'Static pose agreement and registration geometry do not certify a collision envelope.')
+        result['body_probe'] = probe_own_body(world, air.client.call, carla)
     if profile in ('contract', 'observation', 'belief'):
         result['contract'] = {}
         result['note'] = 'Owned development physics probe; may arm/move/capture. Not a tracking comparison.'
@@ -341,7 +347,10 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
             output.write_text(json.dumps(result, indent=2), encoding='utf-8')
             raise
     output.write_text(json.dumps(result, indent=2, allow_nan=False), encoding='utf-8')
-    summary = {k: v for k, v in result.items() if k not in ('samples', 'safety_probe', 'sweep_probe')}
+    summary = {k: v for k, v in result.items() if k not in ('samples', 'safety_probe', 'sweep_probe', 'body_probe')}
+    if profile == 'body':
+        summary['body_probe'] = {k: v for k, v in result['body_probe'].items()
+                                if k not in ('queries', 'samples', 'catalog')}
     if profile == 'sweep':
         summary['sweep_probe'] = {k: v for k, v in result['sweep_probe'].items() if k != 'cases'}
     if profile == 'safety':
@@ -352,12 +361,14 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
         raise SystemExit(2)
     if profile == 'sweep' and result['sweep_probe']['status'] != 'FIXTURE_RESPONSE_VERIFIED':
         raise SystemExit(2)
+    if profile == 'body' and result['body_probe']['status'] != 'DIAGNOSTIC_COMPLETED':
+        raise SystemExit(2)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief', 'safety', 'sweep'], default='api')
+    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief', 'safety', 'sweep', 'body'], default='api')
     parser.add_argument('--expected-settings', type=Path, required=True)
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
     parser.add_argument('--expected-map', choices=PROBE_MAPS, default='Town02')
