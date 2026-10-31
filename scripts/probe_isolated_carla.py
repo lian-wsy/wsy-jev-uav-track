@@ -116,7 +116,8 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
     for folder in ('logs', 'user', 'temp', 'appdata', 'localappdata'):
         (output / folder).mkdir()
     save(output / 'run_request.json', {'requested_map': map_name, 'profile': profile,
-         'kind': 'API_INFRASTRUCTURE_ONLY' if profile == 'api' else 'DEVELOPMENT_CONTRACT',
+         'kind': ('API_INFRASTRUCTURE_ONLY' if profile == 'api' else
+                  'SAFETY_SENSOR_DIAGNOSTIC_NO_MOTION' if profile == 'safety' else 'DEVELOPMENT_CONTRACT'),
          'created_at': time.time(), 'not_final_test': True, 'ports': asdict(ports)})
     if Path(prepared['source']) != source or prepared['binary_sha256'] != sha(task / 'package' / BINARY):
         raise ValueError('Prepared source/executable mismatch')
@@ -152,6 +153,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
               'probe_sha256': sha(Path(__file__)),
               'api_probe_sha256': sha(Path(__file__).with_name('probe_carla_apis.py')),
               'runtime_module_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/isolated_runtime.py'),
+              'sensor_probe_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/sensor_probe.py'),
               'observation_probe_sha256': sha(Path(__file__).with_name('probe_observation_contract.py')),
               'observation_gate_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/live_observation.py'),
               'frames_module_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/frames.py'),
@@ -224,7 +226,16 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
         require_loaded_map(result['client_probe'].get('map'), map_name)
         if result['client_probe'].get('map_match') is not True or result['client_probe'].get('requested_map') != map_name:
             raise ValueError('Client report lacks verified requested map identity')
-        result['status'] = 'API_SMOKE_COMPLETED'
+        if profile == 'safety':
+            diagnostic = result['client_probe'].get('safety_probe')
+            if (result['client_probe'].get('kind') != 'LIVE_OWNED_SAFETY_SENSOR_DIAGNOSTIC'
+                    or not isinstance(diagnostic, dict)
+                    or diagnostic.get('kind') != 'SAFETY_SENSOR_DIAGNOSTIC_NO_MOTION'
+                    or diagnostic.get('status') != 'DIAGNOSTIC_COMPLETED'
+                    or diagnostic.get('control_ready') is not False
+                    or 'clearance_m' not in diagnostic or diagnostic['clearance_m'] is not None):
+                raise ValueError('Invalid or incomplete safety diagnostic receipt; no control certification')
+        result['status'] = 'SAFETY_DIAGNOSTIC_COMPLETED' if profile == 'safety' else 'API_SMOKE_COMPLETED'
     except Exception as exc:
         result['error'] = f'{type(exc).__name__}: {exc}'
     finally:
@@ -290,7 +301,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
         result['ended_at'] = time.time()
         save(output / 'smoke_result.json', result)
     print(json.dumps({k: v for k, v in result.items() if k != 'client_probe'}, indent=2), flush=True)
-    if result['status'] != 'API_SMOKE_COMPLETED' or not result['protected_unchanged']:
+    if result['status'] not in ('API_SMOKE_COMPLETED', 'SAFETY_DIAGNOSTIC_COMPLETED') or not result['protected_unchanged']:
         raise SystemExit(1)
 
 
@@ -301,7 +312,7 @@ if __name__ == '__main__':
     parser.add_argument('--task', type=Path, required=True)
     parser.add_argument('--client-python', type=Path)
     parser.add_argument('--run-name', default='smoke01')
-    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief'], default='api')
+    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief', 'safety'], default='api')
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
     parser.add_argument('--map', choices=PROBE_MAPS, default='Town02', dest='map_name')
     add_port_arguments(parser)

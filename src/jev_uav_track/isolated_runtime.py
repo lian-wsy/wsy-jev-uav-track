@@ -45,7 +45,7 @@ def ports_from_arguments(args):
 def validate_probe_map(map_name: str, profile: str = 'api') -> None:
     if map_name not in PROBE_MAPS:
         raise ValueError('Unsupported probe map; use exactly Town02 or Town03')
-    if profile not in ('api', 'contract', 'observation', 'belief'):
+    if profile not in ('api', 'contract', 'observation', 'belief', 'safety'):
         raise ValueError('Unsupported probe profile')
     if map_name == 'Town03' and profile != 'api':
         raise ValueError('Reserved Town03 permits API-only checks, not development motion probes')

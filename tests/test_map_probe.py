@@ -113,6 +113,45 @@ def test_launcher_rejects_town03_motion_profile_before_creating_run(tmp_path):
     assert not (task / 'runs').exists()
 
 
+def test_safety_profile_is_development_only_before_any_rpc(tmp_path, monkeypatch, settings_path):
+    from jev_uav_track.isolated_runtime import validate_probe_map
+    validate_probe_map('Town02', 'safety')
+    path, settings = settings_path
+    module, counts = load_client_probe(monkeypatch, 'Town03', settings)
+    with pytest.raises(ValueError, match='API-only'):
+        module.main(tmp_path / 'result.json', 'safety', path, 'takeoff', 'Town03')
+    assert counts['connections'] == 0
+
+
+def test_safety_profile_reads_raw_payloads_without_motion_or_settings_writes(tmp_path, monkeypatch, settings_path):
+    path, settings = settings_path
+    before = path.read_bytes()
+    module, counts = load_client_probe(monkeypatch, 'Town02', settings)
+    raw_calls = []
+    def raw_call(method, *args):
+        assert method in ('getMultirotorState', 'simGetCollisionInfo', 'getDistanceSensorData', 'getLidarData')
+        raw_calls.append((method, args))
+        if method == 'getMultirotorState':
+            return {'timestamp': 1_000_000_000 + len(raw_calls) * 1_000_000}
+        raise RuntimeError('Sensor unavailable')
+    original = module.airsim.MultirotorClient
+    def safety_client(**kwargs):
+        assert kwargs['timeout_value'] == 1
+        air = original(**dict(kwargs, timeout_value=5))
+        air.client = SimpleNamespace(call=raw_call)
+        return air
+    module.airsim.MultirotorClient = safety_client
+    result_path = tmp_path / 'result.json'
+    module.main(result_path, 'safety', path, 'takeoff', 'Town02')
+    result = json.loads(result_path.read_text())
+    assert path.read_bytes() == before
+    assert 'contract' not in result
+    assert result['kind'] == 'LIVE_OWNED_SAFETY_SENSOR_DIAGNOSTIC'
+    assert result['safety_probe']['control_ready'] is False
+    assert result['safety_probe']['clearance_m'] is None
+    assert len([name for name, _ in raw_calls if name == 'simGetCollisionInfo']) == 1
+
+
 def test_low_memory_keeps_map_request_evidence_without_starting_process(tmp_path, monkeypatch):
     from scripts import probe_isolated_carla as launcher
     from jev_uav_track.isolated_runtime import BINARY

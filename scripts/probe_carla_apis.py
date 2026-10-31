@@ -283,7 +283,8 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
     validate_probe_map(expected_map, profile)
     client = carla.Client('127.0.0.1', ports.carla_rpc)
     client.set_timeout(5)
-    air = airsim.MultirotorClient(ip='127.0.0.1', port=ports.airsim_rpc, timeout_value=5)
+    air = airsim.MultirotorClient(ip='127.0.0.1', port=ports.airsim_rpc,
+                                  timeout_value=1 if profile == 'safety' else 5)
     if not air.ping():
         raise RuntimeError('AirSim ping failed')
     settings = json.loads(air.getSettingsString())
@@ -294,7 +295,7 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
     actual_map = world.get_map().name
     require_loaded_map(actual_map, expected_map)
     samples = []
-    for _ in range(12):
+    for _ in range(0 if profile == 'safety' else 12):
         wall = time.monotonic()
         snap = world.get_snapshot()
         state = air.getMultirotorState(vehicle_name='JevDrone')
@@ -309,6 +310,12 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
               'airsim_server': air.getServerVersion(), 'vehicles': air.listVehicles(),
               'settings_match': True, 'samples': samples, 'ports': asdict(ports),
               'note': 'No arm, reset, motion, RGB capture or target tracking in this probe.'}
+    if profile == 'safety':
+        from jev_uav_track.sensor_probe import probe_safety_inputs
+        result['kind'] = 'LIVE_OWNED_SAFETY_SENSOR_DIAGNOSTIC'
+        result['note'] = ('No arm, reset, motion, images, settings changes or control authorization. '
+                          'Collision reads may consume event flags on this owned instance.')
+        result['safety_probe'] = probe_safety_inputs(air.client.call)
     if profile in ('contract', 'observation', 'belief'):
         result['contract'] = {}
         result['note'] = 'Owned development physics probe; may arm/move/capture. Not a tracking comparison.'
@@ -319,14 +326,16 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
             result['contract_error'] = f'{type(exc).__name__}: {exc}'
             output.write_text(json.dumps(result, indent=2), encoding='utf-8')
             raise
-    output.write_text(json.dumps(result, indent=2), encoding='utf-8')
+    output.write_text(json.dumps(result, indent=2, allow_nan=False), encoding='utf-8')
     print(json.dumps({k: v for k, v in result.items() if k != 'samples'}))
+    if profile == 'safety' and result['safety_probe']['status'] != 'DIAGNOSTIC_COMPLETED':
+        raise SystemExit(2)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief'], default='api')
+    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief', 'safety'], default='api')
     parser.add_argument('--expected-settings', type=Path, required=True)
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
     parser.add_argument('--expected-map', choices=PROBE_MAPS, default='Town02')

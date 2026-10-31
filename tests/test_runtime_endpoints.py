@@ -173,7 +173,7 @@ def test_all_contract_telemetry_connections_use_independent_port(tmp_path, monke
     assert connections == [42461] * 5  # one velocity reader plus four axis readers
 
 
-@pytest.mark.parametrize('phase', ['waiting', 'complete', 'success', 'legacy', 'map_switch',
+@pytest.mark.parametrize('phase', ['waiting', 'complete', 'success', 'legacy', 'map_switch', 'safety', 'safety_bad_receipt',
                                  'job_close_failure', 'process_wait_failure', 'client_wait_failure'])
 def test_client_memory_guard_and_owned_cleanup(tmp_path, monkeypatch, phase):
     cleanup_failure = phase in ('job_close_failure', 'process_wait_failure', 'client_wait_failure')
@@ -210,8 +210,12 @@ def test_client_memory_guard_and_owned_cleanup(tmp_path, monkeypatch, phase):
             if phase in ('waiting', 'client_wait_failure'):
                 raise launcher.subprocess.TimeoutExpired(self.command, kwargs['timeout'])
             self.returncode = 0
-            Path(self.command[self.command.index('--output') + 1]).write_text(json.dumps({
-                'map': map_name, 'map_match': True, 'requested_map': map_name}))
+            payload = {'map': map_name, 'map_match': True, 'requested_map': map_name}
+            if phase.startswith('safety'):
+                payload.update(kind='LIVE_OWNED_SAFETY_SENSOR_DIAGNOSTIC', safety_probe={
+                    'kind': 'SAFETY_SENSOR_DIAGNOSTIC_NO_MOTION', 'status': 'DIAGNOSTIC_COMPLETED',
+                    'control_ready': phase == 'safety_bad_receipt', 'clearance_m': None})
+            Path(self.command[self.command.index('--output') + 1]).write_text(json.dumps(payload))
             return 'synthetic stdout', 'synthetic stderr'
     class Job:
         def assign(self, process): assigned.append(process.pid)
@@ -235,12 +239,13 @@ def test_client_memory_guard_and_owned_cleanup(tmp_path, monkeypatch, phase):
         assert str(endpoints.carla_rpc) in command and str(endpoints.airsim_rpc) in command
         return samples.pop(0)
     monkeypatch.setattr(launcher, 'ps_json', query)
-    if phase in ('waiting', 'complete') or cleanup_failure:
+    profile = 'safety' if phase.startswith('safety') else 'api'
+    if phase in ('waiting', 'complete', 'safety_bad_receipt') or cleanup_failure:
         with pytest.raises(SystemExit):
-            launcher.smoke(source, task, Path(sys.executable), 'memory', 'api', 'takeoff',
+            launcher.smoke(source, task, Path(sys.executable), 'memory', profile, 'takeoff',
                            map_name=map_name, ports=endpoints)
     else:
-        launcher.smoke(source, task, Path(sys.executable), 'memory', 'api', 'takeoff',
+        launcher.smoke(source, task, Path(sys.executable), 'memory', profile, 'takeoff',
                        map_name=map_name, ports=endpoints)
     result = json.loads((task / 'runs/memory/smoke_result.json').read_text())
     if cleanup_failure:
@@ -263,6 +268,12 @@ def test_client_memory_guard_and_owned_cleanup(tmp_path, monkeypatch, phase):
         assert '768 MiB' in result['error']
         assert result['status'] == 'FAILED'
         assert json.loads((task / 'runs/memory/last_runtime_snapshot.json').read_text())['free_memory_kib'] == 768 * 1024 - 1
+    elif phase == 'safety_bad_receipt':
+        assert result['status'] == 'FAILED'
+        assert 'safety diagnostic' in result['error']
+    elif phase == 'safety':
+        assert result['status'] == 'SAFETY_DIAGNOSTIC_COMPLETED'
+        assert json.loads((task / 'runs/memory/run_request.json').read_text())['kind'] == 'SAFETY_SENSOR_DIAGNOSTIC_NO_MOTION'
     else:
         assert result['status'] == 'API_SMOKE_COMPLETED'
     assert result['cleanup_confirmed'] is True
@@ -271,6 +282,7 @@ def test_client_memory_guard_and_owned_cleanup(tmp_path, monkeypatch, phase):
     assert (task / 'runs/memory/client_stdout.txt').read_text() == 'synthetic stdout'
     assert (task / 'runs/memory/client_stderr.txt').read_text() == 'synthetic stderr'
     command = launched[1].command
+    assert command[command.index('--profile') + 1] == profile
     for flag, value in [('--carla-rpc-port', str(endpoints.carla_rpc)),
                         ('--carla-streaming-port', str(endpoints.carla_streaming)),
                         ('--carla-secondary-port', str(endpoints.carla_secondary)),
