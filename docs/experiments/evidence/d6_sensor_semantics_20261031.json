@@ -1,0 +1,39 @@
+{
+  "schema": "d6_sensor_semantics_audit_v1",
+  "base_commit": "da19812b6bb10816d529d51f1f67c4ed2cbd561d",
+  "observed_at_utc": "2026-10-31T06:19:58.8513411Z",
+  "evidence_class": "UPSTREAM_SOURCE_AND_OFFLINE_INSTALLED_SDK_NOT_LIVE",
+  "upstream_repository": "https://github.com/microsoft/AirSim",
+  "upstream_commit": "1ca93f6f77e4e8a39b2b241c1fe2764da4d7dd41",
+  "upstream_equivalence_to_installed_carlaair_binary": "NOT_VERIFIED",
+  "upstream_sources": [
+    {"path": "AirLib/src/api/RpcLibServerBase.cpp", "bytes": 28342, "sha256": "a77f62e73ce236608b7bc514fabd1253ec1a8d6533e4e55981183ca5cde11f03"},
+    {"path": "Unreal/Plugins/AirSim/Source/PawnSimApi.cpp", "bytes": 23335, "sha256": "7ac390eab08a099aed55976b0f2a3249b02127f42381f38e0818d293da14054d"},
+    {"path": "AirLib/include/sensors/distance/DistanceSimple.hpp", "bytes": 3258, "sha256": "5c7c7aafd7c998e5a7d85a9dbeec7726a66c46b756f1338655ba2326c6b260a7"},
+    {"path": "Unreal/Plugins/AirSim/Source/UnrealSensors/UnrealDistanceSensor.cpp", "bytes": 1327, "sha256": "f84f2ddc4844ac431493db066f4ee1eaec377d847f81b5fc0f271258a8bf11ce"},
+    {"path": "docs/sensors.md", "bytes": 6401, "sha256": "2a768c1e3712001bdf0a366a6a7b2a3e56d147524622162816d20f69701cf9d1"}
+  ],
+  "local_sources": [
+    {"path": "C:/Users/20748/miniconda3/envs/carlaAir/Lib/site-packages/airsim/client.py", "sha256": "baad642c4ef369bdba64a794fd4a51215e88a1614481defd04faa3f1f291d5a1"},
+    {"path": "C:/Users/20748/miniconda3/envs/carlaAir/Lib/site-packages/airsim/types.py", "sha256": "4eec051b2ebe98f52cd217bae4db3bf58efb762d3721520c830c01bdf6dd2fba"},
+    {"path": "D:/JevUavRuns/20261031_d6_probe01/settings.json", "sha256": "67cd1ed7eab1a67b24586ce45a63364bc68a69d37e9e49eadb1ee04006ef2f1c"}
+  ],
+  "offline_sdk_empty_payload_reproduction": {
+    "interpreter": "C:/Users/20748/miniconda3/envs/carlaAir/python.exe",
+    "evidence_class": "OFFLINE_SDK_ONLY_NO_RPC",
+    "collision": {"received_keys": [], "attribute_has_collided": false, "attribute_timestamp": 0.0},
+    "distance": {"received_keys": [], "attribute_distance": 0.0, "attribute_timestamp": 0}
+  },
+  "scope_counts": {
+    "simulator_starts": 0,
+    "simulator_rpcs": 0,
+    "motion_rpcs": 0,
+    "settings_changes": 0,
+    "jev_requests": 0,
+    "source_hdf_reads": 0,
+    "research_training_runs": 0
+  },
+  "local_live_sensor_availability": "NOT_VERIFIED",
+  "new_safety_probe_design": "AWAITING_USER_CONFIRMATION_NOT_IMPLEMENTED",
+  "d6_acceptance": "PARTIAL"
+}
