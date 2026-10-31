@@ -115,6 +115,53 @@ Sky entries, and refresh actor boxes. No missing inventory means clear space.
         return result
 
 
+class ActorGeometryCache:
+    """Cache immutable local shapes; every query uses fresh snapshot transforms.
+
+Only for this fixed-shape, exclusive scenario: no actor scaling/blueprint
+changes are performed. Actor addition/removal/type changes abort, never reuse
+an old world-space obstacle pose or silently drop unknown actors. Construct
+before scenario placement, outside any short observation authority window.
+"""
+    @staticmethod
+    def inventory(actors):
+        result = {}
+        for actor in actors:
+            if actor.type_id.startswith(('vehicle.', 'walker.', 'static.')):
+                if type(actor.id) is not int or actor.id < 0 or actor.id in result:
+                    raise ValueError('Invalid actor inventory')
+                result[actor.id] = actor
+        return result
+
+    def __init__(self, actors, *, required_actor_id):
+        inventory = self.inventory(actors)
+        if required_actor_id not in inventory:
+            raise ValueError('Target missing from actor geometry inventory')
+        self.types = {identity: actor.type_id for identity, actor in inventory.items()}
+        # bounding_box can be a separate native RPC per actor; never read it
+        # again inside a 150 ms capture. get_world_vertices is local arithmetic.
+        self.shapes = {identity: actor.bounding_box for identity, actor in inventory.items()}
+
+    def distance(self, snapshot, point, current_actors):
+        point = vector(point)
+        current = {identity: actor.type_id for identity, actor in self.inventory(current_actors).items()}
+        if current != self.types:
+            raise ValueError('Actor geometry inventory changed; new scene initialization required')
+        distances, records = [], []
+        for identity, shape in self.shapes.items():
+            actor = snapshot.find(identity)
+            if actor is None:
+                raise ValueError('Actor missing from current snapshot')
+            vertices = [vector([v.x, v.y, v.z]) for v in shape.get_world_vertices(actor.get_transform())]
+            if len(vertices) != 8:
+                raise ValueError('Invalid current actor bounding vertices')
+            lo = [min(p[i] for p in vertices) for i in range(3)]
+            hi = [max(p[i] for p in vertices) for i in range(3)]
+            distances.append(math.hypot(*(max(lo[i]-point[i], 0., point[i]-hi[i]) for i in range(3))))
+            records.append({'id': identity, 'type': self.types[identity], 'vertices_m': vertices})
+        return min(distances), records
+
+
 def follow_metrics(frames):
     if not isinstance(frames, list) or len(frames) < 2:
         raise ValueError('Insufficient following observations')

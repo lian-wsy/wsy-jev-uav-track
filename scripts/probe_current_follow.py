@@ -14,7 +14,8 @@ import random
 import time
 
 from jev_uav_track.current_follow import (RegisteredGeometry, load_current_rollout,
-    validate_follow_endpoint, run_control_session, require_follow_receipt, route_primitives)
+    validate_follow_endpoint, run_control_session, require_follow_receipt, route_primitives,
+    ActorGeometryCache)
 
 ROOT = Path(__file__).resolve().parents[1]
 SEED = 2026103101
@@ -117,6 +118,11 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
         actor.set_simulate_physics(False)
         time.sleep(.1)
         target_name = identify_owned_tesla(sorted(set(air.simListSceneObjects())-before_names))
+        actor_geometry = ActorGeometryCache(world.get_actors(), required_actor_id=actor.id)
+        result['actor_geometry_cache'] = {'types_by_id':actor_geometry.types,
+            'local_shapes_read_once_before_placement':True,
+            'world_transforms_and_actor_inventory_refreshed_each_packet':True,
+            'scenario_has_no_shape_scaling_or_blueprint_changes':True}
         air.simPause(True)
         try:
             # Initialization only; the fictitious teleport path is not flight.
@@ -162,23 +168,7 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
                                        'timestamp':collision_baseline}
 
         def dynamic_distance(snapshot, point):
-            distances, records = [], []
-            for entity in world.get_actors():
-                if not entity.type_id.startswith(('vehicle.','walker.','static.')):
-                    continue
-                current = snapshot.find(entity.id)
-                if current is None:
-                    raise ValueError('DYNAMIC_ACTOR_MISSING_FROM_SNAPSHOT')
-                vertices = [triple(v) for v in entity.bounding_box.get_world_vertices(current.get_transform())]
-                if len(vertices)!=8 or not all(math.isfinite(v) for p in vertices for v in p):
-                    raise ValueError('DYNAMIC_BOUNDING_BOX_INVALID')
-                lo=[min(p[i] for p in vertices) for i in range(3)]
-                hi=[max(p[i] for p in vertices) for i in range(3)]
-                distances.append(math.hypot(*(max(lo[i]-point[i],0.,point[i]-hi[i]) for i in range(3))))
-                records.append({'id':entity.id,'type':entity.type_id,'vertices_m':vertices})
-            if actor.id not in [r['id'] for r in records]:
-                raise ValueError('TARGET_NOT_IN_DYNAMIC_GEOMETRY')
-            return min(distances), records
+            return actor_geometry.distance(snapshot, point, world.get_actors())
 
         result['phase']='prearm'
         prearm_start=time.perf_counter()

@@ -34,6 +34,45 @@ def test_missing_or_bad_geometry_never_means_clear(bad):
         module().RegisteredGeometry(bad)
 
 
+class BoxEntity:
+    id=7
+    type_id='vehicle.tesla.model3'
+    def __init__(self): self.reads=0
+    @property
+    def bounding_box(self):
+        self.reads+=1
+        if self.reads>1: raise AssertionError('Repeated fixed geometry RPC inside a live packet')
+        return NS(get_world_vertices=lambda offset:[NS(x=x+offset,y=y,z=z)
+            for x in (-1.,1.) for y in (-1.,1.) for z in (-1.,1.)])
+
+
+def test_actor_geometry_reads_fixed_shape_once_but_uses_each_new_snapshot_pose():
+    m=module()
+    assert callable(getattr(m,'ActorGeometryCache',None)), 'Fixed actor geometry cache missing'
+    entity=BoxEntity()
+    cache=m.ActorGeometryCache([entity],required_actor_id=7)
+    first=NS(find=lambda identity:NS(get_transform=lambda:0.))
+    second=NS(find=lambda identity:NS(get_transform=lambda:1.))
+    assert cache.distance(first,(5.,0.,0.),[entity])[0]==4.
+    assert cache.distance(second,(5.,0.,0.),[entity])[0]==3.
+    assert entity.reads==1
+
+
+@pytest.mark.parametrize('failure',['new_actor','missing_actor','missing_snapshot','changed_type'])
+def test_actor_geometry_cache_rejects_changed_inventory_or_missing_pose(failure):
+    m=module()
+    assert callable(getattr(m,'ActorGeometryCache',None)), 'Fixed actor geometry cache missing'
+    entity=BoxEntity()
+    cache=m.ActorGeometryCache([entity],required_actor_id=7)
+    inventory=[entity]
+    snapshot=NS(find=lambda identity:NS(get_transform=lambda:0.))
+    if failure=='new_actor': inventory.append(NS(id=8,type_id='vehicle.other'))
+    elif failure=='missing_actor': inventory=[]
+    elif failure=='missing_snapshot': snapshot=NS(find=lambda identity:None)
+    else: inventory=[NS(id=7,type_id='walker.person')]
+    with pytest.raises(ValueError): cache.distance(snapshot,(5.,0.,0.),inventory)
+
+
 def frames(moving=True):
     return [{'wall_s': 10. + i, 'visible': True,
              'uav_world_m': [i * .1 if moving else 0., 0., 18.],
