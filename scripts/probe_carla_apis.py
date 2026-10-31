@@ -284,6 +284,9 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
          configure_diagnostic_sensors=False, capture_geometry=False):
     validate_sensor_opt_in(configure_diagnostic_sensors, expected_map, profile, capture_geometry=capture_geometry)
     validate_probe_map(expected_map, profile)
+    if profile == 'follow':
+        from jev_uav_track.current_follow import validate_follow_endpoint
+        validate_follow_endpoint(ports)
     expected = json.loads(expected_settings.read_text())
     sensor_names = (require_diagnostic_sensors(expected) if configure_diagnostic_sensors else
                     {'distance': '', 'lidar': ''})
@@ -300,7 +303,7 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
     actual_map = world.get_map().name
     require_loaded_map(actual_map, expected_map)
     samples = []
-    for _ in range(0 if profile in ('safety', 'sweep', 'body') else 12):
+    for _ in range(0 if profile in ('safety', 'sweep', 'body', 'follow') else 12):
         wall = time.monotonic()
         snap = world.get_snapshot()
         state = air.getMultirotorState(vehicle_name='JevDrone')
@@ -336,6 +339,14 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
         result['note'] = ('Read-only catalog and raw own-body poses/contact; no arm/motion/reset/images/scene writes. '
                           'Static pose agreement and registration geometry do not certify a collision envelope.')
         result['body_probe'] = probe_own_body(world, air.client.call, carla)
+    if profile == 'follow':
+        from probe_current_follow import probe_current_follow
+        result['kind'] = 'LIVE_OWNED_CURRENT_FOLLOW'
+        result['note'] = ('Current causal interval-gated model and Mock Jev, unchanged bounded actuator. '
+                          'Unarmed scenario placement, then limited simulation trial; not full D6 or certified clearance.')
+        result['follow_probe'] = {}
+        probe_current_follow(world, air, output.parent, result['follow_probe'], ports=ports,
+                             carla_sdk=carla, airsim_sdk=airsim)
     if profile in ('contract', 'observation', 'belief'):
         result['contract'] = {}
         result['note'] = 'Owned development physics probe; may arm/move/capture. Not a tracking comparison.'
@@ -347,7 +358,10 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
             output.write_text(json.dumps(result, indent=2), encoding='utf-8')
             raise
     output.write_text(json.dumps(result, indent=2, allow_nan=False), encoding='utf-8')
-    summary = {k: v for k, v in result.items() if k not in ('samples', 'safety_probe', 'sweep_probe', 'body_probe')}
+    summary = {k: v for k, v in result.items() if k not in ('samples', 'safety_probe', 'sweep_probe', 'body_probe', 'follow_probe')}
+    if profile == 'follow':
+        summary['follow_probe'] = {k: result['follow_probe'].get(k) for k in
+                                  ('status', 'phase', 'metrics', 'stop_verdict', 'error', 'acceptance_error')}
     if profile == 'body':
         summary['body_probe'] = {k: v for k, v in result['body_probe'].items()
                                 if k not in ('queries', 'samples', 'catalog')}
@@ -363,12 +377,14 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
         raise SystemExit(2)
     if profile == 'body' and result['body_probe']['status'] != 'DIAGNOSTIC_COMPLETED':
         raise SystemExit(2)
+    if profile == 'follow' and result['follow_probe']['status'] != 'FOLLOW_SMOKE_COMPLETED':
+        raise SystemExit(2)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief', 'safety', 'sweep', 'body'], default='api')
+    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief', 'safety', 'sweep', 'body', 'follow'], default='api')
     parser.add_argument('--expected-settings', type=Path, required=True)
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
     parser.add_argument('--expected-map', choices=PROBE_MAPS, default='Town02')

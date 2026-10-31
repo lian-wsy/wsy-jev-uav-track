@@ -1,0 +1,59 @@
+{
+  "kind": "CURRENT_CAUSAL_FOLLOW_INTEGRATION_AND_PREFLIGHT",
+  "native_attempt": "BLOCKED_BEFORE_LAUNCH",
+  "preflight_last_write_utc": "2026-10-31T14:07:59.1617517Z",
+  "run_root": "D:/JevUavRuns/20261031_d6_probe01/runs/town02_current_follow01_20261031",
+  "original_files": {
+    "preflight.json": {"bytes": 1555, "sha256": "1bea7d4f9570e713e8c99a5f6443d9cc305caf7aa54c137bcc9bae6445fece9f"},
+    "run_request.json": {"bytes": 366, "sha256": "654229bff2efa0d345de028f48b1d3997b40efb8894df085982ddf339b18e126"}
+  },
+  "blocking_evidence": {
+    "raised_error": "External Python/simulator process or simulator listener present; no launch",
+    "free_memory_kib": 2525040,
+    "startup_required_memory_kib": 4194304,
+    "external_shipping_pid": 29872,
+    "external_shipping_path": "D:/CarlaAir/CarlaAir-v0.1.7-Windows11-x86_64/WindowsNoEditor/CarlaUE4/Binaries/Win64/CarlaUE4-Win64-Shipping.exe",
+    "external_shipping_parent_pid": 79328,
+    "external_root_python_pid": 36880,
+    "external_listening_ports": [2000, 2001, 2002, 41451],
+    "later_read_only_check": "External controller chain still present with new child PIDs; no release inferred"
+  },
+  "frozen_model": {
+    "sha256": "b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189",
+    "calibration_sha256": "fa6b59e42df90ce15e39a1ea83652ff223a7e8c4517a15d1471c5f4d44d27d00",
+    "protocol_sha256": "dd8ca2293f586000ab8fa71f4d7d4725fd9696a50d881bafa5e567bcf6428130",
+    "input_mode": "causal_visible",
+    "resolved_training_horizon_s": 0.9999999776482582,
+    "execution_candidate_horizon_s": 1.0,
+    "unchanged_model_horizon_tolerance_s": 0.000001,
+    "before_integration_fix": "ALL_SIX_CANDIDATES_INVALID_EXACT_HORIZON_COMPARISON",
+    "after_integration_fix": "FROZEN_MODEL_TO_BOUNDED_CONTROLLER_AND_SYNTHETIC_TRANSPORT_VERIFIED",
+    "weights_or_calibration_changed": false
+  },
+  "counts": {
+    "owned_shipping_launches": 0,
+    "owned_simulator_rpc_calls": 0,
+    "owned_flight_commands": 0,
+    "new_real_following_frames": 0,
+    "real_jev_calls": 0,
+    "source_pass_hdf_reads": 0,
+    "source_data_training_runs": 0,
+    "new_pass_episodes": 0,
+    "protected_files_checked": 8
+  },
+  "protected_files_unchanged": true,
+  "verification": {
+    "focused_tests": 24,
+    "full_suite_passed": 950,
+    "full_suite_skipped": 1,
+    "full_suite_seconds": 31.45,
+    "python_compileall": ["3.14.7", "3.10.21"],
+    "independent_review": "GO_FOR_SCOPED_ENGINEERING_ATTEMPT_NOT_NATIVE_ACCEPTANCE",
+    "independent_focused_tests": 23
+  },
+  "current_following_effect": "NOT_EVALUATED",
+  "body_clearance_certified": false,
+  "learned_or_jev_gain": "NOT_EVALUATED",
+  "original_d1_d6_acceptance": "PARTIAL",
+  "town03_final_test_pass_episodes": 0
+}

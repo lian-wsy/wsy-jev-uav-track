@@ -103,6 +103,9 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
           configure_diagnostic_sensors=False, capture_geometry=False):
     validate_sensor_opt_in(configure_diagnostic_sensors, map_name, profile, capture_geometry=capture_geometry)
     validate_probe_map(map_name, profile)
+    if profile == 'follow':
+        from jev_uav_track.current_follow import validate_follow_endpoint
+        validate_follow_endpoint(ports)
     validate_roots(source, task)
     import re
     if not re.fullmatch(r'[A-Za-z0-9_-]{1,60}', run_name):
@@ -125,6 +128,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
          'kind': ('API_INFRASTRUCTURE_ONLY' if profile == 'api' else
                   'SAFETY_SENSOR_DIAGNOSTIC_NO_MOTION' if profile == 'safety' else
                   'OWN_BODY_DIAGNOSTIC_NO_MOTION' if profile == 'body' else
+                  'CURRENT_CAUSAL_BOUNDED_FOLLOW' if profile == 'follow' else
                   'OBSTACLE_SWEEP_FIXTURE_NO_FLIGHT' if profile == 'sweep' else 'DEVELOPMENT_CONTRACT'),
          'created_at': time.time(), 'not_final_test': True, 'ports': asdict(ports),
          'configure_diagnostic_sensors': configure_diagnostic_sensors, 'capture_geometry': capture_geometry})
@@ -178,6 +182,10 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
                   for name in ('live_belief.py', 'causal_belief.py', 'history.py', 'pipeline.py', 'rollout.py',
                                'selector.py', 'safety.py', 'jev_client.py', 'models.py', 'primitives.py')},
               'binary_sha256': prepared['binary_sha256']}
+    if profile == 'follow':
+        result['follow_source_sha256'] = {str(path.relative_to(Path(__file__).resolve().parents[1])):sha(path)
+            for path in (Path(__file__).with_name('probe_current_follow.py'),
+                         Path(__file__).resolve().parents[1] / 'src/jev_uav_track/current_follow.py')}
     try:
         map_configuration = OwnedMapConfiguration(source, task, output, map_name)
         map_configuration.apply()
@@ -275,8 +283,15 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
                     or result['client_probe'].get('settings_match') is not True):
                 raise ValueError('Invalid owned body diagnostic receipt')
             require_body_receipt(result['client_probe'].get('body_probe'))
+        if profile == 'follow':
+            from jev_uav_track.current_follow import require_follow_receipt
+            if (result['client_probe'].get('kind') != 'LIVE_OWNED_CURRENT_FOLLOW'
+                    or result['client_probe'].get('settings_match') is not True):
+                raise ValueError('Invalid current-model following receipt')
+            require_follow_receipt(result['client_probe'].get('follow_probe'))
         result['status'] = ('SAFETY_DIAGNOSTIC_COMPLETED' if profile == 'safety' else
                             'BODY_DIAGNOSTIC_COMPLETED' if profile == 'body' else
+                            'FOLLOW_SMOKE_COMPLETED' if profile == 'follow' else
                             'SWEEP_FIXTURE_COMPLETED' if profile == 'sweep' else 'API_SMOKE_COMPLETED')
     except Exception as exc:
         result['error'] = f'{type(exc).__name__}: {exc}'
@@ -353,7 +368,8 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
         save(output / 'smoke_result.json', result)
     print(json.dumps({k: v for k, v in result.items() if k != 'client_probe'}, indent=2), flush=True)
     if result['status'] not in ('API_SMOKE_COMPLETED', 'SAFETY_DIAGNOSTIC_COMPLETED',
-                               'SWEEP_FIXTURE_COMPLETED', 'BODY_DIAGNOSTIC_COMPLETED') or not result['protected_unchanged']:
+                               'SWEEP_FIXTURE_COMPLETED', 'BODY_DIAGNOSTIC_COMPLETED',
+                               'FOLLOW_SMOKE_COMPLETED') or not result['protected_unchanged']:
         raise SystemExit(1)
 
 
@@ -364,7 +380,7 @@ if __name__ == '__main__':
     parser.add_argument('--task', type=Path, required=True)
     parser.add_argument('--client-python', type=Path)
     parser.add_argument('--run-name', default='smoke01')
-    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief', 'safety', 'sweep', 'body'], default='api')
+    parser.add_argument('--profile', choices=['api', 'contract', 'observation', 'belief', 'safety', 'sweep', 'body', 'follow'], default='api')
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
     parser.add_argument('--map', choices=PROBE_MAPS, default='Town02', dest='map_name')
     parser.add_argument('--configure-diagnostic-sensors', action='store_true',

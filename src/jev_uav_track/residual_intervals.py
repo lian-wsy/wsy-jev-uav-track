@@ -82,10 +82,10 @@ class IntervalGatedRolloutModel:
     this wrapper is not a deployment authorization or a calibrated safety gate.
     """
 
-    def __init__(self, predictor, fit_features, radius):
+    def __init__(self, predictor, fit_features, radius, baseline=None):
         if predictor.target_mode != 'baseline_residual':
             raise ValueError('Residual predictor required')
-        self.learned = LearnedOutcomeRolloutModel(predictor)
+        self.learned = LearnedOutcomeRolloutModel(predictor, baseline=baseline)
         self.baseline = self.learned.baseline
         self.fit_features = matrix(fit_features, len(FEATURE_NAMES)).copy()
         self.radius = radius_vector(radius).copy()
