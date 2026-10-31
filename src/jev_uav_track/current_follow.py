@@ -255,7 +255,7 @@ def require_follow_receipt(receipt):
 
 
 def run_control_session(capture, read_telemetry, transport_factory, pipeline, alignment, result,
-                        *, duration_s=10., clock=time.perf_counter, sleep=time.sleep):
+                        *, duration_s=10., clock=time.perf_counter, sleep=time.sleep, energy_start_s=None):
     """Wire existing production components; native calls are injected at edges.
 
 No new feedback law or relaxed limits: original bounded primitives, 200 ms
@@ -279,7 +279,12 @@ EVERY prefix. This transactional loop does not claim sustained 20 Hz control.
         return selection
     coordinator = AsyncDecisionCoordinator(select, clock=clock)
     start = clock()
-    energy = SimulatedEnergyBudget(SimulatedEnergyConfig(20., 90., 120.), start_s=start)
+    energy_start = start if energy_start_s is None else number(energy_start_s)
+    if not 0 <= energy_start <= start:
+        coordinator.close()
+        raise ValueError('Energy start must include prior armed initialization')
+    result['energy_start_s'] = energy_start
+    energy = SimulatedEnergyBudget(SimulatedEnergyConfig(20., 90., 120.), start_s=energy_start)
     loop = BoundedControlLoop(pipeline, coordinator, alignment=alignment, clock=clock,
                              simulated_energy=energy, execution_domain='isolated_simulation')
     actuator = BoundedActuator(transport_factory, execution_domain='isolated_simulation', clock=clock)

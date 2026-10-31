@@ -59,7 +59,7 @@ def _command_code(command):
     return None
 
 
-def _input_code(tick, sample, now, generation):
+def _input_code(tick, sample, now, generation, *, neutral_initialization=False):
     if (not isinstance(tick, ControlTick) or tick.disposition != "COMMAND_PREFIX"
             or tick.reason_code != "BOUNDED_PREFIX"
             or type(tick.generation) is not int or tick.generation < 0
@@ -76,11 +76,13 @@ def _input_code(tick, sample, now, generation):
         return "LEASE_EXPIRED"
     if code := _command_code(tick.command):
         return code
+    if neutral_initialization and (any(tick.command.velocity_mps) or tick.command.yaw_rate_dps != 0.):
+        return "INITIALIZATION_MUST_BE_NEUTRAL"
     if code := _telemetry_code(sample, now):
         return code
     if sample.has_collided:
         return "COLLISION"
-    if sample.landed_state == 0:
+    if sample.landed_state == 0 and not neutral_initialization:
         return "GROUNDED_NOT_READY"
     return None
 
@@ -121,12 +123,17 @@ class BoundedActuator:
     transaction_timeout_s = .2
 
     def __init__(self, transport_factory, *, execution_domain, generation=0,
-                 clock=time.perf_counter, executor=None):
+                 clock=time.perf_counter, executor=None, neutral_initialization=False):
         if (execution_domain not in ("synthetic_simulation", "isolated_simulation")
                 or type(generation) is not int or generation < 0
-                or not callable(transport_factory) or not callable(clock)):
+                or not callable(transport_factory) or not callable(clock)
+                or type(neutral_initialization) is not bool):
             raise ValueError("INVALID_SIMULATION_ACTUATOR")
         self.transport_factory, self.clock, self.generation = transport_factory, clock, generation
+        # Opt-in only for an already-owned simulation's startup. This mode
+        # NEVER permits nonzero commands, even after native state is Flying.
+        # It does not arm, alter landed telemetry or prove readiness/ownership.
+        self._neutral_initialization = neutral_initialization
         self._worker = _DaemonWorker() if executor is None else None
         self._executor = self._worker or executor
         self._port = None
@@ -185,7 +192,8 @@ class BoundedActuator:
         now = self._now()
         if now is None:
             return "OWNER_TERMINATION_REQUIRED"
-        code = _input_code(tick, telemetry, now, self.generation)
+        code = _input_code(tick, telemetry, now, self.generation,
+                           neutral_initialization=self._neutral_initialization)
         if not code and self._collision_event is not None:
             if telemetry.collision_event_ns > self._collision_event:
                 code = "NEW_COLLISION_EVENT"
@@ -226,7 +234,8 @@ class BoundedActuator:
             return replace(receipt, status="CLOCK_INVALID", owner_termination_required=True)
         if self._revoked.is_set():
             return replace(receipt, completed_s=now)
-        if _input_code(tick, sample, now, self.generation):
+        if _input_code(tick, sample, now, self.generation,
+                       neutral_initialization=self._neutral_initialization):
             return replace(receipt, status="EXPIRED_BEFORE_SEND", completed_s=now)
         remaining = min(tick.command.duration_s, tick.dispatch_deadline_s - now,
                         sample.wall_start_s + .2 - now)

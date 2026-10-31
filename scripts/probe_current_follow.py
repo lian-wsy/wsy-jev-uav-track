@@ -40,6 +40,7 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
         full_d6_acceptance=False, learned_gain_claimed=False)
     actor = None
     armed = api_enabled = False
+    preparation_paused = False
     images = []
     def triple(value): return [float(value.x), float(value.y), float(value.z)]
     try:
@@ -55,6 +56,7 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
         from jev_uav_track.live_belief import LiveBeliefAdapter, identify_owned_tesla, read_visible_oracle_position
         from jev_uav_track.live_observation import CaptureWindow
         from jev_uav_track.pipeline import JevTrackPipeline
+        from jev_uav_track.neutral_startup import initialize_neutral
 
         require_loaded_map(world.get_map().name, 'Town02')
         result['phase'] = 'scene_initialization'
@@ -142,6 +144,12 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
                 if str(exc) != 'Object/vehicle/state poses disagree beyond origin translation' or time.perf_counter() >= deadline:
                     raise
                 time.sleep(.03)
+        # The unarmed placement is not flight. Freeze this owned fixture during
+        # camera/prearm preparation instead of letting it free-fall while idle.
+        air.simPause(True)
+        preparation_paused = True
+        if air.simIsPause() is not True:
+            raise ValueError('PREPARATION_PAUSE_NOT_CONFIRMED')
         bridge = AirSimOriginBridge.calibrate(alignment,
             [first['global_ned_m'],second['global_ned_m']],
             [first['vehicle_local_ned_m'],second['vehicle_local_ned_m']])
@@ -186,10 +194,11 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
         api_enabled=True
         if time.perf_counter()-prearm_start>=.15:
             raise ValueError('PREARM_EXPIRED')
+        energy_start = time.perf_counter()
+        result['armed_resource_start_s'] = energy_start
         if air.armDisarm(True,vehicle_name='JevDrone') is not True:
             raise ValueError('ARM_NOT_ACKNOWLEDGED')
         armed=True
-        source_start=world.get_snapshot().timestamp.elapsed_seconds
 
         def flight_sample(start,end,state,collision):
             return FlightTelemetry(start,end,int(state.timestamp),int(state.landed_state),
@@ -201,6 +210,19 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
             state=air.getMultirotorState(vehicle_name='JevDrone')
             collision=air.simGetCollisionInfo(vehicle_name='JevDrone')
             return flight_sample(start,time.perf_counter(),state,collision)
+
+        def read_startup_inputs():
+            start=time.perf_counter()
+            state=air.getMultirotorState(vehicle_name='JevDrone')
+            position=bridge.vehicle_to_carla(list(state.kinematics_estimated.position))
+            dynamic, boxes=dynamic_distance(world.get_snapshot(),position)
+            margin=min(dynamic,geometry.distance(position))-2.
+            collision=air.simGetCollisionInfo(vehicle_name='JevDrone')
+            end=time.perf_counter()
+            result['neutral_initialization']['geometry_trace'].append({
+                'wall_start_s':start,'wall_end_s':end,'position_m':position,
+                'remaining_point_margin_m':margin,'dynamic_boxes':boxes})
+            return flight_sample(start,end,state,collision), margin
 
         def capture():
             start=time.perf_counter()
@@ -263,8 +285,18 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
             client=airsim_sdk.MultirotorClient(ip='127.0.0.1',port=ports.airsim_rpc,timeout_value=.2)
             return AirSimMovementPort(client,airsim_sdk,vehicle_name='JevDrone')
 
+        result['phase']='neutral_initialization'
+        result['neutral_initialization']={'geometry_trace':[]}
+        air.simPause(False)
+        if air.simIsPause() is not False:
+            raise ValueError('PREPARATION_RESUME_NOT_CONFIRMED')
+        preparation_paused=False
+        initialize_neutral(read_startup_inputs,movement_port,result['neutral_initialization'],
+                           collision_baseline_ns=collision_baseline)
+        source_start=world.get_snapshot().timestamp.elapsed_seconds
         result['phase']='bounded_follow'
-        run_control_session(capture,read_telemetry,movement_port,pipeline,alignment,result)
+        run_control_session(capture,read_telemetry,movement_port,pipeline,alignment,result,
+                            energy_start_s=energy_start)
         result['status']='FOLLOW_SMOKE_COMPLETED'
     except Exception as exc:
         result.update(status='FOLLOW_ABORTED',error_type=type(exc).__name__,error=str(exc))
@@ -274,6 +306,7 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
         cleanup=[]
         if armed: cleanup.append(('disarm',lambda:air.armDisarm(False,vehicle_name='JevDrone')))
         if api_enabled: cleanup.append(('release_api',lambda:air.enableApiControl(False,vehicle_name='JevDrone')))
+        if preparation_paused: cleanup.append(('resume_preparation',lambda:air.simPause(False)))
         if actor is not None:
             def destroy():
                 result['target_destroyed']=actor.destroy() is True

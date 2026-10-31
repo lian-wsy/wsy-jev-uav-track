@@ -221,9 +221,10 @@ def test_session_connects_real_coordinator_controller_and_transport_without_netw
         directory = Path(__file__).resolve().parents[1]/'artifacts/d5_causal_calibration_20261030'
         if not directory.exists(): pytest.skip('Local trained weights are not in Git')
         rollout, _ = m.load_current_rollout(directory)
+    arm_time=time.perf_counter()-.5
     m.run_control_session(capture, telemetry, lambda: Port(),
         JevTrackPipeline(MockJevClient(), primitives=BOUNDED_PRIMITIVES, rollout_model=rollout),
-        CarlaAirAlignment((0.,0.,0.)), result, duration_s=.4)
+        CarlaAirAlignment((0.,0.,0.)), result, duration_s=.4, energy_start_s=arm_time)
     assert len(result['frames']) >= 3
     assert result['prefixes']
     assert result['stop_verdict'] == 'STOP_VERIFIED'
@@ -231,6 +232,8 @@ def test_session_connects_real_coordinator_controller_and_transport_without_netw
     assert all(command == 'cancel' or command.duration_s <= .05 for command in calls)
     assert result['selection_counts']['accepted'] >= 1
     assert result['metrics']['motion_observed'] is False
+    assert result['energy_start_s']==arm_time
+    assert result['ticks'][0]['energy']['battery_percent']<89.99
 
 
 def test_session_rejects_grounded_before_transport_creation():
