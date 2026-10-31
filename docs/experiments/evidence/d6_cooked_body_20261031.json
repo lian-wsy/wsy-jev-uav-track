@@ -1,0 +1,518 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-31",
+  "timezone": "Asia/Shanghai",
+  "evidence_class": "OFFLINE_PINNED_BODY_ASSET_EVIDENCE_NOT_FLIGHT",
+  "repo_base": "4e7a8b1cfb3f145b46acf6a68a619d4ce4f2bad2",
+  "recipe": {
+    "path": "scripts/audit_cooked_uav_body.py",
+    "sha256": "e265452d40a5b8068d7f3022726445c755c262d4fe9c8479d8dfe015806e5ced"
+  },
+  "artifacts": [
+    {
+      "path": "D:\\JevUavRuns\\repos\\jev-outcome-dataset-20261030\\artifacts\\d6_cooked_body_20261031\\python314.json",
+      "bytes": 7650,
+      "sha256": "b163f4df295273d883dfe3e17dce5674f0f007592c9cd5bfe02b0176e022c87c"
+    },
+    {
+      "path": "D:\\JevUavRuns\\repos\\jev-outcome-dataset-20261030\\artifacts\\d6_cooked_body_20261031\\python310.json",
+      "bytes": 7650,
+      "sha256": "b163f4df295273d883dfe3e17dce5674f0f007592c9cd5bfe02b0176e022c87c"
+    }
+  ],
+  "cross_python_byte_identical": true,
+  "asset_files": [
+    {
+      "relative_path": "Blueprints/BP_FlyingPawn.uasset",
+      "bytes": 10853,
+      "sha256": "f782c035f9073ca5b2e73e6a1bf6e980075f5fa9bd55673f59641fa03d3db880",
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\package\\CarlaUE4\\Plugins\\AirSim\\Content\\Blueprints\\BP_FlyingPawn.uasset",
+      "mtime_ns": 1774646167000000000
+    },
+    {
+      "relative_path": "Blueprints/BP_FlyingPawn.uexp",
+      "bytes": 7249,
+      "sha256": "c684cf5368a3faf717f5afb53dfe54a5248f54c6a3366a395aa043aa70972445",
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\package\\CarlaUE4\\Plugins\\AirSim\\Content\\Blueprints\\BP_FlyingPawn.uexp",
+      "mtime_ns": 1774646167000000000
+    },
+    {
+      "relative_path": "Models/QuadRotor1/Quadrotor1.uasset",
+      "bytes": 2939,
+      "sha256": "bec4169739f2af739a53261a758463e252f41fef28cbdebcfeb0fb7d7972c62c",
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\package\\CarlaUE4\\Plugins\\AirSim\\Content\\Models\\QuadRotor1\\Quadrotor1.uasset",
+      "mtime_ns": 1774646167000000000
+    },
+    {
+      "relative_path": "Models/QuadRotor1/Quadrotor1.uexp",
+      "bytes": 1226858,
+      "sha256": "ba1665cba0750b4b831a56b543f7a1a6cf45c57e191249064d923d755ff14fb3",
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\package\\CarlaUE4\\Plugins\\AirSim\\Content\\Models\\QuadRotor1\\Quadrotor1.uexp",
+      "mtime_ns": 1774646167000000000
+    }
+  ],
+  "report": {
+    "schema_version": 1,
+    "status": "FROZEN_COOKED_BODY_GEOMETRY_EXTRACTED",
+    "evidence_class": "OFFLINE_COOKED_ASSET_NOT_RUNTIME_CALIBRATION",
+    "coordinate_units": "ASSET_LOCAL_UNITS_NO_AUTOMATIC_METRIC_CLEARANCE",
+    "files": [
+      {
+        "relative_path": "Blueprints/BP_FlyingPawn.uasset",
+        "bytes": 10853,
+        "sha256": "f782c035f9073ca5b2e73e6a1bf6e980075f5fa9bd55673f59641fa03d3db880"
+      },
+      {
+        "relative_path": "Blueprints/BP_FlyingPawn.uexp",
+        "bytes": 7249,
+        "sha256": "c684cf5368a3faf717f5afb53dfe54a5248f54c6a3366a395aa043aa70972445"
+      },
+      {
+        "relative_path": "Models/QuadRotor1/Quadrotor1.uasset",
+        "bytes": 2939,
+        "sha256": "bec4169739f2af739a53261a758463e252f41fef28cbdebcfeb0fb7d7972c62c"
+      },
+      {
+        "relative_path": "Models/QuadRotor1/Quadrotor1.uexp",
+        "bytes": 1226858,
+        "sha256": "ba1665cba0750b4b831a56b543f7a1a6cf45c57e191249064d923d755ff14fb3"
+      }
+    ],
+    "blueprint": {
+      "body_mesh_export": 32,
+      "scs_body_node_export": 17,
+      "scs_root_nodes": [
+        17,
+        18,
+        20,
+        21,
+        22
+      ],
+      "mesh_import": -50,
+      "mesh_asset": "/AirSim/Models/QuadRotor1/Quadrotor1",
+      "runtime_active_mesh_match": "NOT_VERIFIED"
+    },
+    "serialized_convex": {
+      "count": 32,
+      "min": [
+        -50.267356872558594,
+        -50.28471755981445,
+        -19.16818618774414
+      ],
+      "max": [
+        50.250003814697266,
+        50.28471755981445,
+        12.530989646911621
+      ],
+      "radius_about_asset_origin": 61.48739257961295,
+      "vertices_offset": 221,
+      "vertices": [
+        [
+          50.250003814697266,
+          35.25,
+          -2.4908809661865234
+        ],
+        [
+          50.250003814697266,
+          -35.25,
+          -2.490882396697998
+        ],
+        [
+          50.250003814697266,
+          -35.25,
+          3.5031769275665283
+        ],
+        [
+          50.250003814697266,
+          35.25,
+          3.503178358078003
+        ],
+        [
+          -50.267356872558594,
+          -35.23264694213867,
+          -2.4735188484191895
+        ],
+        [
+          -50.267356872558594,
+          35.23264694213867,
+          -2.473520278930664
+        ],
+        [
+          -50.267356872558594,
+          35.23264694213867,
+          3.4858109951019287
+        ],
+        [
+          -50.267356872558594,
+          -35.23264694213867,
+          3.4858129024505615
+        ],
+        [
+          -35.21528625488281,
+          50.28471755981445,
+          -2.456169605255127
+        ],
+        [
+          35.21528625488281,
+          50.28471755981445,
+          -2.456169605255127
+        ],
+        [
+          35.21528625488281,
+          50.28471755981445,
+          3.4684598445892334
+        ],
+        [
+          -35.21528625488281,
+          50.28471755981445,
+          3.468463659286499
+        ],
+        [
+          35.21528625488281,
+          -50.28471755981445,
+          -2.456165313720703
+        ],
+        [
+          -35.21528625488281,
+          -50.28471755981445,
+          -2.456169605255127
+        ],
+        [
+          -35.21528625488281,
+          -50.28471755981445,
+          3.4684627056121826
+        ],
+        [
+          35.21528625488281,
+          -50.28471755981445,
+          3.4684627056121826
+        ],
+        [
+          -41.46900177001953,
+          41.222190856933594,
+          12.530989646911621
+        ],
+        [
+          41.46901321411133,
+          41.222190856933594,
+          12.530989646911621
+        ],
+        [
+          41.4690055847168,
+          -41.22218704223633,
+          12.530989646911621
+        ],
+        [
+          -41.4690055847168,
+          -41.22218704223633,
+          12.530989646911621
+        ],
+        [
+          -33.33180618286133,
+          -33.572696685791016,
+          -19.168184280395508
+        ],
+        [
+          33.572696685791016,
+          -33.331809997558594,
+          -19.168184280395508
+        ],
+        [
+          33.331809997558594,
+          33.572696685791016,
+          -19.168184280395508
+        ],
+        [
+          -33.331809997558594,
+          33.57270050048828,
+          -19.16818618774414
+        ],
+        [
+          -42.749996185302734,
+          42.75000762939453,
+          11.003172874450684
+        ],
+        [
+          42.75,
+          42.75,
+          11.003175735473633
+        ],
+        [
+          42.75,
+          -42.75,
+          -9.990883827209473
+        ],
+        [
+          -42.749996185302734,
+          -42.75000762939453,
+          -9.990880012512207
+        ],
+        [
+          -42.75,
+          42.75,
+          -9.990880966186523
+        ],
+        [
+          42.75,
+          42.75,
+          -9.990884780883789
+        ],
+        [
+          -42.749996185302734,
+          -42.75000762939453,
+          11.003172874450684
+        ],
+        [
+          42.75,
+          -42.75,
+          11.003175735473633
+        ]
+      ]
+    },
+    "convex_element_transform": {
+      "rotation_xyzw": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "translation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale3d": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "build_scale3d_metadata": [
+      12.0,
+      12.0,
+      12.0
+    ],
+    "build_scale_reapplied": false,
+    "cooked_convex": [
+      {
+        "count": 32,
+        "min": [
+          -50.267356872558594,
+          -50.28471755981445,
+          -19.16818618774414
+        ],
+        "max": [
+          50.25000762939453,
+          50.28471755981445,
+          12.530988693237305
+        ],
+        "radius_about_asset_origin": 61.48739253926584,
+        "header_offset": 1686,
+        "vertices_offset": 1742,
+        "vertex_bytes_sha256": "9e45c00fa156e0a2324bf305e6330adad43d06e3d54f375adc8b6e526bbe27ea",
+        "reported_bounds_min": [
+          -50.267356872558594,
+          -50.28471755981445,
+          -19.16818618774414
+        ],
+        "reported_bounds_max": [
+          50.25000762939453,
+          50.28471755981445,
+          12.530988693237305
+        ]
+      },
+      {
+        "count": 32,
+        "min": [
+          -50.25000762939453,
+          -50.28471755981445,
+          -19.16818618774414
+        ],
+        "max": [
+          50.267356872558594,
+          50.28471755981445,
+          12.530988693237305
+        ],
+        "radius_about_asset_origin": 61.48739253926584,
+        "header_offset": 2971,
+        "vertices_offset": 3027,
+        "vertex_bytes_sha256": "c1e3c196ebd50b799a80e3f1fb593ff521698969991900f8fb99f797d2833667",
+        "reported_bounds_min": [
+          -50.25000762939453,
+          -50.28471755981445,
+          -19.16818618774414
+        ],
+        "reported_bounds_max": [
+          50.267356872558594,
+          50.28471755981445,
+          12.530988693237305
+        ]
+      }
+    ],
+    "cooked_triangles": {
+      "count": 6484,
+      "min": [
+        -49.08470916748047,
+        -49.084716796875,
+        -17.968185424804688
+      ],
+      "max": [
+        49.08470916748047,
+        49.084716796875,
+        11.330988883972168
+      ],
+      "radius_about_asset_origin": 59.597015765113326,
+      "triangle_count": 12765,
+      "vertices_offset": 4283,
+      "indices_offset": 82091,
+      "all_triangle_indices_in_range": true,
+      "vertex_bytes_sha256": "6736f5b5db8e922896c63a2850c2fd8cd41684e5d5b868b9df7375fa66c812d8"
+    },
+    "maximum_nearest_raw_to_cooked_error_asset_units": 7.688768146799611e-06,
+    "maximum_nearest_x_mirrored_to_second_cooked_error_asset_units": 7.688768146799611e-06,
+    "control_ready": false,
+    "runtime_collision_envelope_m": null,
+    "new_pass_episodes": 0,
+    "limitations": [
+      "Pins identify four local asset files, not the currently spawned actor or its component transforms.",
+      "Runtime actor/component scale, active shape choice, contact offsets and additional colliding components remain unverified.",
+      "BuildScale3D is preserved metadata; multiplying cooked vertices again is not justified by this audit.",
+      "No source-to-shipped-binary identity, whole-engine physics proof, dynamic clearance, support-contact exception, startup corridor or braking is certified."
+    ]
+  },
+  "local_reference_source": {
+    "root": "D:\\CarlaAir\\repos\\CarlaAir",
+    "head": "d0c3fd717d5983fa488bedcdc055ebb2278c8780",
+    "selected_sources_unmodified_in_checkout": true,
+    "source_to_shipped_binary_identity": "NOT_PROVEN",
+    "files": [
+      {
+        "path": "D:\\CarlaAir\\repos\\CarlaAir\\Unreal\\CarlaUE4\\Plugins\\AirSim\\Source\\Vehicles\\Multirotor\\SimModeWorldMultiRotor.cpp",
+        "sha256": "33d0c78a9be48322f31a6e7f6b364664ebb9d7265a423bc8c8edf5febb9ba8a5"
+      },
+      {
+        "path": "D:\\CarlaAir\\repos\\CarlaAir\\Unreal\\CarlaUE4\\Plugins\\AirSim\\Source\\AirLib\\include\\common\\AirSimSettings.hpp",
+        "sha256": "5a8584dbb2a2438e097117a710113a3379621517bc71d72830954ada171bfbea"
+      },
+      {
+        "path": "D:\\CarlaAir\\repos\\CarlaAir\\Unreal\\CarlaUE4\\Plugins\\AirSim\\Source\\Vehicles\\Multirotor\\FlyingPawn.cpp",
+        "sha256": "dd4e6b4a20eaf79f503b58960aaa52bc043229088ed37a762e05fcd57b4a89f1"
+      },
+      {
+        "path": "D:\\CarlaAir\\repos\\CarlaAir\\Unreal\\CarlaUE4\\Plugins\\AirSim\\Source\\PawnSimApi.cpp",
+        "sha256": "3a661c8fcde0a5d59adacb30f1bf35434d61b6eaf781782f8f120c9a86c699df"
+      },
+      {
+        "path": "D:\\CarlaAir\\repos\\CarlaAir\\Unreal\\CarlaUE4\\Plugins\\AirSim\\Source\\WorldSimApi.cpp",
+        "sha256": "bec0a38d10b9b58d169f4308492d298e592e10e83ccaefadfc425507efd9f9f7"
+      },
+      {
+        "path": "D:\\CarlaAir\\repos\\CarlaAir\\Unreal\\CarlaUE4\\Plugins\\AirSim\\Source\\AirBlueprintLib.cpp",
+        "sha256": "ce3ea05c0df3e0f3f5a74b04ac524b49e73d673dc82c698d3b83cf3c8b79acf2"
+      }
+    ]
+  },
+  "primary_format_sources": [
+    {
+      "url": "https://github.com/atenfyr/UAssetAPI/blob/b4e8a012939295a6fd890ddc64e57ea78b709b95/UAssetAPI/PropertyTypes/Objects/ArrayPropertyData.cs",
+      "scope": "UE tagged array inner metadata, including int64 inner struct size"
+    },
+    {
+      "url": "https://github.com/atenfyr/UAssetAPI/blob/b4e8a012939295a6fd890ddc64e57ea78b709b95/UAssetAPI/PropertyTypes/Structs/StructPropertyData.cs",
+      "scope": "UE tagged struct type and GUID metadata"
+    },
+    {
+      "url": "https://github.com/NVIDIAGameWorks/PhysX-3.4/blob/5e42a5f112351a223c19c17bb331e6c55037b8eb/PhysX_3.4/Source/GeomUtils/src/convex/GuConvexMesh.cpp",
+      "scope": "CVXM13/CLHL8/CVHL8 headers, vertices, reported bounds"
+    },
+    {
+      "url": "https://github.com/NVIDIAGameWorks/PhysX-3.4/blob/5e42a5f112351a223c19c17bb331e6c55037b8eb/PhysX_3.4/Source/GeomUtils/src/GuMeshFactory.cpp",
+      "scope": "MESH14 BVH33, counts, float vertices and 16-bit indices"
+    },
+    {
+      "url": "https://dev.epicgames.com/documentation/en-us/unreal-engine/API/Runtime/Engine/UBodySetup",
+      "scope": "General BodySetup/AggGeom/cooked data/BuildScale metadata semantics; current docs not proof of this UE4 binary"
+    }
+  ],
+  "external_sources_note": "Web search tool returned service HTTP404. Primary author repositories and Epic documentation were read directly over HTTPS, no external program installed or executed.",
+  "guarded_source_query_decisions": [
+    {
+      "api": "simGetMeshPositionVertexBuffers",
+      "decision": "NOT_CALLED",
+      "reason": "Reference implementation walks all static mesh components and GPU buffers with no object filter; not a bounded own-body query and does not directly expose collision shapes."
+    },
+    {
+      "api": "simGetObjectScale",
+      "decision": "NOT_CALLED_THIS_SLICE",
+      "reason": "Reference implementation returns actor-level scale only and zero for missing actor; would not alone certify component transforms or runtime collision envelope."
+    }
+  ],
+  "protected_files": [
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\CarSimConfig.ini",
+      "sha256": "8e96e9fb4d695eb6d21f9d7b9da4fcbd583312b45e63cc20b7b222d4d8a22f90",
+      "matches_prior_evidence": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultEngine.ini",
+      "sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+      "matches_prior_evidence": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultGame.ini",
+      "sha256": "94427ca09cb488081350225a7d3c5b0e22843ae17cb61cb1ebd4af39ad695df0",
+      "matches_prior_evidence": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultGameUserSettings.ini",
+      "sha256": "2168f96d659f41a33b4fbb5bfc3143a1437bc6059b0d018d532f74a4c2e71691",
+      "matches_prior_evidence": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultInput.ini",
+      "sha256": "1ed4e4714a4476b2e2bb15e59afef2fea5413487aa13dfc86114205adb55dec4",
+      "matches_prior_evidence": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultScalability.ini",
+      "sha256": "06fef2edfee12b05f55b914ca8fa8e490e1b708ab8869f20136874ba2897f606",
+      "matches_prior_evidence": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\OptionalModules.ini",
+      "sha256": "91745741cf40de17e1ec47a8a922db851fcdf4403df86b237f3ef03682719f45",
+      "matches_prior_evidence": true
+    },
+    {
+      "path": "C:\\Users\\20748\\Documents\\AirSim\\settings.json",
+      "sha256": "de89442d0093ffb47f7d05a3859206698145f15b2ff99b675e8149a858c8f048",
+      "matches_prior_evidence": true
+    }
+  ],
+  "verification": {
+    "full_suite": {"passed": 904, "skipped": 1, "seconds": 24.11},
+    "python314_compileall": "PASS",
+    "python310_compileall": "PASS",
+    "red_tests_observed": 20,
+    "focused_passed": 20,
+    "independent_review": "APPROVED_NO_MATERIAL_FINDINGS",
+    "independent_read_only_tests": 19,
+    "independent_output_hash_reproduced": true,
+    "independent_review_note": "Existing-output refusal separately exercised without new tempfiles. No live calls."
+  },
+  "actual": {
+    "simulator_launches": 0,
+    "api_calls": 0,
+    "flight_commands": 0,
+    "source_hdf_reads": 0,
+    "training_runs": 0,
+    "jev_requests": 0,
+    "new_pass_episodes": 0
+  },
+  "acceptance": {
+    "D6": "PARTIAL",
+    "D1_Town03_independent_PASS": 0,
+    "control_ready": false,
+    "runtime_collision_envelope_m": null
+  }
+}
