@@ -2,6 +2,8 @@
 
 更新时间：2026-10-31
 
+**10/31 D5诊断闭合：** 冻结原D5模型和区间，5个既有development_stress经完整只读PASS/SHA核验；1475有效帧含遮挡10、出框15。困难区间失覆盖、1475记录/11800候选全部回退，raw距离RMSE0.925513m劣于透明0.403856m。原D5诊断交付COMPLETED_WITH_LIMITATIONS，非收益/独立验证通过；不调参、不重训。见[压力报告](experiments/d5_frozen_stress_20261031.md)。
+
 **10/31同日现场续作：** 独立Town03地图加载已实际通过；api03地图不符失败保留，修复任务内默认地图配置并可恢复后，api04完成12次API状态读取、源保护及进程清理。495测试通过/1跳过。此为基础设施进展，不是PASS episode或真实控制效果；D1–D6仍PARTIAL。见[修复报告](experiments/town03_api_map_fix_20261031.md)。
 
 **10/31 D6执行切片：** 独立端口冻结/传播、有界异步协调器与6组固定seed Mock回归已实现；两次独立API-only预检查因额外Python归属未明而拒绝，现场启动0。Mock置信度回退与跨Python末位差异如实记录，未证明Jev/闭环收益。原条款与当前缺口见[D1–D6验收](experiments/d1_d6_acceptance_20261031.md)。用户提供的Jev综述已形成[模型优化建议](experiments/jev_literature_model_options_20261031.md)，新校准/记忆方案尚未替换冻结模型。

@@ -1,0 +1,2257 @@
+{
+  "schema": "jev_uav_track.d5_frozen_stress_evidence.v1",
+  "evidence_kind": "EXPOSED_DEVELOPMENT_STRESS_NOT_FINAL_TEST",
+  "artifact_root": "artifacts/d5_frozen_stress_20261031",
+  "report": {
+    "protocol": {
+      "kind": "FROZEN_D5_EXPOSED_DEVELOPMENT_STRESS_ONLY",
+      "frozen_artifacts": {
+        "D:\\WPS Cloud\\WPSDrive\\1574147233\\WPS云盘\\wsy-jev-uav-track\\artifacts\\acceptance_20261028\\development_split_v2.json": "7326f07e67e90ed0e6397bb553abf31e23cd8d594cf647532a5b02447b9f8e87",
+        "D:\\JevUavRuns\\repos\\jev-outcome-dataset-20261030\\artifacts\\d5_causal_calibration_20261030\\d5_residual.npz": "b67c0a70e50426dcebfff6a97adfaa3f286e1d26fe6a05e4f26e44a97f8ee189",
+        "D:\\JevUavRuns\\repos\\jev-outcome-dataset-20261030\\artifacts\\d5_causal_calibration_20261030\\calibration.json": "fa6b59e42df90ce15e39a1ea83652ff223a7e8c4517a15d1471c5f4d44d27d00",
+        "D:\\JevUavRuns\\repos\\jev-outcome-dataset-20261030\\artifacts\\d5_causal_calibration_20261030\\protocol.json": "dd8ca2293f586000ab8fa71f4d7d4725fd9696a50d881bafa5e567bcf6428130"
+      },
+      "configs": {
+        "original_96": {
+          "horizon_frames": 5,
+          "stride": 2,
+          "max_samples": 96,
+          "desired_range_m": 20,
+          "ridge_alpha": 1,
+          "train_fraction": 0.7,
+          "target_mode": "baseline_residual",
+          "rollout_horizon_s": 1,
+          "timing_tolerance_s": 0.05,
+          "input_mode": "causal_visible"
+        },
+        "all_eligible": {
+          "horizon_frames": 5,
+          "stride": 1,
+          "max_samples": 100000,
+          "desired_range_m": 20,
+          "ridge_alpha": 1,
+          "train_fraction": 0.7,
+          "target_mode": "baseline_residual",
+          "rollout_horizon_s": 1,
+          "timing_tolerance_s": 0.05,
+          "input_mode": "causal_visible"
+        }
+      },
+      "episodes": [
+        {
+          "path": "D:\\CarlaAir\\data\\trimmed\\v3\\quota_grid_20261004_formal\\Town05_pedestrian_normal_motion_close_seed26094743.hdf5",
+          "filename": "Town05_pedestrian_normal_motion_close_seed26094743.hdf5",
+          "seed": 26094743,
+          "schema": "carlaair_uav_v2_candidate",
+          "validation_status": "PASS",
+          "frame_count": 300,
+          "target_actor_ids": [
+            200
+          ],
+          "target_occluded_fraction": 0.0033333333333333335,
+          "target_in_frame_fraction": 1,
+          "source_manifest": "artifacts\\occlusion_pass_20261024\\pass_manifest_sha256.json",
+          "split": "development_stress",
+          "sha256": "26d51d3d05532ec5d641f242917ad415f99ff204b946eb6eb77a9e08521ac1fa",
+          "bytes": 338459397,
+          "recorded_yaw_available": true
+        },
+        {
+          "path": "D:\\CarlaAir\\data\\trimmed\\v3\\quota_grid_20260930\\Town10HD_bicycle_normal_motion_long_seed260922365.hdf5",
+          "filename": "Town10HD_bicycle_normal_motion_long_seed260922365.hdf5",
+          "seed": 260922365,
+          "schema": "carlaair_uav_v2_candidate",
+          "validation_status": "PASS",
+          "frame_count": 300,
+          "target_actor_ids": [
+            25
+          ],
+          "target_occluded_fraction": 0.03,
+          "target_in_frame_fraction": 1,
+          "source_manifest": "artifacts\\occlusion_pass_20261024\\pass_manifest_sha256.json",
+          "split": "development_stress",
+          "sha256": "535a7e32ea3f5650dfe82330fccb7f90fc5c71b091f542457a0872c00a498c1d",
+          "bytes": 338722010,
+          "recorded_yaw_available": true
+        },
+        {
+          "path": "D:\\CarlaAir\\data\\trimmed\\v3\\quota_grid_20261004_formal\\Town10HD_bicycle_normal_motion_long_seed26094706.hdf5",
+          "filename": "Town10HD_bicycle_normal_motion_long_seed26094706.hdf5",
+          "seed": 26094706,
+          "schema": "carlaair_uav_v2_candidate",
+          "validation_status": "PASS",
+          "frame_count": 300,
+          "target_actor_ids": [
+            25
+          ],
+          "target_occluded_fraction": 0.013333333333333334,
+          "target_in_frame_fraction": 1,
+          "source_manifest": "artifacts\\occlusion_pass_20261024\\pass_manifest_sha256.json",
+          "split": "development_stress",
+          "sha256": "696b0a2ce4c1a988899df3a023220340a5e7508809616e401bee0e1b8386857e",
+          "bytes": 354388616,
+          "recorded_yaw_available": true
+        },
+        {
+          "path": "D:\\CarlaAir\\data\\trimmed\\v3\\quota_grid_20261003_formal\\Town10HD_bicycle_frequent_turns_long_seed26094434.hdf5",
+          "filename": "Town10HD_bicycle_frequent_turns_long_seed26094434.hdf5",
+          "seed": 26094434,
+          "schema": "carlaair_uav_v2_candidate",
+          "validation_status": "PASS",
+          "frame_count": 300,
+          "target_actor_ids": [
+            25
+          ],
+          "target_occluded_fraction": 0,
+          "target_in_frame_fraction": 0.95,
+          "source_manifest": "artifacts\\occlusion_pass_20261024\\pass_manifest_sha256.json",
+          "split": "development_stress",
+          "sha256": "be3661fe3d21bc54a271a6561f3f49769922675b4eafe0c2f754ef04dd482e0a",
+          "bytes": 335023210,
+          "recorded_yaw_available": true
+        },
+        {
+          "path": "D:\\CarlaAir\\data\\trimmed\\v3\\quota_grid_20261004_formal\\Town10HD_bicycle_normal_motion_long_seed26094707.hdf5",
+          "filename": "Town10HD_bicycle_normal_motion_long_seed26094707.hdf5",
+          "seed": 26094707,
+          "schema": "carlaair_uav_v2_candidate",
+          "validation_status": "PASS",
+          "frame_count": 300,
+          "target_actor_ids": [
+            25
+          ],
+          "target_occluded_fraction": 0.013333333333333334,
+          "target_in_frame_fraction": 1,
+          "source_manifest": "artifacts\\occlusion_pass_20261024\\pass_manifest_sha256.json",
+          "split": "development_stress",
+          "sha256": "e59d92ea03d1c09088ebc5751e1f8df3ef326d62dad0013ab29c9938a3bbd247",
+          "bytes": 354258859,
+          "recorded_yaw_available": true
+        }
+      ],
+      "hash_mib_per_s": 16,
+      "retraining": false,
+      "recalibration": false,
+      "threshold_selection": false,
+      "final_test_access": false,
+      "recipe_sha256": "d9f1f2ac523aab4884c686c3c6ac7d614a9ebe41b4fc886487ece6be03b92948",
+      "code_sha256": {
+        "src/jev_uav_track/__init__.py": "7158ed0e49a4b83083431fcfc3f103abc5388d80981f30ea23bfc813cddc4378",
+        "src/jev_uav_track/async_control.py": "66386d84cba8d7806390a241f781e0f6b97a05c4dcb15d10fa9efe08d03d1d54",
+        "src/jev_uav_track/causal_belief.py": "cec6db2d74b4dd182bb8ccb334d30367f5687a7650869edf206ea24e4adc45c1",
+        "src/jev_uav_track/causal_recorded_inputs.py": "e8f0545a58c237fd8e9e2572f20b89c5a05a7e9c0286bb66e32c92940a074b32",
+        "src/jev_uav_track/closed_loop.py": "6d17f89e599712d10db7f98843621b2bb0a114b3f389a45e25e88a6c9af19dbb",
+        "src/jev_uav_track/data/__init__.py": "87563afa290b6ad5f637a1834b28d2ff0115e63db93ddc6af5ee2e4d57b8cb0a",
+        "src/jev_uav_track/data/fingerprint.py": "e488a559d0e17f85101c5f041a090c0c6f9ecd323f32b4743ede0d7a6b9909aa",
+        "src/jev_uav_track/data/hdf5_adapter.py": "f49252cf1fb7c6296dc4dc64575aab4757800eebf7f00c3eb36f391934a5a9cf",
+        "src/jev_uav_track/decision_dataset.py": "03fababb170e0a577abd45e046531665b14ece1c301b40c8e4588b458675b80c",
+        "src/jev_uav_track/decision_dataset_audit.py": "af5787258aeb783e1b20e944f564983f6099af9117dcd6f27749e9ec027a0894",
+        "src/jev_uav_track/demo.py": "bc306ac908435cff01e461af48a9b6787d4c1f4190f3e1336277360ffdbb3ead",
+        "src/jev_uav_track/evaluation.py": "0c1ffc8865c57bdb92b25ce66293a545c2065abae4deeaaa8b15bd1362a0fed4",
+        "src/jev_uav_track/event_metrics.py": "53e057687a0ea9da447e61d32bac6ddbaccdb933f7b59689243d9bd6a554dc30",
+        "src/jev_uav_track/frames.py": "28bd4bcea80870f1dfd05b743e8ab4ce1d5c07817ed3a6e08d3712c4ece9089a",
+        "src/jev_uav_track/history.py": "72b1684a57fb869cc844e557cac7b26ca10149c5438cd9ae3b3e2612396b1778",
+        "src/jev_uav_track/holdout.py": "d1246db7b520e9de30c9a2fe71f006342718f7d0b6b2719aaa7636df98ada0d5",
+        "src/jev_uav_track/isolated_runtime.py": "a7882b4bd1963e403781976de764e7b6bb9304cf49a8c578ec56da584622fb8e",
+        "src/jev_uav_track/jev_client.py": "38726c84fa0ee0622bc158f945008dea3b751d785c7d36604706240fbc6b85a4",
+        "src/jev_uav_track/learned_rollout.py": "8390bc28170856bf863bdaa41ce543972c322c738a69d9f2935102fc466b3c9e",
+        "src/jev_uav_track/live_belief.py": "474a03d35671e60bc055b0fcf4abb819f0954b728ba21a814f61b785f79c1141",
+        "src/jev_uav_track/live_observation.py": "c2e288d95736d43d665c16b59caf86c693162bdf9004b62e5bc67c9d6d085bff",
+        "src/jev_uav_track/mock_simulator.py": "765a0ecb6e47456b21b363e754753f8044d745dc5b93c7ecafa335bf1409a762",
+        "src/jev_uav_track/models.py": "11d156c18f2d34c08092dcfe57d5dd268e9856234cf00d8a9e2d02c300bad793",
+        "src/jev_uav_track/pipeline.py": "0b2a7358d8252cdb4ad78e2c91546838549fda3d5550ff978d5844f05342cad6",
+        "src/jev_uav_track/primitives.py": "53f3e7448c2762c2a7818ca4547f8aeba92b03846c0a7cb46dbe6c39360caeb2",
+        "src/jev_uav_track/request_budget.py": "b805cb04be4741febd4697af203cf86af67b25194dd2b1c6ac9f8f5312f2940a",
+        "src/jev_uav_track/residual_intervals.py": "e2117eb6f93b3d62750dcb4445378adaaf2b17091c8ab837db1016a4d6385fe8",
+        "src/jev_uav_track/residual_study.py": "cd2dc9c3a519c83d6a7599cae939b13cbe3b71b186a19a6fc66b16fbb1236441",
+        "src/jev_uav_track/rollout.py": "6a2758a3fb1f358564bc620c2353020ba5e1e7306677c9a3b2b09ef7cd654026",
+        "src/jev_uav_track/rollout_diagnostics.py": "2667fb1625b89fd2a329c26cf00a6e25d5409f7151a3c2f7e0bb41872f700346",
+        "src/jev_uav_track/safety.py": "4f80741347f5ad642c6a827555f4654ca0248a7e76683b1067941416453cb05e",
+        "src/jev_uav_track/selector.py": "185893651a8fa294607b9acd0c8908d4379a81c3f9f5792e97c174a38ab7e907",
+        "src/jev_uav_track/sim_adapter.py": "bad5659696c7a9ae9b7292bffdfe1635ed97a7593392988502fb2d4e382ad27c",
+        "src/jev_uav_track/split_integrity.py": "507048ca8d9ce86883f9cd424763ac8c3115d65d1c4acd6031287c8798ab0c80",
+        "src/jev_uav_track/training.py": "6a789ee1c73910147da2cb7833039e04533fd0da806d880b5b32d410df8a0ab4",
+        "src/jev_uav_track/windows_job.py": "3994d6a08cf979e186f7aedd6e3de42dadecb7352a2f18da8b68a7d64cdb23c8",
+        "scripts/run_d4_rollout.py": "82278f4ad7a23dba0b27e30d4fd8c184ca3e452227da7d5378cf444152bcf7f2",
+        "scripts/run_d5_calibration.py": "d8964f1a64d39d556847f4220cc420b4a9a2b5c3b2400b650d449cb21a609f6d",
+        "scripts/extend_development_split.py": "940350d615e294601318a32873c2e630361f902ac45c25b254fd2f2f5244e785"
+      },
+      "limitations": [
+        "Historically exposed stress data, not independent validation or final test.",
+        "Visible-oracle causal inputs, not RGB; future privileged truth is labels only.",
+        "Recorded camera velocity action proxy; no counterfactual or closed-loop effect.",
+        "Intervals describe raw residual predictions, not successful tracking probability.",
+        "All eligible frames are dense diagnostics, not independent calibration samples.",
+        "No true identity-crossing audit; no newly admitted episode or dataset split change."
+      ]
+    },
+    "status": "COMPLETED",
+    "provenance": [
+      {
+        "filename": "Town05_pedestrian_normal_motion_close_seed26094743.hdf5",
+        "split": "development_stress",
+        "seed": 26094743,
+        "sha256": "26d51d3d05532ec5d641f242917ad415f99ff204b946eb6eb77a9e08521ac1fa",
+        "bytes": 338459397,
+        "mtime_ns": 1791278498469171800,
+        "validation_status": "PASS",
+        "frames": 300,
+        "visibility_annotations_complete": true
+      },
+      {
+        "filename": "Town10HD_bicycle_normal_motion_long_seed260922365.hdf5",
+        "split": "development_stress",
+        "seed": 260922365,
+        "sha256": "535a7e32ea3f5650dfe82330fccb7f90fc5c71b091f542457a0872c00a498c1d",
+        "bytes": 338722010,
+        "mtime_ns": 1791966929094484400,
+        "validation_status": "PASS",
+        "frames": 300,
+        "visibility_annotations_complete": true
+      },
+      {
+        "filename": "Town10HD_bicycle_normal_motion_long_seed26094706.hdf5",
+        "split": "development_stress",
+        "seed": 26094706,
+        "sha256": "696b0a2ce4c1a988899df3a023220340a5e7508809616e401bee0e1b8386857e",
+        "bytes": 354388616,
+        "mtime_ns": 1791268241255173200,
+        "validation_status": "PASS",
+        "frames": 300,
+        "visibility_annotations_complete": true
+      },
+      {
+        "filename": "Town10HD_bicycle_frequent_turns_long_seed26094434.hdf5",
+        "split": "development_stress",
+        "seed": 26094434,
+        "sha256": "be3661fe3d21bc54a271a6561f3f49769922675b4eafe0c2f754ef04dd482e0a",
+        "bytes": 335023210,
+        "mtime_ns": 1791971236822139700,
+        "validation_status": "PASS",
+        "frames": 300,
+        "visibility_annotations_complete": true
+      },
+      {
+        "filename": "Town10HD_bicycle_normal_motion_long_seed26094707.hdf5",
+        "split": "development_stress",
+        "seed": 26094707,
+        "sha256": "e59d92ea03d1c09088ebc5751e1f8df3ef326d62dad0013ab29c9938a3bbd247",
+        "bytes": 354258859,
+        "mtime_ns": 1791268919302730800,
+        "validation_status": "PASS",
+        "frames": 300,
+        "visibility_annotations_complete": true
+      }
+    ],
+    "sampling": {
+      "original_96": {
+        "all": {
+          "status": "EVALUATED_DEVELOPMENT_STRESS",
+          "samples": 480,
+          "episodes": 5,
+          "interval": {
+            "status": "EVALUATED",
+            "count": 480,
+            "coverage": {
+              "visibility_probability": 0.9770833333333333,
+              "image_center_error": 0.9854166666666667,
+              "range_error_m": 1,
+              "covariance_trace": 0.9895833333333334
+            },
+            "width": {
+              "visibility_probability": 1.2070057701301342,
+              "image_center_error": 0.8542241760094602,
+              "range_error_m": 7.438893156232115,
+              "covariance_trace": 2.4334227448074532
+            },
+            "all_samples_covered": {
+              "visibility_probability": false,
+              "image_center_error": false,
+              "range_error_m": true,
+              "covariance_trace": false
+            }
+          },
+          "recorded_full_fallback_rate": 1,
+          "recorded_outside_fit_box_rate": 1,
+          "rmse": {
+            "transparent": {
+              "visibility_probability": 0.22818844336068056,
+              "image_center_error": 0.43526237576342874,
+              "range_error_m": 0.40866582206072105,
+              "covariance_trace": 0.5821090260578308
+            },
+            "raw_residual": {
+              "visibility_probability": 0.2816247410561835,
+              "image_center_error": 0.1380487139300378,
+              "range_error_m": 0.9101861861742319,
+              "covariance_trace": 0.7022816493859381
+            },
+            "interval_gated": {
+              "visibility_probability": 0.22818844336068056,
+              "image_center_error": 0.43526237576342874,
+              "range_error_m": 0.40866582206072105,
+              "covariance_trace": 0.5821090260578308
+            }
+          },
+          "by_episode": [
+            {
+              "filename": "Town05_pedestrian_normal_motion_close_seed26094743.hdf5",
+              "samples": 96,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 96,
+                "coverage": {
+                  "visibility_probability": 1,
+                  "image_center_error": 1,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": true,
+                  "image_center_error": true,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.07620840427268376,
+                "raw_residual": 0.2472998346404889,
+                "interval_gated": 0.07620840427268376
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_normal_motion_long_seed260922365.hdf5",
+              "samples": 96,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 96,
+                "coverage": {
+                  "visibility_probability": 0.9375,
+                  "image_center_error": 1,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": true,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.1828914707885136,
+                "raw_residual": 0.7040293676363087,
+                "interval_gated": 0.1828914707885136
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_normal_motion_long_seed26094706.hdf5",
+              "samples": 96,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 96,
+                "coverage": {
+                  "visibility_probability": 0.9895833333333334,
+                  "image_center_error": 0.9791666666666666,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": false,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.5671166107374837,
+                "raw_residual": 0.44310862506971965,
+                "interval_gated": 0.5671166107374837
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_frequent_turns_long_seed26094434.hdf5",
+              "samples": 96,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 96,
+                "coverage": {
+                  "visibility_probability": 0.96875,
+                  "image_center_error": 0.9583333333333334,
+                  "range_error_m": 1,
+                  "covariance_trace": 0.9479166666666666
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": false,
+                  "range_error_m": true,
+                  "covariance_trace": false
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.3622774427446407,
+                "raw_residual": 1.800737145060912,
+                "interval_gated": 0.3622774427446407
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_normal_motion_long_seed26094707.hdf5",
+              "samples": 96,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 96,
+                "coverage": {
+                  "visibility_probability": 0.9895833333333334,
+                  "image_center_error": 0.9895833333333334,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": false,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.5855899281390374,
+                "raw_residual": 0.38259690222356757,
+                "interval_gated": 0.5855899281390374
+              }
+            }
+          ],
+          "episode_equal_weight_range_rmse": {
+            "transparent": 0.35481677133647177,
+            "raw_residual": 0.7155543749261992,
+            "interval_gated": 0.35481677133647177
+          }
+        },
+        "visible": {
+          "status": "EVALUATED_DEVELOPMENT_STRESS",
+          "samples": 472,
+          "episodes": 5,
+          "interval": {
+            "status": "EVALUATED",
+            "count": 472,
+            "coverage": {
+              "visibility_probability": 0.9872881355932204,
+              "image_center_error": 0.9915254237288136,
+              "range_error_m": 1,
+              "covariance_trace": 0.9978813559322034
+            },
+            "width": {
+              "visibility_probability": 1.2070057701301342,
+              "image_center_error": 0.8542241760094602,
+              "range_error_m": 7.438893156232115,
+              "covariance_trace": 2.4334227448074532
+            },
+            "all_samples_covered": {
+              "visibility_probability": false,
+              "image_center_error": false,
+              "range_error_m": true,
+              "covariance_trace": false
+            }
+          },
+          "recorded_full_fallback_rate": 1,
+          "recorded_outside_fit_box_rate": 1,
+          "rmse": {
+            "transparent": {
+              "visibility_probability": 0.20577511342512375,
+              "image_center_error": 0.4331315948372087,
+              "range_error_m": 0.4009393053107209,
+              "covariance_trace": 0.36983751745916843
+            },
+            "raw_residual": {
+              "visibility_probability": 0.25587249060465095,
+              "image_center_error": 0.12196436006980173,
+              "range_error_m": 0.8752486993319859,
+              "covariance_trace": 0.49104749028039735
+            },
+            "interval_gated": {
+              "visibility_probability": 0.20577511342512375,
+              "image_center_error": 0.4331315948372087,
+              "range_error_m": 0.4009393053107209,
+              "covariance_trace": 0.36983751745916843
+            }
+          },
+          "by_episode": [
+            {
+              "filename": "Town05_pedestrian_normal_motion_close_seed26094743.hdf5",
+              "samples": 96,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 96,
+                "coverage": {
+                  "visibility_probability": 1,
+                  "image_center_error": 1,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": true,
+                  "image_center_error": true,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.07620840427268376,
+                "raw_residual": 0.2472998346404889,
+                "interval_gated": 0.07620840427268376
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_normal_motion_long_seed260922365.hdf5",
+              "samples": 93,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 93,
+                "coverage": {
+                  "visibility_probability": 0.967741935483871,
+                  "image_center_error": 1,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": true,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.18347965497383864,
+                "raw_residual": 0.709392259844959,
+                "interval_gated": 0.18347965497383864
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_normal_motion_long_seed26094706.hdf5",
+              "samples": 96,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 96,
+                "coverage": {
+                  "visibility_probability": 0.9895833333333334,
+                  "image_center_error": 0.9791666666666666,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": false,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.5671166107374837,
+                "raw_residual": 0.44310862506971965,
+                "interval_gated": 0.5671166107374837
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_frequent_turns_long_seed26094434.hdf5",
+              "samples": 91,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 91,
+                "coverage": {
+                  "visibility_probability": 0.989010989010989,
+                  "image_center_error": 0.989010989010989,
+                  "range_error_m": 1,
+                  "covariance_trace": 0.989010989010989
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": false,
+                  "range_error_m": true,
+                  "covariance_trace": false
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.30366258524162043,
+                "raw_residual": 1.741562469251149,
+                "interval_gated": 0.30366258524162043
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_normal_motion_long_seed26094707.hdf5",
+              "samples": 96,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 96,
+                "coverage": {
+                  "visibility_probability": 0.9895833333333334,
+                  "image_center_error": 0.9895833333333334,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": false,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.5855899281390374,
+                "raw_residual": 0.38259690222356757,
+                "interval_gated": 0.5855899281390374
+              }
+            }
+          ],
+          "episode_equal_weight_range_rmse": {
+            "transparent": 0.3432114366729328,
+            "raw_residual": 0.7047920182059768,
+            "interval_gated": 0.3432114366729328
+          }
+        },
+        "occluded": {
+          "status": "EVALUATED_DEVELOPMENT_STRESS",
+          "samples": 3,
+          "episodes": 1,
+          "interval": {
+            "status": "EVALUATED",
+            "count": 3,
+            "coverage": {
+              "visibility_probability": 0,
+              "image_center_error": 1,
+              "range_error_m": 1,
+              "covariance_trace": 1
+            },
+            "width": {
+              "visibility_probability": 1.2070057701301342,
+              "image_center_error": 0.8542241760094602,
+              "range_error_m": 7.438893156232115,
+              "covariance_trace": 2.4334227448074532
+            },
+            "all_samples_covered": {
+              "visibility_probability": false,
+              "image_center_error": true,
+              "range_error_m": true,
+              "covariance_trace": true
+            }
+          },
+          "recorded_full_fallback_rate": 1,
+          "recorded_outside_fit_box_rate": 1,
+          "rmse": {
+            "transparent": {
+              "visibility_probability": 1,
+              "image_center_error": 0.360047965187287,
+              "range_error_m": 0.16361230186345507,
+              "covariance_trace": 0.6972856360583723
+            },
+            "raw_residual": {
+              "visibility_probability": 1.0350511949335468,
+              "image_center_error": 0.07970034491006185,
+              "range_error_m": 0.5105648711516592,
+              "covariance_trace": 0.7717118406392103
+            },
+            "interval_gated": {
+              "visibility_probability": 1,
+              "image_center_error": 0.360047965187287,
+              "range_error_m": 0.16361230186345507,
+              "covariance_trace": 0.6972856360583723
+            }
+          },
+          "by_episode": [
+            {
+              "filename": "Town10HD_bicycle_normal_motion_long_seed260922365.hdf5",
+              "samples": 3,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 3,
+                "coverage": {
+                  "visibility_probability": 0,
+                  "image_center_error": 1,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": true,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.16361230186345507,
+                "raw_residual": 0.5105648711516592,
+                "interval_gated": 0.16361230186345507
+              }
+            }
+          ],
+          "episode_equal_weight_range_rmse": {
+            "transparent": 0.16361230186345507,
+            "raw_residual": 0.5105648711516592,
+            "interval_gated": 0.16361230186345507
+          }
+        },
+        "out_of_frame": {
+          "status": "EVALUATED_DEVELOPMENT_STRESS",
+          "samples": 5,
+          "episodes": 1,
+          "interval": {
+            "status": "EVALUATED",
+            "count": 5,
+            "coverage": {
+              "visibility_probability": 0.6,
+              "image_center_error": 0.4,
+              "range_error_m": 1,
+              "covariance_trace": 0.2
+            },
+            "width": {
+              "visibility_probability": 1.2070057701301342,
+              "image_center_error": 0.8542241760094602,
+              "range_error_m": 7.438893156232115,
+              "covariance_trace": 2.4334227448074532
+            },
+            "all_samples_covered": {
+              "visibility_probability": false,
+              "image_center_error": false,
+              "range_error_m": true,
+              "covariance_trace": false
+            }
+          },
+          "recorded_full_fallback_rate": 1,
+          "recorded_outside_fit_box_rate": 1,
+          "rmse": {
+            "transparent": {
+              "visibility_probability": 0.6336402764976355,
+              "image_center_error": 0.6324700347342076,
+              "range_error_m": 0.9174221376870563,
+              "covariance_trace": 4.396129170319449
+            },
+            "raw_residual": {
+              "visibility_probability": 0.8892490449833043,
+              "image_center_error": 0.6492109526990567,
+              "range_error_m": 2.6566213345573106,
+              "covariance_trace": 4.922131748266079
+            },
+            "interval_gated": {
+              "visibility_probability": 0.6336402764976355,
+              "image_center_error": 0.6324700347342076,
+              "range_error_m": 0.9174221376870563,
+              "covariance_trace": 4.396129170319449
+            }
+          },
+          "by_episode": [
+            {
+              "filename": "Town10HD_bicycle_frequent_turns_long_seed26094434.hdf5",
+              "samples": 5,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 5,
+                "coverage": {
+                  "visibility_probability": 0.6,
+                  "image_center_error": 0.4,
+                  "range_error_m": 1,
+                  "covariance_trace": 0.2
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": false,
+                  "range_error_m": true,
+                  "covariance_trace": false
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.9174221376870563,
+                "raw_residual": 2.6566213345573106,
+                "interval_gated": 0.9174221376870563
+              }
+            }
+          ],
+          "episode_equal_weight_range_rmse": {
+            "transparent": 0.9174221376870563,
+            "raw_residual": 2.6566213345573106,
+            "interval_gated": 0.9174221376870563
+          }
+        },
+        "unknown": {
+          "status": "NOT_EVALUATED",
+          "samples": 0,
+          "episodes": 0
+        }
+      },
+      "all_eligible": {
+        "all": {
+          "status": "EVALUATED_DEVELOPMENT_STRESS",
+          "samples": 1475,
+          "episodes": 5,
+          "interval": {
+            "status": "EVALUATED",
+            "count": 1475,
+            "coverage": {
+              "visibility_probability": 0.9769491525423729,
+              "image_center_error": 0.9864406779661017,
+              "range_error_m": 0.9972881355932204,
+              "covariance_trace": 0.9891525423728813
+            },
+            "width": {
+              "visibility_probability": 1.2070057701301342,
+              "image_center_error": 0.8542241760094602,
+              "range_error_m": 7.438893156232115,
+              "covariance_trace": 2.4334227448074532
+            },
+            "all_samples_covered": {
+              "visibility_probability": false,
+              "image_center_error": false,
+              "range_error_m": false,
+              "covariance_trace": false
+            }
+          },
+          "recorded_full_fallback_rate": 1,
+          "recorded_outside_fit_box_rate": 1,
+          "rmse": {
+            "transparent": {
+              "visibility_probability": 0.22988300537544654,
+              "image_center_error": 0.4318087356074184,
+              "range_error_m": 0.40385551578635404,
+              "covariance_trace": 0.6125851165851679
+            },
+            "raw_residual": {
+              "visibility_probability": 0.27814665013457013,
+              "image_center_error": 0.1406963689663179,
+              "range_error_m": 0.9255127233247911,
+              "covariance_trace": 0.7270198224646438
+            },
+            "interval_gated": {
+              "visibility_probability": 0.22988300537544654,
+              "image_center_error": 0.4318087356074184,
+              "range_error_m": 0.40385551578635404,
+              "covariance_trace": 0.6125851165851679
+            }
+          },
+          "by_episode": [
+            {
+              "filename": "Town05_pedestrian_normal_motion_close_seed26094743.hdf5",
+              "samples": 295,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 295,
+                "coverage": {
+                  "visibility_probability": 0.9966101694915255,
+                  "image_center_error": 1,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": true,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.07453641670318291,
+                "raw_residual": 0.23652107372304215,
+                "interval_gated": 0.07453641670318291
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_normal_motion_long_seed260922365.hdf5",
+              "samples": 295,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 295,
+                "coverage": {
+                  "visibility_probability": 0.9457627118644067,
+                  "image_center_error": 1,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": true,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.16964724102616857,
+                "raw_residual": 0.7114603836556357,
+                "interval_gated": 0.16964724102616857
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_normal_motion_long_seed26094706.hdf5",
+              "samples": 295,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 295,
+                "coverage": {
+                  "visibility_probability": 0.9864406779661017,
+                  "image_center_error": 0.9864406779661017,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": false,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.5775047912996899,
+                "raw_residual": 0.4821932698494223,
+                "interval_gated": 0.5775047912996899
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_frequent_turns_long_seed26094434.hdf5",
+              "samples": 295,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 295,
+                "coverage": {
+                  "visibility_probability": 0.9694915254237289,
+                  "image_center_error": 0.9491525423728814,
+                  "range_error_m": 0.9864406779661017,
+                  "covariance_trace": 0.9457627118644067
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": false,
+                  "range_error_m": false,
+                  "covariance_trace": false
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.3832435248040623,
+                "raw_residual": 1.8266359269128418,
+                "interval_gated": 0.3832435248040623
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_normal_motion_long_seed26094707.hdf5",
+              "samples": 295,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 295,
+                "coverage": {
+                  "visibility_probability": 0.9864406779661017,
+                  "image_center_error": 0.9966101694915255,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": false,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.5484278813793375,
+                "raw_residual": 0.38941205730820727,
+                "interval_gated": 0.5484278813793375
+              }
+            }
+          ],
+          "episode_equal_weight_range_rmse": {
+            "transparent": 0.35067197104248826,
+            "raw_residual": 0.7292445422898298,
+            "interval_gated": 0.35067197104248826
+          }
+        },
+        "visible": {
+          "status": "EVALUATED_DEVELOPMENT_STRESS",
+          "samples": 1450,
+          "episodes": 5,
+          "interval": {
+            "status": "EVALUATED",
+            "count": 1450,
+            "coverage": {
+              "visibility_probability": 0.9868965517241379,
+              "image_center_error": 0.993103448275862,
+              "range_error_m": 0.9972413793103448,
+              "covariance_trace": 0.9972413793103448
+            },
+            "width": {
+              "visibility_probability": 1.2070057701301342,
+              "image_center_error": 0.8542241760094602,
+              "range_error_m": 7.438893156232115,
+              "covariance_trace": 2.4334227448074532
+            },
+            "all_samples_covered": {
+              "visibility_probability": false,
+              "image_center_error": false,
+              "range_error_m": false,
+              "covariance_trace": false
+            }
+          },
+          "recorded_full_fallback_rate": 1,
+          "recorded_outside_fit_box_rate": 1,
+          "rmse": {
+            "transparent": {
+              "visibility_probability": 0.20831531030637548,
+              "image_center_error": 0.43069738231108273,
+              "range_error_m": 0.39554812753914775,
+              "covariance_trace": 0.37007797827910055
+            },
+            "raw_residual": {
+              "visibility_probability": 0.25402459179660725,
+              "image_center_error": 0.1232939494611399,
+              "range_error_m": 0.8937264567001786,
+              "covariance_trace": 0.4870899701590645
+            },
+            "interval_gated": {
+              "visibility_probability": 0.20831531030637548,
+              "image_center_error": 0.43069738231108273,
+              "range_error_m": 0.39554812753914775,
+              "covariance_trace": 0.37007797827910055
+            }
+          },
+          "by_episode": [
+            {
+              "filename": "Town05_pedestrian_normal_motion_close_seed26094743.hdf5",
+              "samples": 294,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 294,
+                "coverage": {
+                  "visibility_probability": 1,
+                  "image_center_error": 1,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": true,
+                  "image_center_error": true,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.07450886246497258,
+                "raw_residual": 0.2368510244022729,
+                "interval_gated": 0.07450886246497258
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_normal_motion_long_seed260922365.hdf5",
+              "samples": 286,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 286,
+                "coverage": {
+                  "visibility_probability": 0.9755244755244755,
+                  "image_center_error": 1,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": true,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.17062654651791054,
+                "raw_residual": 0.7179468528490003,
+                "interval_gated": 0.17062654651791054
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_normal_motion_long_seed26094706.hdf5",
+              "samples": 295,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 295,
+                "coverage": {
+                  "visibility_probability": 0.9864406779661017,
+                  "image_center_error": 0.9864406779661017,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": false,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.5775047912996899,
+                "raw_residual": 0.4821932698494223,
+                "interval_gated": 0.5775047912996899
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_frequent_turns_long_seed26094434.hdf5",
+              "samples": 280,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 280,
+                "coverage": {
+                  "visibility_probability": 0.9857142857142858,
+                  "image_center_error": 0.9821428571428571,
+                  "range_error_m": 0.9857142857142858,
+                  "covariance_trace": 0.9857142857142858
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": false,
+                  "range_error_m": false,
+                  "covariance_trace": false
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.3261896547496672,
+                "raw_residual": 1.7737644405042052,
+                "interval_gated": 0.3261896547496672
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_normal_motion_long_seed26094707.hdf5",
+              "samples": 295,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 295,
+                "coverage": {
+                  "visibility_probability": 0.9864406779661017,
+                  "image_center_error": 0.9966101694915255,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": false,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.5484278813793375,
+                "raw_residual": 0.38941205730820727,
+                "interval_gated": 0.5484278813793375
+              }
+            }
+          ],
+          "episode_equal_weight_range_rmse": {
+            "transparent": 0.3394515472823155,
+            "raw_residual": 0.7200335289826215,
+            "interval_gated": 0.3394515472823155
+          }
+        },
+        "occluded": {
+          "status": "EVALUATED_DEVELOPMENT_STRESS",
+          "samples": 10,
+          "episodes": 2,
+          "interval": {
+            "status": "EVALUATED",
+            "count": 10,
+            "coverage": {
+              "visibility_probability": 0,
+              "image_center_error": 1,
+              "range_error_m": 1,
+              "covariance_trace": 1
+            },
+            "width": {
+              "visibility_probability": 1.2070057701301342,
+              "image_center_error": 0.8542241760094602,
+              "range_error_m": 7.438893156232115,
+              "covariance_trace": 2.4334227448074532
+            },
+            "all_samples_covered": {
+              "visibility_probability": false,
+              "image_center_error": true,
+              "range_error_m": true,
+              "covariance_trace": true
+            }
+          },
+          "recorded_full_fallback_rate": 1,
+          "recorded_outside_fit_box_rate": 1,
+          "rmse": {
+            "transparent": {
+              "visibility_probability": 1,
+              "image_center_error": 0.32423355077987603,
+              "range_error_m": 0.1305681484362137,
+              "covariance_trace": 0.7397033616973835
+            },
+            "raw_residual": {
+              "visibility_probability": 1.0155441235270668,
+              "image_center_error": 0.07249653244103585,
+              "range_error_m": 0.4374778739263565,
+              "covariance_trace": 0.7899460082416574
+            },
+            "interval_gated": {
+              "visibility_probability": 1,
+              "image_center_error": 0.32423355077987603,
+              "range_error_m": 0.1305681484362137,
+              "covariance_trace": 0.7397033616973835
+            }
+          },
+          "by_episode": [
+            {
+              "filename": "Town05_pedestrian_normal_motion_close_seed26094743.hdf5",
+              "samples": 1,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 1,
+                "coverage": {
+                  "visibility_probability": 0,
+                  "image_center_error": 1,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": true,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.08223797892755691,
+                "raw_residual": 0.10011254364631483,
+                "interval_gated": 0.08223797892755691
+              }
+            },
+            {
+              "filename": "Town10HD_bicycle_normal_motion_long_seed260922365.hdf5",
+              "samples": 9,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 9,
+                "coverage": {
+                  "visibility_probability": 0,
+                  "image_center_error": 1,
+                  "range_error_m": 1,
+                  "covariance_trace": 1
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": true,
+                  "range_error_m": true,
+                  "covariance_trace": true
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.1348733268591607,
+                "raw_residual": 0.4599331328641293,
+                "interval_gated": 0.1348733268591607
+              }
+            }
+          ],
+          "episode_equal_weight_range_rmse": {
+            "transparent": 0.1085556528933588,
+            "raw_residual": 0.28002283825522206,
+            "interval_gated": 0.1085556528933588
+          }
+        },
+        "out_of_frame": {
+          "status": "EVALUATED_DEVELOPMENT_STRESS",
+          "samples": 15,
+          "episodes": 1,
+          "interval": {
+            "status": "EVALUATED",
+            "count": 15,
+            "coverage": {
+              "visibility_probability": 0.6666666666666666,
+              "image_center_error": 0.3333333333333333,
+              "range_error_m": 1,
+              "covariance_trace": 0.2
+            },
+            "width": {
+              "visibility_probability": 1.2070057701301342,
+              "image_center_error": 0.8542241760094602,
+              "range_error_m": 7.438893156232115,
+              "covariance_trace": 2.4334227448074532
+            },
+            "all_samples_covered": {
+              "visibility_probability": false,
+              "image_center_error": false,
+              "range_error_m": true,
+              "covariance_trace": false
+            }
+          },
+          "recorded_full_fallback_rate": 1,
+          "recorded_outside_fit_box_rate": 1,
+          "rmse": {
+            "transparent": {
+              "visibility_probability": 0.5787918451395113,
+              "image_center_error": 0.5773555648635393,
+              "range_error_m": 0.9499609940186448,
+              "covariance_trace": 4.826655048253923
+            },
+            "raw_residual": {
+              "visibility_probability": 0.826017983440875,
+              "image_center_error": 0.6881729976485619,
+              "range_error_m": 2.6248729174058743,
+              "covariance_trace": 5.350143389207079
+            },
+            "interval_gated": {
+              "visibility_probability": 0.5787918451395113,
+              "image_center_error": 0.5773555648635393,
+              "range_error_m": 0.9499609940186448,
+              "covariance_trace": 4.826655048253923
+            }
+          },
+          "by_episode": [
+            {
+              "filename": "Town10HD_bicycle_frequent_turns_long_seed26094434.hdf5",
+              "samples": 15,
+              "interval": {
+                "status": "EVALUATED",
+                "count": 15,
+                "coverage": {
+                  "visibility_probability": 0.6666666666666666,
+                  "image_center_error": 0.3333333333333333,
+                  "range_error_m": 1,
+                  "covariance_trace": 0.2
+                },
+                "width": {
+                  "visibility_probability": 1.2070057701301342,
+                  "image_center_error": 0.8542241760094602,
+                  "range_error_m": 7.438893156232115,
+                  "covariance_trace": 2.4334227448074532
+                },
+                "all_samples_covered": {
+                  "visibility_probability": false,
+                  "image_center_error": false,
+                  "range_error_m": true,
+                  "covariance_trace": false
+                }
+              },
+              "range_rmse": {
+                "transparent": 0.9499609940186446,
+                "raw_residual": 2.6248729174058743,
+                "interval_gated": 0.9499609940186446
+              }
+            }
+          ],
+          "episode_equal_weight_range_rmse": {
+            "transparent": 0.9499609940186446,
+            "raw_residual": 2.6248729174058743,
+            "interval_gated": 0.9499609940186446
+          }
+        },
+        "unknown": {
+          "status": "NOT_EVALUATED",
+          "samples": 0,
+          "episodes": 0
+        }
+      }
+    },
+    "candidate_diagnostics": {
+      "all": {
+        "frames": 1475,
+        "candidates": 11800,
+        "fallback_count": 11800,
+        "outside_fit_box_count": 11800,
+        "no_safe_candidate_frames": 1475,
+        "raw_ranking_changed": 746,
+        "gated_ranking_changed": 0,
+        "mock_utility_disagreement": 0
+      },
+      "visible": {
+        "frames": 1450,
+        "candidates": 11600,
+        "fallback_count": 11600,
+        "outside_fit_box_count": 11600,
+        "no_safe_candidate_frames": 1450,
+        "raw_ranking_changed": 746,
+        "gated_ranking_changed": 0,
+        "mock_utility_disagreement": 0
+      },
+      "occluded": {
+        "frames": 10,
+        "candidates": 80,
+        "fallback_count": 80,
+        "outside_fit_box_count": 80,
+        "no_safe_candidate_frames": 10,
+        "raw_ranking_changed": 0,
+        "gated_ranking_changed": 0,
+        "mock_utility_disagreement": 0
+      },
+      "out_of_frame": {
+        "frames": 15,
+        "candidates": 120,
+        "fallback_count": 120,
+        "outside_fit_box_count": 120,
+        "no_safe_candidate_frames": 15,
+        "raw_ranking_changed": 0,
+        "gated_ranking_changed": 0,
+        "mock_utility_disagreement": 0
+      },
+      "unknown": {
+        "frames": 0,
+        "candidates": 0,
+        "fallback_count": 0,
+        "outside_fit_box_count": 0,
+        "no_safe_candidate_frames": 0,
+        "raw_ranking_changed": 0,
+        "gated_ranking_changed": 0,
+        "mock_utility_disagreement": 0
+      }
+    },
+    "frozen_artifacts_unchanged": true,
+    "records_sha256": "9d076fa7e5a0d93303919a810bc4550a2ded17bb20340d5c6f29b12c2662ed6d",
+    "verified_reads_sha256": "8c9765e9bef700837618e29bc39dd58eda70024c03f6ca38d4277fbf24a1634e"
+  },
+  "raw_record_recomputation": {
+    "status": "RECOMPUTED_FROM_ALL_RAW_RECORDS",
+    "records": 1955,
+    "nonempty_policy_strata_checked": 8,
+    "report_sha256": "5f3fe645c66a2a0d9d52a048ebaf4101df6a241dc3f327b021cfb6a525490160",
+    "records_sha256": "9d076fa7e5a0d93303919a810bc4550a2ded17bb20340d5c6f29b12c2662ed6d",
+    "feature_violations": {
+      "all": [
+        {
+          "feature": "target_range_m",
+          "below": 295,
+          "above": 1156,
+          "fit_min": 9.138856877293833,
+          "fit_max": 25.188775015543904,
+          "observed_min": 7.62602170803157,
+          "observed_max": 39.077447374846564
+        },
+        {
+          "feature": "target_vx_mps",
+          "below": 0,
+          "above": 452,
+          "fit_min": -2.394027763471628,
+          "fit_max": 2.3788452680150853,
+          "observed_min": -1.9478607613115182,
+          "observed_max": 2.634735166312795
+        },
+        {
+          "feature": "target_vy_mps",
+          "below": 0,
+          "above": 298,
+          "fit_min": -2.397499138060938,
+          "fit_max": 0.8594513131555463,
+          "observed_min": -2.387504631001606,
+          "observed_max": 2.6325989357962967
+        },
+        {
+          "feature": "target_vz_mps",
+          "below": 0,
+          "above": 44,
+          "fit_min": -0.030748071836264546,
+          "fit_max": 0.027791979412555234,
+          "observed_min": -0.024759672204248732,
+          "observed_max": 0.061592461055348685
+        },
+        {
+          "feature": "uav_vx_mps",
+          "below": 1,
+          "above": 68,
+          "fit_min": -5.445671081542969,
+          "fit_max": 2.96783447265625,
+          "observed_min": -5.446052551269531,
+          "observed_max": 6.735420227050781
+        },
+        {
+          "feature": "uav_vy_mps",
+          "below": 14,
+          "above": 142,
+          "fit_min": -4.064512252807617,
+          "fit_max": 1.800084114074707,
+          "observed_min": -4.652214050292969,
+          "observed_max": 5.135536193847656
+        },
+        {
+          "feature": "uav_vz_mps",
+          "below": 1,
+          "above": 57,
+          "fit_min": -0.8358955383300781,
+          "fit_max": 0.24957656860351562,
+          "observed_min": -0.9264469146728516,
+          "observed_max": 0.5959987640380859
+        },
+        {
+          "feature": "visibility_probability",
+          "below": 25,
+          "above": 0,
+          "fit_min": 1,
+          "fit_max": 1,
+          "observed_min": 0.05,
+          "observed_max": 1
+        },
+        {
+          "feature": "occlusion_risk",
+          "below": 0,
+          "above": 25,
+          "fit_min": 0,
+          "fit_max": 0,
+          "observed_min": 0,
+          "observed_max": 0.6
+        },
+        {
+          "feature": "image_center_error",
+          "below": 0,
+          "above": 359,
+          "fit_min": 0.000002948644637020455,
+          "fit_max": 0.3712540685528969,
+          "observed_min": 0.00009734427568383176,
+          "observed_max": 1
+        },
+        {
+          "feature": "uav_speed_mps",
+          "below": 0,
+          "above": 12,
+          "fit_min": 0.018041281335933107,
+          "fit_max": 5.585036366139928,
+          "observed_min": 0.13061750541146655,
+          "observed_max": 7.093264658183713
+        },
+        {
+          "feature": "command_vx_mps",
+          "below": 1,
+          "above": 68,
+          "fit_min": -5.445671081542969,
+          "fit_max": 2.96783447265625,
+          "observed_min": -5.446052551269531,
+          "observed_max": 6.735420227050781
+        },
+        {
+          "feature": "command_vy_mps",
+          "below": 14,
+          "above": 142,
+          "fit_min": -4.064512252807617,
+          "fit_max": 1.800084114074707,
+          "observed_min": -4.652214050292969,
+          "observed_max": 5.135536193847656
+        },
+        {
+          "feature": "command_vz_mps",
+          "below": 1,
+          "above": 57,
+          "fit_min": -0.8358955383300781,
+          "fit_max": 0.24957656860351562,
+          "observed_min": -0.9264469146728516,
+          "observed_max": 0.5959987640380859
+        }
+      ],
+      "visible": [
+        {
+          "feature": "target_range_m",
+          "below": 294,
+          "above": 1132,
+          "fit_min": 9.138856877293833,
+          "fit_max": 25.188775015543904,
+          "observed_min": 7.62602170803157,
+          "observed_max": 37.12539640817479
+        },
+        {
+          "feature": "target_vx_mps",
+          "below": 0,
+          "above": 443,
+          "fit_min": -2.394027763471628,
+          "fit_max": 2.3788452680150853,
+          "observed_min": -1.9478607613115182,
+          "observed_max": 2.634735166312795
+        },
+        {
+          "feature": "target_vy_mps",
+          "below": 0,
+          "above": 298,
+          "fit_min": -2.397499138060938,
+          "fit_max": 0.8594513131555463,
+          "observed_min": -2.387504631001606,
+          "observed_max": 2.6325989357962967
+        },
+        {
+          "feature": "target_vz_mps",
+          "below": 0,
+          "above": 44,
+          "fit_min": -0.030748071836264546,
+          "fit_max": 0.027791979412555234,
+          "observed_min": -0.024759672204248732,
+          "observed_max": 0.061592461055348685
+        },
+        {
+          "feature": "uav_vx_mps",
+          "below": 1,
+          "above": 68,
+          "fit_min": -5.445671081542969,
+          "fit_max": 2.96783447265625,
+          "observed_min": -5.446052551269531,
+          "observed_max": 6.735420227050781
+        },
+        {
+          "feature": "uav_vy_mps",
+          "below": 14,
+          "above": 142,
+          "fit_min": -4.064512252807617,
+          "fit_max": 1.800084114074707,
+          "observed_min": -4.652214050292969,
+          "observed_max": 5.135536193847656
+        },
+        {
+          "feature": "uav_vz_mps",
+          "below": 1,
+          "above": 47,
+          "fit_min": -0.8358955383300781,
+          "fit_max": 0.24957656860351562,
+          "observed_min": -0.9264469146728516,
+          "observed_max": 0.5959987640380859
+        },
+        {
+          "feature": "image_center_error",
+          "below": 0,
+          "above": 341,
+          "fit_min": 0.000002948644637020455,
+          "fit_max": 0.3712540685528969,
+          "observed_min": 0.00009734427568383176,
+          "observed_max": 1
+        },
+        {
+          "feature": "uav_speed_mps",
+          "below": 0,
+          "above": 12,
+          "fit_min": 0.018041281335933107,
+          "fit_max": 5.585036366139928,
+          "observed_min": 0.13061750541146655,
+          "observed_max": 7.093264658183713
+        },
+        {
+          "feature": "command_vx_mps",
+          "below": 1,
+          "above": 68,
+          "fit_min": -5.445671081542969,
+          "fit_max": 2.96783447265625,
+          "observed_min": -5.446052551269531,
+          "observed_max": 6.735420227050781
+        },
+        {
+          "feature": "command_vy_mps",
+          "below": 14,
+          "above": 142,
+          "fit_min": -4.064512252807617,
+          "fit_max": 1.800084114074707,
+          "observed_min": -4.652214050292969,
+          "observed_max": 5.135536193847656
+        },
+        {
+          "feature": "command_vz_mps",
+          "below": 1,
+          "above": 47,
+          "fit_min": -0.8358955383300781,
+          "fit_max": 0.24957656860351562,
+          "observed_min": -0.9264469146728516,
+          "observed_max": 0.5959987640380859
+        }
+      ],
+      "occluded": [
+        {
+          "feature": "target_range_m",
+          "below": 1,
+          "above": 9,
+          "fit_min": 9.138856877293833,
+          "fit_max": 25.188775015543904,
+          "observed_min": 7.75005693526891,
+          "observed_max": 27.394928694137555
+        },
+        {
+          "feature": "target_vx_mps",
+          "below": 0,
+          "above": 9,
+          "fit_min": -2.394027763471628,
+          "fit_max": 2.3788452680150853,
+          "observed_min": -1.0000038370490931,
+          "observed_max": 2.3826981123394844
+        },
+        {
+          "feature": "visibility_probability",
+          "below": 10,
+          "above": 0,
+          "fit_min": 1,
+          "fit_max": 1,
+          "observed_min": 0.05,
+          "observed_max": 0.05
+        },
+        {
+          "feature": "occlusion_risk",
+          "below": 0,
+          "above": 10,
+          "fit_min": 0,
+          "fit_max": 0,
+          "observed_min": 0.6,
+          "observed_max": 0.6
+        },
+        {
+          "feature": "image_center_error",
+          "below": 0,
+          "above": 3,
+          "fit_min": 0.000002948644637020455,
+          "fit_max": 0.3712540685528969,
+          "observed_min": 0.0058207361115832,
+          "observed_max": 0.4758419857735627
+        }
+      ],
+      "out_of_frame": [
+        {
+          "feature": "target_range_m",
+          "below": 0,
+          "above": 15,
+          "fit_min": 9.138856877293833,
+          "fit_max": 25.188775015543904,
+          "observed_min": 36.508434204018954,
+          "observed_max": 39.077447374846564
+        },
+        {
+          "feature": "uav_vz_mps",
+          "below": 0,
+          "above": 10,
+          "fit_min": -0.8358955383300781,
+          "fit_max": 0.24957656860351562,
+          "observed_min": 0.019693374633789062,
+          "observed_max": 0.44918060302734375
+        },
+        {
+          "feature": "visibility_probability",
+          "below": 15,
+          "above": 0,
+          "fit_min": 1,
+          "fit_max": 1,
+          "observed_min": 0.05,
+          "observed_max": 0.05
+        },
+        {
+          "feature": "occlusion_risk",
+          "below": 0,
+          "above": 15,
+          "fit_min": 0,
+          "fit_max": 0,
+          "observed_min": 0.6,
+          "observed_max": 0.6
+        },
+        {
+          "feature": "image_center_error",
+          "below": 0,
+          "above": 15,
+          "fit_min": 0.000002948644637020455,
+          "fit_max": 0.3712540685528969,
+          "observed_min": 1,
+          "observed_max": 1
+        },
+        {
+          "feature": "command_vz_mps",
+          "below": 0,
+          "above": 10,
+          "fit_min": -0.8358955383300781,
+          "fit_max": 0.24957656860351562,
+          "observed_min": 0.019693374633789062,
+          "observed_max": 0.44918060302734375
+        }
+      ]
+    },
+    "dense": {
+      "all": {
+        "status": "EVALUATED_DEVELOPMENT_STRESS",
+        "samples": 1475,
+        "episodes": 5,
+        "interval": {
+          "status": "EVALUATED",
+          "count": 1475,
+          "coverage": {
+            "visibility_probability": 0.9769491525423729,
+            "image_center_error": 0.9864406779661017,
+            "range_error_m": 0.9972881355932204,
+            "covariance_trace": 0.9891525423728813
+          },
+          "width": {
+            "visibility_probability": 1.2070057701301342,
+            "image_center_error": 0.8542241760094602,
+            "range_error_m": 7.438893156232115,
+            "covariance_trace": 2.4334227448074532
+          },
+          "all_samples_covered": {
+            "visibility_probability": false,
+            "image_center_error": false,
+            "range_error_m": false,
+            "covariance_trace": false
+          }
+        },
+        "recorded_full_fallback_rate": 1,
+        "recorded_outside_fit_box_rate": 1,
+        "rmse": {
+          "transparent": {
+            "visibility_probability": 0.22988300537544654,
+            "image_center_error": 0.4318087356074184,
+            "range_error_m": 0.40385551578635404,
+            "covariance_trace": 0.6125851165851679
+          },
+          "raw_residual": {
+            "visibility_probability": 0.27814665013457013,
+            "image_center_error": 0.1406963689663179,
+            "range_error_m": 0.9255127233247911,
+            "covariance_trace": 0.7270198224646438
+          },
+          "interval_gated": {
+            "visibility_probability": 0.22988300537544654,
+            "image_center_error": 0.4318087356074184,
+            "range_error_m": 0.40385551578635404,
+            "covariance_trace": 0.6125851165851679
+          }
+        },
+        "episode_equal_weight_range_rmse": {
+          "transparent": 0.35067197104248826,
+          "raw_residual": 0.7292445422898298,
+          "interval_gated": 0.35067197104248826
+        }
+      },
+      "visible": {
+        "status": "EVALUATED_DEVELOPMENT_STRESS",
+        "samples": 1450,
+        "episodes": 5,
+        "interval": {
+          "status": "EVALUATED",
+          "count": 1450,
+          "coverage": {
+            "visibility_probability": 0.9868965517241379,
+            "image_center_error": 0.993103448275862,
+            "range_error_m": 0.9972413793103448,
+            "covariance_trace": 0.9972413793103448
+          },
+          "width": {
+            "visibility_probability": 1.2070057701301342,
+            "image_center_error": 0.8542241760094602,
+            "range_error_m": 7.438893156232115,
+            "covariance_trace": 2.4334227448074532
+          },
+          "all_samples_covered": {
+            "visibility_probability": false,
+            "image_center_error": false,
+            "range_error_m": false,
+            "covariance_trace": false
+          }
+        },
+        "recorded_full_fallback_rate": 1,
+        "recorded_outside_fit_box_rate": 1,
+        "rmse": {
+          "transparent": {
+            "visibility_probability": 0.20831531030637548,
+            "image_center_error": 0.43069738231108273,
+            "range_error_m": 0.39554812753914775,
+            "covariance_trace": 0.37007797827910055
+          },
+          "raw_residual": {
+            "visibility_probability": 0.25402459179660725,
+            "image_center_error": 0.1232939494611399,
+            "range_error_m": 0.8937264567001786,
+            "covariance_trace": 0.4870899701590645
+          },
+          "interval_gated": {
+            "visibility_probability": 0.20831531030637548,
+            "image_center_error": 0.43069738231108273,
+            "range_error_m": 0.39554812753914775,
+            "covariance_trace": 0.37007797827910055
+          }
+        },
+        "episode_equal_weight_range_rmse": {
+          "transparent": 0.3394515472823155,
+          "raw_residual": 0.7200335289826215,
+          "interval_gated": 0.3394515472823155
+        }
+      },
+      "occluded": {
+        "status": "EVALUATED_DEVELOPMENT_STRESS",
+        "samples": 10,
+        "episodes": 2,
+        "interval": {
+          "status": "EVALUATED",
+          "count": 10,
+          "coverage": {
+            "visibility_probability": 0,
+            "image_center_error": 1,
+            "range_error_m": 1,
+            "covariance_trace": 1
+          },
+          "width": {
+            "visibility_probability": 1.2070057701301342,
+            "image_center_error": 0.8542241760094602,
+            "range_error_m": 7.438893156232115,
+            "covariance_trace": 2.4334227448074532
+          },
+          "all_samples_covered": {
+            "visibility_probability": false,
+            "image_center_error": true,
+            "range_error_m": true,
+            "covariance_trace": true
+          }
+        },
+        "recorded_full_fallback_rate": 1,
+        "recorded_outside_fit_box_rate": 1,
+        "rmse": {
+          "transparent": {
+            "visibility_probability": 1,
+            "image_center_error": 0.32423355077987603,
+            "range_error_m": 0.1305681484362137,
+            "covariance_trace": 0.7397033616973835
+          },
+          "raw_residual": {
+            "visibility_probability": 1.0155441235270668,
+            "image_center_error": 0.07249653244103585,
+            "range_error_m": 0.4374778739263565,
+            "covariance_trace": 0.7899460082416574
+          },
+          "interval_gated": {
+            "visibility_probability": 1,
+            "image_center_error": 0.32423355077987603,
+            "range_error_m": 0.1305681484362137,
+            "covariance_trace": 0.7397033616973835
+          }
+        },
+        "episode_equal_weight_range_rmse": {
+          "transparent": 0.1085556528933588,
+          "raw_residual": 0.28002283825522206,
+          "interval_gated": 0.1085556528933588
+        }
+      },
+      "out_of_frame": {
+        "status": "EVALUATED_DEVELOPMENT_STRESS",
+        "samples": 15,
+        "episodes": 1,
+        "interval": {
+          "status": "EVALUATED",
+          "count": 15,
+          "coverage": {
+            "visibility_probability": 0.6666666666666666,
+            "image_center_error": 0.3333333333333333,
+            "range_error_m": 1,
+            "covariance_trace": 0.2
+          },
+          "width": {
+            "visibility_probability": 1.2070057701301342,
+            "image_center_error": 0.8542241760094602,
+            "range_error_m": 7.438893156232115,
+            "covariance_trace": 2.4334227448074532
+          },
+          "all_samples_covered": {
+            "visibility_probability": false,
+            "image_center_error": false,
+            "range_error_m": true,
+            "covariance_trace": false
+          }
+        },
+        "recorded_full_fallback_rate": 1,
+        "recorded_outside_fit_box_rate": 1,
+        "rmse": {
+          "transparent": {
+            "visibility_probability": 0.5787918451395113,
+            "image_center_error": 0.5773555648635393,
+            "range_error_m": 0.9499609940186448,
+            "covariance_trace": 4.826655048253923
+          },
+          "raw_residual": {
+            "visibility_probability": 0.826017983440875,
+            "image_center_error": 0.6881729976485619,
+            "range_error_m": 2.6248729174058743,
+            "covariance_trace": 5.350143389207079
+          },
+          "interval_gated": {
+            "visibility_probability": 0.5787918451395113,
+            "image_center_error": 0.5773555648635393,
+            "range_error_m": 0.9499609940186448,
+            "covariance_trace": 4.826655048253923
+          }
+        },
+        "episode_equal_weight_range_rmse": {
+          "transparent": 0.9499609940186446,
+          "raw_residual": 2.6248729174058743,
+          "interval_gated": 0.9499609940186446
+        }
+      },
+      "unknown": {
+        "status": "NOT_EVALUATED",
+        "samples": 0,
+        "episodes": 0
+      }
+    },
+    "candidate_diagnostics": {
+      "all": {
+        "frames": 1475,
+        "candidates": 11800,
+        "fallback_count": 11800,
+        "outside_fit_box_count": 11800,
+        "no_safe_candidate_frames": 1475,
+        "raw_ranking_changed": 746,
+        "gated_ranking_changed": 0,
+        "mock_utility_disagreement": 0
+      },
+      "visible": {
+        "frames": 1450,
+        "candidates": 11600,
+        "fallback_count": 11600,
+        "outside_fit_box_count": 11600,
+        "no_safe_candidate_frames": 1450,
+        "raw_ranking_changed": 746,
+        "gated_ranking_changed": 0,
+        "mock_utility_disagreement": 0
+      },
+      "occluded": {
+        "frames": 10,
+        "candidates": 80,
+        "fallback_count": 80,
+        "outside_fit_box_count": 80,
+        "no_safe_candidate_frames": 10,
+        "raw_ranking_changed": 0,
+        "gated_ranking_changed": 0,
+        "mock_utility_disagreement": 0
+      },
+      "out_of_frame": {
+        "frames": 15,
+        "candidates": 120,
+        "fallback_count": 120,
+        "outside_fit_box_count": 120,
+        "no_safe_candidate_frames": 15,
+        "raw_ranking_changed": 0,
+        "gated_ranking_changed": 0,
+        "mock_utility_disagreement": 0
+      },
+      "unknown": {
+        "frames": 0,
+        "candidates": 0,
+        "fallback_count": 0,
+        "outside_fit_box_count": 0,
+        "no_safe_candidate_frames": 0,
+        "raw_ranking_changed": 0,
+        "gated_ranking_changed": 0,
+        "mock_utility_disagreement": 0
+      }
+    }
+  },
+  "source_frame_coverage": [
+    {
+      "filename": "Town05_pedestrian_normal_motion_close_seed26094743.hdf5",
+      "frames": 300,
+      "occluded_in_frame_all_indices": [
+        2
+      ],
+      "occluded_excluded_tail_indices": [],
+      "out_of_frame_all_indices": []
+    },
+    {
+      "filename": "Town10HD_bicycle_normal_motion_long_seed260922365.hdf5",
+      "frames": 300,
+      "occluded_in_frame_all_indices": [
+        176,
+        177,
+        178,
+        215,
+        216,
+        258,
+        259,
+        260,
+        261
+      ],
+      "occluded_excluded_tail_indices": [],
+      "out_of_frame_all_indices": []
+    },
+    {
+      "filename": "Town10HD_bicycle_normal_motion_long_seed26094706.hdf5",
+      "frames": 300,
+      "occluded_in_frame_all_indices": [
+        296,
+        297,
+        298,
+        299
+      ],
+      "occluded_excluded_tail_indices": [
+        296,
+        297,
+        298,
+        299
+      ],
+      "out_of_frame_all_indices": []
+    },
+    {
+      "filename": "Town10HD_bicycle_frequent_turns_long_seed26094434.hdf5",
+      "frames": 300,
+      "occluded_in_frame_all_indices": [],
+      "occluded_excluded_tail_indices": [],
+      "out_of_frame_all_indices": [
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        212
+      ]
+    },
+    {
+      "filename": "Town10HD_bicycle_normal_motion_long_seed26094707.hdf5",
+      "frames": 300,
+      "occluded_in_frame_all_indices": [
+        296,
+        297,
+        298,
+        299
+      ],
+      "occluded_excluded_tail_indices": [
+        296,
+        297,
+        298,
+        299
+      ],
+      "out_of_frame_all_indices": []
+    }
+  ],
+  "publication_notes": [
+    "interval_gated recorded RMSE is an unclipped masked-residual diagnostic; not general clipped deployment performance.",
+    "All candidates in this run fall back exactly to transparent; ranking is ungated diagnostics and all frames are separately safety-rejected.",
+    "Pooled all_samples_covered is an all-frame boolean, not an episode coverage fraction.",
+    "Stress data remain excluded from fitting/calibration/threshold selection; no evaluation-based modification or promotion performed."
+  ]
+}
