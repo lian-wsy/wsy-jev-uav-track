@@ -113,6 +113,18 @@ def test_energy_is_rechecked_after_costly_compilation(monkeypatch):
     assert result.reason_code == "CURRENT_ACTION_UNSAFE"
 
 
+def test_energy_deadline_is_preserved_for_a_delayed_transport():
+    # .00107 Wh above reserve at t=1, .001 Wh reserved for the 1 s
+    # action at .001 Wh/s: the final send must precede t=1.07.
+    clock, executor, coordinator, loop, budget = simulation_loop(SimulatedEnergyConfig(.1, 21.07, 3.6))
+    step(loop, clock)
+    executor.complete()
+    clock.now = 1.05
+    result = step(loop, clock)
+    assert result.command is not None
+    assert result.dispatch_deadline_s == pytest.approx(1.07)
+
+
 def test_explicit_budget_rejects_conflicting_battery_measurement():
     clock, executor, coordinator, loop, budget = simulation_loop()
     assert step(loop, clock, battery_percent=100.).reason_code == "ENERGY_SOURCE_CONFLICT"

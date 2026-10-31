@@ -349,6 +349,39 @@ def test_prefix_is_capped_by_remaining_capture_budget():
     assert result.command.duration_s == pytest.approx(.01)
 
 
+def test_compiled_prefix_carries_observation_deadline_to_actual_transport():
+    clock, executor, coordinator, loop, measured = setup_loop()
+    pending = tick(loop, clock, measured)
+    assert getattr(pending, "dispatch_deadline_s", None) is None
+    executor.complete()
+    clock.now = 1.05
+    result = tick(loop, clock, measured)
+    assert result.command is not None
+    assert result.dispatch_deadline_s == pytest.approx(1.24)
+
+
+def test_transport_lease_cannot_outlive_original_action_despite_new_observation():
+    clock, executor, coordinator, loop, measured = setup_loop()
+    tick(loop, clock, measured)
+    executor.complete()
+    clock.now = 1.05
+    tick(loop, clock, measured)
+    clock.now = 1.99
+    result = tick(loop, clock, measured)
+    assert result.command is not None
+    assert result.dispatch_deadline_s == 2.0
+
+
+def test_rejected_tick_has_no_reusable_transport_lease():
+    clock, executor, coordinator, loop, measured = setup_loop()
+    tick(loop, clock, measured)
+    executor.complete()
+    clock.now = 1.05
+    result = tick(loop, clock, measured, clearance_m=None)
+    assert result.command is None
+    assert result.dispatch_deadline_s is None
+
+
 def test_safety_failure_on_an_early_tick_still_revokes_old_motion():
     clock, executor, coordinator, loop, measured = setup_loop()
     tick(loop, clock, measured)

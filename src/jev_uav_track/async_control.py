@@ -337,6 +337,9 @@ class ControlTick:
     request_id: int | None = None
     action_id: str | None = None
     energy: EnergySnapshot | None = None
+    # Absolute local-clock lease for the eventual RPC consumer. A consumer
+    # must recheck this, not treat a previously compiled prefix as authority.
+    dispatch_deadline_s: float | None = None
 
 
 class BoundedControlLoop:
@@ -467,7 +470,10 @@ class BoundedControlLoop:
         if safety_reasons(selected, current.uav, current.constraints):
             return self._no_command(now, "CURRENT_ACTION_UNSAFE")
 
+        dispatch_deadline = None
+
         def bound_at_dispatch(command):
+            nonlocal dispatch_deadline
             # Finish callbacks/checks BEFORE the final clock. Even an energy
             # snapshot or safety function can take time. The remaining constant-
             # power allowance becomes a deadline, so the final check needs no
@@ -506,6 +512,9 @@ class BoundedControlLoop:
                 return None, "CURRENT_ACTION_UNSAFE"
             remaining = min(command.duration_s, .05, advice.valid_until_s - dispatch_now,
                             capture_remaining)
+            dispatch_deadline = min(advice.valid_until_s,
+                                    capture.wall_start_s + self._gate.decision_ttl_s,
+                                    energy_deadline if energy_deadline is not None else math.inf)
             self._last_tick_s = dispatch_now
             return replace(command, duration_s=remaining), "BOUNDED_PREFIX"
 
@@ -519,7 +528,8 @@ class BoundedControlLoop:
             return self._no_command(now, code)
         self.command_count += 1
         return ControlTick(now, self.coordinator.generation, "COMMAND_PREFIX", "BOUNDED_PREFIX",
-                           emitted, advice.request_id, advice.action.id, self._energy_snapshot)
+                           emitted, advice.request_id, advice.action.id, self._energy_snapshot,
+                           dispatch_deadline)
 
     def reset(self):
         self.coordinator.reset()
