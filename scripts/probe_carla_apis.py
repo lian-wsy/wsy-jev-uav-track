@@ -281,8 +281,8 @@ def contract_probe(world, air, output, result, bootstrap, observation_contract=F
 
 
 def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *, ports=DEFAULT_PORTS,
-         configure_diagnostic_sensors=False):
-    validate_sensor_opt_in(configure_diagnostic_sensors, expected_map, profile)
+         configure_diagnostic_sensors=False, capture_geometry=False):
+    validate_sensor_opt_in(configure_diagnostic_sensors, expected_map, profile, capture_geometry=capture_geometry)
     validate_probe_map(expected_map, profile)
     expected = json.loads(expected_settings.read_text())
     sensor_names = (require_diagnostic_sensors(expected) if configure_diagnostic_sensors else
@@ -322,7 +322,8 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
                           'Collision reads may consume event flags on this owned instance.')
         result['configure_diagnostic_sensors'] = configure_diagnostic_sensors
         result['safety_probe'] = probe_safety_inputs(air.client.call,
-            distance_sensor_name=sensor_names['distance'], lidar_name=sensor_names['lidar'])
+            distance_sensor_name=sensor_names['distance'], lidar_name=sensor_names['lidar'],
+            capture_geometry=capture_geometry)
     if profile in ('contract', 'observation', 'belief'):
         result['contract'] = {}
         result['note'] = 'Owned development physics probe; may arm/move/capture. Not a tracking comparison.'
@@ -334,7 +335,11 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
             output.write_text(json.dumps(result, indent=2), encoding='utf-8')
             raise
     output.write_text(json.dumps(result, indent=2, allow_nan=False), encoding='utf-8')
-    print(json.dumps({k: v for k, v in result.items() if k != 'samples'}))
+    summary = {k: v for k, v in result.items() if k not in ('samples', 'safety_probe')}
+    if profile == 'safety':
+        summary['safety_probe'] = {k: v for k, v in result['safety_probe'].items()
+                                  if k not in ('queries', 'samples')}
+    print(json.dumps(summary))  # Full geometry remains in the dedicated JSON, not stdout.
     if profile == 'safety' and result['safety_probe']['status'] != 'DIAGNOSTIC_COMPLETED':
         raise SystemExit(2)
 
@@ -347,7 +352,9 @@ if __name__ == '__main__':
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
     parser.add_argument('--expected-map', choices=PROBE_MAPS, default='Town02')
     parser.add_argument('--configure-diagnostic-sensors', action='store_true')
+    parser.add_argument('--capture-sensor-geometry', action='store_true')
     add_port_arguments(parser)
     args = parser.parse_args()
     main(args.output, args.profile, args.expected_settings, args.bootstrap, args.expected_map,
-         ports=ports_from_arguments(args), configure_diagnostic_sensors=args.configure_diagnostic_sensors)
+         ports=ports_from_arguments(args), configure_diagnostic_sensors=args.configure_diagnostic_sensors,
+         capture_geometry=args.capture_sensor_geometry)

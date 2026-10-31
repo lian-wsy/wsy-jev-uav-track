@@ -98,8 +98,8 @@ def prepare(source, task, *, ports=DEFAULT_PORTS):
 
 
 def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='Town02', *, ports=DEFAULT_PORTS,
-          configure_diagnostic_sensors=False):
-    validate_sensor_opt_in(configure_diagnostic_sensors, map_name, profile)
+          configure_diagnostic_sensors=False, capture_geometry=False):
+    validate_sensor_opt_in(configure_diagnostic_sensors, map_name, profile, capture_geometry=capture_geometry)
     validate_probe_map(map_name, profile)
     validate_roots(source, task)
     import re
@@ -123,7 +123,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
          'kind': ('API_INFRASTRUCTURE_ONLY' if profile == 'api' else
                   'SAFETY_SENSOR_DIAGNOSTIC_NO_MOTION' if profile == 'safety' else 'DEVELOPMENT_CONTRACT'),
          'created_at': time.time(), 'not_final_test': True, 'ports': asdict(ports),
-         'configure_diagnostic_sensors': configure_diagnostic_sensors})
+         'configure_diagnostic_sensors': configure_diagnostic_sensors, 'capture_geometry': capture_geometry})
     if Path(prepared['source']) != source or prepared['binary_sha256'] != sha(task / 'package' / BINARY):
         raise ValueError('Prepared source/executable mismatch')
     before = protected_files(source)
@@ -157,6 +157,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
               'requested_map': map_name, 'not_final_test': True, 'ports': asdict(ports),
               'profile': profile, 'bootstrap': bootstrap, 'client_python': str(client_python),
               'configure_diagnostic_sensors': configure_diagnostic_sensors,
+              'capture_geometry': capture_geometry,
               'probe_sha256': sha(Path(__file__)),
               'api_probe_sha256': sha(Path(__file__).with_name('probe_carla_apis.py')),
               'runtime_module_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/isolated_runtime.py'),
@@ -205,6 +206,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
                                  '--expected-map', map_name,
                                  '--expected-settings', str(task / 'settings.json'),
                                  *(['--configure-diagnostic-sensors'] if configure_diagnostic_sensors else []),
+                                 *(['--capture-sensor-geometry'] if capture_geometry else []),
                                  *[argument for name, value in asdict(ports).items()
                                    for argument in ('--' + name.replace('_', '-') + '-port', str(value))]],
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, env=env,
@@ -252,6 +254,10 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
                     result['client_probe'].get('settings_match') is not True
                     or diagnostic.get('sensor_names') != {'distance': DISTANCE_NAME, 'lidar': LIDAR_NAME}):
                 raise ValueError('Diagnostic sensor names or loaded settings not verified')
+            if capture_geometry and (diagnostic.get('capture_geometry') is not True
+                                     or type(diagnostic.get('geometry_schema_version')) is not int
+                                     or diagnostic['geometry_schema_version'] != 1):
+                raise ValueError('Requested diagnostic geometry archival not verified')
         result['status'] = 'SAFETY_DIAGNOSTIC_COMPLETED' if profile == 'safety' else 'API_SMOKE_COMPLETED'
     except Exception as exc:
         result['error'] = f'{type(exc).__name__}: {exc}'
@@ -343,11 +349,13 @@ if __name__ == '__main__':
     parser.add_argument('--map', choices=PROBE_MAPS, default='Town02', dest='map_name')
     parser.add_argument('--configure-diagnostic-sensors', action='store_true',
                         help='Temporarily enable owned named sensors; Town02 safety smoke only')
+    parser.add_argument('--capture-sensor-geometry', action='store_true',
+                        help='Archive bounded raw geometry; requires configured diagnostic sensors')
     add_port_arguments(parser)
     args = parser.parse_args()
     ports = ports_from_arguments(args)
-    if args.configure_diagnostic_sensors and args.mode != 'smoke':
-        parser.error('--configure-diagnostic-sensors requires smoke mode')
+    if (args.configure_diagnostic_sensors or args.capture_sensor_geometry) and args.mode != 'smoke':
+        parser.error('Diagnostic sensors and geometry capture require smoke mode')
     if os.name != 'nt':
         raise SystemExit('Windows only')
     source, task = args.source.resolve(), args.task.resolve()
@@ -357,4 +365,5 @@ if __name__ == '__main__':
         if not args.client_python or not args.client_python.is_file():
             raise SystemExit('--client-python must be an existing CARLA/AirSim Python runtime')
         smoke(source, task, args.client_python, args.run_name, args.profile, args.bootstrap, args.map_name,
-              ports=ports, configure_diagnostic_sensors=args.configure_diagnostic_sensors)
+              ports=ports, configure_diagnostic_sensors=args.configure_diagnostic_sensors,
+              capture_geometry=args.capture_sensor_geometry)

@@ -24,6 +24,11 @@ _FIELDS = {
     _DISTANCE: ('time_stamp', 'distance', 'min_distance', 'max_distance', 'relative_pose'),
     _LIDAR: ('time_stamp', 'point_cloud', 'pose'),
 }
+_XYZ = ('x_val', 'y_val', 'z_val')
+_GEOMETRY_FIELDS = {
+    _STATE: ('kinematics_estimated', 'landed_state'),
+    _COLLISION: ('normal', 'impact_point', 'position', 'object_name', 'object_id'),
+}
 
 
 def _number(value):
@@ -104,8 +109,59 @@ def _project(method, raw):
     return result
 
 
+def _geometry_projection(method, raw, base):
+    """Archive only bounded received geometry, independently of event validity.
+
+    Keeping an event/timestamp does not make incomplete geometry valid. No SDK
+    defaults, frame transforms, synchronization or clearance estimates here.
+    """
+    result = {'geometry': None, 'geometry_status': 'NOT_APPLICABLE', 'geometry_missing_fields': []}
+    if method == _DISTANCE:
+        return result  # The existing bounded payload already retains its relative pose.
+    if base['payload'] is None:
+        return dict(result, geometry_status=base['payload_status'])
+    missing = [field for field in _GEOMETRY_FIELDS.get(method, ()) if field not in raw]
+    if missing:
+        return dict(result, geometry_status='MISSING_FIELDS', geometry_missing_fields=missing)
+    result['geometry_status'] = 'INVALID_VALUE'
+
+    def vector(value):
+        return type(value) is dict and all(_number(value.get(key)) for key in _XYZ)
+
+    if method == _STATE:
+        kin = raw['kinematics_estimated']
+        if (not _pose(kin) or type(raw['landed_state']) is not int or raw['landed_state'] not in (0, 1)
+                or any(not vector(kin.get(key)) for key in ('linear_velocity', 'angular_velocity'))):
+            return result
+        norm = math.hypot(*(kin['orientation'][key] for key in ('w_val', *_XYZ)))
+        if not math.isfinite(norm) or abs(norm - 1.) > 1e-3:
+            return result
+        geometry = {'kinematics_estimated': dict(_pose_projection(kin), **{
+            field: {key: kin[field][key] for key in _XYZ}
+            for field in ('linear_velocity', 'angular_velocity')}), 'landed_state': raw['landed_state']}
+    elif method == _COLLISION:
+        if (any(not vector(raw[key]) for key in ('normal', 'impact_point', 'position'))
+                or type(raw['object_id']) is not int or not -1 <= raw['object_id'] < 2**31
+                or type(raw['object_name']) is not str
+                or not re.fullmatch(r'[A-Za-z0-9_./: -]{0,256}', raw['object_name'])):
+            return result
+        geometry = {field: {key: raw[field][key] for key in _XYZ}
+                    for field in ('normal', 'impact_point', 'position')}
+        geometry.update(object_name=raw['object_name'], object_id=raw['object_id'])
+    else:
+        # _project validated shape, finiteness and <=30,000 scalars first.
+        norm = math.hypot(*(raw['pose']['orientation'][key] for key in ('w_val', *_XYZ)))
+        if not math.isfinite(norm) or abs(norm - 1.) > 1e-3:
+            return result
+        geometry = {'point_cloud': list(raw['point_cloud'])}
+    result.update(geometry=deepcopy(geometry), geometry_status='VALID_FIELDS_NOT_CALIBRATED')
+    if method == _LIDAR and not geometry['point_cloud']:
+        result['geometry_status'] = 'EMPTY_POINT_CLOUD'
+    return result
+
+
 def probe_safety_inputs(rpc_call, *, clock=None, sleep=time.sleep, sample_count=6,
-                        distance_sensor_name='', lidar_name=''):
+                        distance_sensor_name='', lidar_name='', capture_geometry=False):
     """At most six samples / 30 RPCs / 8s soft budget. Never authorize control.
 
     Each RPC is made once. A transport error disables that optional sensor;
@@ -114,6 +170,8 @@ def probe_safety_inputs(rpc_call, *, clock=None, sleep=time.sleep, sample_count=
     """
     if type(sample_count) is not int or not 1 <= sample_count <= 6:
         raise ValueError('sample_count must be an integer in 1..6')
+    if type(capture_geometry) is not bool:
+        raise ValueError('capture_geometry must be boolean')
     for name in (distance_sensor_name, lidar_name):
         if type(name) is not str or (name != '' and not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]{0,63}', name)):
             raise ValueError('Sensor names must be empty or bounded ASCII identifiers')
@@ -135,6 +193,9 @@ def probe_safety_inputs(rpc_call, *, clock=None, sleep=time.sleep, sample_count=
               'source_clock_domain': 'AIRSIM_REPORTED_NS_NOT_CALIBRATED',
               'collision_read_semantics': 'MAY_CONSUME_EVENT_FLAG_LOCAL_SEMANTICS_UNVERIFIED',
               'measurement_readiness': 'NOT_CERTIFIED',
+              'capture_geometry': capture_geometry, 'geometry_schema_version': 1,
+              'geometry_point_limit': 10000,
+              'geometry_frame_status': 'RAW_SERVER_FRAMES_NOT_CALIBRATED',
               'sensor_names': {'distance': distance_sensor_name, 'lidar': lidar_name},
               'host_clock': host_clock, 'budget_s': 8., 'rpc_timeout_required_s': 1.}
     floor = None
@@ -169,7 +230,9 @@ def probe_safety_inputs(rpc_call, *, clock=None, sleep=time.sleep, sample_count=
             return None
         row = {'rpc': method, 'sample_index': index, 'wall_start_s': start, 'wall_end_s': None,
                'transport_status': 'RECEIVED', 'payload_status': 'NOT_RECEIVED', 'payload': None,
-               'temporal_status': 'NOT_ASSESSED', 'missing_fields': []}
+               'temporal_status': 'NOT_ASSESSED', 'missing_fields': [],
+               'geometry': None, 'geometry_status': 'NOT_RECEIVED' if capture_geometry else 'NOT_REQUESTED',
+               'geometry_missing_fields': []}
         report['queries'].append(row)
         report['rpc_count'] += 1
         args = (sensor_names[method], 'JevDrone') if method in sensor_names else ('JevDrone',)
@@ -190,6 +253,8 @@ def probe_safety_inputs(rpc_call, *, clock=None, sleep=time.sleep, sample_count=
         row['receipt_latency_status'] = 'WITHIN_200MS' if end - start < .2 else 'EXCEEDS_200MS'
         if row['transport_status'] == 'RECEIVED':
             row.update(_project(method, raw))
+            if capture_geometry:
+                row.update(_geometry_projection(method, raw, row))
         if end >= deadline:
             abort('DIAGNOSTIC_BUDGET_EXHAUSTED')
         elif row['transport_status'] == 'RPC_TIMEOUT':

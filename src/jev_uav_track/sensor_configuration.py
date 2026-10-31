@@ -34,9 +34,11 @@ def diagnostic_sensors():
     return sensors
 
 
-def validate_sensor_opt_in(enabled, map_name, profile):
+def validate_sensor_opt_in(enabled, map_name, profile, *, capture_geometry=False):
     if type(enabled) is not bool or (enabled and (map_name != 'Town02' or profile != 'safety')):
         raise ValueError('Diagnostic sensor configuration requires Town02 safety profile')
+    if type(capture_geometry) is not bool or (capture_geometry and not enabled):
+        raise ValueError('Geometry capture requires explicitly configured diagnostic sensors')
 
 
 def require_diagnostic_sensors(settings):
