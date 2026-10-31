@@ -1,0 +1,1638 @@
+{
+  "schema_version": 1,
+  "evidence_class": "LIVE_OWNED_COLLISION_QUERY_FIXTURE_NOT_FLIGHT",
+  "date": "2026-10-31",
+  "timezone": "Asia/Shanghai",
+  "runtime_code_commit": "7e0fbad1f07d950fb284d1f76a221bda6bcdbacc",
+  "execution_repo_head": "1eb3991dc576482ae3e8cd3c2bfa116a7aec8c77",
+  "preceding_attempt": {
+    "name": "town02_sweep01_20261031",
+    "status": "PREFLIGHT_MEMORY_REJECTED_PRESERVED",
+    "evidence": "d6_obstacle_sweep_20261031.json"
+  },
+  "current_attempt": {
+    "name": "town02_sweep02_20261031",
+    "status": "SWEEP_FIXTURE_COMPLETED",
+    "exit_code": 0,
+    "simulator_launches": 1,
+    "actor_creations": 11,
+    "cleanup_acknowledgements": 11,
+    "sensor_events": 12,
+    "flight_commands": 0,
+    "jev_requests": 0,
+    "training_runs": 0,
+    "source_hdf_reads": 0,
+    "new_pass_episodes": 0,
+    "readiness": false,
+    "clearance_m": null,
+    "owner_elapsed_s": 17.529279232025146,
+    "probe_elapsed_s": 1.3360553001984954
+  },
+  "cases_summary": [
+    {
+      "name": "baseline",
+      "status": "FIXTURE_RESPONSE_VERIFIED",
+      "event_count": 3,
+      "hit_ids": [
+        113
+      ],
+      "distances_m": [
+        8.673901557922363
+      ],
+      "source_span_s": 0.10000049695372581,
+      "receive_span_s": 0.0991693998221308,
+      "listening_window_s": 0.16403099987655878,
+      "all_received_before_deadline": true
+    },
+    {
+      "name": "center",
+      "status": "FIXTURE_RESPONSE_VERIFIED",
+      "event_count": 3,
+      "hit_ids": [
+        116
+      ],
+      "distances_m": [
+        2.673901319503784
+      ],
+      "source_span_s": 0.10000079870223999,
+      "receive_span_s": 0.09968949994072318,
+      "listening_window_s": 0.14223470003344119,
+      "all_received_before_deadline": true
+    },
+    {
+      "name": "off_axis",
+      "status": "FIXTURE_RESPONSE_VERIFIED",
+      "event_count": 3,
+      "hit_ids": [
+        119
+      ],
+      "distances_m": [
+        3.184312582015991
+      ],
+      "source_span_s": 0.10000059753656387,
+      "receive_span_s": 0.1001613000407815,
+      "listening_window_s": 0.1675080000422895,
+      "all_received_before_deadline": true
+    },
+    {
+      "name": "outside",
+      "status": "FIXTURE_RESPONSE_VERIFIED",
+      "event_count": 3,
+      "hit_ids": [
+        121
+      ],
+      "distances_m": [
+        8.673901557922363
+      ],
+      "source_span_s": 0.10000059753656387,
+      "receive_span_s": 0.09997189999558032,
+      "listening_window_s": 0.17259650002233684,
+      "all_received_before_deadline": true
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_sweep02_20261031\\api_probe.json",
+      "bytes": 33357,
+      "sha256": "7118ce0458db67303f9c90b477eeefc72a80b8c30c126446a8d5abf4c9b2d799"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_sweep02_20261031\\client_stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_sweep02_20261031\\client_stdout.txt",
+      "bytes": 1065,
+      "sha256": "dc7a428748a36eefda349315131ce02374f99bbfd6b374cfb9e486db3c0aa07f"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_sweep02_20261031\\last_runtime_snapshot.json",
+      "bytes": 786,
+      "sha256": "259b870927936a325aa28eb412900fb899a6623e6ac4317f5dcb2df6bb698d2a"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_sweep02_20261031\\map_config_before.ini",
+      "bytes": 15138,
+      "sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_sweep02_20261031\\map_config.json",
+      "bytes": 537,
+      "sha256": "1b23a3b689320584107ceac463f16c2ca5e9a55d936378e6016097eb526c212b"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_sweep02_20261031\\owner.json",
+      "bytes": 838,
+      "sha256": "d8aa3ce6431bf36e68528e0775ba149ad87e8e76c7c342fa4447fdac893ea785"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_sweep02_20261031\\preflight.json",
+      "bytes": 249,
+      "sha256": "f58476acb14c2cb15ca81e46e57fe576b5f4d1e8189324668f292dd716cad4fe"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_sweep02_20261031\\run_request.json",
+      "bytes": 368,
+      "sha256": "ee8cd46d744f23ca88e856e20d7fcf75432a62f057a60ceb56ff71793bedea8d"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_sweep02_20261031\\smoke_result.json",
+      "bytes": 39521,
+      "sha256": "4a20d8843fc4535f019cbd60bbf7e87c8bf0718040f0bd54bc3bdc309fb269a8"
+    }
+  ],
+  "protected_files": [
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\CarSimConfig.ini",
+      "expected_sha256": "8e96e9fb4d695eb6d21f9d7b9da4fcbd583312b45e63cc20b7b222d4d8a22f90",
+      "sha256": "8e96e9fb4d695eb6d21f9d7b9da4fcbd583312b45e63cc20b7b222d4d8a22f90",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultEngine.ini",
+      "expected_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+      "sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultGame.ini",
+      "expected_sha256": "94427ca09cb488081350225a7d3c5b0e22843ae17cb61cb1ebd4af39ad695df0",
+      "sha256": "94427ca09cb488081350225a7d3c5b0e22843ae17cb61cb1ebd4af39ad695df0",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultGameUserSettings.ini",
+      "expected_sha256": "2168f96d659f41a33b4fbb5bfc3143a1437bc6059b0d018d532f74a4c2e71691",
+      "sha256": "2168f96d659f41a33b4fbb5bfc3143a1437bc6059b0d018d532f74a4c2e71691",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultInput.ini",
+      "expected_sha256": "1ed4e4714a4476b2e2bb15e59afef2fea5413487aa13dfc86114205adb55dec4",
+      "sha256": "1ed4e4714a4476b2e2bb15e59afef2fea5413487aa13dfc86114205adb55dec4",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultScalability.ini",
+      "expected_sha256": "06fef2edfee12b05f55b914ca8fa8e490e1b708ab8869f20136874ba2897f606",
+      "sha256": "06fef2edfee12b05f55b914ca8fa8e490e1b708ab8869f20136874ba2897f606",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\OptionalModules.ini",
+      "expected_sha256": "91745741cf40de17e1ec47a8a922db851fcdf4403df86b237f3ef03682719f45",
+      "sha256": "91745741cf40de17e1ec47a8a922db851fcdf4403df86b237f3ef03682719f45",
+      "unchanged": true
+    },
+    {
+      "path": "C:\\Users\\20748\\Documents\\AirSim\\settings.json",
+      "expected_sha256": "de89442d0093ffb47f7d05a3859206698145f15b2ff99b675e8149a858c8f048",
+      "sha256": "de89442d0093ffb47f7d05a3859206698145f15b2ff99b675e8149a858c8f048",
+      "unchanged": true
+    }
+  ],
+  "postcheck": {
+    "processes": [],
+    "listeners": [],
+    "verified_at": "2026-10-31T11:36:45.1972127Z"
+  },
+  "owner": {
+    "pid": 43884,
+    "started_at": 1793446364.2057915,
+    "executable": "D:\\JevUavRuns\\20261031_d6_probe01\\package\\CarlaUE4\\Binaries\\Win64\\CarlaUE4-Win64-Shipping.exe",
+    "arguments": [
+      "CarlaUE4",
+      "/Game/Carla/Maps/Town02",
+      "-windowed",
+      "-ResX=640",
+      "-ResY=360",
+      "-quality-level=Low",
+      "-nosound",
+      "-unattended",
+      "-NoCrashDialog",
+      "-nocrashreports",
+      "-carla-rpc-port=3200",
+      "-carla-streaming-port=3201",
+      "-carla-secondary-port=3202",
+      "-TexturePoolSize=1024",
+      "-SaveToUserDir",
+      "-UserDir=D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_sweep02_20261031\\user",
+      "-abslog=D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_sweep02_20261031\\logs\\CarlaUE4.log",
+      "--settings",
+      "D:\\JevUavRuns\\20261031_d6_probe01\\settings.json"
+    ]
+  },
+  "preflight": {
+    "free_memory_kib": 4249664,
+    "processes": [
+      {
+        "ProcessId": 29792,
+        "ParentProcessId": 22928,
+        "Name": "python.exe",
+        "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+      }
+    ],
+    "listeners": []
+  },
+  "last_runtime": {
+    "free_memory_kib": 2470084,
+    "processes": [
+      {
+        "ProcessId": 29792,
+        "ParentProcessId": 22928,
+        "Name": "python.exe",
+        "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+      },
+      {
+        "ProcessId": 43884,
+        "ParentProcessId": 29792,
+        "Name": "CarlaUE4-Win64-Shipping.exe",
+        "ExecutablePath": "D:\\JevUavRuns\\20261031_d6_probe01\\package\\CarlaUE4\\Binaries\\Win64\\CarlaUE4-Win64-Shipping.exe"
+      }
+    ],
+    "listeners": [
+      {
+        "LocalPort": 42461,
+        "OwningProcess": 43884
+      },
+      {
+        "LocalPort": 3202,
+        "OwningProcess": 43884
+      },
+      {
+        "LocalPort": 3201,
+        "OwningProcess": 43884
+      },
+      {
+        "LocalPort": 3200,
+        "OwningProcess": 43884
+      }
+    ]
+  },
+  "run_result": {
+    "status": "SWEEP_FIXTURE_COMPLETED",
+    "started_at": 1793446364.2057915,
+    "requested_map": "Town02",
+    "not_final_test": true,
+    "ports": {
+      "carla_rpc": 3200,
+      "carla_streaming": 3201,
+      "carla_secondary": 3202,
+      "airsim_rpc": 42461
+    },
+    "profile": "sweep",
+    "bootstrap": "takeoff",
+    "client_python": "C:\\Users\\20748\\miniconda3\\envs\\carlaAir\\python.exe",
+    "configure_diagnostic_sensors": false,
+    "capture_geometry": false,
+    "probe_sha256": "6faf4623345573ddca40edac5802cb86fd9c4bce0b3fdb3dca89d4f4920f9e70",
+    "api_probe_sha256": "a0f07a70b59f239026a0791f9924cb74f1ec410ecb93b9a6f9b4601e5ea66354",
+    "runtime_module_sha256": "c0b2e3924668c9de3c36bade33de5a44f9a4db49e43f8333eab71b3c894df5d6",
+    "sensor_probe_sha256": "89af4773b21c415c567183385eadc12055a1d87bf36a50aff1dab475c0ad9e26",
+    "obstacle_probe_sha256": "96ce10e00534c566b6538bbe301ea7c0e7d1e461b11fcbf7ed3167979cfea550",
+    "sensor_configuration_sha256": "4214bd0795e1dc43ce48ac1c871fa1328129ec97c040faf6108e482e1157f021",
+    "observation_probe_sha256": "822a8adae05ff09877df3bf68f671e24db94dbf329d23df0acf1568ab9d08e5a",
+    "observation_gate_sha256": "c2e288d95736d43d665c16b59caf86c693162bdf9004b62e5bc67c9d6d085bff",
+    "frames_module_sha256": "28bd4bcea80870f1dfd05b743e8ab4ce1d5c07817ed3a6e08d3712c4ece9089a",
+    "belief_probe_sha256": "ad42d9f6184bc21ab941b31573d77aa44f6125c5e63bcb680044921913e3ec35",
+    "belief_modules_sha256": {
+      "live_belief.py": "85350f3e13ee328f11232aaf926ba9ff17b2baf855948fbbcf98dee841ee1f29",
+      "causal_belief.py": "cec6db2d74b4dd182bb8ccb334d30367f5687a7650869edf206ea24e4adc45c1",
+      "history.py": "72b1684a57fb869cc844e557cac7b26ca10149c5438cd9ae3b3e2612396b1778",
+      "pipeline.py": "0b2a7358d8252cdb4ad78e2c91546838549fda3d5550ff978d5844f05342cad6",
+      "rollout.py": "6a2758a3fb1f358564bc620c2353020ba5e1e7306677c9a3b2b09ef7cd654026",
+      "selector.py": "185893651a8fa294607b9acd0c8908d4379a81c3f9f5792e97c174a38ab7e907",
+      "safety.py": "dc740ddf74a97c61c8c1ca3d7b4e3174b221eee4d49f92f2673d89eeda5ffda9",
+      "jev_client.py": "38726c84fa0ee0622bc158f945008dea3b751d785c7d36604706240fbc6b85a4",
+      "models.py": "6f0d984e14b4ab49a4279aec0fea0a6aa6efe625af7500fdd8befe4015ab24b5",
+      "primitives.py": "53f3e7448c2762c2a7818ca4547f8aeba92b03846c0a7cb46dbe6c39360caeb2"
+    },
+    "binary_sha256": "e39091f72c148db0c6821d4dcbbbba55d768fe67e3320707c4007d2db784b0d7",
+    "client_exit_code": 0,
+    "cleanup_errors": {},
+    "owned_process_exit_code": 0,
+    "owned_handles_stopped": true,
+    "sensor_config_restored": true,
+    "map_config_restored": true,
+    "map_configuration": {
+      "requested_map": "Town02",
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\package\\CarlaUE4\\Config\\DefaultEngine.ini",
+      "applied": true,
+      "restored": true,
+      "before_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+      "configured_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+      "backup": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_sweep02_20261031\\map_config_before.ini",
+      "restored_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64"
+    },
+    "protected_unchanged": true,
+    "postflight": {
+      "free_memory_kib": 4540804,
+      "processes": [
+        {
+          "ProcessId": 29792,
+          "ParentProcessId": 22928,
+          "Name": "python.exe",
+          "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+        }
+      ],
+      "listeners": []
+    },
+    "cleanup_confirmed": true,
+    "ended_at": 1793446381.7350707
+  },
+  "api_probe": {
+    "kind": "LIVE_OWNED_OBSTACLE_SWEEP_FIXTURE",
+    "carla_server": "7a7fdb3-dirty",
+    "python_version": "3.10.21 | packaged by conda-forge | (main, Aug 21 2026, 22:38:44) [MSC v.1944 64 bit (AMD64)]",
+    "rpc_success_checked": true,
+    "carla_client": "7a7fdb3-dirty",
+    "map": "Carla/Maps/Town02",
+    "requested_map": "Town02",
+    "map_match": true,
+    "airsim_server": 1,
+    "vehicles": [
+      "JevDrone"
+    ],
+    "settings_match": true,
+    "samples": [],
+    "ports": {
+      "carla_rpc": 3200,
+      "carla_streaming": 3201,
+      "carla_secondary": 3202,
+      "airsim_rpc": 42461
+    },
+    "note": "Owned static props and obstacle sensors only; no UAV arm/motion/reset/images. Fixture responses do not certify UAV clearance or control readiness.",
+    "sweep_probe": {
+      "kind": "OBSTACLE_SWEEP_FIXTURE_NO_FLIGHT",
+      "schema_version": 1,
+      "config": {
+        "radius_m": 3,
+        "distance_m": 16,
+        "prop": "static.prop.box01",
+        "origin_xyz_m": [
+          0,
+          0,
+          40
+        ],
+        "only_dynamics": false
+      },
+      "control_ready": false,
+      "clearance_m": null,
+      "status": "FIXTURE_RESPONSE_VERIFIED",
+      "cases": [
+        {
+          "name": "baseline",
+          "started_s": 1466816.2924612,
+          "events": [
+            {
+              "frame": 307,
+              "time_s": 5.444605901837349,
+              "received_s": 1466816.3909567,
+              "actor_id": 114,
+              "other_actor_id": 113,
+              "distance_m": 8.673901557922363,
+              "sensor_pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "frame": 310,
+              "time_s": 5.494606100022793,
+              "received_s": 1466816.440846,
+              "actor_id": 114,
+              "other_actor_id": 113,
+              "distance_m": 8.673901557922363,
+              "sensor_pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "frame": 313,
+              "time_s": 5.544606398791075,
+              "received_s": 1466816.4901261,
+              "actor_id": 114,
+              "other_actor_id": 113,
+              "distance_m": 8.673901557922363,
+              "sensor_pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "overflow": false,
+          "callback_errors": 0,
+          "cleanup": [
+            {
+              "id": 114,
+              "destroyed": true
+            },
+            {
+              "id": 113,
+              "destroyed": true
+            }
+          ],
+          "sensor_stopped": true,
+          "created_actor_ids": [
+            113,
+            114
+          ],
+          "floor": {
+            "frame": 304,
+            "time_s": 5.394605699926615
+          },
+          "before": {
+            "witness": {
+              "id": 113,
+              "type_id": "static.prop.box01",
+              "pose": [
+                12,
+                0,
+                40,
+                0,
+                0,
+                0
+              ],
+              "vertices": [
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  40.68599319458008
+                ]
+              ]
+            },
+            "blocker": null,
+            "sensor": {
+              "id": 114,
+              "type_id": "sensor.other.obstacle",
+              "pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          "listening_started_s": 1466816.356543,
+          "listening_deadline_s": 1466818.356543,
+          "listening_closed_s": 1466816.520574,
+          "ceiling": {
+            "frame": 314,
+            "time_s": 5.561273198574781
+          },
+          "after": {
+            "witness": {
+              "id": 113,
+              "type_id": "static.prop.box01",
+              "pose": [
+                12,
+                0,
+                40,
+                0,
+                0,
+                0
+              ],
+              "vertices": [
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  40.68599319458008
+                ]
+              ]
+            },
+            "blocker": null,
+            "sensor": {
+              "id": 114,
+              "type_id": "sensor.other.obstacle",
+              "pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          "ended_s": 1466816.556382,
+          "assessment": {
+            "status": "FIXTURE_RESPONSE_VERIFIED",
+            "reasons": []
+          }
+        },
+        {
+          "name": "center",
+          "started_s": 1466816.5566177,
+          "events": [
+            {
+              "frame": 325,
+              "time_s": 5.744608201086521,
+              "received_s": 1466816.6904245,
+              "actor_id": 117,
+              "other_actor_id": 116,
+              "distance_m": 2.673901319503784,
+              "sensor_pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "frame": 328,
+              "time_s": 5.794608600437641,
+              "received_s": 1466816.7399802,
+              "actor_id": 117,
+              "other_actor_id": 116,
+              "distance_m": 2.673901319503784,
+              "sensor_pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "frame": 331,
+              "time_s": 5.844608999788761,
+              "received_s": 1466816.790114,
+              "actor_id": 117,
+              "other_actor_id": 116,
+              "distance_m": 2.673901319503784,
+              "sensor_pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "overflow": false,
+          "callback_errors": 0,
+          "cleanup": [
+            {
+              "id": 117,
+              "destroyed": true
+            },
+            {
+              "id": 116,
+              "destroyed": true
+            },
+            {
+              "id": 115,
+              "destroyed": true
+            }
+          ],
+          "sensor_stopped": true,
+          "created_actor_ids": [
+            115,
+            116,
+            117
+          ],
+          "floor": {
+            "frame": 322,
+            "time_s": 5.694607999175787
+          },
+          "before": {
+            "witness": {
+              "id": 115,
+              "type_id": "static.prop.box01",
+              "pose": [
+                12,
+                0,
+                40,
+                0,
+                0,
+                0
+              ],
+              "vertices": [
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  40.68599319458008
+                ]
+              ]
+            },
+            "blocker": {
+              "id": 116,
+              "type_id": "static.prop.box01",
+              "pose": [
+                6,
+                0,
+                40,
+                0,
+                0,
+                0
+              ],
+              "vertices": [
+                [
+                  5.673901081085205,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  5.673901081085205,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  5.673901081085205,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  5.673901081085205,
+                  0.32609859108924866,
+                  40.68599319458008
+                ],
+                [
+                  6.3260979652404785,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  6.3260979652404785,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  6.3260979652404785,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  6.3260979652404785,
+                  0.32609859108924866,
+                  40.68599319458008
+                ]
+              ]
+            },
+            "sensor": {
+              "id": 117,
+              "type_id": "sensor.other.obstacle",
+              "pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          "listening_started_s": 1466816.6730981,
+          "listening_deadline_s": 1466818.6730981,
+          "listening_closed_s": 1466816.8153328,
+          "ceiling": {
+            "frame": 332,
+            "time_s": 5.86127619817853
+          },
+          "after": {
+            "witness": {
+              "id": 115,
+              "type_id": "static.prop.box01",
+              "pose": [
+                12,
+                0,
+                40,
+                0,
+                0,
+                0
+              ],
+              "vertices": [
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  40.68599319458008
+                ]
+              ]
+            },
+            "blocker": {
+              "id": 116,
+              "type_id": "static.prop.box01",
+              "pose": [
+                6,
+                0,
+                40,
+                0,
+                0,
+                0
+              ],
+              "vertices": [
+                [
+                  5.673901081085205,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  5.673901081085205,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  5.673901081085205,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  5.673901081085205,
+                  0.32609859108924866,
+                  40.68599319458008
+                ],
+                [
+                  6.3260979652404785,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  6.3260979652404785,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  6.3260979652404785,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  6.3260979652404785,
+                  0.32609859108924866,
+                  40.68599319458008
+                ]
+              ]
+            },
+            "sensor": {
+              "id": 117,
+              "type_id": "sensor.other.obstacle",
+              "pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          "ended_s": 1466816.8897497,
+          "assessment": {
+            "status": "FIXTURE_RESPONSE_VERIFIED",
+            "reasons": []
+          }
+        },
+        {
+          "name": "off_axis",
+          "started_s": 1466816.8899093,
+          "events": [
+            {
+              "frame": 348,
+              "time_s": 6.127944201231003,
+              "received_s": 1466817.0733861,
+              "actor_id": 120,
+              "other_actor_id": 119,
+              "distance_m": 3.184312582015991,
+              "sensor_pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "frame": 351,
+              "time_s": 6.177944499999285,
+              "received_s": 1466817.1233997,
+              "actor_id": 120,
+              "other_actor_id": 119,
+              "distance_m": 3.184312582015991,
+              "sensor_pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "frame": 354,
+              "time_s": 6.227944798767567,
+              "received_s": 1466817.1735474,
+              "actor_id": 120,
+              "other_actor_id": 119,
+              "distance_m": 3.184312582015991,
+              "sensor_pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "overflow": false,
+          "callback_errors": 0,
+          "cleanup": [
+            {
+              "id": 120,
+              "destroyed": true
+            },
+            {
+              "id": 119,
+              "destroyed": true
+            },
+            {
+              "id": 118,
+              "destroyed": true
+            }
+          ],
+          "sensor_stopped": true,
+          "created_actor_ids": [
+            118,
+            119,
+            120
+          ],
+          "floor": {
+            "frame": 342,
+            "time_s": 6.027943700551987
+          },
+          "before": {
+            "witness": {
+              "id": 118,
+              "type_id": "static.prop.box01",
+              "pose": [
+                12,
+                0,
+                40,
+                0,
+                0,
+                0
+              ],
+              "vertices": [
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  40.68599319458008
+                ]
+              ]
+            },
+            "blocker": {
+              "id": 119,
+              "type_id": "static.prop.box01",
+              "pose": [
+                6,
+                2,
+                40,
+                0,
+                0,
+                0
+              ],
+              "vertices": [
+                [
+                  5.673901081085205,
+                  1.673901915550232,
+                  39.99444580078125
+                ],
+                [
+                  5.673901081085205,
+                  1.673901915550232,
+                  40.68599319458008
+                ],
+                [
+                  5.673901081085205,
+                  2.326098680496216,
+                  39.99444580078125
+                ],
+                [
+                  5.673901081085205,
+                  2.326098680496216,
+                  40.68599319458008
+                ],
+                [
+                  6.3260979652404785,
+                  1.673901915550232,
+                  39.99444580078125
+                ],
+                [
+                  6.3260979652404785,
+                  1.673901915550232,
+                  40.68599319458008
+                ],
+                [
+                  6.3260979652404785,
+                  2.326098680496216,
+                  39.99444580078125
+                ],
+                [
+                  6.3260979652404785,
+                  2.326098680496216,
+                  40.68599319458008
+                ]
+              ]
+            },
+            "sensor": {
+              "id": 120,
+              "type_id": "sensor.other.obstacle",
+              "pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          "listening_started_s": 1466817.0063372,
+          "listening_deadline_s": 1466819.0063372,
+          "listening_closed_s": 1466817.1738452,
+          "ceiling": {
+            "frame": 354,
+            "time_s": 6.227944798767567
+          },
+          "after": {
+            "witness": {
+              "id": 118,
+              "type_id": "static.prop.box01",
+              "pose": [
+                12,
+                0,
+                40,
+                0,
+                0,
+                0
+              ],
+              "vertices": [
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  40.68599319458008
+                ]
+              ]
+            },
+            "blocker": {
+              "id": 119,
+              "type_id": "static.prop.box01",
+              "pose": [
+                6,
+                2,
+                40,
+                0,
+                0,
+                0
+              ],
+              "vertices": [
+                [
+                  5.673901081085205,
+                  1.673901915550232,
+                  39.99444580078125
+                ],
+                [
+                  5.673901081085205,
+                  1.673901915550232,
+                  40.68599319458008
+                ],
+                [
+                  5.673901081085205,
+                  2.326098680496216,
+                  39.99444580078125
+                ],
+                [
+                  5.673901081085205,
+                  2.326098680496216,
+                  40.68599319458008
+                ],
+                [
+                  6.3260979652404785,
+                  1.673901915550232,
+                  39.99444580078125
+                ],
+                [
+                  6.3260979652404785,
+                  1.673901915550232,
+                  40.68599319458008
+                ],
+                [
+                  6.3260979652404785,
+                  2.326098680496216,
+                  39.99444580078125
+                ],
+                [
+                  6.3260979652404785,
+                  2.326098680496216,
+                  40.68599319458008
+                ]
+              ]
+            },
+            "sensor": {
+              "id": 120,
+              "type_id": "sensor.other.obstacle",
+              "pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          "ended_s": 1466817.2563666,
+          "assessment": {
+            "status": "FIXTURE_RESPONSE_VERIFIED",
+            "reasons": []
+          }
+        },
+        {
+          "name": "outside",
+          "started_s": 1466817.256543,
+          "events": [
+            {
+              "frame": 370,
+              "time_s": 6.494711101055145,
+              "received_s": 1466817.4404036,
+              "actor_id": 123,
+              "other_actor_id": 121,
+              "distance_m": 8.673901557922363,
+              "sensor_pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "frame": 373,
+              "time_s": 6.544711600989103,
+              "received_s": 1466817.4901068,
+              "actor_id": 123,
+              "other_actor_id": 121,
+              "distance_m": 8.673901557922363,
+              "sensor_pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "frame": 376,
+              "time_s": 6.594711698591709,
+              "received_s": 1466817.5403755,
+              "actor_id": 123,
+              "other_actor_id": 121,
+              "distance_m": 8.673901557922363,
+              "sensor_pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "overflow": false,
+          "callback_errors": 0,
+          "cleanup": [
+            {
+              "id": 123,
+              "destroyed": true
+            },
+            {
+              "id": 122,
+              "destroyed": true
+            },
+            {
+              "id": 121,
+              "destroyed": true
+            }
+          ],
+          "sensor_stopped": true,
+          "created_actor_ids": [
+            121,
+            122,
+            123
+          ],
+          "floor": {
+            "frame": 364,
+            "time_s": 6.394710499793291
+          },
+          "before": {
+            "witness": {
+              "id": 121,
+              "type_id": "static.prop.box01",
+              "pose": [
+                12,
+                0,
+                40,
+                0,
+                0,
+                0
+              ],
+              "vertices": [
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  40.68599319458008
+                ]
+              ]
+            },
+            "blocker": {
+              "id": 122,
+              "type_id": "static.prop.box01",
+              "pose": [
+                6,
+                6,
+                40,
+                0,
+                0,
+                0
+              ],
+              "vertices": [
+                [
+                  5.673901081085205,
+                  5.673901557922363,
+                  39.99444580078125
+                ],
+                [
+                  5.673901081085205,
+                  5.673901557922363,
+                  40.68599319458008
+                ],
+                [
+                  5.673901081085205,
+                  6.326098442077637,
+                  39.99444580078125
+                ],
+                [
+                  5.673901081085205,
+                  6.326098442077637,
+                  40.68599319458008
+                ],
+                [
+                  6.3260979652404785,
+                  5.673901557922363,
+                  39.99444580078125
+                ],
+                [
+                  6.3260979652404785,
+                  5.673901557922363,
+                  40.68599319458008
+                ],
+                [
+                  6.3260979652404785,
+                  6.326098442077637,
+                  39.99444580078125
+                ],
+                [
+                  6.3260979652404785,
+                  6.326098442077637,
+                  40.68599319458008
+                ]
+              ]
+            },
+            "sensor": {
+              "id": 123,
+              "type_id": "sensor.other.obstacle",
+              "pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          "listening_started_s": 1466817.3732811,
+          "listening_deadline_s": 1466819.3732811,
+          "listening_closed_s": 1466817.5458776,
+          "ceiling": {
+            "frame": 376,
+            "time_s": 6.594711698591709
+          },
+          "after": {
+            "witness": {
+              "id": 121,
+              "type_id": "static.prop.box01",
+              "pose": [
+                12,
+                0,
+                40,
+                0,
+                0,
+                0
+              ],
+              "vertices": [
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  11.673901557922363,
+                  0.32609859108924866,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  -0.32609811425209045,
+                  40.68599319458008
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  39.99444580078125
+                ],
+                [
+                  12.326098442077637,
+                  0.32609859108924866,
+                  40.68599319458008
+                ]
+              ]
+            },
+            "blocker": {
+              "id": 122,
+              "type_id": "static.prop.box01",
+              "pose": [
+                6,
+                6,
+                40,
+                0,
+                0,
+                0
+              ],
+              "vertices": [
+                [
+                  5.673901081085205,
+                  5.673901557922363,
+                  39.99444580078125
+                ],
+                [
+                  5.673901081085205,
+                  5.673901557922363,
+                  40.68599319458008
+                ],
+                [
+                  5.673901081085205,
+                  6.326098442077637,
+                  39.99444580078125
+                ],
+                [
+                  5.673901081085205,
+                  6.326098442077637,
+                  40.68599319458008
+                ],
+                [
+                  6.3260979652404785,
+                  5.673901557922363,
+                  39.99444580078125
+                ],
+                [
+                  6.3260979652404785,
+                  5.673901557922363,
+                  40.68599319458008
+                ],
+                [
+                  6.3260979652404785,
+                  6.326098442077637,
+                  39.99444580078125
+                ],
+                [
+                  6.3260979652404785,
+                  6.326098442077637,
+                  40.68599319458008
+                ]
+              ]
+            },
+            "sensor": {
+              "id": 123,
+              "type_id": "sensor.other.obstacle",
+              "pose": [
+                0,
+                0,
+                40,
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          "ended_s": 1466817.6231995,
+          "assessment": {
+            "status": "FIXTURE_RESPONSE_VERIFIED",
+            "reasons": []
+          }
+        }
+      ],
+      "elapsed_s": 1.3360553001984954
+    }
+  },
+  "verification": {
+    "same_runtime_source_as_reviewed_freeze": true,
+    "raw_receipt_rechecked_in_python": "3.10.21",
+    "targeted_passed": 62,
+    "targeted_seconds": 0.63,
+    "full_passed": 825,
+    "full_skipped": 1,
+    "full_seconds": 23.23,
+    "compiled_python_versions": ["3.14.7", "3.10.21"],
+    "tests": "Fresh post-live regression; no altered model/training"
+  },
+  "limits": [
+    "Fixed box fixture only, not full-scene or Pawn-channel certification.",
+    "Distance denotes reported swept-sphere travel to hit, not nearest Euclidean UAV clearance.",
+    "No UAV motion, new origin calibration, takeoff readiness or braking verification.",
+    "Town03 final-test PASS remains zero; D6 remains PARTIAL."
+  ]
+}
