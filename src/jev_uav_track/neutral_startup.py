@@ -8,7 +8,7 @@ from dataclasses import asdict
 import math
 import time
 
-from .actuation import BoundedActuator, StopVerifier, _telemetry_code
+from .actuation import BoundedActuator, StopVerifier, _telemetry_code, observe_until_stopped
 from .async_control import ControlTick
 from .energy import finite_number
 from .sim_adapter import AirSimWorldVelocityCommand
@@ -92,14 +92,7 @@ one <=150 ms window. The point margin is not certified body clearance.
             raise ValueError('INITIALIZATION_REPLAYED_TELEMETRY')
     receipt = transact(airborne, startup=False)
     verifier = StopVerifier(receipt, airborne)
-    while True:
-        sample = read()
-        now = clock()
-        verdict = verifier.observe(sample, now_s=now)
-        result['stop_trace'].append({'telemetry':asdict(sample), 'now_s':now, 'verdict':verdict})
-        if verdict == 'TELEMETRY_SETTLED':
-            result['status'] = 'AIRBORNE_READY'
-            return
-        if verdict not in ('OBSERVING', 'STILL_MOVING'):
-            raise ValueError('INITIALIZATION_' + verdict)
-        sleep(.05)
+    verdict = observe_until_stopped(verifier, read, result['stop_trace'], clock=clock, sleep=sleep)
+    if verdict != 'TELEMETRY_SETTLED':
+        raise ValueError('INITIALIZATION_' + verdict)
+    result['status'] = 'AIRBORNE_READY'

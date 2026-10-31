@@ -2,6 +2,7 @@
 from dataclasses import replace
 import threading
 import time
+import math
 from types import SimpleNamespace
 
 import pytest
@@ -9,6 +10,26 @@ import pytest
 from jev_uav_track.async_control import ControlTick
 from jev_uav_track.sim_adapter import AirSimWorldVelocityCommand
 from test_async_control import Clock, ControlledExecutor
+
+
+def test_stop_observer_samples_inside_deadline_despite_windows_sleep_quantization():
+    from jev_uav_track import actuation
+    observer=getattr(actuation,'observe_until_stopped',None)
+    assert callable(observer), 'Bounded fine-grained stop observer missing'
+    receipt=successful_receipt()
+    clock=Clock(receipt.neutral_completed_s+.001)
+    def read():
+        start=clock.now
+        clock.now+=.003
+        velocity=.08 if clock.now < receipt.neutral_completed_s+.37 else .03
+        return telemetry(clock.now,wall_start_s=start,linear_velocity_mps=(0.,0.,velocity))
+    def sleep(delay):
+        clock.now+=math.ceil(delay/.015625)*.015625
+    trace=[]
+    verdict=observer(actuation.StopVerifier(receipt,telemetry()),read,trace,clock=clock,sleep=sleep)
+    assert verdict=='TELEMETRY_SETTLED'
+    assert trace[-1]['now_s']<receipt.neutral_completed_s+.5
+    assert len([row for row in trace if row['verdict']=='OBSERVING'])>=2
 
 
 def prefix(**changes):

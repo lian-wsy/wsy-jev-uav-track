@@ -263,7 +263,7 @@ advice/observation expiry, 0.3 m/s and 50 ms prefixes. Neutral is sent after
 EVERY prefix. This transactional loop does not claim sustained 20 Hz control.
 """
     from dataclasses import asdict
-    from .actuation import BoundedActuator, StopVerifier
+    from .actuation import BoundedActuator, StopVerifier, observe_until_stopped
     from .async_control import AsyncDecisionCoordinator, BoundedControlLoop
     from .energy import SimulatedEnergyBudget, SimulatedEnergyConfig
     if not 0 < number(duration_s) <= 12.:
@@ -332,15 +332,8 @@ EVERY prefix. This transactional loop does not claim sustained 20 Hz control.
             sleep(.001)
         if last_receipt is not None:
             verifier = StopVerifier(last_receipt, last_baseline)
-            while clock() < last_receipt.neutral_completed_s + .5:
-                sample = read_telemetry()
-                now = clock()
-                verdict = verifier.observe(sample, now_s=now)
-                result['stop_trace'].append({'telemetry': asdict(sample), 'now_s':now, 'verdict': verdict})
-                result['stop_verdict'] = 'STOP_VERIFIED' if verdict == 'TELEMETRY_SETTLED' else verdict
-                if verdict == 'TELEMETRY_SETTLED':
-                    break
-                sleep(.05)
+            verdict = observe_until_stopped(verifier, read_telemetry, result['stop_trace'], clock=clock, sleep=sleep)
+            result['stop_verdict'] = 'STOP_VERIFIED' if verdict == 'TELEMETRY_SETTLED' else verdict
         if len(result['frames']) >= 2:
             result['metrics'] = follow_metrics(result['frames'])
     finally:

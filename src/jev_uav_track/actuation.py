@@ -7,7 +7,7 @@ ownership. A hung RPC requires the external owned-process supervisor.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, replace
 import math
 import threading
 import time
@@ -387,3 +387,20 @@ class StopVerifier:
             self._terminal = "TELEMETRY_SETTLED"
             return self._terminal
         return "OBSERVING"
+
+
+def observe_until_stopped(verifier, read_telemetry, trace, *, clock=time.perf_counter, sleep=time.sleep):
+    """Observe within the original deadline, not at a nominal control cadence.
+
+Windows can round a 50 ms wait above 60 ms. Use short observer waits to avoid
+missing the final admissible 100 ms evidence window. This sends NO commands,
+does not change controller frequency and preserves every verifier threshold.
+"""
+    while True:
+        sample = read_telemetry()
+        now = clock()
+        verdict = verifier.observe(sample, now_s=now)
+        trace.append({'telemetry':asdict(sample), 'now_s':now, 'verdict':verdict})
+        if verdict not in ('OBSERVING', 'STILL_MOVING'):
+            return verdict
+        sleep(.01)
