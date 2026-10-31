@@ -6,6 +6,8 @@
 
 **后续D5诊断闭合：** 冻结原模型/校准参数，5个已暴露stress集完整只读核验，补1475有效帧的三分层：可见1450、遮挡10、出框15；负结果和全部回退见[D5压力报告](d5_frozen_stress_20261031.md)。原D5诊断交付记COMPLETED_WITH_LIMITATIONS，不将stress改名为validation/test；独立困难验证仍缺。
 
+**D6准备根因复核：** 实际复现电量百分比直接减耗能Wh的单位错误；当前SDK/独立配置亦未提供已验证电量/间距测量链，控制输出仍是请求而非真实运输层回执。见[安全输入审计](d6_safety_readiness_20261031.md)。已知缺陷尚未修复，保持PARTIAL；没有用合成电量或成功API读取将其改记通过。
+
 ## 已有证据复查
 
 本轮只读核对公开开发manifest：39条、39个独立seed、39个不同内容SHA，28 train / 6 validation / 5 development_stress；`final_test_available=false`。这些是清单元数据检查，源HDF完整PASS/SHA检查复用10/28、10/30及10/31原实验记录，不声称本轮重新读取全部原数据。
@@ -31,7 +33,7 @@
 | D3 未来/隐藏真值隔离 | live 16帧因果重放与新causal_visible训练/评估/D5回归；仅历史可见位置估速度，未来真值仅作为标签 | 旧oracle模型不升级认证；当前可见标注oracle并非RGB检测器，真实困难输入覆盖不足 |
 | D4 同时域三模型与支持域 | 因果重训28/6、2688/576样本，transparent/absolute/residual与候选覆盖完整报告 | 逐集3改善/3退化；不将本条“实验完成”解释成learned模型有效 |
 | D5 区间/覆盖/宽度/回退及分层 | 原18fit/10calibration/6validation报告保留；冻结同一模型新增5stress/1475帧三分层，遮挡visibility覆盖0/10、出框中心5/15、covariance3/15；记录/候选全部回退 | **COMPLETED_WITH_LIMITATIONS：原诊断交付完成，结果为负**；原validation困难样本仍0/NOT_EVALUATED，stress不冒充独立验证。区间门控等价透明基线，无learned收益；不认证困难泛化 |
-| D6 异步回路、重置、延迟/超时、共享控制 | 新增有界异步协调器、确定性Mock、真实selector回路与6组smoke；单工作槽、reset代际、当前测量复核和50ms前缀都有回归；新独立API准备已现场通过 | **PARTIAL**：实际控制运输层/新鲜安全测量/物理停止未验证，不能用API连通替代；D7完整矩阵不在本轮范围 |
+| D6 异步回路、重置、延迟/超时、共享控制 | 新增有界异步协调器、确定性Mock、真实selector回路与6组smoke；单工作槽、reset代际、当前测量复核和50ms前缀都有回归；新独立API准备已现场通过 | **PARTIAL**：新增反例证实percent减Wh错误，未修；实际控制运输层/新鲜安全测量/物理停止未验证，不能用API连通替代。D7完整矩阵不在本轮范围 |
 
 ## 当前总判定
 

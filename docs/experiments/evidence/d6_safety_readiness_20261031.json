@@ -1,0 +1,117 @@
+{
+  "schema": "jev_uav_track.d6_safety_readiness.v1",
+  "timestamp_utc": "2026-10-31T05:23:46.932000+00:00",
+  "evidence_kind": "LOCAL_STATIC_AND_OFFLINE_COUNTEREXAMPLE_NOT_LIVE",
+  "git_base": "0763da11b31b22a3e7e3a84ed9a42ff1f27ee60c",
+  "resource_snapshot": {
+    "timestamp_utc": "2026-10-31T05:21:43.7821177Z",
+    "free_memory_kib": 6431464,
+    "processes_matching_python_carla_ue4_unreal": [],
+    "watched_listeners": [],
+    "watched_ports": [2000, 2001, 2002, 41451, 3100, 3101, 3102, 42451, 3200, 3201, 3202, 42461],
+    "is_launch_authorization": false
+  },
+  "files": {
+    "sdk_types": {
+      "path": "C:/Users/20748/miniconda3/envs/carlaAir/Lib/site-packages/airsim/types.py",
+      "sha256": "4eec051b2ebe98f52cd217bae4db3bf58efb762d3721520c830c01bdf6dd2fba"
+    },
+    "sdk_client": {
+      "path": "C:/Users/20748/miniconda3/envs/carlaAir/Lib/site-packages/airsim/client.py",
+      "sha256": "baad642c4ef369bdba64a794fd4a51215e88a1614481defd04faa3f1f291d5a1"
+    },
+    "owned_settings": {
+      "path": "D:/JevUavRuns/20261031_d6_probe01/settings.json",
+      "sha256": "67cd1ed7eab1a67b24586ce45a63364bc68a69d37e9e49eadb1ee04006ef2f1c"
+    },
+    "models": {
+      "path": "D:/JevUavRuns/repos/jev-outcome-dataset-20261030/src/jev_uav_track/models.py",
+      "sha256": "11d156c18f2d34c08092dcfe57d5dd268e9856234cf00d8a9e2d02c300bad793"
+    },
+    "safety": {
+      "path": "D:/JevUavRuns/repos/jev-outcome-dataset-20261030/src/jev_uav_track/safety.py",
+      "sha256": "4f80741347f5ad642c6a827555f4654ca0248a7e76683b1067941416453cb05e"
+    },
+    "async_control": {
+      "path": "D:/JevUavRuns/repos/jev-outcome-dataset-20261030/src/jev_uav_track/async_control.py",
+      "sha256": "66386d84cba8d7806390a241f781e0f6b97a05c4dcb15d10fa9efe08d03d1d54"
+    },
+    "rollout": {
+      "path": "D:/JevUavRuns/repos/jev-outcome-dataset-20261030/src/jev_uav_track/rollout.py",
+      "sha256": "6a2758a3fb1f358564bc620c2353020ba5e1e7306677c9a3b2b09ef7cd654026"
+    },
+    "mock_simulator": {
+      "path": "D:/JevUavRuns/repos/jev-outcome-dataset-20261030/src/jev_uav_track/mock_simulator.py",
+      "sha256": "765a0ecb6e47456b21b363e754753f8044d745dc5b93c7ecafa335bf1409a762"
+    }
+  },
+  "sdk": {
+    "multirotor_state_declared_fields": ["collision", "kinematics_estimated", "gps_location", "timestamp", "landed_state", "rc_data", "ready", "ready_message", "can_arm"],
+    "battery_or_energy_named_functions": [],
+    "distance_sensor_api_available": true,
+    "lidar_api_available": true,
+    "collision_api_available": true,
+    "server_payload_not_queried": true
+  },
+  "owned_settings": {
+    "vehicle_type": "SimpleFlight",
+    "airsim_rpc_port": 42461,
+    "explicit_vehicle_sensors": null,
+    "explicit_top_level_sensors": null,
+    "explicit_default_sensors": null,
+    "camera_image_types": [0]
+  },
+  "contracts": {
+    "measured_safety_fields": ["timestamp_s", "valid", "battery_percent", "clearance_m", "collision"],
+    "capacity_declared_in_uav_state": false,
+    "safety_guard_combines_percent_and_wh": true,
+    "unit_bug_already_present_in_baseline_commit": "a0e9476",
+    "zero_velocity_zero_yaw_proxy_energy_wh": 0.0,
+    "energy_cost_is_heuristic_not_measured": true,
+    "bounded_loop_returns_request_not_transport_receipt": true,
+    "physical_stop_not_verified": true
+  },
+  "counterexamples": [
+    {
+      "evidence_kind": "CONSTRUCTED_ARITHMETIC_NOT_DEVICE_PARAMETERS",
+      "battery_percent": 20.005,
+      "predicted_energy_wh": 0.002,
+      "illustrative_capacity_wh": 20.0,
+      "reserve_percent": 20.0,
+      "current_code_remaining_numeric": 20.003,
+      "dimensionally_converted_remaining_percent": 19.994999999999997,
+      "current_reasons": [],
+      "current_battery_acceptance": true,
+      "capacity_based_battery_acceptance": false
+    },
+    {
+      "evidence_kind": "CONSTRUCTED_ARITHMETIC_NOT_DEVICE_PARAMETERS",
+      "battery_percent": 20.005,
+      "predicted_energy_wh": 0.006,
+      "illustrative_capacity_wh": 200.0,
+      "reserve_percent": 20.0,
+      "current_code_remaining_numeric": 19.999,
+      "dimensionally_converted_remaining_percent": 20.002,
+      "current_reasons": ["battery_reserve"],
+      "current_battery_acceptance": false,
+      "capacity_based_battery_acceptance": true
+    }
+  ],
+  "interpretation": [
+    "No verified battery source in the inspected SDK contract; server extensions remain unqueried, not ruled out.",
+    "No explicitly configured distance/lidar sensors; this does not prove all server defaults are absent.",
+    "SDK method existence does not prove current sensor samples or swept-volume clearance.",
+    "Existing D6 output command is an in-memory dispatch request, not completed RPC or measured stop.",
+    "A proposed simulator energy model would require explicit source/type/capacity and approval; it is not an observed battery.",
+    "Missing original measurement/transport/stop evidence remains NOT_READY, no criteria waived."
+  ],
+  "actions": {
+    "simulator_start": 0,
+    "motion_rpc": 0,
+    "jev_requests": 0,
+    "training_runs": 0,
+    "source_hdf_reads": 0,
+    "settings_edits": 0,
+    "external_process_changes": 0
+  }
+}
