@@ -76,6 +76,81 @@ def route_primitives(heading_deg):
     return tuple(result)
 
 
+class GeometricCenterFallback:
+    """Explicit engineering variant; NEVER alter the frozen residual baseline.
+
+    Only when ALL candidates fully fall back and the target is currently
+    visible, replace the unsigned center heuristic with a signed pinhole
+    projection delta anchored at the measured bounding-box center. Commands,
+    trajectories, interval gates, other outcomes and safety remain untouched.
+    Level body attitude and constant velocity are approximations, not learned
+    dynamics or calibrated pixel-error/visibility uncertainty. No hidden truth
+    or future frame is accepted here. A partial learned result is not mixed
+    with this separately versioned baseline intervention.
+    """
+    def __init__(self, baseline):
+        self.baseline = baseline
+
+    def generate(self, primitives, state):
+        from dataclasses import replace
+        actions = self.baseline.generate(primitives, state)
+        if (state.target.visibility_probability != 1.
+                or not actions
+                or not all(a.metadata.get('interval_full_fallback') is True for a in actions)):
+            return actions
+        try:
+            geometry = state.environment['camera_center_geometry']
+            x, y = map(number, geometry['observed_xy'])
+            pitch = math.radians(number(geometry['pitch_deg']))
+            fov = number(geometry['horizontal_fov_deg'])
+            width, height = map(number, geometry['image_size'])
+            offset = vector(geometry['offset_body_forward_right_up_m'])
+            if not (abs(x) <= 1. and abs(y) <= 1. and -math.pi/2 < pitch < math.pi/2
+                    and 0 < fov < 180 and width > 0 and height > 0):
+                raise ValueError('Invalid visible camera projection')
+            horizontal = number(math.tan(math.radians(fov/2)))
+            vertical = number(horizontal*height/width)
+            if min(horizontal,vertical) <= 0:
+                raise ValueError('Degenerate camera projection')
+            relative = [a-b for a,b in zip(vector(state.target.position_m), vector(state.uav.position_m))]
+            target_velocity = vector(state.target.velocity_mps)
+            yaw = number(state.uav.yaw_deg)
+        except (KeyError, TypeError, OverflowError) as exc:
+            raise ValueError('Missing or malformed visible camera projection') from exc
+
+        def project(relative, heading):
+            angle = math.radians(number(heading))
+            c, s, cp, sp = math.cos(angle), math.sin(angle), math.cos(pitch), math.sin(pitch)
+            # Body forward/right/up mount offset follows the predicted yaw.
+            rx = relative[0] - (c*offset[0]-s*offset[1])
+            ry = relative[1] - (s*offset[0]+c*offset[1])
+            rz = relative[2] - offset[2]
+            depth = number(cp*(c*rx+s*ry)+sp*rz)
+            if depth <= 1e-9:
+                return None
+            return (number((-s*rx+c*ry)/(depth*horizontal)),
+                    number((sp*(c*rx+s*ry)-cp*rz)/(depth*vertical)))
+
+        current = project(relative, yaw)
+        if current is None:
+            raise ValueError('Visible target is behind nominal camera')
+        corrected = []
+        for action in actions:
+            duration = number(action.duration_s)
+            if duration <= 0:
+                raise ValueError('Projection needs positive action duration')
+            command = vector(action.command_mps)
+            end_relative = [relative[i]+(target_velocity[i]-command[i])*duration for i in range(3)]
+            future = project(end_relative, yaw+number(action.yaw_rate_dps)*duration)
+            center = (min(1., number(math.hypot(x+future[0]-current[0],y+future[1]-current[1]))/math.sqrt(2.))
+                      if future is not None else 1.)
+            corrected.append(replace(action, outcome=replace(action.outcome,image_center_error=center),
+                metadata={**action.metadata, 'center_model':'signed-level-camera-delta-v1',
+                          'legacy_center_error':action.outcome.image_center_error,
+                          'learned_center_correction':False}))
+        return corrected
+
+
 class RegisteredGeometry:
     """Exact point-to-OBB distance over supplied CARLA registered boxes.
 
@@ -275,6 +350,10 @@ EVERY prefix. This transactional loop does not claim sustained 20 Hz control.
         result['selections'].append({'request_id': request.request_id,
             'action_id': selection.action.id, 'selector_fallback': selection.used_fallback,
             'candidate_ids': [a.id for a in request.candidates],
+            'candidate_diagnostics': [{'id':a.id, 'center_model':a.metadata.get('center_model'),
+                'image_center_error':a.outcome.image_center_error,
+                'legacy_center_error':a.metadata.get('legacy_center_error'),
+                'utility':a.outcome.utility(request.state.constraints)} for a in request.candidates],
             'interval_full_fallback': [a.metadata.get('interval_full_fallback') for a in request.candidates]})
         return selection
     coordinator = AsyncDecisionCoordinator(select, clock=clock)

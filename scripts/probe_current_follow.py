@@ -15,7 +15,7 @@ import time
 
 from jev_uav_track.current_follow import (RegisteredGeometry, load_current_rollout,
     validate_follow_endpoint, run_control_session, require_follow_receipt, route_primitives,
-    ActorGeometryCache)
+    ActorGeometryCache, GeometricCenterFallback)
 
 ROOT = Path(__file__).resolve().parents[1]
 SEED = 2026103101
@@ -45,6 +45,8 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
     validate_follow_endpoint(ports)
     result.update(kind='CURRENT_CAUSAL_BOUNDED_FOLLOW', status='FOLLOW_ABORTED',
         phase='frozen_model', method='mock_jev', real_jev_calls=0,
+        rollout_variant='geometry_center_fallback_v1',
+        baseline_intervention='CENTER_ONLY_WHEN_ALL_INTERVAL_OUTPUTS_REJECTED',
         scenario_seed=SEED, frames=[], prefixes=[], cleanup_errors=[], target_destroyed=False,
         initialization_kind='UNARMED_SIMULATOR_PLACEMENT_NOT_TAKEOFF',
         perception='CURRENT_VISIBLE_SIMULATOR_ANNOTATION_NOT_RGB_DETECTOR',
@@ -183,7 +185,7 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
         adapter = LiveBeliefAdapter(bridge)
         # Fix the existing bounded world commands to the initial straight
         # route heading, ONCE. This is not a new feedback controller.
-        pipeline = JevTrackPipeline(MockJevClient(),rollout_model=model,
+        pipeline = JevTrackPipeline(MockJevClient(),rollout_model=GeometricCenterFallback(model),
                                     primitives=route_primitives(math.degrees(yaw)))
         result['candidate_vocabulary'] = [asdict(p) for p in pipeline.primitives]
         initial_collision = air.simGetCollisionInfo(vehicle_name='JevDrone')
@@ -283,6 +285,15 @@ def probe_current_follow(world, air, output, result, *, ports, carla_sdk, airsim
             # Preserve the pre-existing stricter scene threshold in addition to
             # the controller's generic minimum. This is not certified body space.
             tracking=replace(tracking,constraints=replace(tracking.constraints,minimum_obstacle_margin_m=3.5))
+            if found:
+                # Measured CURRENT bbox only. This level-attitude projection
+                # delta is a separately labeled transparent baseline change,
+                # not a camera/dynamics calibration or residual-model update.
+                tracking=replace(tracking,environment={**tracking.environment,
+                    'camera_center_geometry':{'observed_xy':[(x1+x2)/image.width-1.,(y1+y2)/image.height-1.],
+                        'pitch_deg':result['scenario']['camera_pitch_deg'],
+                        'horizontal_fov_deg':90., 'image_size':[image.width,image.height],
+                        'offset_body_forward_right_up_m':[.75,0.,.2]}})
             new_collision=int(collision.time_stamp)>collision_baseline
             record={'wall_s':end,'window':asdict(window),'visible':bool(found),'uav_world_m':list(position),
                 'target_measurement_world_m':measurement,'center_error':center,'bbox_xyxy':bbox,
