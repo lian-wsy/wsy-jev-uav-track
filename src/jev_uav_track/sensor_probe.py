@@ -10,6 +10,7 @@ from copy import deepcopy
 import hashlib
 import json
 import math
+import re
 import time
 
 
@@ -103,7 +104,8 @@ def _project(method, raw):
     return result
 
 
-def probe_safety_inputs(rpc_call, *, clock=None, sleep=time.sleep, sample_count=6):
+def probe_safety_inputs(rpc_call, *, clock=None, sleep=time.sleep, sample_count=6,
+                        distance_sensor_name='', lidar_name=''):
     """At most six samples / 30 RPCs / 8s soft budget. Never authorize control.
 
     Each RPC is made once. A transport error disables that optional sensor;
@@ -112,6 +114,10 @@ def probe_safety_inputs(rpc_call, *, clock=None, sleep=time.sleep, sample_count=
     """
     if type(sample_count) is not int or not 1 <= sample_count <= 6:
         raise ValueError('sample_count must be an integer in 1..6')
+    for name in (distance_sensor_name, lidar_name):
+        if type(name) is not str or (name != '' and not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]{0,63}', name)):
+            raise ValueError('Sensor names must be empty or bounded ASCII identifiers')
+    sensor_names = {_DISTANCE: distance_sensor_name, _LIDAR: lidar_name}
     host_clock = {'source': 'INJECTED_NOT_CALIBRATED', 'resolution_s': None}
     if clock is None:
         # Python3.10/Windows monotonic() uses a coarse GetTickCount64 clock.
@@ -129,6 +135,7 @@ def probe_safety_inputs(rpc_call, *, clock=None, sleep=time.sleep, sample_count=
               'source_clock_domain': 'AIRSIM_REPORTED_NS_NOT_CALIBRATED',
               'collision_read_semantics': 'MAY_CONSUME_EVENT_FLAG_LOCAL_SEMANTICS_UNVERIFIED',
               'measurement_readiness': 'NOT_CERTIFIED',
+              'sensor_names': {'distance': distance_sensor_name, 'lidar': lidar_name},
               'host_clock': host_clock, 'budget_s': 8., 'rpc_timeout_required_s': 1.}
     floor = None
     last_state = None
@@ -165,7 +172,9 @@ def probe_safety_inputs(rpc_call, *, clock=None, sleep=time.sleep, sample_count=
                'temporal_status': 'NOT_ASSESSED', 'missing_fields': []}
         report['queries'].append(row)
         report['rpc_count'] += 1
-        args = ('', 'JevDrone') if method in (_DISTANCE, _LIDAR) else ('JevDrone',)
+        args = (sensor_names[method], 'JevDrone') if method in sensor_names else ('JevDrone',)
+        if method in sensor_names:
+            row['sensor_name'] = sensor_names[method]
         raw = None
         try:
             raw = rpc_call(method, *args)

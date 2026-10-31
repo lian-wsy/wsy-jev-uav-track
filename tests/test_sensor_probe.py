@@ -2,6 +2,7 @@
 import importlib
 import importlib.util
 import json
+import inspect
 
 import pytest
 
@@ -66,6 +67,36 @@ def run_rpc(rpc, count=2):
 
 def queries(report, method):
     return [item for item in report['queries'] if item['rpc'] == method]
+
+
+def test_explicit_sensor_names_reach_rpc_and_receipt_without_extra_calls():
+    runner = probe()
+    assert 'distance_sensor_name' in inspect.signature(runner).parameters, 'Named distance query missing'
+    rpc = SensorRpc(Clock())
+    named_calls = []
+    def named_rpc(method, *args):
+        named_calls.append((method, args))
+        if method == 'getDistanceSensorData':
+            assert args == ('JevDistanceFront', 'JevDrone')
+            return rpc(method, '', 'JevDrone')
+        if method == 'getLidarData':
+            assert args == ('JevLidarDiagnostic', 'JevDrone')
+            return rpc(method, '', 'JevDrone')
+        return rpc(method, *args)
+    result = runner(named_rpc, clock=rpc.clock, sleep=rpc.clock.sleep,
+        distance_sensor_name='JevDistanceFront', lidar_name='JevLidarDiagnostic')
+    assert result['rpc_count'] == len(named_calls) == 30
+    assert result['sensor_names'] == {'distance': 'JevDistanceFront', 'lidar': 'JevLidarDiagnostic'}
+    assert queries(result, 'getLidarData')[0]['sensor_name'] == 'JevLidarDiagnostic'
+    assert result['control_ready'] is False and result['clearance_m'] is None
+
+
+@pytest.mark.parametrize('name', [None, 5, 'bad/name', 'line\nbreak', 'x' * 65])
+def test_invalid_sensor_name_rejects_before_rpc(name):
+    runner = probe()
+    assert 'distance_sensor_name' in inspect.signature(runner).parameters, 'Named distance query missing'
+    def forbidden(*args): pytest.fail('Bad name reached RPC')
+    with pytest.raises(ValueError): runner(forbidden, distance_sensor_name=name)
 
 
 def test_only_four_read_interfaces_are_used_and_no_control_clearance_is_invented():

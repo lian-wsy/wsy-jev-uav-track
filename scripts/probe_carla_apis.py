@@ -13,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 from jev_uav_track.isolated_runtime import (require_rpc_success, command_cadence,
     validate_probe_map, require_loaded_map, PROBE_MAPS, DEFAULT_PORTS,
     add_port_arguments, ports_from_arguments)
+from jev_uav_track.sensor_configuration import validate_sensor_opt_in, require_diagnostic_sensors
 
 import carla
 import airsim
@@ -279,8 +280,13 @@ def contract_probe(world, air, output, result, bootstrap, observation_contract=F
     return result
 
 
-def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *, ports=DEFAULT_PORTS):
+def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *, ports=DEFAULT_PORTS,
+         configure_diagnostic_sensors=False):
+    validate_sensor_opt_in(configure_diagnostic_sensors, expected_map, profile)
     validate_probe_map(expected_map, profile)
+    expected = json.loads(expected_settings.read_text())
+    sensor_names = (require_diagnostic_sensors(expected) if configure_diagnostic_sensors else
+                    {'distance': '', 'lidar': ''})
     client = carla.Client('127.0.0.1', ports.carla_rpc)
     client.set_timeout(5)
     air = airsim.MultirotorClient(ip='127.0.0.1', port=ports.airsim_rpc,
@@ -288,7 +294,6 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
     if not air.ping():
         raise RuntimeError('AirSim ping failed')
     settings = json.loads(air.getSettingsString())
-    expected = json.loads(expected_settings.read_text())
     if settings != expected or expected.get('ApiServerPort') != ports.airsim_rpc or list(expected.get('Vehicles', {})) != ['JevDrone']:
         raise RuntimeError('Loaded AirSim settings are not task-owned settings')
     world = client.get_world()
@@ -313,9 +318,11 @@ def main(output, profile, expected_settings, bootstrap, expected_map='Town02', *
     if profile == 'safety':
         from jev_uav_track.sensor_probe import probe_safety_inputs
         result['kind'] = 'LIVE_OWNED_SAFETY_SENSOR_DIAGNOSTIC'
-        result['note'] = ('No arm, reset, motion, images, settings changes or control authorization. '
+        result['note'] = ('No arm, reset, motion, images, RPC settings changes or control authorization. '
                           'Collision reads may consume event flags on this owned instance.')
-        result['safety_probe'] = probe_safety_inputs(air.client.call)
+        result['configure_diagnostic_sensors'] = configure_diagnostic_sensors
+        result['safety_probe'] = probe_safety_inputs(air.client.call,
+            distance_sensor_name=sensor_names['distance'], lidar_name=sensor_names['lidar'])
     if profile in ('contract', 'observation', 'belief'):
         result['contract'] = {}
         result['note'] = 'Owned development physics probe; may arm/move/capture. Not a tracking comparison.'
@@ -339,7 +346,8 @@ if __name__ == '__main__':
     parser.add_argument('--expected-settings', type=Path, required=True)
     parser.add_argument('--bootstrap', choices=['takeoff', 'velocity'], default='takeoff')
     parser.add_argument('--expected-map', choices=PROBE_MAPS, default='Town02')
+    parser.add_argument('--configure-diagnostic-sensors', action='store_true')
     add_port_arguments(parser)
     args = parser.parse_args()
     main(args.output, args.profile, args.expected_settings, args.bootstrap, args.expected_map,
-         ports=ports_from_arguments(args))
+         ports=ports_from_arguments(args), configure_diagnostic_sensors=args.configure_diagnostic_sensors)
