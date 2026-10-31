@@ -163,6 +163,7 @@ def smoke(source, task, client_python, run_name, profile, bootstrap, map_name='T
               'configure_diagnostic_sensors': configure_diagnostic_sensors,
               'capture_geometry': capture_geometry,
               'probe_sha256': sha(Path(__file__)),
+              'package_init_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/__init__.py'),
               'api_probe_sha256': sha(Path(__file__).with_name('probe_carla_apis.py')),
               'runtime_module_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/isolated_runtime.py'),
               'sensor_probe_sha256': sha(Path(__file__).resolve().parents[1] / 'src/jev_uav_track/sensor_probe.py'),

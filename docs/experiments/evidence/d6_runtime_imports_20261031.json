@@ -1,0 +1,57 @@
+{
+  "kind": "ISOLATED_LAUNCHER_IMPORT_FOOTPRINT",
+  "schema_version": 1,
+  "date": "2026-10-31",
+  "measurement_api": "Windows GetProcessMemoryInfo PROCESS_MEMORY_COUNTERS_EX",
+  "baseline_commit": "7acc870ad958f8f4d0b261f3e4515ee9c82a26a0",
+  "modified_package_init_sha256": "30415154dbb9eb344a7d503ea7ff5d51939dfa924e479f57ac16387c0a527617",
+  "before_refactor": {
+    "python": "3.14.7 | packaged by Anaconda, Inc. | (main, Aug 14 2026, 10:12:46) [MSC v.1942 64 bit (AMD64)]",
+    "before": {
+      "working_set_bytes": 16969728,
+      "private_commit_bytes": 10211328
+    },
+    "after": {
+      "working_set_bytes": 30752768,
+      "private_commit_bytes": 20307968
+    },
+    "loaded": {
+      "numpy": false,
+      "h5py": false,
+      "jev_uav_track.training": true,
+      "jev_uav_track.data": true,
+      "jev_uav_track.closed_loop": true,
+      "jev_uav_track.jev_client": true
+    },
+    "actions": "IMPORT_ONLY_NO_RPC_NO_SOURCE_DATA"
+  },
+  "after_refactor": {
+    "python": "3.14.7 | packaged by Anaconda, Inc. | (main, Aug 14 2026, 10:12:46) [MSC v.1942 64 bit (AMD64)]",
+    "before": {
+      "working_set_bytes": 16908288,
+      "private_commit_bytes": 10166272
+    },
+    "after": {
+      "working_set_bytes": 24244224,
+      "private_commit_bytes": 14761984
+    },
+    "loaded": {
+      "numpy": false,
+      "h5py": false,
+      "jev_uav_track.training": false,
+      "jev_uav_track.data": false,
+      "jev_uav_track.closed_loop": false,
+      "jev_uav_track.jev_client": false
+    },
+    "actions": "IMPORT_ONLY_NO_RPC_NO_SOURCE_DATA"
+  },
+  "working_set_sample_difference_bytes": 6508544,
+  "private_commit_sample_difference_bytes": 5545984,
+  "command": "$env:PYTHONPATH=(Resolve-Path -LiteralPath 'src').Path\n@'\nimport ctypes, json, sys\nfrom ctypes import wintypes\nclass Counters(ctypes.Structure):\n    _fields_ = [('cb', wintypes.DWORD), ('PageFaultCount', wintypes.DWORD)] + [(key, ctypes.c_size_t) for key in ('PeakWorkingSetSize','WorkingSetSize','QuotaPeakPagedPoolUsage','QuotaPagedPoolUsage','QuotaPeakNonPagedPoolUsage','QuotaNonPagedPoolUsage','PagefileUsage','PeakPagefileUsage','PrivateUsage')]\nkernel = ctypes.WinDLL('kernel32', use_last_error=True)\nkernel.GetCurrentProcess.restype = wintypes.HANDLE\npsapi = ctypes.WinDLL('psapi', use_last_error=True)\npsapi.GetProcessMemoryInfo.argtypes = [wintypes.HANDLE, ctypes.POINTER(Counters), wintypes.DWORD]\npsapi.GetProcessMemoryInfo.restype = wintypes.BOOL\ndef measure():\n    value = Counters(); value.cb = ctypes.sizeof(value)\n    if not psapi.GetProcessMemoryInfo(kernel.GetCurrentProcess(), ctypes.byref(value), value.cb):\n        raise ctypes.WinError(ctypes.get_last_error())\n    return {'working_set_bytes': value.WorkingSetSize, 'private_commit_bytes': value.PrivateUsage}\nbefore = measure()\nfrom scripts import probe_isolated_carla\nprint(json.dumps({'python':sys.version, 'before':before, 'after':measure(), 'loaded':{name:name in sys.modules for name in ('numpy','h5py','jev_uav_track.training','jev_uav_track.data','jev_uav_track.closed_loop','jev_uav_track.jev_client')}, 'actions':'IMPORT_ONLY_NO_RPC_NO_SOURCE_DATA'}))\n'@ | python -",
+  "limitations": [
+    "One fresh-process sample per version; not a guaranteed memory reserve or throughput benchmark.",
+    "No NumPy or HDF5 module was loaded in either sample; only project research modules were prematurely imported.",
+    "Does not lower the 4GiB startup or 768MiB runtime resource gates.",
+    "No simulator startup, RPC, key reads, model training, source HDF reads or PASS data produced by this measurement."
+  ]
+}

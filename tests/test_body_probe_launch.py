@@ -120,6 +120,8 @@ def test_body_owner_revalidates_raw_receipt_and_preserves_cleanup(tmp_path, monk
     assert config.read_bytes() == original
     assert result['body_probe_sha256'] == launcher.sha(Path(launcher.__file__).resolve().parents[1] /
                                                      'src/jev_uav_track/body_probe.py')
+    assert result['package_init_sha256'] == launcher.sha(Path(launcher.__file__).resolve().parents[1] /
+                                                       'src/jev_uav_track/__init__.py')
     request = json.loads((task / 'runs/body/run_request.json').read_text())
     assert request['kind'] == 'OWN_BODY_DIAGNOSTIC_NO_MOTION'
     assert request['not_final_test'] is True
