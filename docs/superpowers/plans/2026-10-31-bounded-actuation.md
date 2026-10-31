@@ -69,4 +69,8 @@ assert port.sent == []
 - [x] RED/GREEN: script uses the production pipeline/loop/actuator, synthetic port/clock/own telemetry, utility and Mock Jev under identical limits. Include grounded refusal, delayed-before-send rejection, acknowledgement+stop telemetry, motion RPC failure and watchdog timeout. Output fresh exclusive directory, finite JSON; no RPC/client construction, key read or training.
 - [x] Run `python scripts/run_d6_actuation_smoke.py --output-dir artifacts/d6_actuation_20261031`; run with existing Python3.10 and a distinct output path. Verify raw JSON and preserve non-success cases.
 - [x] Full `python -m pytest -q`, both interpreters' compileall, `git diff --check`. Independent code review and fix any evidenced findings with RED/GREEN tests.
-- [ ] Write measured results and remaining live geometry/startup/transport limits. Commit only this slice, push existing feature branch and verify remote HEAD. Do not complete the D1–D6 goal.
+- [x] Write measured results and remaining live geometry/startup/transport limits. Commit only this slice, push existing feature branch and verify remote HEAD. Do not complete the D1–D6 goal.
+
+## Completion receipt for this slice, not the D1–D6 goal
+
+Code `9f20a1d`, experiment report and independent evidence review published on the existing feature branch. `834b5a99d84f80f679c7f8d1f37a716e39711b3e` was pushed and its remote ref verified before this receipt. Full 763 passed/1 skipped; independent targeted 152 passed and seven report/source hashes plus both 14-case matrices verified. The report explicitly states poll-driven watchdog/hung-RPC limits. No main merge, live launch, training, source HDF read, Jev call or other-chat contact. Original D1–D6 remains incomplete; this checklist describes only the bounded offline transport slice.
