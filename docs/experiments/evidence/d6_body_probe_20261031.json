@@ -1,0 +1,161 @@
+{
+  "kind": "OWN_BODY_DIAGNOSTIC_PREFLIGHT_REJECTION",
+  "schema_version": 1,
+  "code_commit": "aac046df01ff7417eda5ebbeae0bcd1fad1643ed",
+  "status": "NOT_RUN_RESOURCE_GATE",
+  "scope": "D6_DEVELOPMENT_NO_MOTION_NOT_FINAL_TEST",
+  "run_root": "D:/JevUavRuns/20261031_d6_probe01/runs/town02_body01_20261031",
+  "request": {
+    "requested_map": "Town02",
+    "profile": "body",
+    "kind": "OWN_BODY_DIAGNOSTIC_NO_MOTION",
+    "created_at": 1793448051.2559128,
+    "not_final_test": true,
+    "ports": {
+      "carla_rpc": 3200,
+      "carla_streaming": 3201,
+      "carla_secondary": 3202,
+      "airsim_rpc": 42461
+    },
+    "configure_diagnostic_sensors": false,
+    "capture_geometry": false
+  },
+  "preflight": {
+    "free_memory_kib": 4188960,
+    "processes": [
+      {
+        "ProcessId": 36520,
+        "ParentProcessId": 51768,
+        "Name": "python.exe",
+        "ExecutablePath": "C:\\Users\\20748\\miniconda3\\python.exe"
+      }
+    ],
+    "listeners": []
+  },
+  "required_free_memory_kib": 4194304,
+  "owner_exists": false,
+  "api_exists": false,
+  "smoke_exists": false,
+  "actual": {
+    "training_runs": 0,
+    "images": 0,
+    "new_pass_episodes": 0,
+    "jev_requests": 0,
+    "measurement_rpcs": 0,
+    "startup_attempts": 1,
+    "flight_commands": 0,
+    "simulator_launches": 0
+  },
+  "artifacts": [
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body01_20261031\\preflight.json",
+      "bytes": 249,
+      "sha256": "8eebdb741defe8ae2655c6fbb1818eaeaa0773ce92d3d17decd0369cc2e5503f"
+    },
+    {
+      "path": "D:\\JevUavRuns\\20261031_d6_probe01\\runs\\town02_body01_20261031\\run_request.json",
+      "bytes": 364,
+      "sha256": "d9c98825d1a28bafa0c5f77dd21a388730298084d4dceb6e3c65ffd164546268"
+    }
+  ],
+  "code_sha256": [
+    {
+      "path": "src/jev_uav_track/body_probe.py",
+      "sha256": "347aae0a0e227eb2a245711a1654b865a5d8be7d9a82ae32193eda88779ad39a"
+    },
+    {
+      "path": "src/jev_uav_track/sensor_probe.py",
+      "sha256": "89af4773b21c415c567183385eadc12055a1d87bf36a50aff1dab475c0ad9e26"
+    },
+    {
+      "path": "src/jev_uav_track/isolated_runtime.py",
+      "sha256": "efe10dc13be2559413f932efb86b365967269ea9650808e18f6a22a3edbb5957"
+    },
+    {
+      "path": "src/jev_uav_track/frames.py",
+      "sha256": "28bd4bcea80870f1dfd05b743e8ab4ce1d5c07817ed3a6e08d3712c4ece9089a"
+    },
+    {
+      "path": "scripts/probe_carla_apis.py",
+      "sha256": "ee1ab4b78bdfb89098415bf27b283d73f4687491d8523e7018d8342e06bb21db"
+    },
+    {
+      "path": "scripts/probe_isolated_carla.py",
+      "sha256": "7ef9798ae36a3e91590c111438292c462c97af8e903dee8145fecd60a5b74fd3"
+    }
+  ],
+  "protected_files": [
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\CarSimConfig.ini",
+      "expected_sha256": "8e96e9fb4d695eb6d21f9d7b9da4fcbd583312b45e63cc20b7b222d4d8a22f90",
+      "actual_sha256": "8e96e9fb4d695eb6d21f9d7b9da4fcbd583312b45e63cc20b7b222d4d8a22f90",
+      "matches": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultEngine.ini",
+      "expected_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+      "actual_sha256": "07b8a71e8df9d8bfdaaea4d04dc15868b73339cbc51f8ca16239e350b6267e64",
+      "matches": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultGame.ini",
+      "expected_sha256": "94427ca09cb488081350225a7d3c5b0e22843ae17cb61cb1ebd4af39ad695df0",
+      "actual_sha256": "94427ca09cb488081350225a7d3c5b0e22843ae17cb61cb1ebd4af39ad695df0",
+      "matches": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultGameUserSettings.ini",
+      "expected_sha256": "2168f96d659f41a33b4fbb5bfc3143a1437bc6059b0d018d532f74a4c2e71691",
+      "actual_sha256": "2168f96d659f41a33b4fbb5bfc3143a1437bc6059b0d018d532f74a4c2e71691",
+      "matches": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultInput.ini",
+      "expected_sha256": "1ed4e4714a4476b2e2bb15e59afef2fea5413487aa13dfc86114205adb55dec4",
+      "actual_sha256": "1ed4e4714a4476b2e2bb15e59afef2fea5413487aa13dfc86114205adb55dec4",
+      "matches": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\DefaultScalability.ini",
+      "expected_sha256": "06fef2edfee12b05f55b914ca8fa8e490e1b708ab8869f20136874ba2897f606",
+      "actual_sha256": "06fef2edfee12b05f55b914ca8fa8e490e1b708ab8869f20136874ba2897f606",
+      "matches": true
+    },
+    {
+      "path": "D:\\CarlaAir\\CarlaAir-v0.1.7-Windows11-x86_64\\WindowsNoEditor\\CarlaUE4\\Config\\OptionalModules.ini",
+      "expected_sha256": "91745741cf40de17e1ec47a8a922db851fcdf4403df86b237f3ef03682719f45",
+      "actual_sha256": "91745741cf40de17e1ec47a8a922db851fcdf4403df86b237f3ef03682719f45",
+      "matches": true
+    },
+    {
+      "path": "C:\\Users\\20748\\Documents\\AirSim\\settings.json",
+      "expected_sha256": "de89442d0093ffb47f7d05a3859206698145f15b2ff99b675e8149a858c8f048",
+      "actual_sha256": "de89442d0093ffb47f7d05a3859206698145f15b2ff99b675e8149a858c8f048",
+      "matches": true
+    }
+  ],
+  "postcheck": {
+    "time": "2026-10-31T20:01:39.7736352+08:00",
+    "processes": [],
+    "listeners": [],
+    "free_memory_kib": 4307076
+  },
+  "verification": {
+    "full_seconds": 23.78,
+    "reviewer_focused": 54,
+    "full_passed": 879,
+    "python314_compile": "PASS",
+    "python310_compile": "PASS",
+    "full_skipped": 1,
+    "python310_cli": "PASS",
+    "focused_passed": 54,
+    "review": "NO_REMAINING_BLOCKING_FINDINGS"
+  },
+  "acceptance": {
+    "clearance_m": null,
+    "D6": "PARTIAL",
+    "control_ready": false,
+    "body_envelope_status": "NOT_CERTIFIED",
+    "D1_Town03_independent_PASS": 0
+  }
+}

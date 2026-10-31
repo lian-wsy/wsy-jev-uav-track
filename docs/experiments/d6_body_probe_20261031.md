@@ -34,4 +34,18 @@ $env:PYTHONPATH=(Resolve-Path -LiteralPath 'src').Path
 python scripts/probe_isolated_carla.py smoke --source 'D:/CarlaAir/CarlaAir-v0.1.7-Windows11-x86_64/WindowsNoEditor' --task 'D:/JevUavRuns/20261031_d6_probe01' --client-python 'C:/Users/20748/miniconda3/envs/carlaAir/python.exe' --run-name town02_body01_20261031 --profile body --map Town02 --carla-rpc-port 3200 --carla-streaming-port 3201 --carla-secondary-port 3202 --airsim-rpc-port 42461
 ```
 
-现场状态目前`NOT_RUN`。D6仍PARTIAL、Town03独立PASS仍0；静态位姿诊断无论何种结果，都不能单独认证碰撞外形、支持接触例外、起飞通道或实际制动。
+## 20:00正式预检查：未达原内存门槛，未启动
+
+代码冻结提交`aac046df01ff7417eda5ebbeae0bcd1fad1643ed`。上面的命令仅执行一次，退出1；运行目录`town02_body01_20261031`保留，不覆盖旧尝试。
+
+启动前只读快照20:00:30为4,264,736KiB，相关进程/监听空；随后正式预检查为**4,188,960KiB**，低于4,194,304KiB门槛5,344KiB（约5.22MiB）。启动器自身Python PID36520是唯一相关进程，监听0；因此是内存门槛拒绝，不是外部采集占用。小幅差距也不构成降低原门槛的理由。
+
+拒绝发生在`OwnedJob`、地图配置事务或Shipping进程创建之前。`owner.json`、`api_probe.json`、`smoke_result.json`均不存在；实际模拟器启动、测量RPC、飞行命令、图像、Jev、HDF读取、训练和新PASS episode全部0。原`preflight.json`249字节，SHA `8eebdb741defe8ae2655c6fbb1818eaeaa0773ce92d3d17decd0369cc2e5503f`；`run_request.json`364字节，SHA `d9c98825d1a28bafa0c5f77dd21a388730298084d4dceb6e3c65ffd164546268`。
+
+20:01:39结束核验：相关进程/监听均空，8份保护配置SHA与准备快照一致；记录该次退出核验的可用内存4,307,076KiB，不据此连续重新启动。没有关闭其他应用、修改共享资源或联系其他聊天。完整原始请求/预检查、6运行模块SHA、保护哈希及结束核验见[机器证据](evidence/d6_body_probe_20261031.json)。
+
+## 验收变化与下一步
+
+本轮完成的是**可运行的同窗口机体诊断及严格原始回执验证**，并修复审查实际复现的时钟/类型/数值溢出缺陷；现场机体结果仍`NOT_RUN_RESOURCE_GATE`，不能用879项测试替代。
+
+D6仍PARTIAL、Town03独立PASS仍0，原模型与划分未变。后续资源条件稳定满足原门槛时，复用这份冻结协议；不要重复已有四组扫掠或旧训练，也不要凭登记box猜测碰撞外形。静态位姿诊断无论何种结果，都不能单独认证碰撞外形、支持接触例外、起飞通道或实际制动。
